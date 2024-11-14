@@ -103,6 +103,35 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
+  # UUID=abe35444-076d-4e0e-afd1-6d3be2d97d6c /mnt/joker9944/linux-games ext4 nosuid,nodev,nofail,rw,exec 0 2
+  fileSystems."/mnt/linux-games" = {
+    device = "/dev/disk/by-uuid/abe35444-076d-4e0e-afd1-6d3be2d97d6c";
+    fsType = "ext4";
+    options = [
+      "x-gvfs-show"
+      "nosuid"
+      "nodev"
+      "nofail"
+      "rw"
+      "exec"
+    ];
+  };
+
+  # UUID=529952040F63F024 /mnt/joker9944/windows-games ntfs uid=1000,gid=1000,rw,user,exec,umask=000 0 2
+  fileSystems."/mnt/windows-games" = {
+    device = "/dev/disk/by-uuid/529952040F63F024";
+    fsType = "ntfs";
+    options = [
+      "x-gvfs-show"
+      "uid=1000"
+      "gid=100"
+      "umask=000"
+      "user"
+      "rw"
+      "exec"
+    ];
+  };
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.joker9944 = {
     isNormalUser = true;
