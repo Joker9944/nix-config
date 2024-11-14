@@ -51,7 +51,9 @@
 
         ./hosts/HAL9000/configuration.nix
         ./modules/1password.nix
+        ./modules/nvidia.nix
         ./modules/steam.nix
+        ./modules/xserver-gnome.nix
 
         home-manager.nixosModules.home-manager
         {
