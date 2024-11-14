@@ -13,14 +13,8 @@
 
     libreoffice
     xournalpp
-    firefox
-    _1password-gui
 
     spotify
-
-    steam
-    gamemode
-    gamescope
     lutris
     discord
 
