@@ -44,7 +44,24 @@
     ];
   in {
 
-    nixosConfigurations = nixpkgs.lib.listToAttrs (nixpkgs.lib.map (hostname: {
+    nixosConfigurations.HAL9000 = nixpkgs.lib.nixosSystem {
+      specialArgs = { inherit inputs; };
+      modules = [
+        { nixpkgs.overlays = overlays; }
+
+        ./hosts/HAL9000/configuration.nix
+
+        home-manager.nixosModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.joker9944 = import ./users/joker9944/HAL9000.nix;
+        }
+      ];
+    };
+
+    # TODO figure this out
+    /*nixosConfigurations = nixpkgs.lib.listToAttrs (nixpkgs.lib.map (hostname: {
       "name" = hostname;
       "value" = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
@@ -61,7 +78,7 @@
           }
         ];
       };
-    }) (listDirs hostsDir));
+    }) (listDirs hostsDir));*/
 
     # TODO figure this out
     # https://github.com/nix-community/home-manager/issues/2954
