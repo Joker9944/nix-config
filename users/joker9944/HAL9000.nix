@@ -1,15 +1,15 @@
-{ config, pkgs, inputs, ...}:
+{ config, pkgs, ...}:
 
 {
   home.username = "joker9944";
   home.homeDirectory = "/home/joker9944";
 
+  imports = [ ./gnome.nix ];
+
   home.packages = with pkgs; [
     fastfetch
     btop
     vscode
-
-    baobab
 
     libreoffice
     xournalpp
