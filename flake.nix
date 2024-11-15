@@ -43,11 +43,18 @@
       inputs.talhelper.overlays.default
     ];
   in {
+    nixosModules = import ./modules;
 
     nixosConfigurations.HAL9000 = nixpkgs.lib.nixosSystem {
       specialArgs = { inherit inputs; };
       modules = [
         { nixpkgs.overlays = overlays; }
+
+        {
+          _1password.enable = true;
+          _1password.polkitPolicyOwners = [ "joker9944" ];
+          _1password.allowedBrowsers = [ "firefox" ];
+        }
 
         ./hosts/HAL9000/configuration.nix
         ./modules/1password.nix

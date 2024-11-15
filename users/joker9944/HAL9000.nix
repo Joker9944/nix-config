@@ -1,4 +1,4 @@
-{ config, pkgs, ...}:
+{ lib, config, pkgs, ...}:
 
 {
   home.username = "joker9944";
@@ -17,6 +17,7 @@
     spotify
     lutris
     discord
+    telegram-desktop
 
     kubectl
     fluxcd
@@ -67,7 +68,10 @@
           format = "ssh";
         };
         "gpg \"ssh\"" = {
-          program = "/opt/1Password/op-ssh-sign";
+          program = "${lib.getExe' pkgs._1password-gui "op-ssh-sign"}";
+        };
+        commit = {
+          gpgsign = true;
         };
         user = {
           signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP9R2V8FqyXifBoVO3OndfpRrqxdwK1H/3qlm645l7rg";
@@ -77,7 +81,10 @@
 
     ssh = {
       enable = true;
-      extraConfig = ''IdentityAgent ~/.1password/agent.sock'';
+      extraConfig = ''
+        Host *
+          IdentityAgent ~/.1password/agent.sock
+      '';
     };
 
     home-manager.enable = true;
