@@ -4,7 +4,10 @@
   home.username = "joker9944";
   home.homeDirectory = "/home/joker9944";
 
-  imports = [ ./gnome.nix ];
+  imports = [
+    ./gnome.nix
+    ./xdg.nix
+  ];
 
   home.packages = with pkgs; [
     fastfetch
