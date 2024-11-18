@@ -1,10 +1,11 @@
-{ lib, config, pkgs, ...}:
+{ lib, config, pkgs, inputs, ...}:
 
 {
   home.username = "joker9944";
   home.homeDirectory = "/home/joker9944";
 
   imports = [
+    inputs.home-manager-xdg-autostart.homeManagerModules.xdg-autostart
     ./gnome.nix
     ./xdg.nix
   ];
@@ -29,6 +30,9 @@
     # talhelper
     openlens
 
+    sops
+    age
+
     kanidm
   ];
 
@@ -38,15 +42,18 @@
       enable = true;
       enableCompletion = true;
 
+      # TODO Move XDG_CONFIG_HOME
       bashrcExtra = ''
-      # Command Completion
-      source <(kubectl completion bash)
-      source <(helm completion bash)
-      source <(flux completion bash)
-      source <(talosctl completion bash)
-      # source <(talhelper completion bash)
+        # Command Completion
+        source <(kubectl completion bash)
+        source <(helm completion bash)
+        source <(flux completion bash)
+        source <(talosctl completion bash)
+        # source <(talhelper completion bash)
 
-      fastfetch
+        export XDG_CONFIG_HOME=~/.config
+
+        fastfetch
       '';
 
       shellAliases = {
@@ -78,6 +85,9 @@
         };
         user = {
           signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP9R2V8FqyXifBoVO3OndfpRrqxdwK1H/3qlm645l7rg";
+        };
+        pull = {
+          rebase = false;
         };
       };
     };

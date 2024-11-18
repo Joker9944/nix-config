@@ -7,7 +7,11 @@
       url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    talhelper.url = "github:budimanjojo/talhelper";
+    talhelper = {
+      url = "github:budimanjojo/talhelper";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    home-manager-xdg-autostart.url = "github:Zocker1999NET/home-manager-xdg-autostart";
   };
 
   outputs = inputs@{ self, nixpkgs, home-manager, ... }: let
@@ -64,6 +68,7 @@
 
         home-manager.nixosModules.home-manager
         {
+          home-manager.extraSpecialArgs = { inherit inputs; };
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.users.joker9944 = import ./users/joker9944/HAL9000.nix;

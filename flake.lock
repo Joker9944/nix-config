@@ -39,6 +39,21 @@
         "type": "github"
       }
     },
+    "home-manager-xdg-autostart": {
+      "locked": {
+        "lastModified": 1723314998,
+        "narHash": "sha256-BwP56CHfU3P7ZHr2SzAEjF3uveiN1dZ5hFHTzRLS/WI=",
+        "owner": "Zocker1999NET",
+        "repo": "home-manager-xdg-autostart",
+        "rev": "4d1def4a330d6812fe18be140781e94003c3cc0a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Zocker1999NET",
+        "repo": "home-manager-xdg-autostart",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1731239293,
@@ -67,25 +82,10 @@
         "url": "https://github.com/NixOS/nixpkgs/archive/fb192fec7cc7a4c26d51779e9bab07ce6fa5597a.tar.gz"
       }
     },
-    "nixpkgs_2": {
-      "locked": {
-        "lastModified": 1729880355,
-        "narHash": "sha256-RP+OQ6koQQLX5nw0NmcDrzvGL8HDLnyXt/jHhL1jwjM=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "18536bf04cd71abd345f9579158841376fdd0c5a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "home-manager": "home-manager",
+        "home-manager-xdg-autostart": "home-manager-xdg-autostart",
         "nixpkgs": "nixpkgs",
         "talhelper": "talhelper"
       }
@@ -93,7 +93,9 @@
     "talhelper": {
       "inputs": {
         "flake-parts": "flake-parts",
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": [
+          "nixpkgs"
+        ]
       },
       "locked": {
         "lastModified": 1731468043,
