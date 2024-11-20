@@ -66,9 +66,7 @@
         { nixpkgs.overlays = overlays; }
 
         {
-          _1password.enable = true;
-          _1password.polkitPolicyOwners = [ "joker9944" ];
-          _1password.allowedBrowsers = [ "firefox" ];
+          programs._1password-gui.enable = true;
         }
 
         ./hosts/HAL9000/configuration.nix
