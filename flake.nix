@@ -2,19 +2,23 @@
   description = "Root NixOS flake";
 
   inputs = {
+    # nix pkgs
     nixpkgs.url= "github:NixOS/nixpkgs/nixos-24.05";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    # nix helpers
     home-manager = {
       url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    home-manager-xdg-autostart.url = "github:Zocker1999NET/home-manager-xdg-autostart";
+    # external pkgs
     talhelper = {
       url = "github:budimanjojo/talhelper";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    home-manager-xdg-autostart.url = "github:Zocker1999NET/home-manager-xdg-autostart";
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, ... }: let
+  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, home-manager, ... }: let
     hostsDir = ./hosts;
     usersDir = ./users;
 
@@ -49,8 +53,15 @@
   in {
     nixosModules = import ./modules;
 
-    nixosConfigurations.HAL9000 = nixpkgs.lib.nixosSystem {
-      specialArgs = { inherit inputs; };
+    nixosConfigurations.HAL9000 = nixpkgs.lib.nixosSystem rec {
+      system = "x86_64-linux";
+      specialArgs = {
+        inherit inputs;
+        pkgs-unstable = import nixpkgs-unstable {
+          inherit system;
+          config.allowUnfree = true;
+        };
+      };
       modules = [
         { nixpkgs.overlays = overlays; }
 
@@ -62,6 +73,7 @@
 
         ./hosts/HAL9000/configuration.nix
         ./modules/1password.nix
+        ./modules/firefoxpwa.nix
         ./modules/nvidia.nix
         ./modules/steam.nix
         ./modules/xserver-gnome.nix
