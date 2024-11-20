@@ -18,12 +18,12 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, home-manager, ... }: let
+  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, home-manager, ... }: with nixpkgs.lib; let
     hostsDir = ./hosts;
     usersDir = ./users;
 
-    listDirs = dir: nixpkgs.lib.attrNames ( nixpkgs.lib.filterAttrs ( filename: fileType: fileType == "directory" ) ( builtins.readDir dir ) );
-    listFiles = dir: nixpkgs.lib.attrNames ( nixpkgs.lib.filterAttrs ( filename: fileType: fileType == "regular" ) ( builtins.readDir dir ) );
+    listDirs = dir: attrNames ( filterAttrs ( _: type: elem type [ "directory" ] ) ( builtins.readDir dir ) );
+    listFiles = dir: attrNames ( filterAttrs ( _: type: elem type [ "regular" "symlink" ] ) ( builtins.readDir dir ) );
 
     hostnames = listDirs hostsDir;
     usernames = listDirs usersDir;
@@ -51,8 +51,6 @@
       inputs.talhelper.overlays.default
     ];
   in {
-    nixosModules = import ./modules;
-
     nixosConfigurations.HAL9000 = nixpkgs.lib.nixosSystem rec {
       system = "x86_64-linux";
       specialArgs = {
@@ -65,25 +63,17 @@
       modules = [
         { nixpkgs.overlays = overlays; }
 
-        {
-          programs._1password-gui.enable = true;
-        }
-
         ./hosts/HAL9000/configuration.nix
-        ./modules/1password.nix
-        ./modules/firefoxpwa.nix
-        ./modules/nvidia.nix
-        ./modules/steam.nix
-        ./modules/xserver-gnome.nix
 
-        home-manager.nixosModules.home-manager
-        {
+        { programs._1password-gui.enable = true; }
+
+        home-manager.nixosModules.home-manager {
           home-manager.extraSpecialArgs = { inherit inputs; };
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.users.joker9944 = import ./users/joker9944/HAL9000.nix;
         }
-      ];
+      ] ++ ( map (name: path.append ./modules name) ( listFiles ./modules ));
     };
 
     # TODO figure this out
