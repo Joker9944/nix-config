@@ -27,8 +27,8 @@
     fluxcd
     kubernetes-helm
     talosctl
-    # talhelper
-    openlens
+    talhelper
+    lens
 
     sops
     age

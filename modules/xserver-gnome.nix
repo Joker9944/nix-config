@@ -12,7 +12,7 @@
     gnome-tour
     gnome-connections
     epiphany # web browser
-    gnome.geary # email reader. Up to 24.05. Starting from 24.11 the package name is just geary.
+    geary # email reader
   ];
 
   environment.systemPackages = with pkgs; [
@@ -23,12 +23,12 @@
     gnomeExtensions.auto-move-windows
     gnomeExtensions.dash-to-dock
     gnomeExtensions.vertical-workspaces
-    gnome.dconf-editor
+    dconf-editor
   ];
 
-  # TODO Workaround for missing TopHat dependency
-  # https://github.com/fflewddur/tophat/issues/106#issuecomment-1848319826
   environment.variables = {
+    # TODO Workaround for missing TopHat dependency
+    # https://github.com/fflewddur/tophat/issues/106#issuecomment-1848319826
     GI_TYPELIB_PATH = "/run/current-system/sw/lib/girepository-1.0";
   };
 }

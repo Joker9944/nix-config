@@ -5,16 +5,18 @@
     steam = {
       enable = true;
       remotePlay.openFirewall = true;
-      dedicatedServer.openFirewall = true;
       localNetworkGameTransfers.openFirewall = true;
-      gamescopeSession.enable = true;
+      gamescopeSession.enable = false;
     };
     gamemode = {
       enable = true;
     };
     gamescope = {
-      enable = true;
+      enable = false;
       capSysNice = true;
     };
+  };
+  environment = with pkgs; {
+    systemPackages = [ mangohud ];
   };
 }
