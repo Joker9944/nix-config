@@ -19,39 +19,13 @@
   };
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, home-manager, ... }: with nixpkgs.lib; let
-    hostsDir = ./hosts;
-    usersDir = ./users;
-
-    listDirs = dir: attrNames ( filterAttrs ( _: type: elem type [ "directory" ] ) ( builtins.readDir dir ) );
-    listFiles = dir: attrNames ( filterAttrs ( _: type: elem type [ "regular" "symlink" ] ) ( builtins.readDir dir ) );
-
-    hostnames = listDirs hostsDir;
-    usernames = listDirs usersDir;
-
-    hostsFromUsername = username: nixpkgs.lib.map ( filename: nixpkgs.lib.removeSuffix ".nix" filename ) ( nixpkgs.lib.filter ( filename: filename != "common.nix" ) ( listFiles nixpkgs.lib.path.append usersDir username ) );
-
-    hostsByUsers = nixpkgs.lib.listToAttrs ( nixpkgs.lib.map ( username: {
-      "name" = username;
-      "value" = hostsFromUsername username;
-    } ) usernames);
-
-    generateHomeConfiguration = hostname: username:  {
-      "${username}@${hostname}" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.${nixpkgs.hostPlatform};
-        extraSpecialArgs = { inherit inputs; };
-        modules = [
-          (nixpkgs.lib.path.append usersDir "${username}/${hostname}.nix")
-        ];
-      };
-    };
-
-    generateHomeConfigurations = nixpkgs.lib.mergeAttrsList ( nixpkgs.lib.flatten ( nixpkgs.lib.mapAttrsFlatten ( username: hostname: nixpkgs.lib.map ( hostname: generateHomeConfiguration hostname username ) hostnames ) hostsByUsers ) );
+    customlib = import ./lib nixpkgs.lib;
 
     overlays = [
       inputs.talhelper.overlays.default
     ];
   in {
-    nixosConfigurations.HAL9000 = nixpkgs.lib.nixosSystem rec {
+    nixosConfigurations.HAL9000 = nixosSystem rec {
       system = "x86_64-linux";
       specialArgs = {
         inherit inputs;
@@ -59,6 +33,7 @@
           inherit system;
           config.allowUnfree = true;
         };
+        inherit customlib;
       };
       modules = [
         { nixpkgs.overlays = overlays; }
@@ -73,7 +48,7 @@
           home-manager.useUserPackages = true;
           home-manager.users.joker9944 = import ./users/joker9944/HAL9000.nix;
         }
-      ] ++ ( map (name: path.append ./modules name) ( listFiles ./modules ));
+      ] ++ ( map (name: path.append ./modules name) ( customlib.listFiles ./modules ));
     };
 
     # TODO figure this out
