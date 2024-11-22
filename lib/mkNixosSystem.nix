@@ -9,7 +9,7 @@ hostname:
 
   hostModulesPath = path.append hostsPath "${hostname}/configuration.nix";
   userModulesPath = username: path.append usersPath "${username}/${hostname}.nix";
-  customModules = ( map (name: path.append modulesPath name ) ( libUtility.listFiles modulesPath ));
+  customNixosModules = ( map ( name: path.append modulesPath name ) ( libUtility.listFiles modulesPath ));
 
   usersModules = listToAttrs ( map ( username: {
     name = username;
@@ -19,13 +19,12 @@ in nixosSystem {
   inherit system;
 
   specialArgs = {
-    inherit inputs;
+    inherit inputs libUtility;
     pkgs-unstable = import inputs.nixpkgs-unstable {
       inherit system;
       # TODO find a way to configure this somewhere else
       config.allowUnfree = true;
     };
-    inherit libUtility;
   };
 
   modules = [
@@ -43,5 +42,5 @@ in nixosSystem {
       home-manager.useUserPackages = true;
       home-manager.users = usersModules;
     }
-  ] ++ customModules;
+  ] ++ customNixosModules;
 }

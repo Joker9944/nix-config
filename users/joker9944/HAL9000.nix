@@ -44,14 +44,14 @@
 
       # TODO Move XDG_CONFIG_HOME
       bashrcExtra = ''
+        export XDG_CONFIG_HOME=~/.config
+
         # Command Completion
         source <(kubectl completion bash)
         source <(helm completion bash)
         source <(flux completion bash)
         source <(talosctl completion bash)
-        # source <(talhelper completion bash)
-
-        export XDG_CONFIG_HOME=~/.config
+        source <(talhelper completion bash)
 
         fastfetch
       '';
