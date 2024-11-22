@@ -13,7 +13,7 @@ hostname:
 
   usersModules = listToAttrs ( map ( username: {
     name = username;
-    value = import (userModulesPath username);
+    value = import ( userModulesPath username );
   }) users );
 in nixosSystem {
   inherit system;
@@ -29,10 +29,12 @@ in nixosSystem {
   };
 
   modules = [
-    { nixpkgs.overlays = overlays; }
+    {
+      nixpkgs.overlays = overlays;
+      networking.hostName = hostname;
+    }
 
-    # TODO create host default module
-    # libUtility.hostsPath
+    hostsPath
     hostModulesPath
 
     inputs.home-manager.nixosModules.home-manager {
