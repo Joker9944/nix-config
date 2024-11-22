@@ -1,7 +1,7 @@
 lib: with lib; {
-  hostsPath = ./hosts;
-  modulesPath = ./modules;
-  usersPath = ./users;
+  hostsPath = ../hosts;
+  modulesPath = ../modules;
+  usersPath = ../users;
 
   listDirs = dir: attrNames ( filterAttrs ( _: type: elem type [ "directory" ] ) ( builtins.readDir dir ));
   listFiles = dir: attrNames ( filterAttrs ( _: type: elem type [ "regular" "symlink" ] ) ( builtins.readDir dir ));

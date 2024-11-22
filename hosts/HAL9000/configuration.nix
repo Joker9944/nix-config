@@ -103,6 +103,8 @@
   # Install firefox.
   programs.firefox.enable = true;
 
+  programs._1password-gui.enable = true;
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 

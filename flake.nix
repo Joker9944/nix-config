@@ -19,57 +19,20 @@
   };
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, home-manager, ... }: with nixpkgs.lib; let
-    customlib = import ./lib nixpkgs.lib;
+    libUtility = import ./lib/utility.nix nixpkgs.lib;
 
     overlays = [
       inputs.talhelper.overlays.default
     ];
-  in {
-    nixosConfigurations.HAL9000 = nixosSystem rec {
-      system = "x86_64-linux";
-      specialArgs = {
-        inherit inputs;
-        pkgs-unstable = import nixpkgs-unstable {
-          inherit system;
-          config.allowUnfree = true;
-        };
-        inherit customlib;
-      };
-      modules = [
-        { nixpkgs.overlays = overlays; }
 
-        ./hosts/HAL9000/configuration.nix
-
-        { programs._1password-gui.enable = true; }
-
-        home-manager.nixosModules.home-manager {
-          home-manager.extraSpecialArgs = { inherit inputs; };
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.joker9944 = import ./users/joker9944/HAL9000.nix;
-        }
-      ] ++ ( map (name: path.append ./modules name) ( customlib.listFiles ./modules ));
+    mkNixosSystem = import ./lib/mkNixosSystem.nix {
+      inherit inputs libUtility overlays;
     };
-
-    # TODO figure this out
-    /*nixosConfigurations = nixpkgs.lib.listToAttrs (nixpkgs.lib.map (hostname: {
-      "name" = hostname;
-      "value" = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs; };
-        modules = [
-          { nixpkgs.overlays = overlays; }
-
-          ( nixpkgs.lib.path.append hostsDir "${hostname}/configuration.nix" )
-
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.joker9944 = import ./users/joker9944/nixos.nix;
-          }
-        ];
-      };
-    }) (listDirs hostsDir));*/
+  in {
+    nixosConfigurations.HAL9000 = mkNixosSystem "HAL9000" {
+      system = "x86_64-linux";
+      users = [ "joker9944" ];
+    };
 
     # TODO figure this out
     # https://github.com/nix-community/home-manager/issues/2954
