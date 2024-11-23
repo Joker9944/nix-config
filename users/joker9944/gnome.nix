@@ -40,7 +40,7 @@ in {
       dock-position = "LEFT";
       show-trash = false;
     };
-    "org.gnome.shell.extensions.auto-move-windows" = {
+    "org/gnome/shell/extensions/auto-move-windows" = {
       application-list = mkAutoMoveWindowsApplicationList {
         "steam.desktop" = 1;
         "discord.desktop" = 2;
