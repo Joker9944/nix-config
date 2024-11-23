@@ -72,11 +72,11 @@ in {
   environment.systemPackages = with pkgs; [
     # Clients
     home-manager
+    git
 
     # Utilities
     curl
     wget
-    git
   ];
 
   # Enable networking by default

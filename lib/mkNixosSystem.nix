@@ -3,12 +3,11 @@
 hostname:
 
 { system, users }: with inputs.nixpkgs.lib; let
-  hostsModulesPath = ../hosts;
-  nixosModulesPath = ../modules;
+  nixosModulesPath = ../modules/nixos;
   usersPath = ../users;
 
   userModulesPath = username: path.append usersPath "${username}/${hostname}.nix";
-  nixosModules = ( map ( name: path.append nixosModulesPath name ) ( libUtility.listFiles nixosModulesPath ));
+  nixosModulesPaths = ( map ( name: path.append nixosModulesPath name ) ( libUtility.listFiles nixosModulesPath ));
 
   usersModules = listToAttrs ( map ( username: {
     name = username;
@@ -27,7 +26,7 @@ in nixosSystem {
   };
 
   modules = [
-    hostsModulesPath
+    ../hosts
 
     inputs.home-manager.nixosModules.home-manager {
       home-manager.extraSpecialArgs = { inherit inputs; };
@@ -35,5 +34,5 @@ in nixosSystem {
       home-manager.useUserPackages = true;
       home-manager.users = usersModules;
     }
-  ] ++ nixosModules;
+  ] ++ nixosModulesPaths;
 }
