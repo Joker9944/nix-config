@@ -8,7 +8,7 @@
   imports =[
     ./hardware-configuration.nix
     ./pipewire.nix
-    ./mount.nix
+    ./fstab.nix
   ];
 
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.

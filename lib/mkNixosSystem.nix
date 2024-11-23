@@ -3,13 +3,12 @@
 hostname:
 
 { system, users }: with inputs.nixpkgs.lib; let
-  hostsPath = ../hosts;
-  modulesPath = ../modules;
+  hostsModulesPath = ../hosts;
+  nixosModulesPath = ../modules;
   usersPath = ../users;
 
-  hostModulesPath = path.append hostsPath "${hostname}/configuration.nix";
   userModulesPath = username: path.append usersPath "${username}/${hostname}.nix";
-  customNixosModules = ( map ( name: path.append modulesPath name ) ( libUtility.listFiles modulesPath ));
+  nixosModules = ( map ( name: path.append nixosModulesPath name ) ( libUtility.listFiles nixosModulesPath ));
 
   usersModules = listToAttrs ( map ( username: {
     name = username;
@@ -19,7 +18,7 @@ in nixosSystem {
   inherit system;
 
   specialArgs = {
-    inherit inputs libUtility;
+    inherit inputs libUtility hostname overlays;
     pkgs-unstable = import inputs.nixpkgs-unstable {
       inherit system;
       # TODO find a way to configure this somewhere else
@@ -28,13 +27,7 @@ in nixosSystem {
   };
 
   modules = [
-    {
-      nixpkgs.overlays = overlays;
-      networking.hostName = hostname;
-    }
-
-    hostsPath
-    hostModulesPath
+    hostsModulesPath
 
     inputs.home-manager.nixosModules.home-manager {
       home-manager.extraSpecialArgs = { inherit inputs; };
@@ -42,5 +35,5 @@ in nixosSystem {
       home-manager.useUserPackages = true;
       home-manager.users = usersModules;
     }
-  ] ++ customNixosModules;
+  ] ++ nixosModules;
 }

@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ lib, config, pkgs, hostname, overlays, ... }:
 
 let
   locale = {
@@ -8,6 +8,15 @@ let
     de_CH = "de_CH.UTF-8";
   };
 in {
+  # Import matching host modules
+  imports = [
+    ( lib.path.append ./. hostname )
+  ];
+
+  # Set args inherited from mkNixosSystem
+  nixpkgs.overlays = overlays;
+  networking.hostName = hostname;
+
   # Enable experimental flake support and experimental nix command
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
