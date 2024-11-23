@@ -38,10 +38,7 @@
       enable = true;
       enableCompletion = true;
 
-      # TODO Move XDG_CONFIG_HOME
       bashrcExtra = ''
-        export XDG_CONFIG_HOME=~/.config
-
         # Command Completion
         source <(kubectl completion bash)
         source <(helm completion bash)
@@ -53,8 +50,10 @@
       '';
 
       shellAliases = {
-        ls = "ls -ah";
-        ll = "ls -ahl";
+        ls = "ls --color=auto --human-readable";
+        ll = "ls --color=auto --human-readable -l --group-directories-first";
+        la = "ls --color=auto --human-readable -l --all --group-directories-first";
+        grep = "grep --color=auto";
         ".." = "cd ..";
         "..." = "cd ../..";
         cls = "clear";
@@ -62,6 +61,8 @@
         sops-decrypt = "sops --indent 2 --decrypt --in-place";
         mktar = "tar -czvf";
         untar = "tar -xvf";
+        nix-update = "sudo nixos-rebuild switch --flake /home/joker9944/Workspace/nix-config";
+        home-update = "home-manager switch --flake /home/joker9944/Workspace/nix-config";
       };
     };
 
