@@ -13,7 +13,7 @@ in {
     ( lib.path.append ./. hostname )
   ];
 
-  # Set args inherited from mkNixosSystem
+  # Set args inherited from mkNixosConfiguration
   nixpkgs.overlays = overlays;
   networking.hostName = hostname;
 

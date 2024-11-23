@@ -18,24 +18,36 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, home-manager, ... }: with nixpkgs.lib; let
-    libUtility = import ./lib/utility.nix nixpkgs.lib;
+  outputs = inputs@{ ... }: let
+
+    nixosModules = [ ];
+
+    homeModules = [
+      inputs.home-manager-xdg-autostart.homeManagerModules.xdg-autostart
+    ];
 
     overlays = [
       inputs.talhelper.overlays.default
     ];
 
-    mkNixosSystem = import ./lib/mkNixosSystem.nix {
-      inherit inputs libUtility overlays;
+    libUtility = import ./lib/utility.nix inputs.nixpkgs.lib;
+    mkNixosConfiguration = import ./lib/mkNixosConfiguration.nix {
+      inherit inputs libUtility nixosModules overlays;
+    };
+    mkHomeConfiguration = import ./lib/mkHomeConfiguration.nix {
+      inherit inputs libUtility homeModules overlays;
     };
   in {
-    nixosConfigurations.HAL9000 = mkNixosSystem "HAL9000" {
+    nixosConfigurations.HAL9000 = mkNixosConfiguration {
       system = "x86_64-linux";
-      users = [ "joker9944" ];
+      hostname = "HAL9000";
+      usernames = [ "joker9944" ];
     };
 
-    # TODO figure this out
-    # https://github.com/nix-community/home-manager/issues/2954
-    # homeConfigurations = generateHomeConfigurations;
+    homeConfigurations."joker9944@HAL9000" = mkHomeConfiguration {
+      system = "x86_64-linux";
+      hostname = "HAL9000";
+      username = "joker9944";
+    };
   };
 }

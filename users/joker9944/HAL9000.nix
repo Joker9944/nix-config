@@ -1,11 +1,7 @@
 { lib, config, pkgs, inputs, ...}:
 
 {
-  home.username = "joker9944";
-  home.homeDirectory = "/home/joker9944";
-
   imports = [
-    inputs.home-manager-xdg-autostart.homeManagerModules.xdg-autostart
     ./gnome.nix
     ./xdg.nix
   ];
