@@ -67,6 +67,14 @@ in {
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  # Set default desktop environment
+  services.xserver = {
+    enable = true;
+
+    displayManager.gdm.enable = true;
+    desktopManager.gnome.enable = true;
+  };
+
   # Enable default programs
   programs = {
     firefox.enable = true;
