@@ -22,8 +22,8 @@
     gnomeExtensions.clipboard-history
     gnomeExtensions.auto-move-windows
     gnomeExtensions.dash-to-dock
-    gnomeExtensions.vertical-workspaces
     dconf-editor
+    gparted
   ];
 
   environment.variables = {
