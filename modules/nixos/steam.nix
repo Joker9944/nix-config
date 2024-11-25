@@ -7,6 +7,8 @@
       remotePlay.openFirewall = true;
       localNetworkGameTransfers.openFirewall = true;
       gamescopeSession.enable = false;
+
+      extraCompatPackages = with pkgs; [ proton-ge-bin ];
     };
     gamemode = {
       enable = true;
