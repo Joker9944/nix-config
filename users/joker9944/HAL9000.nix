@@ -30,6 +30,8 @@
     age
 
     kanidm
+
+    ventoy
   ];
 
   programs = {
