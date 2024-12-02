@@ -4,6 +4,7 @@
   imports = [
     ./gnome.nix
     ./xdg.nix
+    ./kanidm.nix
   ];
 
   home.packages = with pkgs; [
@@ -28,8 +29,6 @@
 
     sops
     age
-
-    kanidm
 
     ventoy
   ];
