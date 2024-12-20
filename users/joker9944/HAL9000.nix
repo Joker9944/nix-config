@@ -5,6 +5,7 @@
     ./gnome.nix
     ./xdg.nix
     ./kanidm.nix
+    ./rclone.nix
   ];
 
   home.packages = with pkgs; [
@@ -19,6 +20,8 @@
     lutris
     discord
     telegram-desktop
+    vlc
+    inkscape
 
     kubectl
     fluxcd
@@ -39,8 +42,7 @@
       enable = true;
       enableCompletion = true;
 
-      bashrcExtra = ''
-        # Command Completion
+      initExtra = ''
         source <(kubectl completion bash)
         source <(helm completion bash)
         source <(flux completion bash)

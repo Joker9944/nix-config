@@ -11,6 +11,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager-xdg-autostart.url = "github:Zocker1999NET/home-manager-xdg-autostart";
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # external pkgs
     talhelper = {
       url = "github:budimanjojo/talhelper";
@@ -20,10 +24,13 @@
 
   outputs = inputs@{ ... }: let
 
-    nixosModules = [ ];
+    nixosModules = [
+      inputs.sops-nix.nixosModules.sops
+    ];
 
     homeModules = [
       inputs.home-manager-xdg-autostart.homeManagerModules.xdg-autostart
+      inputs.sops-nix.homeManagerModules.sops
     ];
 
     overlays = [

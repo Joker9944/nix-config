@@ -10,7 +10,7 @@ in {
       group = username;
       homeMode = "750";
       description = "Felix von Arx";
-      extraGroups = [ "networkmanager" "wheel" ];
+      extraGroups = [ "networkmanager" "wheel" "keys" ];
     };
 
     groups.${username} = {

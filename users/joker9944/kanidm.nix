@@ -8,7 +8,7 @@
 
   # Kanidm configuration file
   # https://kanidm.github.io/kanidm/master/client_tools.html#kanidm-configuration
-  home.file.".config/kanidm".text = ''
+  xdg.configFile."kanidm".text = ''
     uri = "https://idm.vonarx.online"
   '';
 }

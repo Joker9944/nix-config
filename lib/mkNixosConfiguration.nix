@@ -9,6 +9,7 @@
 
   usersNixosModulePaths = map ( username: userNixosModulePath username ) usernames;
   userNixosModulePath = username: path.append usersPath "${username}/nixos.nix";
+
 in nixosSystem {
   inherit system;
 
