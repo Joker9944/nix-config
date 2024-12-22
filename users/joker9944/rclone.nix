@@ -1,12 +1,12 @@
 { config, pkgs, ...}:
 
 with pkgs; let
-  mkdirBin = "${ pkgs.coreutils }/bin/mkdir";
+  mkdirBin = "${ coreutils }/bin/mkdir";
   oidcAddBin = "${ oidc-agent }/bin/oidc-add";
-  rcloneBin = "${ pkgs.rclone }/bin/rclone";
-  fusermountBin = "${ pkgs.fuse }/bin/fusermount";
+  rcloneBin = "${ rclone }/bin/rclone";
+  fusermountBin = "${ fuse }/bin/fusermount";
 in {
-  home.packages = with pkgs; [ rclone ];
+  home.packages = with pkgs; [ rclone oidc-agent ];
 
   services.oidc-agent.enable = true;
 
@@ -20,10 +20,7 @@ in {
 
   sops.secrets."oidc-agent/owncloud/key".path = "%r/oidc-agent/owncloud_key.txt";
 
-  programs.bash.shellAliases = {
-    oidc-gen-owncloud = "oidc-gen --pub --flow=code --issuer=https://idm.vonarx.online/oauth2/openid/owncloud --client-id=owncloud --scope=\"openid profile email groups\" " + 
-      "--redirect-uri=http://localhost:12345 --pw-file=\"$XDG_RUNTIME_DIR/oidc-agent/owncloud_key.txt\" owncloud";
-  };
+  programs.bash.shellAliases.oidc-gen-owncloud = "oidc-gen --pub --issuer=https://idm.vonarx.online/oauth2/openid/owncloud --client-id=owncloud --redirect-uri=http://localhost:12345 --scope=\"openid profile email groups offline_access\" --pw-file=\"$XDG_RUNTIME_DIR/oidc-agent/owncloud_key.txt\" owncloud";
 
   systemd.user = {
     services.rclone-mount-owncloud-file-joker9944 = {
@@ -43,7 +40,7 @@ in {
           "${ mkdirBin } --parents \"%h/.local/mount/ownCloud\""
           "${ oidcAddBin } --pw-file=\"%t/oidc-agent/owncloud_key.txt\" owncloud"
         ];
-        ExecStart = "${ rcloneBin } --config=\"${ config.xdg.configHome }/rclone/owncloud.conf\" --vfs-cache-mode writes mount \"owncloud:files/joker9944\" \"%h/.local/mount/ownCloud\"";
+        ExecStart = "${ rcloneBin } --config=\"${ config.xdg.configHome }/rclone/owncloud.conf\" --vfs-cache-mode=writes --no-checksum mount \"owncloud:files/joker9944\" \"%h/.local/mount/ownCloud\"";
         ExecStop = "${ fusermountBin } -u \"%h/.local/mount/ownCloud\"";
       };
 
