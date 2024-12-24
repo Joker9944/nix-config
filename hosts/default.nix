@@ -31,6 +31,14 @@ in {
     };
   };
 
+  # Enable automatic upgrades
+  system.autoUpgrade = {
+    enable = true;
+    persistent = true;
+    flake = "github:Joker9944/nix-config";
+    dates = "daily";
+  };
+
   # Set default session environment variables
   environment.sessionVariables = {
     XDG_CACHE_HOME  = "$HOME/.cache";
