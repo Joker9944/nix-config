@@ -1,0 +1,19 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard",
+    "schedule:daily",
+    ":automergeMinor"
+  ],
+  "nix": {
+    "enabled": true
+  },
+  "major": {
+    "dependencyDashboardApproval": true
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "commitMessageTopic": "flake.lock"
+  }
+}
