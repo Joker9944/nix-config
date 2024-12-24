@@ -15,6 +15,7 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    flake-utils.url = "github:numtide/flake-utils";
     # external pkgs
     talhelper = {
       url = "github:budimanjojo/talhelper";
@@ -22,7 +23,7 @@
     };
   };
 
-  outputs = inputs@{ ... }: let
+  outputs = inputs@{ self, nixpkgs, ... }: let
 
     nixosModules = [
       inputs.sops-nix.nixosModules.sops
@@ -37,24 +38,38 @@
       inputs.talhelper.overlays.default
     ];
 
-    libUtility = import ./lib/utility.nix inputs.nixpkgs.lib;
+    utility = import ./lib/utility.nix nixpkgs.lib;
     mkNixosConfiguration = import ./lib/mkNixosConfiguration.nix {
-      inherit inputs libUtility nixosModules overlays;
+      inherit inputs utility nixosModules;
     };
     mkHomeConfiguration = import ./lib/mkHomeConfiguration.nix {
-      inherit inputs libUtility homeModules overlays;
+      inherit inputs utility homeModules;
     };
-  in {
+  in inputs.flake-utils.lib.eachDefaultSystem ( system: let pkgs = nixpkgs.legacyPackages.${ system }; in {
+
+    packages = {
+      firefox-profile-switcher-connector = pkgs.callPackage ./pkgs/firefox-profile-switcher-connector.nix { };
+    };
+
+  }) // {
+
+    overlays = {
+      firefox-profile-switcher-connector = final: prev: { inherit ( self.packages.${ prev.system } ) firefox-profile-switcher-connector; };
+    };
+
     nixosConfigurations.HAL9000 = mkNixosConfiguration {
       system = "x86_64-linux";
       hostname = "HAL9000";
       usernames = [ "joker9944" ];
+      overlays = overlays ++ ( utility.attrsToValuesList self.overlays );
     };
 
     homeConfigurations."joker9944@HAL9000" = mkHomeConfiguration {
       system = "x86_64-linux";
       hostname = "HAL9000";
       username = "joker9944";
+      overlays = overlays ++ ( utility.attrsToValuesList self.overlays );
     };
+
   };
 }

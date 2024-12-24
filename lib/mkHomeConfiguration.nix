@@ -1,15 +1,15 @@
-{ inputs, libUtility, homeModules, overlays }:
+{ inputs, utility, homeModules }:
 
-{ system, hostname, username }: with inputs.nixpkgs.lib; let
+{ system, hostname, username, overlays }: with inputs.nixpkgs.lib; let
   usersPath = ../users;
   customHomeManagerModulesPath = ../modules/home;
 
-  customHomeManagerModulesPaths = ( map ( filename: path.append customHomeManagerModulesPath filename ) ( libUtility.listFiles customHomeManagerModulesPath ));
+  customHomeManagerModulesPaths = ( map ( filename: path.append customHomeManagerModulesPath filename ) ( utility.listFiles customHomeManagerModulesPath ));
 
 in inputs.home-manager.lib.homeManagerConfiguration {
   pkgs = inputs.nixpkgs.legacyPackages.${system};
   extraSpecialArgs = {
-    inherit inputs libUtility overlays hostname username;
+    inherit inputs utility overlays hostname username;
   };
   modules = [ usersPath ] ++ homeModules ++ customHomeManagerModulesPaths;
 }
