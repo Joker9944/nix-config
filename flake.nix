@@ -25,26 +25,29 @@
 
   outputs = inputs@{ self, nixpkgs, ... }: let
 
+    lib = nixpkgs.lib;
+
     nixosModules = [
       inputs.sops-nix.nixosModules.sops
-    ];
+    ] ++ ( lib.mapAttrsToList ( _: value: value ) self.nixosModules );
 
     homeModules = [
       inputs.home-manager-xdg-autostart.homeManagerModules.xdg-autostart
       inputs.sops-nix.homeManagerModules.sops
-    ];
+    ] ++ ( lib.mapAttrsToList ( _: value: value ) self.homeModules );
 
     overlays = [
       inputs.talhelper.overlays.default
-    ];
+    ] ++ ( lib.mapAttrsToList ( _: value: value ) self.overlays );
 
-    utility = import ./lib/utility.nix nixpkgs.lib;
+    utility = import ./lib/utility.nix lib;
     mkNixosConfiguration = import ./lib/mkNixosConfiguration.nix {
-      inherit inputs utility nixosModules;
+      inherit inputs utility;
     };
     mkHomeConfiguration = import ./lib/mkHomeConfiguration.nix {
-      inherit inputs utility homeModules;
+      inherit inputs utility;
     };
+
   in inputs.flake-utils.lib.eachDefaultSystem ( system: let pkgs = nixpkgs.legacyPackages.${ system }; in {
 
     packages = {
@@ -57,18 +60,21 @@
       firefox-profile-switcher-connector = final: prev: { inherit ( self.packages.${ prev.system } ) firefox-profile-switcher-connector; };
     };
 
+    nixosModules = utility.importFiles ./modules/nixos;
+    homeModules = utility.importFiles ./modules/home;
+
     nixosConfigurations.HAL9000 = mkNixosConfiguration {
+      inherit overlays nixosModules;
       system = "x86_64-linux";
       hostname = "HAL9000";
       usernames = [ "joker9944" ];
-      overlays = overlays ++ ( utility.attrsToValuesList self.overlays );
     };
 
     homeConfigurations."joker9944@HAL9000" = mkHomeConfiguration {
+      inherit overlays homeModules;
       system = "x86_64-linux";
       hostname = "HAL9000";
       username = "joker9944";
-      overlays = overlays ++ ( utility.attrsToValuesList self.overlays );
     };
 
   };

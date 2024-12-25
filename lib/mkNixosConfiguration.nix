@@ -1,11 +1,9 @@
-{ inputs, utility, nixosModules }:
+{ inputs, utility }:
 
-{ system, hostname, usernames, overlays }: with inputs.nixpkgs.lib; let
+{ system, hostname, usernames, overlays, nixosModules }: with inputs.nixpkgs.lib; let
+
   hostsPath = ../hosts;
-  customNixosModulesPath = ../modules/nixos;
   usersPath = ../users;
-
-  customNixosModulesPaths = ( map ( filename: path.append customNixosModulesPath filename ) ( utility.listFiles customNixosModulesPath ));
 
   usersNixosModulePaths = map ( username: userNixosModulePath username ) usernames;
   userNixosModulePath = username: path.append usersPath "${username}/nixos.nix";
@@ -22,5 +20,5 @@ in nixosSystem {
     };
   };
 
-  modules = [ hostsPath ] ++ nixosModules ++ customNixosModulesPaths ++ usersNixosModulePaths;
+  modules = [ hostsPath ] ++ nixosModules ++ usersNixosModulePaths;
 }
