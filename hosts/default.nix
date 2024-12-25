@@ -39,6 +39,13 @@ in {
     dates = "daily";
   };
 
+  # Enable automatic nix store garbage collection
+  nix.gc = {
+    automatic = true;
+    persistent = true;
+    dates = "weekly";
+  };
+
   # Set default session environment variables
   environment.sessionVariables = {
     XDG_CACHE_HOME  = "$HOME/.cache";
