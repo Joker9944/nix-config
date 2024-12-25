@@ -14,6 +14,14 @@ in {
   };
   nixpkgs.overlays = overlays;
 
+  # Enable automatic upgrades
+  services.betterAutoUpgrade = {
+    enable = true;
+    persistent = true;
+    flake = "github:Joker9944/nix-config";
+    frequency = "daily";
+  };
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
