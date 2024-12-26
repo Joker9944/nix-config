@@ -1,4 +1,4 @@
-{ lib, config, pkgs, inputs, ...}:
+{ lib, config, pkgs, pkgs-unstable, inputs, ...}:
 
 {
   imports = [
@@ -26,7 +26,7 @@
     kubectl
     fluxcd
     kubernetes-helm
-    talosctl
+    pkgs-unstable.talosctl
     talhelper
     lens
 
