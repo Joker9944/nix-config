@@ -108,6 +108,10 @@ in {
     # Utilities
     curl
     wget
+
+    # Languages
+    python3
+    openjdk
   ];
 
   # Enable networking by default
