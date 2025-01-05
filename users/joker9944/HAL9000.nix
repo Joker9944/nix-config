@@ -12,6 +12,9 @@
     fastfetch
     btop
     vscode
+    jetbrains.idea-ultimate
+    jetbrains.pycharm-professional
+    jetbrains.webstorm
 
     libreoffice
     xournalpp
