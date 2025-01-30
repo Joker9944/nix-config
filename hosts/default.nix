@@ -108,6 +108,8 @@ in {
     # Utilities
     curl
     wget
+    jq
+    yq
 
     # Languages
     python3
