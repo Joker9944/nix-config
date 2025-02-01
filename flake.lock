@@ -170,11 +170,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1738035934,
-        "narHash": "sha256-F/aKgPVGNHh2GaWByMaCy6CAG4Wj+s7jdocuUClJVQI=",
+        "lastModified": 1738384273,
+        "narHash": "sha256-KlFlrSheq/8W5i+Qh1ERH45ySs31xbA2Ed2M2d9R49s=",
         "owner": "budimanjojo",
         "repo": "talhelper",
-        "rev": "0b04684857f60ebff327575ed58ace16c3c25fc5",
+        "rev": "5261f6e9bc8cb7fea002cc616ba4d924645d5596",
         "type": "github"
       },
       "original": {
