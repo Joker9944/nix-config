@@ -25,6 +25,7 @@
     telegram-desktop
     vlc
     inkscape
+    audacity
 
     kubectl
     fluxcd
