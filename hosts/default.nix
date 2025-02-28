@@ -94,6 +94,7 @@ in {
   programs = {
     firefox.enable = true;
     _1password-gui.enable = true;
+    ffmpeg.enable = true;
     # Disable nano and switch to vim as default
     nano.enable = false;
     vim.enable = true;
