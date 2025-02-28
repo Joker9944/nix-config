@@ -46,6 +46,12 @@ in {
     dates = "weekly";
   };
 
+  # Enable automatic nix store optimization
+  nix.optimise = {
+    automatic = true;
+    dates = [ "weekly" ];
+  };
+
   # Set default session environment variables
   environment.sessionVariables = {
     XDG_CACHE_HOME  = "$HOME/.cache";
