@@ -18,7 +18,10 @@
       capSysNice = true;
     };
   };
+
   environment = with pkgs; {
     systemPackages = [ mangohud ];
   };
+
+  services.udev.dualsenseFix.enable = true;
 }
