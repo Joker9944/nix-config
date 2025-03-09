@@ -18,8 +18,8 @@
     flake-utils.url = "github:numtide/flake-utils";
     # external pkgs
     talhelper = {
-      url = "github:budimanjojo/talhelper";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:budimanjojo/talhelper/v3.0.19";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
   };
 
