@@ -115,6 +115,7 @@ in {
     # Utilities
     curl
     wget
+    dig
     jq
     yq
 
