@@ -118,6 +118,7 @@ in {
     dig
     jq
     yq
+    openssl
 
     # Languages
     python3
