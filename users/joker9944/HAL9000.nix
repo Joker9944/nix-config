@@ -11,6 +11,7 @@
   home.packages = with pkgs; [
     fastfetch
     btop
+
     vscode
     jetbrains.idea-ultimate
     jetbrains.pycharm-professional
@@ -18,14 +19,17 @@
 
     libreoffice
     xournalpp
+    inkscape
+    audacity
 
     spotify
     lutris
+    vlc
+
     discord
     telegram-desktop
-    vlc
-    inkscape
-    audacity
+
+    nextcloud-client
 
     kubectl
     fluxcd
