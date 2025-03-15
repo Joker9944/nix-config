@@ -30,6 +30,7 @@
     telegram-desktop
 
     nextcloud-client
+    minio-client
 
     kubectl
     fluxcd
