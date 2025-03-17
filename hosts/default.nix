@@ -125,6 +125,13 @@ in {
     openjdk
   ];
 
+  fonts.packages = with pkgs; [
+    lato
+    roboto
+    texlivePackages.opensans
+    texlivePackages.nunito
+  ];
+
   # Enable networking by default
   networking.networkmanager.enable = true;
 
