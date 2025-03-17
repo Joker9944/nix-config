@@ -18,6 +18,10 @@
     jetbrains.webstorm
 
     libreoffice
+    hunspell
+    hunspellDicts.en_US
+    hunspellDicts.de_CH
+
     xournalpp
     inkscape
     audacity
