@@ -2,7 +2,7 @@
 
 {
   home.packages = with pkgs; [
-    kanidm
+    kanidm_1_5
     openldap
   ];
 
