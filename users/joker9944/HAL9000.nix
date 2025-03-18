@@ -11,6 +11,7 @@
   home.packages = with pkgs; [
     fastfetch
     btop
+    imagemagick
 
     vscode
     jetbrains.idea-ultimate
