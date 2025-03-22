@@ -23,6 +23,7 @@
     hunspellDicts.en_US
     hunspellDicts.de_CH
 
+    joplin-desktop
     xournalpp
     inkscape
     audacity
