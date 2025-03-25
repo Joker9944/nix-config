@@ -33,23 +33,23 @@ in {
 
   # Enable automatic upgrades
   system.autoUpgrade = {
-    enable = true;
+    enable = lib.mkDefault true;
     persistent = true;
     flake = "github:Joker9944/nix-config";
-    dates = "daily";
+    dates = lib.mkDefault "daily";
   };
 
   # Enable automatic nix store garbage collection
   nix.gc = {
-    automatic = true;
+    automatic = lib.mkDefault true;
     persistent = true;
-    dates = "weekly";
+    dates = lib.mkDefault "weekly";
   };
 
   # Enable automatic nix store optimization
   nix.optimise = {
-    automatic = true;
-    dates = [ "weekly" ];
+    automatic = lib.mkDefault true;
+    dates = lib.mkDefault [ "weekly" ];
   };
 
   # Set default session environment variables
@@ -79,11 +79,11 @@ in {
 
   # Set deault keymap
   services.xserver.xkb = with locale; {
-    layout = de;
-    variant = us;
+    layout = lib.mkDefault de;
+    variant = lib.mkDefault us;
   };
 
-  console.keyMap = locale.us;
+  console.keyMap = lib.mkDefault locale.us;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -98,13 +98,13 @@ in {
 
   # Enable default programs
   programs = {
-    firefox.enable = true;
-    _1password-gui.enable = true;
-    ffmpeg.enable = true;
+    firefox.enable = lib.mkDefault true;
+    _1password-gui.enable = lib.mkDefault true;
+    ffmpeg.enable = lib.mkDefault true;
     # Disable nano and switch to vim as default
-    nano.enable = false;
-    vim.enable = true;
-    vim.defaultEditor = true;
+    nano.enable = lib.mkDefault false;
+    vim.enable = lib.mkDefault true;
+    vim.defaultEditor = lib.mkDefault true;
   };
 
   environment.systemPackages = with pkgs; [
@@ -133,12 +133,15 @@ in {
   ];
 
   # Enable networking by default
-  networking.networkmanager.enable = true;
+  networking.networkmanager.enable = lib.mkDefault true;
+
+  # Enable cups by default
+  services.printing.enable = lib.mkDefault true;
 
   # Enable PipeWire by default
-  security.rtkit.enable = true;
+  security.rtkit.enable = lib.mkDefault true;
   services.pipewire = {
-    enable = true;
+    enable = lib.mkDefault true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
