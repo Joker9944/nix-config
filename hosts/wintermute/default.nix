@@ -7,8 +7,11 @@
   ];
 
   services.xserver.xkb = {
-    variant = "ch";
+    layout = "ch";
+    variant = null;
   };
+
+  console.keyMap = "ch";
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
