@@ -8,7 +8,7 @@
 
   services.xserver.xkb = {
     layout = "ch";
-    variant = null;
+    variant = "";
   };
 
   console.keyMap = "ch";
