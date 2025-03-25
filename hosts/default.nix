@@ -83,7 +83,7 @@ in {
     variant = lib.mkDefault us;
   };
 
-  console.keyMap = lib.mkDefault locale.us;
+  console.useXkbConfig = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
