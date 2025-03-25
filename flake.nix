@@ -16,6 +16,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-utils.url = "github:numtide/flake-utils";
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # external pkgs
     talhelper = {
       url = "github:budimanjojo/talhelper/v3.0.19";
@@ -28,6 +32,7 @@
     lib = nixpkgs.lib;
 
     nixosModules = [
+      inputs.disko.nixosModules.disko
       inputs.sops-nix.nixosModules.sops
     ] ++ ( lib.mapAttrsToList ( _: value: value ) self.nixosModules );
 
@@ -68,6 +73,17 @@
       system = "x86_64-linux";
       hostname = "HAL9000";
       usernames = [ "joker9944" ];
+      disks = [ "/dev/nvme1n1" "/dev/nvme0n1" ];
+      swapSize = "40G";
+    };
+
+    nixosConfigurations.wintermute = mkNixosConfiguration {
+      inherit overlays nixosModules;
+      system = "x86_64-linux";
+      hostname = "wintermute";
+      usernames = [ "joker9944" ];
+      disks = [ "/dev/nvme0n1" ];
+      swapSize = "20G";
     };
 
     homeConfigurations."joker9944@HAL9000" = mkHomeConfiguration {

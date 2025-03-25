@@ -1,6 +1,6 @@
 { inputs, utility }:
 
-{ system, hostname, usernames, overlays, nixosModules }: with inputs.nixpkgs.lib; let
+{ system, hostname, usernames, overlays, disks, swapSize, nixosModules }: with inputs.nixpkgs.lib; let
 
   hostsPath = ../hosts;
   usersPath = ../users;
@@ -12,7 +12,7 @@ in nixosSystem {
   inherit system;
 
   specialArgs = {
-    inherit inputs utility hostname overlays;
+    inherit inputs utility hostname overlays disks swapSize;
     pkgs-unstable = import inputs.nixpkgs-unstable {
       inherit system;
       # TODO find a way to configure this somewhere else
