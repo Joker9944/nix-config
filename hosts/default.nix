@@ -119,6 +119,7 @@ in {
     jq
     yq
     openssl
+    pciutils
 
     # Languages
     python3
