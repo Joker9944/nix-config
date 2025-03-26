@@ -5,6 +5,7 @@ let
 in {
   imports = [
     ./config/bash.nix
+    ./config/cloud.nix
     ./config/gnome.nix
     ./config/kanidm.nix
     ./config/xdg.nix
