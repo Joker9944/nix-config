@@ -19,6 +19,7 @@ in {
     jetbrains.idea-ultimate
     jetbrains.pycharm-professional
     jetbrains.webstorm
+    meld
 
     libreoffice
     hunspell
