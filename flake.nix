@@ -93,5 +93,12 @@
       username = "joker9944";
     };
 
+    homeConfigurations."joker9944@wintermute" = mkHomeConfiguration {
+      inherit overlays homeModules;
+      system = "x86_64-linux";
+      hostname = "wintermute";
+      username = "joker9944";
+    };
+
   };
 }
