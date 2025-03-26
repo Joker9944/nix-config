@@ -9,10 +9,5 @@
       desktopName = "Steam";
       exec = "steam %U";
     };
-    telegram = makeDesktopItem {
-      name = "telegram";
-      desktopName = "Telegram";
-      exec = "telegram-desktop -- %u";
-    };
   };
 }

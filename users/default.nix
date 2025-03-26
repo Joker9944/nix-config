@@ -1,10 +1,10 @@
-{ lib, config, hostname, username, overlays, ... }:
+{ lib, config, username, overlays, ... }:
 
 let
   userSecrets = lib.path.append ./. "${ username }/secrets.yaml";
 in {
   imports = [
-    ( lib.path.append ./. "${ username }/${ hostname }.nix" )
+    ( lib.path.append ./. username )
   ];
 
   # Set args inherited from mkHomeConfiguration

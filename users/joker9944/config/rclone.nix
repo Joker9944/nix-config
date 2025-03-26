@@ -6,7 +6,7 @@ with pkgs; let
   rcloneBin = "${ rclone }/bin/rclone";
   fusermountBin = "${ fuse }/bin/fusermount";
 in {
-  home.packages = with pkgs; [ rclone oidc-agent ];
+  home.packages = with pkgs; [ rclone ];
 
   services.oidc-agent.enable = true;
 
