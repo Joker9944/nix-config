@@ -1,6 +1,4 @@
-{ pkgs, ...}:
-
-{
+{pkgs, ...}: {
   home.packages = with pkgs; [
     kanidm_1_5
     openldap

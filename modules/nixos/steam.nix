@@ -1,16 +1,17 @@
-{ lib, config, pkgs, ... }:
-
 {
-
+  lib,
+  config,
+  pkgs,
+  ...
+}: {
   config = lib.mkIf config.programs.steam.enable {
-
     programs = {
       steam = {
         remotePlay.openFirewall = true;
         localNetworkGameTransfers.openFirewall = true;
         gamescopeSession.enable = false;
 
-        extraCompatPackages = with pkgs; [ proton-ge-bin ];
+        extraCompatPackages = with pkgs; [proton-ge-bin];
       };
       gamemode = {
         enable = true;
@@ -22,11 +23,9 @@
     };
 
     environment = with pkgs; {
-      systemPackages = [ mangohud ];
+      systemPackages = [mangohud];
     };
 
     services.udev.dualsenseFix.enable = true;
-
   };
-
 }

@@ -3,7 +3,7 @@
 
   inputs = {
     # nix pkgs
-    nixpkgs.url= "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     # nix helpers
     home-manager = {
@@ -27,23 +27,32 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, ... }: let
-
+  outputs = inputs @ {
+    self,
+    nixpkgs,
+    ...
+  }: let
     lib = nixpkgs.lib;
 
-    nixosModules = [
-      inputs.disko.nixosModules.disko
-      inputs.sops-nix.nixosModules.sops
-    ] ++ ( lib.mapAttrsToList ( _: value: value ) self.nixosModules );
+    nixosModules =
+      [
+        inputs.disko.nixosModules.disko
+        inputs.sops-nix.nixosModules.sops
+      ]
+      ++ (lib.mapAttrsToList (_: value: value) self.nixosModules);
 
-    homeModules = [
-      inputs.home-manager-xdg-autostart.homeManagerModules.xdg-autostart
-      inputs.sops-nix.homeManagerModules.sops
-    ] ++ ( lib.mapAttrsToList ( _: value: value ) self.homeModules );
+    homeModules =
+      [
+        inputs.home-manager-xdg-autostart.homeManagerModules.xdg-autostart
+        inputs.sops-nix.homeManagerModules.sops
+      ]
+      ++ (lib.mapAttrsToList (_: value: value) self.homeModules);
 
-    overlays = [
-      inputs.talhelper.overlays.default
-    ] ++ ( lib.mapAttrsToList ( _: value: value ) self.overlays );
+    overlays =
+      [
+        inputs.talhelper.overlays.default
+      ]
+      ++ (lib.mapAttrsToList (_: value: value) self.overlays);
 
     utility = import ./lib/utility.nix lib;
     mkNixosConfiguration = import ./lib/mkNixosConfiguration.nix {
@@ -52,55 +61,54 @@
     mkHomeConfiguration = import ./lib/mkHomeConfiguration.nix {
       inherit inputs utility;
     };
+  in
+    inputs.flake-utils.lib.eachDefaultSystem (system: let
+      pkgs = nixpkgs.legacyPackages.${system};
+    in {
+      packages = {
+        firefox-profile-switcher-connector = pkgs.callPackage ./pkgs/firefox-profile-switcher-connector.nix {};
+      };
 
-  in inputs.flake-utils.lib.eachDefaultSystem ( system: let pkgs = nixpkgs.legacyPackages.${ system }; in {
+      formatter = pkgs.alejandra;
+    })
+    // {
+      overlays = {
+        firefox-profile-switcher-connector = final: prev: {inherit (self.packages.${prev.system}) firefox-profile-switcher-connector;};
+      };
 
-    packages = {
-      firefox-profile-switcher-connector = pkgs.callPackage ./pkgs/firefox-profile-switcher-connector.nix { };
+      nixosModules = utility.importFiles ./modules/nixos;
+      homeModules = utility.importFiles ./modules/home;
+
+      nixosConfigurations.HAL9000 = mkNixosConfiguration {
+        inherit overlays nixosModules;
+        system = "x86_64-linux";
+        hostname = "HAL9000";
+        usernames = ["joker9944"];
+        disks = ["/dev/nvme1n1" "/dev/nvme0n1"];
+        swapSize = "40G";
+      };
+
+      nixosConfigurations.wintermute = mkNixosConfiguration {
+        inherit overlays nixosModules;
+        system = "x86_64-linux";
+        hostname = "wintermute";
+        usernames = ["joker9944"];
+        disks = ["/dev/nvme0n1"];
+        swapSize = "20G";
+      };
+
+      homeConfigurations."joker9944@HAL9000" = mkHomeConfiguration {
+        inherit overlays homeModules;
+        system = "x86_64-linux";
+        hostname = "HAL9000";
+        username = "joker9944";
+      };
+
+      homeConfigurations."joker9944@wintermute" = mkHomeConfiguration {
+        inherit overlays homeModules;
+        system = "x86_64-linux";
+        hostname = "wintermute";
+        username = "joker9944";
+      };
     };
-
-    formatter = pkgs.alejandra;
-
-  }) // {
-
-    overlays = {
-      firefox-profile-switcher-connector = final: prev: { inherit ( self.packages.${ prev.system } ) firefox-profile-switcher-connector; };
-    };
-
-    nixosModules = utility.importFiles ./modules/nixos;
-    homeModules = utility.importFiles ./modules/home;
-
-    nixosConfigurations.HAL9000 = mkNixosConfiguration {
-      inherit overlays nixosModules;
-      system = "x86_64-linux";
-      hostname = "HAL9000";
-      usernames = [ "joker9944" ];
-      disks = [ "/dev/nvme1n1" "/dev/nvme0n1" ];
-      swapSize = "40G";
-    };
-
-    nixosConfigurations.wintermute = mkNixosConfiguration {
-      inherit overlays nixosModules;
-      system = "x86_64-linux";
-      hostname = "wintermute";
-      usernames = [ "joker9944" ];
-      disks = [ "/dev/nvme0n1" ];
-      swapSize = "20G";
-    };
-
-    homeConfigurations."joker9944@HAL9000" = mkHomeConfiguration {
-      inherit overlays homeModules;
-      system = "x86_64-linux";
-      hostname = "HAL9000";
-      username = "joker9944";
-    };
-
-    homeConfigurations."joker9944@wintermute" = mkHomeConfiguration {
-      inherit overlays homeModules;
-      system = "x86_64-linux";
-      hostname = "wintermute";
-      username = "joker9944";
-    };
-
-  };
 }

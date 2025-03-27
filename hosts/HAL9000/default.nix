@@ -1,7 +1,5 @@
-{ ... }:
-
-{
-  imports =[
+{...}: {
+  imports = [
     ./hardware-configuration.nix
     ./pipewire.nix
     ./fstab.nix

@@ -1,9 +1,9 @@
-{ lib, config, ... }:
-
 {
-
+  lib,
+  config,
+  ...
+}: {
   config = lib.mkIf config.programs.bash.enable {
-
     programs.bash = {
       enableCompletion = true;
 
@@ -33,7 +33,5 @@
         home-update = "home-manager switch --flake /home/joker9944/Workspace/nix-config";
       };
     };
-
   };
-
 }

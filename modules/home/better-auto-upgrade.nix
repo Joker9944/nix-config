@@ -1,13 +1,15 @@
-{ config, lib, pkgs, ... }:
-
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 # Lifted and adapted from https://github.com/NixOS/nixpkgs/blob/1807c2b91223227ad5599d7067a61665c52d1295/nixos/modules/tasks/auto-upgrade.nix
 # Remove once issue has been resolved https://github.com/nix-community/home-manager/issues/338
 let
   cfg = config.services.betterAutoUpgrade;
 in {
-  
   options.services.betterAutoUpgrade = {
-
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -43,7 +45,7 @@ in {
 
     flags = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = [ ];
+      default = [];
       example = [
         "-I"
         "stuff=/home/alice/nixos-stuff"
@@ -96,7 +98,6 @@ in {
       '';
     };
 
-
     persistent = lib.mkOption {
       default = true;
       type = lib.types.bool;
@@ -112,30 +113,30 @@ in {
         system was powered down.
       '';
     };
-
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = !((cfg.channel != null) && (cfg.flake != null));
+        message = ''
+          The options 'services.betterAutoUpgrade.channel' and 'services.betterAutoUpgrade.flake' cannot both be set.
+        '';
+      }
+    ];
 
-    assertions = [{
-      assertion = !((cfg.channel != null) && (cfg.flake != null));
-      message = ''
-        The options 'services.betterAutoUpgrade.channel' and 'services.betterAutoUpgrade.flake' cannot both be set.
-      '';
-    }];
-
-    services.betterAutoUpgrade.flags = (if cfg.flake == null then
-        [ "--no-build-output" ] ++ lib.optionals (cfg.channel != null) [
+    services.betterAutoUpgrade.flags =
+      if cfg.flake == null
+      then
+        ["--no-build-output"]
+        ++ lib.optionals (cfg.channel != null) [
           "-I"
           "nixpkgs=${cfg.channel}/nixexprs.tar.xz"
         ]
-      else
-        [ "--refresh" "--flake ${cfg.flake}" ]);
+      else ["--refresh" "--flake ${cfg.flake}"];
 
     systemd.user = {
-
       services.home-manager-upgrade = {
-
         Unit = {
           Description = "Home Manager Upgrade Service";
 
@@ -151,22 +152,21 @@ in {
           ExecStart = let
             home-manager = "${pkgs.home-manager}/bin/home-manager";
             nix-channel = "${pkgs.nix}/bin/nix-channel";
-          in toString (pkgs.writeShellScript "home-manager-upgrade-start" (lib.concatLines (
-            [ "set -e" ] ++
-            (lib.optional (cfg.channel == null) "${nix-channel} --update") ++
-            [ "${home-manager} switch ${toString (cfg.flags)}" ]
-          )));
+          in
+            toString (pkgs.writeShellScript "home-manager-upgrade-start" (lib.concatLines (
+              ["set -e"]
+              ++ (lib.optional (cfg.channel == null) "${nix-channel} --update")
+              ++ ["${home-manager} switch ${toString (cfg.flags)}"]
+            )));
 
           X-RestartIfChanged = false;
         };
-
       };
 
       timers.home-manager-upgrade = {
-
         Unit.Description = "Home Manager Upgrade Timer";
 
-        Install.WantedBy = [ "timers.target" ];
+        Install.WantedBy = ["timers.target"];
 
         Timer = {
           FixedRandomDelay = cfg.fixedRandomDelay;
@@ -174,10 +174,7 @@ in {
           Persistent = cfg.persistent;
           RandomizedDelaySec = cfg.randomizedDelaySec;
         };
-
       };
-
     };
   };
-
 }

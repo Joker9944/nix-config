@@ -1,6 +1,8 @@
-{ disks, swapSize, ... }:
-
 {
+  disks,
+  swapSize,
+  ...
+}: {
   disko.devices = {
     disk = {
       main = {
@@ -9,7 +11,6 @@
         content = {
           type = "gpt";
           partitions = {
-
             ESP = {
               size = "1G";
               type = "EF00";
@@ -39,29 +40,26 @@
 
                 content = {
                   type = "btrfs";
-                  extraArgs = [ "-f" ];
+                  extraArgs = ["-f"];
 
                   subvolumes = {
-
                     "rootfs" = {
                       mountpoint = "/";
                     };
 
                     "home" = {
                       mountpoint = "/home";
-                      mountOptions = [ "compress=zstd" ];
+                      mountOptions = ["compress=zstd"];
                     };
 
                     "nix" = {
                       mountpoint = "/nix";
-                      mountOptions = [ "compress=zstd" "noatime" ];
+                      mountOptions = ["compress=zstd" "noatime"];
                     };
-
                   };
                 };
               };
             };
-
           };
         };
       };

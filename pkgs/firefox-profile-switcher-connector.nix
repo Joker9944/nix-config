@@ -1,5 +1,9 @@
-{ lib, fetchFromGitHub, rustPlatform, cmake }:
-
+{
+  lib,
+  fetchFromGitHub,
+  rustPlatform,
+  cmake,
+}:
 # Lifted from https://github.com/null-dev/firefox-profile-switcher-connector/issues/10#issuecomment-1238034441
 # Remove once packaged in nixpkgs https://github.com/NixOS/nixpkgs/issues/332470
 rustPlatform.buildRustPackage rec {
@@ -13,7 +17,7 @@ rustPlatform.buildRustPackage rec {
     sha256 = "sha256-mnPpIJ+EQAjfjhrSSNTrvCqGbW0VMy8GHbLj39rR8r4=";
   };
 
-  nativeBuildInputs = [ cmake ];
+  nativeBuildInputs = [cmake];
 
   cargoHash = "sha256-EQIBeZwF9peiwpgZNfMmjvLv8NyhvVGUjVXgkf12Wig=";
 

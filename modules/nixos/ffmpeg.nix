@@ -1,11 +1,12 @@
-{ config, lib, pkgs, ... }:
-
-let
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
   cfg = config.programs.ffmpeg;
 in {
-
   options.programs.ffmpeg = with lib; {
-
     enable = mkOption {
       type = types.bool;
       default = false;
@@ -13,18 +14,14 @@ in {
         Whether to enable ffmpeg.
       '';
     };
-
   };
 
   config = lib.mkIf cfg.enable {
-
     environment.systemPackages = with pkgs; [
-      ( ffmpeg.override {
+      (ffmpeg.override {
         withUnfree = true;
         withFdkAac = true;
-      } )
+      })
     ];
-
   };
-
 }

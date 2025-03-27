@@ -1,15 +1,26 @@
-{ lib, config, pkgs, pkgs-unstable, hostname, ...}:
-
-let
+{
+  lib,
+  config,
+  pkgs,
+  pkgs-unstable,
+  hostname,
+  ...
+}: let
   hostModule = lib.path.append ./. "hosts/${hostname}.nix";
 in {
-  imports = [
-    ./config/bash.nix
-    ./config/cloud.nix
-    ./config/gnome.nix
-    ./config/kanidm.nix
-    ./config/xdg.nix
-  ] ++ ( if ( builtins.pathExists hostModule ) then [ hostModule ] else [] );
+  imports =
+    [
+      ./config/bash.nix
+      ./config/cloud.nix
+      ./config/gnome.nix
+      ./config/kanidm.nix
+      ./config/xdg.nix
+    ]
+    ++ (
+      if (builtins.pathExists hostModule)
+      then [hostModule]
+      else []
+    );
 
   home.packages = with pkgs; [
     fastfetch
@@ -56,7 +67,6 @@ in {
   ];
 
   programs = {
-
     bash.enable = true;
 
     git = {
@@ -69,7 +79,7 @@ in {
     ssh.enable = true;
 
     _1password = {
-      sshIdentityAgentHosts = [ "*" ];
+      sshIdentityAgentHosts = ["*"];
       gitSigningKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP9R2V8FqyXifBoVO3OndfpRrqxdwK1H/3qlm645l7rg";
     };
 

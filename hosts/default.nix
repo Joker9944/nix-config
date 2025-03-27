@@ -1,6 +1,11 @@
-{ lib, config, pkgs, hostname, overlays, ... }:
-
-let
+{
+  lib,
+  config,
+  pkgs,
+  hostname,
+  overlays,
+  ...
+}: let
   locale = {
     us = "us";
     de = "de";
@@ -10,7 +15,7 @@ let
 in {
   # Import matching host modules
   imports = [
-    ( lib.path.append ./. hostname )
+    (lib.path.append ./. hostname)
   ];
 
   # Set args inherited from mkNixosConfiguration
@@ -18,7 +23,7 @@ in {
   networking.hostName = hostname;
 
   # Enable experimental flake support and experimental nix command
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = ["nix-command" "flakes"];
 
   # Set default bootloader settings
   boot.loader = {
@@ -49,15 +54,15 @@ in {
   # Enable automatic nix store optimization
   nix.optimise = {
     automatic = lib.mkDefault true;
-    dates = lib.mkDefault [ "weekly" ];
+    dates = lib.mkDefault ["weekly"];
   };
 
   # Set default session environment variables
   environment.sessionVariables = {
-    XDG_CACHE_HOME  = "$HOME/.cache";
+    XDG_CACHE_HOME = "$HOME/.cache";
     XDG_CONFIG_HOME = "$HOME/.config";
-    XDG_DATA_HOME   = "$HOME/.local/share";
-    XDG_STATE_HOME  = "$HOME/.local/state";
+    XDG_DATA_HOME = "$HOME/.local/share";
+    XDG_STATE_HOME = "$HOME/.local/state";
   };
 
   # Set default localisation

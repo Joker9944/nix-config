@@ -1,6 +1,4 @@
-{ ... }:
-
-{
+{...}: {
   fileSystems."/mnt/linux-games" = {
     device = "/dev/disk/by-uuid/abe35444-076d-4e0e-afd1-6d3be2d97d6c";
     fsType = "ext4";

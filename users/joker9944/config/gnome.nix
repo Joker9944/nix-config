@@ -1,10 +1,14 @@
-{ lib, config, pkgs, ...}:
-
-with lib; with lib.hm.gvariant; let
-  mkAutoMoveWindowsApplicationList = attrs: attrValues ( mapAttrs ( app: index: app + ":" + toString index ) attrs );
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+with lib;
+with lib.hm.gvariant; let
+  mkAutoMoveWindowsApplicationList = attrs: attrValues (mapAttrs (app: index: app + ":" + toString index) attrs);
 in {
   dconf.settings = {
-
     # Theming
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
@@ -15,27 +19,27 @@ in {
     "org/gnome/desktop/wm/keybindings" = {
       move-to-monitor-up = mkEmptyArray type.string;
       move-to-monitor-down = mkEmptyArray type.string;
-      move-to-workspace-left = [ "<Shift><Super>Up" ];
-      move-to-workspace-right = [ "<Shift><Super>Down" ];
-      switch-to-workspace-left = [ "<Control><Super>Up" ];
-      switch-to-workspace-right = [ "<Control><Super>Down" ];
+      move-to-workspace-left = ["<Shift><Super>Up"];
+      move-to-workspace-right = ["<Shift><Super>Down"];
+      switch-to-workspace-left = ["<Control><Super>Up"];
+      switch-to-workspace-right = ["<Control><Super>Down"];
     };
     "org/gnome/settings-daemon/plugins/media-keys" = {
-      screensaver = [ "<Super>Escape" ];
+      screensaver = ["<Super>Escape"];
       custom-keybindings = [
         "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
         "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
       ];
     };
     "org/gnome/settings-daemon/plugins/custom-keybindings/custom0" = {
-        name = "Console";
-        binding = "<Super>t";
-        command = "kgx";
+      name = "Console";
+      binding = "<Super>t";
+      command = "kgx";
     };
     "org/gnome/settings-daemon/plugins/custom-keybindings/custom1" = {
-        name = "btop++";
-        binding = "<Shift><Control>Escape";
-        command = "kgx -- btop";
+      name = "btop++";
+      binding = "<Shift><Control>Escape";
+      command = "kgx -- btop";
     };
     "org/gnome/mutter/wayland/keybindings" = {
       restore-shortcuts = mkEmptyArray type.string;

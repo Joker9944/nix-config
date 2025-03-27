@@ -1,6 +1,4 @@
-{ ... }:
-
-let
+{...}: let
   username = "joker9944";
 in {
   users = {
@@ -10,12 +8,12 @@ in {
       group = username;
       homeMode = "750";
       description = "Felix von Arx";
-      extraGroups = [ "networkmanager" "wheel" "keys" "docker" ];
+      extraGroups = ["networkmanager" "wheel" "keys" "docker"];
     };
 
     groups.${username} = {
       gid = 1000;
-      members = [ username ];
+      members = [username];
     };
   };
 }

@@ -1,12 +1,15 @@
-{ config, pkgs, ...}:
-
+{
+  config,
+  pkgs,
+  ...
+}:
 with pkgs; let
-  mkdirBin = "${ coreutils }/bin/mkdir";
-  oidcAddBin = "${ oidc-agent }/bin/oidc-add";
-  rcloneBin = "${ rclone }/bin/rclone";
-  fusermountBin = "${ fuse }/bin/fusermount";
+  mkdirBin = "${coreutils}/bin/mkdir";
+  oidcAddBin = "${oidc-agent}/bin/oidc-add";
+  rcloneBin = "${rclone}/bin/rclone";
+  fusermountBin = "${fuse}/bin/fusermount";
 in {
-  home.packages = with pkgs; [ rclone ];
+  home.packages = with pkgs; [rclone];
 
   services.oidc-agent.enable = true;
 
@@ -24,10 +27,9 @@ in {
 
   systemd.user = {
     services.rclone-mount-owncloud-file-joker9944 = {
-      
       Unit = {
         Description = "Joker9944's ownCloud Files rclone Mount";
-        After = [ "network.target" "oidc-agent.service" ];
+        After = ["network.target" "oidc-agent.service"];
         Requires = "oidc-agent.service";
         Wants = "network-online.target";
       };
@@ -37,17 +39,16 @@ in {
         EnvironmentFile = "%t/oidc-agent/oidc-agent.env";
 
         ExecStartPre = [
-          "${ mkdirBin } --parents \"%h/.local/mount/ownCloud\""
-          "${ oidcAddBin } --pw-file=\"%t/oidc-agent/owncloud_key.txt\" owncloud"
+          "${mkdirBin} --parents \"%h/.local/mount/ownCloud\""
+          "${oidcAddBin} --pw-file=\"%t/oidc-agent/owncloud_key.txt\" owncloud"
         ];
-        ExecStart = "${ rcloneBin } --config=\"${ config.xdg.configHome }/rclone/owncloud.conf\" --vfs-cache-mode=writes --no-checksum mount \"owncloud:files/joker9944\" \"%h/.local/mount/ownCloud\"";
-        ExecStop = "${ fusermountBin } -u \"%h/.local/mount/ownCloud\"";
+        ExecStart = "${rcloneBin} --config=\"${config.xdg.configHome}/rclone/owncloud.conf\" --vfs-cache-mode=writes --no-checksum mount \"owncloud:files/joker9944\" \"%h/.local/mount/ownCloud\"";
+        ExecStop = "${fusermountBin} -u \"%h/.local/mount/ownCloud\"";
       };
 
       Install = {
-        WantedBy = [ "default.target" ];
+        WantedBy = ["default.target"];
       };
-
     };
   };
 }

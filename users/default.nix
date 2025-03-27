@@ -1,16 +1,20 @@
-{ lib, config, username, overlays, ... }:
-
-let
-  userSecrets = lib.path.append ./. "${ username }/secrets.yaml";
+{
+  lib,
+  config,
+  username,
+  overlays,
+  ...
+}: let
+  userSecrets = lib.path.append ./. "${username}/secrets.yaml";
 in {
   imports = [
-    ( lib.path.append ./. username )
+    (lib.path.append ./. username)
   ];
 
   # Set args inherited from mkHomeConfiguration
   home = {
     username = username;
-    homeDirectory = "/home/${ username }";
+    homeDirectory = "/home/${username}";
   };
   nixpkgs.overlays = overlays;
 
@@ -26,8 +30,8 @@ in {
   nixpkgs.config.allowUnfree = true;
 
   # Setup sops if user secrets file exists
-  sops = lib.mkIf ( builtins.pathExists userSecrets ) {
+  sops = lib.mkIf (builtins.pathExists userSecrets) {
     defaultSopsFile = userSecrets;
-    age.keyFile = "${ config.xdg.configHome }/sops/age/keys.txt";
+    age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
   };
 }

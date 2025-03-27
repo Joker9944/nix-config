@@ -1,6 +1,9 @@
-{ lib, config, pkgs, ... }:
-
 {
+  lib,
+  config,
+  pkgs,
+  ...
+}: {
   config = lib.mkIf config.services.xserver.desktopManager.gnome.enable {
     environment.gnome.excludePackages = with pkgs; [
       gnome-tour

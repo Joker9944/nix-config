@@ -1,13 +1,11 @@
-{ ... }:
-
-{
+{...}: {
   imports = [
     ./hardware-configuration.nix
     ./disko.nix
   ];
 
   # Manually add kernel modules which do net get picked up in hardware scan
-  boot.kernelModules = [ "iwlwifi" ];
+  boot.kernelModules = ["iwlwifi"];
 
   # Override keyboard layout
   services.xserver.xkb = {

@@ -1,11 +1,12 @@
-{ config, lib, pkgs, ... }:
-
-let
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
   cfg = config.programs._1password;
 in {
-
   options.programs._1password = with lib; {
-
     gitSigningKey = mkOption {
       type = lib.types.nullOr types.str;
       default = null;
@@ -17,19 +18,16 @@ in {
 
     sshIdentityAgentHosts = mkOption {
       type = types.listOf types.str;
-      default = [ ];
-      example = [ "*" ];
+      default = [];
+      example = ["*"];
       description = ''
         Whether to enable the 1Password SSH identety agent.
       '';
     };
-
   };
 
   config.programs = {
-
-    git.extraConfig = lib.mkIf ( cfg.gitSigningKey != "" ) {
-
+    git.extraConfig = lib.mkIf (cfg.gitSigningKey != "") {
       gpg = {
         format = "ssh";
       };
@@ -45,14 +43,12 @@ in {
       user = {
         signingkey = cfg.gitSigningKey;
       };
-
     };
 
-    ssh.extraConfig = lib.mkIf ( cfg.sshIdentityAgentHosts != [ ] ) ( lib.foldr (el: acc: el + "\n" + acc) "" ( map ( host: ''
-      Host ${host}
-        IdentityAgent ~/.1password/agent.sock
-    '' ) cfg.sshIdentityAgentHosts ));
-
+    ssh.extraConfig = lib.mkIf (cfg.sshIdentityAgentHosts != []) (lib.foldr (el: acc: el + "\n" + acc) "" (map (host: ''
+        Host ${host}
+          IdentityAgent ~/.1password/agent.sock
+      '')
+      cfg.sshIdentityAgentHosts));
   };
-
 }
