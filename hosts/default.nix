@@ -120,6 +120,7 @@ in {
     yq
     openssl
     pciutils
+    alejandra
 
     # Languages
     python3

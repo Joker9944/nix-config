@@ -59,6 +59,8 @@
       firefox-profile-switcher-connector = pkgs.callPackage ./pkgs/firefox-profile-switcher-connector.nix { };
     };
 
+    formatter = pkgs.alejandra;
+
   }) // {
 
     overlays = {
