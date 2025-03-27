@@ -22,7 +22,7 @@
             };
 
             luks = {
-              size = "90%";
+              size = "100%";
 
               content = {
                 type = "luks";
