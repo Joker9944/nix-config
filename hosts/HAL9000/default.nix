@@ -7,6 +7,8 @@
     ./docker.nix
   ];
 
+  boot.loader.grub.useOSProber = true;
+
   programs = {
     steam.enable = true;
   };

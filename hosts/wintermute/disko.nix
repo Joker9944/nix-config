@@ -21,17 +21,8 @@
               };
             };
 
-            swap = {
-              size = swapSize;
-              content = {
-                type = "swap";
-                randomEncryption = true;
-                resumeDevice = true;
-              };
-            };
-
             luks = {
-              size = "100%";
+              size = "90%";
 
               content = {
                 type = "luks";
@@ -43,7 +34,7 @@
                   extraArgs = ["-f"];
 
                   subvolumes = {
-                    "rootfs" = {
+                    "root" = {
                       mountpoint = "/";
                     };
 
@@ -55,6 +46,11 @@
                     "nix" = {
                       mountpoint = "/nix";
                       mountOptions = ["compress=zstd" "noatime"];
+                    };
+
+                    "swap" = {
+                      mountpoint = "/swap";
+                      swap.swapfile.size = swapSize;
                     };
                   };
                 };

@@ -15,6 +15,7 @@
 in {
   # Import matching host modules
   imports = [
+    ./boot.nix
     (lib.path.append ./. hostname)
   ];
 
@@ -24,17 +25,6 @@ in {
 
   # Enable experimental flake support and experimental nix command
   nix.settings.experimental-features = ["nix-command" "flakes"];
-
-  # Set default bootloader settings
-  boot.loader = {
-    efi.canTouchEfiVariables = true;
-
-    systemd-boot = {
-      enable = true;
-      consoleMode = "max";
-      configurationLimit = 10;
-    };
-  };
 
   # Enable automatic upgrades
   system.autoUpgrade = {
