@@ -13,10 +13,9 @@
       };
 
       grub = {
-        # GRUB setup
         enable = lib.mkDefault true;
         efiSupport = true;
-        devices = [ "nodev" ];
+        devices = ["nodev"];
       };
     };
   };

@@ -13,9 +13,9 @@
     de_CH = "de_CH.UTF-8";
   };
 in {
-  # Import matching host modules
   imports = [
     ./boot.nix
+    # Import matching host modules
     (lib.path.append ./. hostname)
   ];
 
