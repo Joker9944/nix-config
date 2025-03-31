@@ -1,5 +1,5 @@
 {
-  description = "Root NixOS flake";
+  description = "NixOS flake";
 
   inputs = {
     # nix pkgs
@@ -19,11 +19,6 @@
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-    # external pkgs
-    talhelper = {
-      url = "github:budimanjojo/talhelper/v3.0.19";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
   };
 
@@ -48,11 +43,7 @@
       ]
       ++ (lib.mapAttrsToList (_: value: value) self.homeModules);
 
-    overlays =
-      [
-        inputs.talhelper.overlays.default
-      ]
-      ++ (lib.mapAttrsToList (_: value: value) self.overlays);
+    overlays = lib.mapAttrsToList (_: value: value) self.overlays;
 
     utility = import ./lib/utility.nix lib;
     mkNixosConfiguration = import ./lib/mkNixosConfiguration.nix {
@@ -72,7 +63,12 @@
       devShells.default = pkgs.mkShell {
         name = "flake-dev";
 
-        packages = [pkgs.alejandra pkgs.home-manager];
+        packages = with pkgs; [
+          alejandra
+          home-manager
+          sops
+          age
+        ];
       };
 
       formatter = pkgs.alejandra;

@@ -8,12 +8,6 @@
       enableCompletion = true;
 
       initExtra = ''
-        source <(kubectl completion bash)
-        source <(helm completion bash)
-        source <(flux completion bash)
-        source <(talosctl completion bash)
-        source <(talhelper completion bash)
-
         fastfetch
       '';
 

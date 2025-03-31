@@ -28,10 +28,12 @@ in {
     imagemagick
 
     vscode
+    sops # For vscode sops plugin
     jetbrains.idea-ultimate
     jetbrains.pycharm-professional
     jetbrains.webstorm
     meld
+    lens
 
     libreoffice
     hunspell
@@ -52,16 +54,6 @@ in {
 
     nextcloud-client
     minio-client
-
-    kubectl
-    fluxcd
-    kubernetes-helm
-    pkgs-unstable.talosctl
-    talhelper
-    lens
-
-    sops
-    age
 
     ventoy
   ];
