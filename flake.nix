@@ -69,6 +69,12 @@
         firefox-profile-switcher-connector = pkgs.callPackage ./pkgs/firefox-profile-switcher-connector.nix {};
       };
 
+      devShells.default = pkgs.mkShell {
+        name = "flake-dev";
+
+        packages = [pkgs.alejandra pkgs.home-manager];
+      };
+
       formatter = pkgs.alejandra;
     })
     // {
