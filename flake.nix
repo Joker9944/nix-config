@@ -10,14 +10,14 @@
       url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    home-manager-xdg-autostart.url = "github:Zocker1999NET/home-manager-xdg-autostart";
+    home-manager-xdg-autostart.url = "github:Zocker1999NET/home-manager-xdg-autostart/main";
     sops-nix = {
-      url = "github:Mic92/sops-nix";
+      url = "github:Mic92/sops-nix/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    flake-utils.url = "github:numtide/flake-utils";
+    flake-utils.url = "github:numtide/flake-utils/main";
     disko = {
-      url = "github:nix-community/disko";
+      url = "github:nix-community/disko/v1.11.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

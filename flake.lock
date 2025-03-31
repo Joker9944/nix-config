@@ -7,15 +7,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1741786315,
-        "narHash": "sha256-VT65AE2syHVj6v/DGB496bqBnu1PXrrzwlw07/Zpllc=",
+        "lastModified": 1736864502,
+        "narHash": "sha256-ItkIZyebGvNH2dK9jVGzJHGPtb6BSWLN8Gmef16NeY0=",
         "owner": "nix-community",
         "repo": "disko",
-        "rev": "0d8c6ad4a43906d14abd5c60e0ffe7b587b213de",
+        "rev": "0141aabed359f063de7413f80d906e1d98c0c123",
         "type": "github"
       },
       "original": {
         "owner": "nix-community",
+        "ref": "v1.11.0",
         "repo": "disko",
         "type": "github"
       }
@@ -34,6 +35,7 @@
       },
       "original": {
         "owner": "numtide",
+        "ref": "main",
         "repo": "flake-utils",
         "type": "github"
       }
@@ -70,6 +72,7 @@
       },
       "original": {
         "owner": "Zocker1999NET",
+        "ref": "main",
         "repo": "home-manager-xdg-autostart",
         "type": "github"
       }
@@ -133,6 +136,7 @@
       },
       "original": {
         "owner": "Mic92",
+        "ref": "master",
         "repo": "sops-nix",
         "type": "github"
       }
