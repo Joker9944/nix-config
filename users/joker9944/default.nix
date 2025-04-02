@@ -27,8 +27,6 @@ in {
     btop
     imagemagick
 
-    vscode
-    sops # For vscode sops plugin
     jetbrains.idea-ultimate
     jetbrains.pycharm-professional
     jetbrains.webstorm
@@ -60,6 +58,8 @@ in {
 
   programs = {
     bash.enable = true;
+
+    vscode.enable = true;
 
     git = {
       enable = true;
