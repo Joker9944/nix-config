@@ -26,6 +26,7 @@ in {
     fastfetch
     btop
     imagemagick
+    tree
 
     jetbrains.idea-ultimate
     jetbrains.pycharm-professional
