@@ -4,7 +4,7 @@
   ];
 
   # Disk setup
-  discs.main = {
+  disks.main = {
     name = "nvme0n1";
     size = {
       disk = 1000000;

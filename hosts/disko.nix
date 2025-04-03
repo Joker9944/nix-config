@@ -3,11 +3,11 @@
   lib,
   ...
 }: let
-  cfg = config.discs.main;
+  cfg = config.disks.main;
   devicePath = "/dev/${cfg.name}";
   sizeMain = cfg.size.total - cfg.size.boot - cfg.size.empty;
 in {
-  options.discs.main = with lib; {
+  options.disks.main = with lib; {
     name = mkOption {
       type = lib.types.nullOr types.str;
       default = null;
