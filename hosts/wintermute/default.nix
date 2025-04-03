@@ -1,8 +1,16 @@
 {...}: {
   imports = [
     ./hardware-configuration.nix
-    ./disko.nix
   ];
+
+  # Disk setup
+  discs.main = {
+    name = "nvme0n1";
+    size = {
+      disk = 1000000;
+      swap = 20000;
+    };
+  };
 
   # Manually add kernel modules which do net get picked up in hardware scan
   boot.kernelModules = ["iwlwifi"];

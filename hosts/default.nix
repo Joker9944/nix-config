@@ -14,6 +14,7 @@
   };
 in {
   imports = [
+    ./disko.nix
     ./boot.nix
     # Import matching host modules
     (lib.path.append ./. hostname)

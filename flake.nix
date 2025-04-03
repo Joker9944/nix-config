@@ -86,8 +86,6 @@
         system = "x86_64-linux";
         hostname = "HAL9000";
         usernames = ["joker9944"];
-        disks = ["/dev/nvme1n1" "/dev/nvme0n1"];
-        swapSize = "40G";
       };
 
       nixosConfigurations.wintermute = mkNixosConfiguration {
@@ -95,8 +93,6 @@
         system = "x86_64-linux";
         hostname = "wintermute";
         usernames = ["joker9944"];
-        disks = ["/dev/nvme0n1"];
-        swapSize = "20G";
       };
 
       homeConfigurations."joker9944@HAL9000" = mkHomeConfiguration {

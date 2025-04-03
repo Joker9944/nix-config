@@ -6,8 +6,6 @@
   hostname,
   usernames,
   overlays,
-  disks,
-  swapSize,
   nixosModules,
 }:
 with inputs.nixpkgs.lib; let
