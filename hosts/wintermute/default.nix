@@ -7,8 +7,8 @@
   disks.main = {
     name = "nvme0n1";
     size = {
-      disk = 1000000;
-      swap = 20000;
+      main = "-100G";
+      swap = "20G"; 
     };
   };
 

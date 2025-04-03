@@ -3,8 +3,9 @@
   disks.main = {
     name = "nvme1n1";
     size = {
-      disk = 1000000;
-      swap = 40000;
+      boot = "1G";
+      main = "-100G";
+      swap = "40G";
     };
   };
 
@@ -16,7 +17,7 @@
       type = "gpt";
       partitions = {
         games = {
-          size = "1900000M";
+          end = "-100G";
           content = {
             type = "filesystem";
             format = "xfs";

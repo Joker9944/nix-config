@@ -5,7 +5,6 @@
 }: let
   cfg = config.disks.main;
   devicePath = "/dev/${cfg.name}";
-  sizeMain = cfg.size.disk - cfg.size.boot - cfg.size.empty;
 in {
   options.disks.main = with lib; {
     name = mkOption {
@@ -18,50 +17,42 @@ in {
     };
 
     size = {
-      disk = mkOption {
-        type = lib.types.nullOr types.int;
-        default = null;
-        example = 1000000;
-        description = ''
-          Total size of the main disk in MB.
-        '';
-      };
-
       boot = mkOption {
-        type = types.int;
-        default = 1000;
+        type = types.str;
+        default = "500M";
         description = ''
-          Size of the boot partition in MB.
+          Size of the boot partition.
         '';
       };
 
       swap = mkOption {
-        type = lib.types.nullOr types.int;
+        type = lib.types.nullOr types.str;
         default = null;
-        example = 40000;
+        example = "40G";
         description = ''
-          Size of the swap file in MB, if null no swap file will be created.
+          Size of the swap file. The swap file is part of the main partition.
         '';
       };
 
-      empty = mkOption {
-        type = types.int;
-        default = 100000;
+      main = mkOption {
+        type = types.str;
+        default = "100%";
+        example = "-100G";
         description = ''
-          Size of the empty space at the end of the disk used for overprovisioning in MB.
+          Size of the main partition.
         '';
       };
     };
   };
 
-  config.disko.devices.disk.main = lib.mkIf (cfg.name != null && cfg.size.disk != null) {
+  config.disko.devices.disk.main = lib.mkIf (cfg.name != null) {
     device = devicePath;
     type = "disk";
     content = {
       type = "gpt";
       partitions = {
         ESP = {
-          size = "${toString cfg.size.boot}M";
+          end = cfg.size.boot;
           type = "EF00";
           content = {
             type = "filesystem";
@@ -71,7 +62,7 @@ in {
         };
 
         luks = {
-          size = "${toString sizeMain}M";
+          end = cfg.size.main;
 
           content = {
             type = "luks";
@@ -99,7 +90,7 @@ in {
 
                 "swap" = lib.mkIf (cfg.size.swap != null) {
                   mountpoint = "/swap";
-                  swap.swapfile.size = "${toString cfg.size.swap}M";
+                  swap.swapfile.size = cfg.size.swap;
                 };
               };
             };
