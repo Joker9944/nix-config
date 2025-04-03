@@ -3,17 +3,17 @@
   lib,
   ...
 }: let
-  cfg = config.discs.main;
+  cfg = config.disks.main;
   devicePath = "/dev/${cfg.name}";
-  sizeMain = cfg.size.total - cfg.size.boot - cfg.size.empty;
+  sizeMain = cfg.size.disk - cfg.size.boot - cfg.size.empty;
 in {
-  options.discs.main = with lib; {
+  options.disks.main = with lib; {
     name = mkOption {
       type = lib.types.nullOr types.str;
       default = null;
       example = "sda";
       description = ''
-        Name of the disc that should be used as main disc.
+        Name of the disk that should be used as main disk.
       '';
     };
 
@@ -23,7 +23,7 @@ in {
         default = null;
         example = 1000000;
         description = ''
-          Total size of the main disc in MB.
+          Total size of the main disk in MB.
         '';
       };
 
@@ -48,7 +48,7 @@ in {
         type = types.int;
         default = 100000;
         description = ''
-          Size of the empty space at the end of the disc used for overprovisioning.
+          Size of the empty space at the end of the disk used for overprovisioning in MB.
         '';
       };
     };
@@ -61,7 +61,7 @@ in {
       type = "gpt";
       partitions = {
         ESP = {
-          size = "${cfg.size.boot}M";
+          size = "${toString cfg.size.boot}M";
           type = "EF00";
           content = {
             type = "filesystem";
@@ -71,7 +71,7 @@ in {
         };
 
         luks = {
-          size = "${sizeMain}M";
+          size = "${toString sizeMain}M";
 
           content = {
             type = "luks";
@@ -99,7 +99,7 @@ in {
 
                 "swap" = lib.mkIf (cfg.size.swap != null) {
                   mountpoint = "/swap";
-                  swap.swapfile.size = "${cfg.size.swap}M";
+                  swap.swapfile.size = "${toString cfg.size.swap}M";
                 };
               };
             };

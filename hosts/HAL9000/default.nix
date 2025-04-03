@@ -1,8 +1,8 @@
 {...}: {
   imports = [
     ./hardware-configuration.nix
+    ./disks.nix
     ./pipewire.nix
-    ./fstab.nix
     ./nvidia.nix
     ./docker.nix
   ];
