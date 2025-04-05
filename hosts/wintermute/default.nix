@@ -1,4 +1,4 @@
-{...}: {
+{pkgs, ...}: {
   imports = [
     ./hardware-configuration.nix
   ];
@@ -17,6 +17,9 @@
 
   # Manually add kernel modules which do net get picked up in hardware scan
   boot.kernelModules = ["iwlwifi"];
+
+  # Enable finger print reader service
+  services.fprintd.enable = true;
 
   # Supports Linux Vendor Firmware Service (lvfs)
   services.fwupd.enable = true;
