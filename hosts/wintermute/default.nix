@@ -3,6 +3,9 @@
     ./hardware-configuration.nix
   ];
 
+  # Lenovo ThinkPad X1 Yoga Gen 4
+  # * https://wiki.archlinux.org/title/Lenovo_ThinkPad_X1_Yoga_(Gen_4)
+
   # Disk setup
   disks.main = {
     name = "nvme0n1";
@@ -14,6 +17,9 @@
 
   # Manually add kernel modules which do net get picked up in hardware scan
   boot.kernelModules = ["iwlwifi"];
+
+  # Supports Linux Vendor Firmware Service (lvfs)
+  services.fwupd.enable = true;
 
   # Override keyboard layout
   services.xserver.xkb = {
