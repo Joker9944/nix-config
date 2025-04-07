@@ -13,6 +13,9 @@ in {
       color-scheme = "prefer-dark";
       accent-color = "purple";
     };
+    "org/gnome/shell/app-switcher" = {
+      current-workspace-only = true;
+    };
 
     # Keybindings
     "org/gnome/desktop/wm/keybindings" = {
