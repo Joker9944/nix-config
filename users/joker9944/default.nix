@@ -12,6 +12,7 @@ in {
     [
       ./config/bash.nix
       ./config/cloud.nix
+      ./config/font.nix
       ./config/gnome.nix
       ./config/kanidm.nix
       ./config/xdg.nix
