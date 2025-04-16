@@ -119,7 +119,6 @@ in {
 
     # Languages
     python3
-    openjdk
   ];
 
   fonts.packages = with pkgs; [

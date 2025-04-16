@@ -14,6 +14,7 @@ in {
       ./config/cloud.nix
       ./config/font.nix
       ./config/gnome.nix
+      ./config/jetbrains.nix
       ./config/kanidm.nix
       ./config/xdg.nix
     ]
@@ -29,9 +30,6 @@ in {
     imagemagick
     tree
 
-    jetbrains.idea-ultimate
-    jetbrains.pycharm-professional
-    jetbrains.webstorm
     meld
     lens
 

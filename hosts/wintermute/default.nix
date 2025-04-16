@@ -11,7 +11,7 @@
     name = "nvme0n1";
     size = {
       main = "-100G";
-      swap = "20G"; 
+      swap = "20G";
     };
   };
 
