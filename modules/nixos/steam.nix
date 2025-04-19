@@ -2,6 +2,7 @@
   lib,
   config,
   pkgs,
+  pkgs-unstable,
   ...
 }: {
   config = lib.mkIf config.programs.steam.enable {
@@ -23,7 +24,7 @@
     };
 
     environment = with pkgs; {
-      systemPackages = [mangohud];
+      systemPackages = [mangohud pkgs-unstable.r2modman];
     };
 
     services.udev.dualsenseFix.enable = true;
