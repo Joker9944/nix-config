@@ -10,4 +10,9 @@
       exec = "steam %U";
     };
   };
+
+  home.packages = with pkgs; [
+    prismlauncher
+    lutris
+  ];
 }

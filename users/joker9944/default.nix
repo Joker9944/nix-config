@@ -44,7 +44,6 @@ in {
     audacity
 
     spotify
-    lutris
     vlc
 
     discord
