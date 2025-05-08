@@ -12,6 +12,7 @@
   time.hardwareClockInLocalTime = true;
 
   # Set desktop environment
+  common.desktopEnvironment.gnome.enable = false;
   common.desktopEnvironment.kde.enable = true;
 
   programs = {
