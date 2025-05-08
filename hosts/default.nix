@@ -85,12 +85,7 @@ in {
   nixpkgs.config.allowUnfree = true;
 
   # Set default desktop environment
-  services.xserver = {
-    enable = true;
-
-    displayManager.gdm.enable = true;
-    desktopManager.gnome.enable = true;
-  };
+  common.desktopEnvironment.gnome.enable = lib.mkDefault true;
 
   # Enable default programs
   programs = {

@@ -11,6 +11,9 @@
   boot.loader.grub.useOSProber = true;
   time.hardwareClockInLocalTime = true;
 
+  # Set desktop environment
+  common.desktopEnvironment.kde.enable = true;
+
   programs = {
     steam.enable = true;
   };

@@ -3,8 +3,21 @@
   config,
   pkgs,
   ...
-}: {
-  config = lib.mkIf config.services.xserver.desktopManager.gnome.enable {
+}: let
+  cfg = config.common.desktopEnvironment.gnome;
+in {
+  options.common.desktopEnvironment.gnome = with lib; {
+    enable = mkEnableOption "Whether to enable GNOME desktop environment.";
+  };
+
+  config = lib.mkIf cfg.enable {
+    services.xserver = {
+      enable = true;
+
+      displayManager.gdm.enable = true;
+      desktopManager.gnome.enable = true;
+    };
+
     environment.gnome.excludePackages = with pkgs; [
       gnome-tour
       gnome-connections
