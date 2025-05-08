@@ -12,13 +12,13 @@
         localNetworkGameTransfers.openFirewall = true;
         gamescopeSession.enable = false;
 
-        extraCompatPackages = with pkgs; [proton-ge-bin];
+        extraCompatPackages = with pkgs; [pkgs-unstable.proton-ge-bin];
       };
       gamemode = {
         enable = true;
       };
       gamescope = {
-        enable = false;
+        enable = true;
         capSysNice = true;
       };
     };

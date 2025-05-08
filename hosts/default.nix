@@ -1,5 +1,6 @@
 {
   lib,
+  utility,
   config,
   pkgs,
   hostname,
@@ -13,12 +14,11 @@
     de_CH = "de_CH.UTF-8";
   };
 in {
-  imports = [
-    ./disko.nix
-    ./boot.nix
-    # Import matching host modules
-    (lib.path.append ./. hostname)
-  ];
+  imports =
+    [
+      (lib.path.append ./. hostname) # Import matching host modules
+    ]
+    ++ (utility.listFilesRelative ./common);
 
   # Set args inherited from mkNixosConfiguration
   nixpkgs.overlays = overlays;
