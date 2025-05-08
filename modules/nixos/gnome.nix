@@ -9,7 +9,6 @@
       gnome-tour
       gnome-connections
       epiphany # web browser
-      geary # email reader
     ];
 
     environment.systemPackages = with pkgs; [
