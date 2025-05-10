@@ -16,6 +16,7 @@ in {
       ./config/gnome.nix
       ./config/jetbrains.nix
       ./config/kanidm.nix
+      ./config/kde-plasma.nix
       ./config/xdg.nix
     ]
     ++ (
@@ -23,6 +24,8 @@ in {
       then [hostModule]
       else []
     );
+
+  common.desktopEnvironment.gnome.enable = lib.mkDefault true;
 
   home.packages = with pkgs; [
     fastfetch

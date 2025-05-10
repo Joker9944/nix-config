@@ -20,6 +20,11 @@
       url = "github:nix-community/disko/v1.11.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    plasma-manager = {
+      url = "github:nix-community/plasma-manager/trunk";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-math.url = "github:xddxdd/nix-math/master";
   };
 
   outputs = inputs @ {
@@ -40,12 +45,13 @@
       [
         inputs.home-manager-xdg-autostart.homeManagerModules.xdg-autostart
         inputs.sops-nix.homeManagerModules.sops
+        inputs.plasma-manager.homeManagerModules.plasma-manager
       ]
       ++ (lib.mapAttrsToList (_: value: value) self.homeModules);
 
     overlays = lib.mapAttrsToList (_: value: value) self.overlays;
 
-    utility = import ./lib/utility.nix lib;
+    utility = (import ./lib/utility.nix lib) // inputs.nix-math.lib.math;
     mkNixosConfiguration = import ./lib/mkNixosConfiguration.nix {
       inherit inputs utility;
     };

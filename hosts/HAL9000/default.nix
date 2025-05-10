@@ -13,7 +13,7 @@
 
   # Set desktop environment
   common.desktopEnvironment.gnome.enable = false;
-  common.desktopEnvironment.kde.enable = true;
+  common.desktopEnvironment.kde-plasma.enable = true;
 
   programs = {
     steam.enable = true;
