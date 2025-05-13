@@ -14,13 +14,24 @@ in {
 
   config = lib.mkIf cfg.enable {
     # Extensions
-    home.packages = with pkgs; [
-      gnomeExtensions.tophat
-      gnomeExtensions.clipboard-history
-      gnomeExtensions.auto-move-windows
-      dconf-editor
-      gparted
-    ];
+    programs.gnome-shell = {
+      enable = true;
+
+      extensions = with pkgs.gnomeExtensions; [
+        {
+          package = tophat;
+        }
+        {
+          package = clipboard-history;
+        }
+        {
+          package = auto-move-windows;
+        }
+        {
+          package = places-status-indicator;
+        }
+      ];
+    };
 
     # Theming
     gtk = {
@@ -29,20 +40,6 @@ in {
     };
 
     dconf.settings = with lib.hm.gvariant; {
-      # Extensions
-      "org/gnome/shell" = {
-        disable-user-extensions = false;
-        enabled-extensions = [
-          # Custom extensions
-          "tophat@fflewddur.github.io"
-          "clipboard-history@alexsaveau.dev"
-          "auto-move-windows@gnome-shell-extensions.gcampax.github.com"
-          # Built-in extensions
-          "places-menu@gnome-shell-extensions.gcampax.github.com"
-          "apps-menu@gnome-shell-extensions.gcampax.github.com"
-        ];
-      };
-
       # Theming
       "org/gnome/desktop/interface" = {
         color-scheme = "prefer-dark";
