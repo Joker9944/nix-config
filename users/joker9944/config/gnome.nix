@@ -49,8 +49,13 @@ in {
         accent-color = "purple";
       };
       "org/gnome/shell/extensions/tophat" = {
-        fs-display = "numeric";
+        # Memory
         mem-display = "numeric";
+        # Disk
+        fs-display = "numeric";
+        mount-to-monitor = "/";
+        fs-hide-in-menu = "/boot";
+        # Network
         network-usage-unit = "bits";
       };
 
