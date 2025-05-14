@@ -10,6 +10,10 @@ in {
     enable = mkEnableOption "Whether to enable KDE Plasma desktop environment.";
   };
 
+  environment.plasma6.excludePackages = with pkgs.kdePackages; [
+    kate
+  ];
+
   config = lib.mkIf cfg.enable {
     services.xserver = {
       enable = true;

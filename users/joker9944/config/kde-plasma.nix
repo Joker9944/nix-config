@@ -8,8 +8,10 @@
 
   colors = {
     # Japanese violet - https://encycolorpedia.com/5b3256
-    accentPrimaryColor = "235,89,61"; # Orange soda - https://encycolorpedia.com/eb593d
-    accentSecondaryColor = "41,204,255";
+    primary = "235,89,61"; # Orange soda - https://encycolorpedia.com/eb593d
+    primaryComplement = "41,204,255";
+    secondary = "134,226,70";
+    secondaryComplement = "136,68,228";
   };
 
   workspaces = [
@@ -20,12 +22,20 @@
   ];
   workspaceIndex = name: (lib.lists.findFirstIndex (workspace: workspace == name) 0 workspaces) + 1;
   workspaceInternalName = name: "Desktop_" + (builtins.toString (workspaceIndex name));
+  calcDesktopLength = n: n * 8;
 in {
   options.common.desktopEnvironment.kde-plasma = with lib; {
     enable = mkEnableOption "Whether to enable KDE Plasma desktop environment config.";
   };
 
   config = lib.mkIf cfg.enable {
+    home.packages = with pkgs.kdePackages; [
+      kmail
+      kmail-account-wizard
+      merkuro
+      kcalc
+    ];
+
     programs.plasma = {
       enable = true;
 
@@ -34,7 +44,7 @@ in {
 
       # Theming
       workspace.lookAndFeel = "org.kde.breezedark.desktop";
-      configFile."kdeglobals"."General"."AccentColor" = colors.accentPrimaryColor;
+      configFile."kdeglobals"."General"."AccentColor" = colors.primary;
 
       # Shortcuts
       shortcuts = {
@@ -96,12 +106,13 @@ in {
                 title = "Individual Core Usage";
                 displayStyle = "org.kde.ksysguard.barchart";
                 totalSensors = ["cpu/all/usage"];
-                sensors = lib.lists.genList (i: {
-                  name = "cpu/cpu" + (builtins.toString i) + "/usage";
-                  color = colors.accentPrimaryColor;
-                  label = "Core " + (builtins.toString i);
-                })
-                24;
+                sensors =
+                  lib.lists.genList (i: {
+                    name = "cpu/cpu" + (builtins.toString i) + "/usage";
+                    color = colors.primary;
+                    label = "Core " + (builtins.toString i);
+                  })
+                  24;
               };
             }
             {
@@ -114,7 +125,7 @@ in {
                 sensors = [
                   {
                     name = "memory/physical/used";
-                    color = colors.accentPrimaryColor;
+                    color = colors.primary;
                     label = "Used Physical Memory";
                   }
                 ];
@@ -130,7 +141,7 @@ in {
                 sensors = [
                   {
                     name = "memory/swap/used";
-                    color = colors.accentPrimaryColor;
+                    color = colors.primary;
                     label = "Used Swap Memory";
                   }
                 ];
@@ -144,12 +155,12 @@ in {
                 sensors = [
                   {
                     name = "network/all/download";
-                    color = colors.accentPrimaryColor;
+                    color = colors.primary;
                     label = "Download Rate";
                   }
                   {
                     name = "network/all/upload";
-                    color = colors.accentSecondaryColor;
+                    color = colors.primaryComplement;
                     label = "Upload Rate";
                   }
                 ];
@@ -167,6 +178,146 @@ in {
               };
             }
           ];
+        }
+      ];
+
+      desktop.widgets = [
+        {
+          # CPU Chart
+          systemMonitor = {
+            title = "CPU Usage";
+            position = {
+              horizontal = calcDesktopLength 2;
+              vertical = calcDesktopLength 2;
+            };
+            size = {
+              width = calcDesktopLength 30;
+              height = calcDesktopLength 26;
+            };
+            displayStyle = "org.kde.ksysguard.linechart";
+            sensors = [
+              {
+                name = "cpu/all/usage";
+                color = colors.primary;
+                label = "Total CPU Usage";
+              }
+            ];
+          };
+        }
+        {
+          # Memory Chart
+          systemMonitor = {
+            title = "Memory Usage";
+            position = {
+              horizontal = calcDesktopLength 34;
+              vertical = calcDesktopLength 2;
+            };
+            size = {
+              width = calcDesktopLength 30;
+              height = calcDesktopLength 26;
+            };
+            displayStyle = "org.kde.ksysguard.linechart";
+            sensors = [
+              {
+                name = "memory/physical/used";
+                color = colors.primary;
+                label = "Used Physical Memory";
+              }
+            ];
+          };
+        }
+        {
+          # Swap Chart
+          systemMonitor = {
+            title = "Swap Usage";
+            position = {
+              horizontal = calcDesktopLength 66;
+              vertical = calcDesktopLength 2;
+            };
+            size = {
+              width = calcDesktopLength 30;
+              height = calcDesktopLength 26;
+            };
+            displayStyle = "org.kde.ksysguard.linechart";
+            sensors = [
+              {
+                name = "memory/swap/used";
+                color = colors.primary;
+                label = "Used Swap Memory";
+              }
+            ];
+          };
+        }
+        {
+          # GPU Chart
+          systemMonitor = {
+            title = "GPU Usage";
+            position = {
+              horizontal = calcDesktopLength 2;
+              vertical = calcDesktopLength 30;
+            };
+            size = {
+              width = calcDesktopLength 30;
+              height = calcDesktopLength 26;
+            };
+            displayStyle = "org.kde.ksysguard.linechart";
+            sensors = [
+              {
+                name = "gpu/all/usage";
+                color = colors.secondary;
+                label = "Total GPU Usage";
+              }
+            ];
+          };
+        }
+        {
+          # VRAM Chart
+          systemMonitor = {
+            title = "Video Memory Usage";
+            position = {
+              horizontal = calcDesktopLength 34;
+              vertical = calcDesktopLength 30;
+            };
+            size = {
+              width = calcDesktopLength 30;
+              height = calcDesktopLength 26;
+            };
+            displayStyle = "org.kde.ksysguard.linechart";
+            sensors = [
+              {
+                name = "gpu/all/usedVram";
+                color = colors.secondary;
+                label = "Used Video Memory";
+              }
+            ];
+          };
+        }
+        {
+          # Network Chart
+          systemMonitor = {
+            title = "Network Speed";
+            position = {
+              horizontal = calcDesktopLength 66;
+              vertical = calcDesktopLength 30;
+            };
+            size = {
+              width = calcDesktopLength 30;
+              height = calcDesktopLength 26;
+            };
+            displayStyle = "org.kde.ksysguard.linechart";
+            sensors = [
+              {
+                name = "network/all/download";
+                color = colors.secondary;
+                label = "Download Rate";
+              }
+              {
+                name = "network/all/upload";
+                color = colors.secondaryComplement;
+                label = "Upload Rate";
+              }
+            ];
+          };
         }
       ];
 
