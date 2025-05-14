@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: let
-  nextcloudDir = dir: "${config.home.homeDirectory}/.local/state/cloud/${dir}";
+  cloudDir = dir: "${config.home.homeDirectory}/.local/state/cloud/${dir}";
 
   mkdirBin = "${pkgs.coreutils}/bin/mkdir";
 in {
@@ -18,38 +18,29 @@ in {
   };
 
   home = {
-    file = {
-      "Documents" = {
-        source = config.lib.file.mkOutOfStoreSymlink (nextcloudDir "Documents");
-        force = true;
-      };
+    file = lib.attrsets.listToAttrs (
+      lib.lists.map (dir: {
+        name = dir;
+        value = {
+          source = config.lib.file.mkOutOfStoreSymlink (cloudDir dir);
+          force = true;
+        };
+      }) [
+        "Documents"
+        "Templates"
+        "Music"
+        "Pictures"
+        "Videos"
+      ]
+    );
 
-      "Templates" = {
-        source = config.lib.file.mkOutOfStoreSymlink (nextcloudDir "Templates");
-        force = true;
-      };
-
-      "Music" = {
-        source = config.lib.file.mkOutOfStoreSymlink (nextcloudDir "Music");
-        force = true;
-      };
-
-      "Pictures" = {
-        source = config.lib.file.mkOutOfStoreSymlink (nextcloudDir "Pictures");
-        force = true;
-      };
-
-      "Videos" = {
-        source = config.lib.file.mkOutOfStoreSymlink (nextcloudDir "Videos");
-        force = true;
-      };
-    };
-
-    activation.createUserDirs = lib.hm.dag.entryAfter ["writeBoundary"] ''
-      if [ ! -d ~/Desktop ]; then run ${mkdirBin} $VERBOSE_ARG --mode=755 ~/Desktop; fi
-      if [ ! -d ~/Downloads ]; then run ${mkdirBin} $VERBOSE_ARG --mode=755 ~/Downloads; fi
-      if [ ! -d ~/Public ]; then run ${mkdirBin} $VERBOSE_ARG --mode=755 ~/Public; fi
-      if [ ! -d ~/Workspace ]; then run ${mkdirBin} $VERBOSE_ARG --mode=755 ~/Workspace; fi
-    '';
+    activation.createUserDirs = lib.hm.dag.entryAfter ["writeBoundary"] (
+      lib.strings.concatLines (lib.lists.map (dir: "if [ ! -d ~/${dir} ]; then run ${mkdirBin} $VERBOSE_ARG --mode=755 ~/${dir}; fi") [
+        "Desktop"
+        "Downloads"
+        "Public"
+        "Workspace"
+      ])
+    );
   };
 }
