@@ -30,6 +30,9 @@ in {
         {
           package = places-status-indicator;
         }
+        {
+          package = worksets;
+        }
       ];
     };
 
