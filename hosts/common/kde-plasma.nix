@@ -11,6 +11,10 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    environment.plasma6.excludePackages = with pkgs.kdePackages; [
+      kate
+    ];
+
     services.xserver = {
       enable = true;
 

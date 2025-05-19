@@ -30,6 +30,9 @@ in {
         {
           package = places-status-indicator;
         }
+        {
+          package = worksets;
+        }
       ];
     };
 
@@ -37,6 +40,11 @@ in {
     gtk = {
       enable = true;
       gtk3.extraConfig.gtk-application-prefer-dark-theme = 1; # Legacy theming
+    };
+
+    home.pointerCursor = {
+      package = pkgs.adwaita-icon-theme;
+      name = "Adwaita";
     };
 
     dconf.settings = with lib.hm.gvariant; {

@@ -11,9 +11,6 @@
     };
   };
 
-  common.desktopEnvironment.gnome.enable = false;
-  common.desktopEnvironment.kde-plasma.enable = true;
-
   home.packages = with pkgs; [
     prismlauncher
     lutris

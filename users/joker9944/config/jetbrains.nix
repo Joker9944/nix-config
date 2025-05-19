@@ -4,6 +4,7 @@
       jetbrains.idea-ultimate
       jetbrains.pycharm-professional
       jetbrains.webstorm
+      nodejs
     ];
   };
 
