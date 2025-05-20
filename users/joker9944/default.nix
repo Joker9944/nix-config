@@ -54,8 +54,6 @@ in {
 
     nextcloud-client
     minio-client
-
-    ventoy
   ];
 
   programs = {
