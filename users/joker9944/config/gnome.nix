@@ -60,6 +60,12 @@ in {
       };
 
       # Behaviour
+      "org/gnome/mutter" = {
+        dynamic-workspaces = false;
+      };
+      "org/gnome/desktop/wm/preferences" = {
+        num-workspaces = 4;
+      };
       "org/gnome/shell/app-switcher" = {
         current-workspace-only = true;
       };
