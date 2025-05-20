@@ -17,23 +17,18 @@ in {
     programs.gnome-shell = {
       enable = true;
 
-      extensions = with pkgs.gnomeExtensions; [
-        {
-          package = tophat;
-        }
-        {
-          package = clipboard-history;
-        }
-        {
-          package = auto-move-windows;
-        }
-        {
-          package = places-status-indicator;
-        }
-        {
-          package = worksets;
-        }
-      ];
+      extensions = with pkgs.gnomeExtensions;
+        lib.lists.map (pkg: {
+          id = pkg.extensionUuid;
+          package = pkg;
+        }) [
+          tophat
+          clipboard-history
+          auto-move-windows
+          places-status-indicator
+          worksets
+          caffeine
+        ];
     };
 
     # Theming
