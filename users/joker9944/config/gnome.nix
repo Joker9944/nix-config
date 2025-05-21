@@ -13,22 +13,30 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    # Extensions
-    programs.gnome-shell = {
-      enable = true;
+    programs = {
+      gnome-shell = {
+        enable = true;
 
-      extensions = with pkgs.gnomeExtensions;
-        lib.lists.map (pkg: {
-          id = pkg.extensionUuid;
-          package = pkg;
-        }) [
-          tophat
-          clipboard-history
-          auto-move-windows
-          places-status-indicator
-          worksets
-          caffeine
-        ];
+        extensions = with pkgs.gnomeExtensions;
+          lib.lists.map (pkg: {
+            id = pkg.extensionUuid;
+            package = pkg;
+          }) [
+            tophat
+            clipboard-history
+            auto-move-windows
+            places-status-indicator
+            worksets
+            caffeine
+          ];
+      };
+      gnome-multitasking = {
+        enable = true;
+
+        workspaces = "fixed";
+        multiMonitor = "all-displays";
+        appSwitching = "current-workspace";
+      };
     };
 
     # Theming
@@ -60,15 +68,6 @@ in {
       };
 
       # Behaviour
-      "org/gnome/mutter" = {
-        dynamic-workspaces = false;
-      };
-      "org/gnome/desktop/wm/preferences" = {
-        num-workspaces = 4;
-      };
-      "org/gnome/shell/app-switcher" = {
-        current-workspace-only = true;
-      };
       "org/gnome/shell/extensions/auto-move-windows" = {
         application-list = mkAutoMoveWindowsApplicationList {
           "steam.desktop" = 1;
