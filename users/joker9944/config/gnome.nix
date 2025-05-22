@@ -18,13 +18,13 @@ in {
         enable = true;
 
         extensions = with pkgs.gnomeExtensions;
-          lib.lists.map (id: {
-            id = id;
+          lib.lists.map (name: {
+            id = name + "@gnome-shell-extensions.gcampax.github.com";
             package = pkgs.gnome-shell-extensions;
           }) [
-            "auto-move-windows@gnome-shell-extensions.gcampax.github.com"
-            "places-menu@gnome-shell-extensions.gcampax.github.com"
-            "apps-menu@gnome-shell-extensions.gcampax.github.com"
+            "auto-move-windows"
+            "places-menu"
+            "apps-menu"
           ]
           ++ lib.lists.map (pkg: {
             id = pkg.extensionUuid;
@@ -40,11 +40,25 @@ in {
           name = "Dracula";
           package = pkgs.dracula-theme;
         };
+      };
+    };
 
-        icons = {
-          name = "Dracula";
-          package = pkgs.dracula-icon-theme;
-        };
+    gtk = {
+      enable = true;
+
+      theme = {
+        name = "Dracula";
+        package = pkgs.dracula-theme;
+      };
+
+      cursorTheme = {
+        name = "Dracula";
+        package = pkgs.dracula-theme;
+      };
+
+      iconTheme = {
+        name = "Dracula";
+        package = pkgs.dracula-icon-theme;
       };
     };
 
