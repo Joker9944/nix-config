@@ -5,7 +5,7 @@
 }: let
   cfg = config.gnome-settings.keyboard.shortcuts;
 
-  customShortcutOptions = {config, ...}: {
+  customShortcutOptions = {...}: {
     options = with lib; {
       name = mkOption {
         type = types.str;

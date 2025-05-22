@@ -80,6 +80,12 @@ in {
 
         style = "prefer-dark";
         accentColor = "purple";
+
+        background = {
+          picturePath = "/run/current-system/sw/share/backgrounds/gnome/blobs-l.svg";
+          darkStylePicturePath = "/run/current-system/sw/share/backgrounds/gnome/blobs-d.svg";
+          primaryColor = "#241f31";
+        };
       };
 
       keyboard.shortcuts = {
@@ -161,7 +167,7 @@ in {
         unmaximize = ["<Super>Page_Down"];
       };
       "org/gnome/settings-daemon/plugins/media-keys" = {
-        calculator = [ "<Super>c" ];
+        calculator = ["<Super>c"];
         screensaver = ["<Super>Escape" "<Super>l"];
       };
       "org/gnome/mutter/wayland/keybindings" = {
