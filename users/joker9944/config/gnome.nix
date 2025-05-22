@@ -6,7 +6,17 @@
 }:
 with lib; let
   cfg = config.common.desktopEnvironment.gnome;
+
   mkAutoMoveWindowsApplicationList = attrs: attrValues (mapAttrs (app: index: app + ":" + toString index) attrs);
+
+  mkGnomeShellExtensionsList = lib.lists.map (name: {
+    id = name + "@gnome-shell-extensions.gcampax.github.com";
+    package = pkgs.gnome-shell-extensions;
+  });
+  mkGeneralShellExtensionsList = lib.lists.map (pkg: {
+    id = pkg.extensionUuid;
+    package = pkg;
+  });
 in {
   options.common.desktopEnvironment.gnome = with lib; {
     enable = mkEnableOption "Whether to enable GNOME desktop environment config.";
@@ -18,18 +28,12 @@ in {
         enable = true;
 
         extensions = with pkgs.gnomeExtensions;
-          lib.lists.map (name: {
-            id = name + "@gnome-shell-extensions.gcampax.github.com";
-            package = pkgs.gnome-shell-extensions;
-          }) [
+          mkGnomeShellExtensionsList [
             "auto-move-windows"
             "places-menu"
             "apps-menu"
           ]
-          ++ lib.lists.map (pkg: {
-            id = pkg.extensionUuid;
-            package = pkg;
-          }) [
+          ++ mkGeneralShellExtensionsList [
             tophat
             clipboard-history
             worksets
@@ -76,6 +80,28 @@ in {
 
         style = "prefer-dark";
         accentColor = "purple";
+      };
+
+      keyboard.shortcuts = {
+        enable = true;
+
+        customShortcuts = [
+          {
+            name = "Launch Console";
+            command = "kgx";
+            binding = "<Super>T";
+          }
+          {
+            name = "Launch btop++";
+            command = "kgx -- btop";
+            binding = "<Shift><Control>Escape";
+          }
+          {
+            name = "Launch Calculator";
+            command = "gnome-calculator";
+            binding = "<Super>C";
+          }
+        ];
       };
     };
 
@@ -141,20 +167,6 @@ in {
       };
       "org/gnome/settings-daemon/plugins/media-keys" = {
         screensaver = ["<Super>Escape" "<Super>L"];
-        custom-keybindings = [
-          "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
-          "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
-        ];
-      };
-      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-        name = "Launch Console";
-        binding = "<Super>t";
-        command = "kgx";
-      };
-      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
-        name = "Launch btop++";
-        binding = "<Shift><Control>Escape";
-        command = "kgx -- btop";
       };
       "org/gnome/mutter/wayland/keybindings" = {
         restore-shortcuts = mkEmptyArray type.string;

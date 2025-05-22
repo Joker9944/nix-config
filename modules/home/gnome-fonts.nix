@@ -29,7 +29,7 @@ in {
       type = types.bool;
       default = true;
       description = ''
-        Whether the interface text font should be used for GTK applications.
+        Whether the interface text font should be used for GTK applications. Passes the interface text font to gtk.font.
       '';
     };
 
@@ -65,7 +65,7 @@ in {
 
       homePkgs =
         lib.lists.optional (cfg.interfaceText != null && !cfg.gtkFontCompatibility) cfg.interfaceText.package
-        ++ lib.lists.optional (cfg.monospaceText != null) cfg.monospaceText.package
+        ++ lib.lists.optional (cfg.documentText != null) cfg.documentText.package
         ++ lib.lists.optional (cfg.monospaceText != null) cfg.monospaceText.package;
     in {
       dconf.settings."org/gnome/desktop/interface" = dconfSettings;
