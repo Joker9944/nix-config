@@ -52,7 +52,7 @@ in {
       };
 
       cursorTheme = {
-        name = "Dracula";
+        name = "Dracula-cursors";
         package = pkgs.dracula-theme;
       };
 
