@@ -46,28 +46,26 @@ in {
           package = pkgs.dracula-icon-theme;
         };
       };
+    };
 
-      gnome-multitasking = {
+    gnome-settings = {
+      multitasking = {
         enable = true;
 
         workspaces = "fixed";
         multiMonitor = "all-displays";
         appSwitching = "current-workspace";
       };
-    };
 
-    # Theming
-    gtk = {
-      enable = true;
-      gtk3.extraConfig.gtk-application-prefer-dark-theme = 1; # Legacy theming
+      appearance = {
+        enable = true;
+
+        style = "prefer-dark";
+        accentColor = "purple";
+      };
     };
 
     dconf.settings = with lib.hm.gvariant; {
-      # Theming
-      "org/gnome/desktop/interface" = {
-        color-scheme = "prefer-dark";
-        accent-color = "purple";
-      };
       "org/gnome/shell/extensions/tophat" = {
         # Memory
         mem-display = "numeric";
