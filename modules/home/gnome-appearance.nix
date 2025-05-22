@@ -56,6 +56,7 @@ in {
 
     gtk = lib.mkIf cfg.gtkLegacyCompatibility {
       enable = true;
+
       gtk3.extraConfig.gtk-application-prefer-dark-theme =
         if (cfg.style == "default")
         then 0

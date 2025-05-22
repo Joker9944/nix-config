@@ -79,6 +79,30 @@ in {
       };
     };
 
+    gnome-tweaks = {
+      fonts = {
+        enable = true;
+
+        interfaceText = {
+          name = "Inter";
+          package = pkgs.inter;
+          size = 10;
+        };
+
+        documentText = {
+          name = "Roboto";
+          package = pkgs.roboto;
+          size = 12;
+        };
+
+        monospaceText = {
+          name = "JetBrains Mono";
+          package = pkgs.jetbrains-mono;
+          size = 10;
+        };
+      };
+    };
+
     dconf.settings = with lib.hm.gvariant; {
       "org/gnome/shell/extensions/tophat" = {
         # Memory
