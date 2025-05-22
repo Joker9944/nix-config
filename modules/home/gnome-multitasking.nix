@@ -61,7 +61,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    dconf.settings = with lib.hm.gvariant; {
+    dconf.settings = {
       "org/gnome/desktop/interface" = {
         enable-hot-corners = cfg.hotCorner;
       };

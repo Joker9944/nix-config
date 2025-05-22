@@ -18,18 +18,35 @@ in {
         enable = true;
 
         extensions = with pkgs.gnomeExtensions;
-          lib.lists.map (pkg: {
+          lib.lists.map (id: {
+            id = id;
+            package = pkgs.gnome-shell-extensions;
+          }) [
+            "auto-move-windows@gnome-shell-extensions.gcampax.github.com"
+            "places-menu@gnome-shell-extensions.gcampax.github.com"
+            "apps-menu@gnome-shell-extensions.gcampax.github.com"
+          ]
+          ++ lib.lists.map (pkg: {
             id = pkg.extensionUuid;
             package = pkg;
           }) [
             tophat
             clipboard-history
-            auto-move-windows
-            places-status-indicator
             worksets
             caffeine
           ];
+
+        theme = {
+          name = "Dracula";
+          package = pkgs.dracula-theme;
+        };
+
+        icons = {
+          name = "Dracula";
+          package = pkgs.dracula-icon-theme;
+        };
       };
+
       gnome-multitasking = {
         enable = true;
 
@@ -43,11 +60,6 @@ in {
     gtk = {
       enable = true;
       gtk3.extraConfig.gtk-application-prefer-dark-theme = 1; # Legacy theming
-    };
-
-    home.pointerCursor = {
-      package = pkgs.adwaita-icon-theme;
-      name = "Adwaita";
     };
 
     dconf.settings = with lib.hm.gvariant; {
