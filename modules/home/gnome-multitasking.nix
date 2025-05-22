@@ -28,7 +28,7 @@ in {
       ];
       default = "dynamic";
       description = ''
-        Whether the number of workspaces should automaticly expand or be fixed.
+        Whether the number of workspaces should automatically expand or be fixed.
       '';
     };
     numberOfWorkspaces = mkOption {

@@ -74,6 +74,8 @@
           home-manager
           sops
           age
+          gnome-tweaks
+          dconf-editor
         ];
       };
 
