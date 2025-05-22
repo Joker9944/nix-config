@@ -25,7 +25,7 @@
 
       binding = mkOption {
         type = types.str;
-        example = "<Super>T";
+        example = "<Super>t";
         description = ''
           The shortcut binding.
         '';
@@ -68,7 +68,7 @@ in {
     in {
       dconf.settings =
         {
-          "org/gnome/settings-daemon/plugins/media-keys".custom-keybindings = customKeybindingsRef;
+          "org/gnome/settings-daemon/plugins/media-keys".custom-keybindings = lib.mkIf (customKeybindingsRef != []) customKeybindingsRef;
         }
         // customKeybindings;
     }

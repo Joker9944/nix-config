@@ -89,17 +89,12 @@ in {
           {
             name = "Launch Console";
             command = "kgx";
-            binding = "<Super>T";
+            binding = "<Super>t";
           }
           {
             name = "Launch btop++";
             command = "kgx -- btop";
             binding = "<Shift><Control>Escape";
-          }
-          {
-            name = "Launch Calculator";
-            command = "gnome-calculator";
-            binding = "<Super>C";
           }
         ];
       };
@@ -166,7 +161,8 @@ in {
         unmaximize = ["<Super>Page_Down"];
       };
       "org/gnome/settings-daemon/plugins/media-keys" = {
-        screensaver = ["<Super>Escape" "<Super>L"];
+        calculator = [ "<Super>c" ];
+        screensaver = ["<Super>Escape" "<Super>l"];
       };
       "org/gnome/mutter/wayland/keybindings" = {
         restore-shortcuts = mkEmptyArray type.string;
