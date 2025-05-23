@@ -88,6 +88,15 @@ in {
         };
       };
 
+      peripherals = {
+        enable = true;
+
+        mouse = {
+          pointerSpeed = 0.5;
+          mouseAcceleration = false;
+        };
+      };
+
       keyboard.shortcuts = {
         enable = true;
 

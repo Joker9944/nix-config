@@ -72,25 +72,6 @@
       };
     };
   };
-
-  mkBackgroundDconfSettings =
-    {
-      picture-options = cfg.background.pictureOption;
-      color-shading-type = cfg.background.colorShadingType;
-      primary-color = cfg.background.primaryColor;
-      secondary-color = cfg.background.secondaryColor;
-    }
-    // lib.attrsets.optionalAttrs (cfg.background.picturePath != null) {
-      picture-uri = "file://${cfg.background.picturePath}";
-    };
-  mkBackgroundWithDarkDconfSettings =
-    mkBackgroundDconfSettings
-    // lib.attrsets.optionalAttrs (cfg.background.picturePath != null && cfg.background.darkStylePicturePath == null) {
-      picture-uri-dark = "file://${cfg.background.picturePath}";
-    }
-    // lib.attrsets.optionalAttrs (cfg.background.picturePath != null && cfg.background.darkStylePicturePath != null) {
-      picture-uri-dark = "file://${cfg.background.darkStylePicturePath}";
-    };
 in {
   options.gnome-settings.appearance = with lib; {
     enable = mkEnableOption "Whether to enable GNOME appearance config.";
@@ -152,24 +133,44 @@ in {
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    dconf.settings = {
-      "org/gnome/desktop/interface" = {
-        color-scheme = cfg.style;
-        accent-color = cfg.accentColor;
+  config = let
+    mkBackgroundDconfSettings =
+      {
+        picture-options = cfg.background.pictureOption;
+        color-shading-type = cfg.background.colorShadingType;
+        primary-color = cfg.background.primaryColor;
+        secondary-color = cfg.background.secondaryColor;
+      }
+      // lib.attrsets.optionalAttrs (cfg.background.picturePath != null) {
+        picture-uri = "file://${cfg.background.picturePath}";
+      };
+    mkBackgroundWithDarkDconfSettings =
+      mkBackgroundDconfSettings
+      // lib.attrsets.optionalAttrs (cfg.background.picturePath != null && cfg.background.darkStylePicturePath == null) {
+        picture-uri-dark = "file://${cfg.background.picturePath}";
+      }
+      // lib.attrsets.optionalAttrs (cfg.background.picturePath != null && cfg.background.darkStylePicturePath != null) {
+        picture-uri-dark = "file://${cfg.background.darkStylePicturePath}";
+      };
+  in
+    lib.mkIf cfg.enable {
+      dconf.settings = {
+        "org/gnome/desktop/interface" = {
+          color-scheme = cfg.style;
+          accent-color = cfg.accentColor;
+        };
+
+        "org/gnome/desktop/background" = lib.mkIf (cfg.background != null) mkBackgroundWithDarkDconfSettings;
+        "org/gnome/desktop/screensaver" = lib.mkIf (cfg.background != null) mkBackgroundDconfSettings;
       };
 
-      "org/gnome/desktop/background" = lib.mkIf (cfg.background != null) mkBackgroundWithDarkDconfSettings;
-      "org/gnome/desktop/screensaver" = lib.mkIf (cfg.background != null) mkBackgroundDconfSettings;
-    };
+      gtk = lib.mkIf cfg.gtkLegacyCompatibility {
+        enable = true;
 
-    gtk = lib.mkIf cfg.gtkLegacyCompatibility {
-      enable = true;
-
-      gtk3.extraConfig.gtk-application-prefer-dark-theme =
-        if (cfg.style == "default")
-        then 0
-        else 1;
+        gtk3.extraConfig.gtk-application-prefer-dark-theme =
+          if (cfg.style == "default")
+          then 0
+          else 1;
+      };
     };
-  };
 }

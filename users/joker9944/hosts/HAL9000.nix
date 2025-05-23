@@ -15,4 +15,6 @@
     prismlauncher
     lutris
   ];
+
+  gnome-settings.peripherals.touchpad.enable = false;
 }
