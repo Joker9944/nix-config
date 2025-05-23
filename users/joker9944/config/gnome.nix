@@ -126,8 +126,8 @@ in {
         };
 
         documentText = {
-          name = "Roboto";
-          package = pkgs.roboto;
+          name = "Lato";
+          package = pkgs.lato;
           size = 12;
         };
 
