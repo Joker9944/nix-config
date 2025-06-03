@@ -73,7 +73,7 @@ in {
     };
   };
 
-  # Set deault keymap
+  # Set default keymap
   services.xserver.xkb = with locale; {
     layout = lib.mkDefault de;
     variant = lib.mkDefault us;

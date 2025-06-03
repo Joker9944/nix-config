@@ -6,48 +6,140 @@
 }:
 with lib; let
   cfg = config.common.desktopEnvironment.gnome;
+
   mkAutoMoveWindowsApplicationList = attrs: attrValues (mapAttrs (app: index: app + ":" + toString index) attrs);
+
+  mkGnomeShellExtensionsList = lib.lists.map (name: {
+    id = name + "@gnome-shell-extensions.gcampax.github.com";
+    package = pkgs.gnome-shell-extensions;
+  });
+  mkGeneralShellExtensionsList = lib.lists.map (pkg: {
+    id = pkg.extensionUuid;
+    package = pkg;
+  });
 in {
   options.common.desktopEnvironment.gnome = with lib; {
     enable = mkEnableOption "Whether to enable GNOME desktop environment config.";
   };
 
   config = lib.mkIf cfg.enable {
-    # Extensions
-    programs.gnome-shell = {
-      enable = true;
+    programs = {
+      gnome-shell = {
+        enable = true;
 
-      extensions = with pkgs.gnomeExtensions;
-        lib.lists.map (pkg: {
-          id = pkg.extensionUuid;
-          package = pkg;
-        }) [
-          tophat
-          clipboard-history
-          auto-move-windows
-          places-status-indicator
-          worksets
-          caffeine
-        ];
+        extensions = with pkgs.gnomeExtensions;
+          mkGnomeShellExtensionsList [
+            "auto-move-windows"
+            "places-menu"
+            "apps-menu"
+          ]
+          ++ mkGeneralShellExtensionsList [
+            tophat
+            clipboard-history
+            worksets
+            caffeine
+          ];
+
+        theme = {
+          name = "Dracula";
+          package = pkgs.dracula-theme;
+        };
+      };
     };
 
-    # Theming
     gtk = {
       enable = true;
-      gtk3.extraConfig.gtk-application-prefer-dark-theme = 1; # Legacy theming
+
+      theme = {
+        name = "Dracula";
+        package = pkgs.dracula-theme;
+      };
+
+      cursorTheme = {
+        name = "Dracula-cursors";
+        package = pkgs.dracula-theme;
+      };
+
+      iconTheme = {
+        name = "Dracula";
+        package = pkgs.dracula-icon-theme;
+      };
     };
 
-    home.pointerCursor = {
-      package = pkgs.adwaita-icon-theme;
-      name = "Adwaita";
+    gnome-settings = {
+      multitasking = {
+        enable = true;
+
+        workspaces = "fixed";
+        multiMonitor = "all-displays";
+        appSwitching = "current-workspace";
+      };
+
+      appearance = {
+        enable = true;
+
+        style = "prefer-dark";
+        accentColor = "purple";
+
+        background = {
+          picturePath = "/run/current-system/sw/share/backgrounds/gnome/blobs-l.svg";
+          darkStylePicturePath = "/run/current-system/sw/share/backgrounds/gnome/blobs-d.svg";
+          primaryColor = "#241f31";
+        };
+      };
+
+      peripherals = {
+        enable = true;
+
+        mouse = {
+          pointerSpeed = 0.5;
+          mouseAcceleration = false;
+        };
+      };
+
+      keyboard.shortcuts = {
+        enable = true;
+
+        customShortcuts = [
+          {
+            name = "Launch Console";
+            command = "kgx";
+            binding = "<Super>t";
+          }
+          {
+            name = "Launch btop++";
+            command = "kgx -- btop";
+            binding = "<Shift><Control>Escape";
+          }
+        ];
+      };
+    };
+
+    gnome-tweaks = {
+      fonts = {
+        enable = true;
+
+        interfaceText = {
+          name = "Inter";
+          package = pkgs.inter;
+          size = 10;
+        };
+
+        documentText = {
+          name = "Lato";
+          package = pkgs.lato;
+          size = 12;
+        };
+
+        monospaceText = {
+          name = "JetBrains Mono";
+          package = pkgs.jetbrains-mono;
+          size = 10;
+        };
+      };
     };
 
     dconf.settings = with lib.hm.gvariant; {
-      # Theming
-      "org/gnome/desktop/interface" = {
-        color-scheme = "prefer-dark";
-        accent-color = "purple";
-      };
       "org/gnome/shell/extensions/tophat" = {
         # Memory
         mem-display = "numeric";
@@ -60,15 +152,6 @@ in {
       };
 
       # Behaviour
-      "org/gnome/mutter" = {
-        dynamic-workspaces = false;
-      };
-      "org/gnome/desktop/wm/preferences" = {
-        num-workspaces = 4;
-      };
-      "org/gnome/shell/app-switcher" = {
-        current-workspace-only = true;
-      };
       "org/gnome/shell/extensions/auto-move-windows" = {
         application-list = mkAutoMoveWindowsApplicationList {
           "steam.desktop" = 1;
@@ -93,21 +176,8 @@ in {
         unmaximize = ["<Super>Page_Down"];
       };
       "org/gnome/settings-daemon/plugins/media-keys" = {
-        screensaver = ["<Super>Escape" "<Super>L"];
-        custom-keybindings = [
-          "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
-          "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
-        ];
-      };
-      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-        name = "Launch Console";
-        binding = "<Super>t";
-        command = "kgx";
-      };
-      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
-        name = "Launch btop++";
-        binding = "<Shift><Control>Escape";
-        command = "kgx -- btop";
+        calculator = ["<Super>c"];
+        screensaver = ["<Super>Escape" "<Super>l"];
       };
       "org/gnome/mutter/wayland/keybindings" = {
         restore-shortcuts = mkEmptyArray type.string;

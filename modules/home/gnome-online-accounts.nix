@@ -3,9 +3,9 @@
   config,
   ...
 }: let
-  cfg = config.programs.gnome-online-accounts;
+  cfg = config.gnome-settings.gnome-online-accounts;
 in {
-  options.programs.gnome-online-accounts = with lib; {
+  options.gnome-settings.gnome-online-accounts = with lib; {
     enable = mkEnableOption "Whether to enable GNOME online accounts config.";
     accounts = mkOption {
       type = with types; attrsOf attrs;
