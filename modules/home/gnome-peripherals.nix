@@ -8,23 +8,25 @@
   mkPointerSpeedOption = device:
     with lib;
       mkOption {
-        type = types.numbers.between (-1) (1);
+        type = types.numbers.between (-1) 1;
         default = 0;
         description = ''
           The ${device} pointer speed.
         '';
       };
 
-  mkScrollDirectionOption = device: default: with lib; mkOption {
-    type = types.enum [
-      "traditional"
-      "natural"
-    ];
-    default = default;
-    description = ''
-      The ${device} scroll direction.
-    '';
-  };
+  mkScrollDirectionOption = device: default:
+    with lib;
+      mkOption {
+        type = types.enum [
+          "traditional"
+          "natural"
+        ];
+        default = default;
+        description = ''
+          The ${device} scroll direction.
+        '';
+      };
 
   mouseOptions = {...}: {
     options = with lib; {
@@ -123,7 +125,7 @@ in {
         }
       '';
       description = ''
-         Mouse behaviour settings.
+        Mouse behaviour settings.
       '';
     };
 

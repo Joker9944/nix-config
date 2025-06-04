@@ -64,6 +64,7 @@
     in {
       packages = {
         firefox-profile-switcher-connector = pkgs.callPackage ./pkgs/firefox-profile-switcher-connector.nix {};
+        vscode-extensions.streetsidesoftware.code-spell-checker-swiss-german = pkgs.callPackage ./pkgs/vscode-extensions.streetsidesoftware.code-spell-checker-swiss-german.nix {};
       };
 
       devShells.default = pkgs.mkShell {
@@ -84,6 +85,9 @@
     // {
       overlays = {
         firefox-profile-switcher-connector = final: prev: {inherit (self.packages.${prev.system}) firefox-profile-switcher-connector;};
+        vscode-extensions-streetsidesoftware-code-spell-checker-swiss-german = final: prev: {
+          vscode-extensions.streetsidesoftware = {inherit (self.packages.${prev.system}.vscode-extensions.streetsidesoftware) code-spell-checker-swiss-german;};
+        };
       };
 
       nixosModules = utility.importFiles ./modules/nixos;

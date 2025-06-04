@@ -176,7 +176,7 @@ in {
         unmaximize = ["<Super>Page_Down"];
       };
       "org/gnome/settings-daemon/plugins/media-keys" = {
-        home=["<Super>e"];
+        home = ["<Super>e"];
         calculator = ["<Super>c"];
         screensaver = ["<Super>Escape" "<Super>l"];
       };

@@ -17,6 +17,7 @@ in {
       ./config/jetbrains.nix
       ./config/kanidm.nix
       ./config/kde-plasma.nix
+      ./config/vscode.nix
       ./config/xdg.nix
     ]
     ++ (
