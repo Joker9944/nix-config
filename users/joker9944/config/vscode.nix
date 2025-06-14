@@ -13,6 +13,7 @@
     "editor.renderWhitespace" = "boundary";
     "diffEditor.ignoreTrimWhitespace" = false;
     "workbench.colorTheme" = "Dracula Theme";
+    "editor.fontFamily" = "'JetBrains Mono', 'Adwaita Mono', monospace";
     "[markdown]" = {
       "editor.defaultFormatter" = "esbenp.prettier-vscode";
     };
