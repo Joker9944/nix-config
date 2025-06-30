@@ -127,7 +127,10 @@ in {
   networking.networkmanager.enable = lib.mkDefault true;
 
   # Enable cups by default
-  services.printing.enable = lib.mkDefault true;
+  services.printing = {
+    enable = lib.mkDefault true;
+    drivers = [ pkgs.epson-escpr ];
+  };
 
   # Enable PipeWire by default
   security.rtkit.enable = lib.mkDefault true;
