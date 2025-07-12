@@ -126,6 +126,9 @@ in {
   # Enable networking by default
   networking.networkmanager.enable = lib.mkDefault true;
 
+  # Enable Tailscale by default
+  services.tailscale.enable = true;
+
   # Enable cups by default
   services.printing = {
     enable = lib.mkDefault true;
