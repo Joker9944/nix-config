@@ -132,7 +132,7 @@ in {
   # Enable cups by default
   services.printing = {
     enable = lib.mkDefault true;
-    drivers = [ pkgs.epson-escpr ];
+    drivers = [pkgs.epson-escpr];
   };
 
   # Enable PipeWire by default

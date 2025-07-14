@@ -86,9 +86,11 @@
       overlays = {
         firefox-profile-switcher-connector = final: prev: {inherit (self.packages.${prev.system}) firefox-profile-switcher-connector;};
         vscode-extensions-streetsidesoftware-code-spell-checker-swiss-german = final: prev: {
-          vscode-extensions = prev.vscode-extensions // {
-            streetsidesoftware = prev.vscode-extensions.streetsidesoftware // {inherit (self.packages.${prev.system}.vscode-extensions.streetsidesoftware) code-spell-checker-swiss-german;};
-          };
+          vscode-extensions =
+            prev.vscode-extensions
+            // {
+              streetsidesoftware = prev.vscode-extensions.streetsidesoftware // {inherit (self.packages.${prev.system}.vscode-extensions.streetsidesoftware) code-spell-checker-swiss-german;};
+            };
         };
       };
 

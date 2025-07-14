@@ -1,4 +1,8 @@
-{pkgs, ...}: let
+{
+  lib,
+  pkgs,
+  ...
+}: let
   commonExtensions = with pkgs.vscode-extensions; [
     dracula-theme.theme-dracula
     streetsidesoftware.code-spell-checker
@@ -19,44 +23,53 @@
     };
     "cSpell.language" = "en,de-CH";
   };
+
+  mkProfile = profile:
+    profile
+    // {
+      extensions = commonExtensions ++ profile.extensions or [];
+      userSettings = lib.recursiveUpdate commonSettings profile.userSettings or {};
+    };
 in {
   config.programs.vscode = {
     package = pkgs.vscodium;
 
     profiles = {
-      default = {
+      default = mkProfile {
         enableUpdateCheck = false;
         enableExtensionUpdateCheck = false;
-
-        extensions = commonExtensions;
-
-        userSettings = commonSettings;
       };
-      nix = {
-        extensions = with pkgs.vscode-extensions;
-          [
-            kamadorueda.alejandra
-            jnoortheen.nix-ide
-          ]
-          ++ commonExtensions;
 
-        userSettings =
-          {
-            "[nix]" = {
-              "editor.tabSize" = 2;
-            };
-          }
-          // commonSettings;
+      nix = mkProfile {
+        extensions = with pkgs.vscode-extensions; [
+          kamadorueda.alejandra
+          jnoortheen.nix-ide
+        ];
+
+        userSettings = {
+          "[nix]" = {
+            "editor.tabSize" = 2;
+          };
+        };
       };
-      notes = {
-        extensions = with pkgs.vscode-extensions;
-          [
-            foam.foam-vscode
-            yzhang.markdown-all-in-one
-          ]
-          ++ commonExtensions;
 
-        userSettings = commonSettings;
+      notes = mkProfile {
+        extensions = with pkgs.vscode-extensions; [
+          foam.foam-vscode
+          yzhang.markdown-all-in-one
+        ];
+      };
+
+      k8s = mkProfile {
+        extensions = with pkgs.vscode-extensions; [
+          ms-kubernetes-tools.vscode-kubernetes-tools
+          ms-vscode-remote.remote-containers
+          redhat.vscode-yaml
+        ];
+
+        userSettings = {
+          "redhat.telemetry.enabled" = false;
+        };
       };
     };
   };
