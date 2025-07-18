@@ -20,12 +20,15 @@ jobs:
     steps:
 
       - name: Repository Checkout
+        id: git-checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Install Determinate Nix
+        id: nix-install
         uses: DeterminateSystems/determinate-nix-action@2b7bca919ce8854111c6f9135091ddf5eea8e0eb # v3.8.2
 
       - name: Update flake.lock
+        id: nix-update
         uses: DeterminateSystems/update-flake-lock@c5930b397a673a70ca70be06020e943aeac310a1 # v27
 
         with:
@@ -34,3 +37,14 @@ jobs:
           sign-commits: true
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+
+        # This is a workaround since no code checks are configured for Github auto merge, if that ever changes switch to:
+        # https://github.com/juliangruber/approve-pull-request-action
+      - name: Merge Update flake.lock PR
+        id: git-merge
+        uses: juliangruber/merge-pull-request-action@9234b8714dda9a08f3d1df5b2a6a3abd7b695353 # v1.3.1
+        with:
+          number: ${{ steps.nix-update.outputs.pull-request-number }}
+          method: squash
+
+          github-token: ${{ secrets.GITHUB_TOKEN }}
