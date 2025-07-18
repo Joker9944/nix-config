@@ -1,0 +1,20 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  extends: [
+    "config:recommended",
+    ":dependencyDashboard",
+    "schedule:weekends",
+  ],
+  packageRules: [
+    {
+      matchUpdateTypes: [ "major" ],
+      automerge: false,
+      dependencyDashboardApproval: true,
+    },
+    {
+      matchUpdateTypes: ["minor", "patch", "pin", "digest"],
+      automerge: true,
+      ignoreTests: true,
+    },
+  ],
+}
