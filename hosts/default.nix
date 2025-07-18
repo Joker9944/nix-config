@@ -32,7 +32,7 @@ in {
     enable = lib.mkDefault true;
     persistent = true;
     flake = "github:Joker9944/nix-config";
-    dates = lib.mkDefault "daily";
+    dates = lib.mkDefault "*-*-* 04:00:00 UTC"; # 1 hour after github actions nix flake update
   };
 
   # Enable automatic nix store garbage collection
@@ -133,6 +133,12 @@ in {
   services.printing = {
     enable = lib.mkDefault true;
     drivers = [pkgs.epson-escpr];
+  };
+
+  # Enable GnuPG by default
+  programs.gnupg = {
+    package = pkgs.gnupg1;
+    agent.enable = lib.mkDefault true;
   };
 
   # Enable PipeWire by default
