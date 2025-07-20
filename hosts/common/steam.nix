@@ -27,6 +27,6 @@
       systemPackages = [mangohud pkgs-unstable.r2modman];
     };
 
-    services.udev.dualsenseFix.enable = true;
+    services.udev.dualsenseFix = true;
   };
 }
