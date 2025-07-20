@@ -26,7 +26,6 @@ in {
 
   home.packages = with pkgs; [
     fastfetch
-    btop
     imagemagick
     tree
 
@@ -57,6 +56,8 @@ in {
     bash.enable = true;
 
     vscode.enable = true;
+
+    btop.enable = true;
 
     git = {
       enable = true;

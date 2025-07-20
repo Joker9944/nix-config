@@ -7,13 +7,7 @@
   cfg = config.programs.ffmpeg;
 in {
   options.programs.ffmpeg = with lib; {
-    enable = mkOption {
-      type = types.bool;
-      default = false;
-      description = ''
-        Whether to enable ffmpeg.
-      '';
-    };
+    enable = mkEnableOption "ffmpeg"
   };
 
   config = lib.mkIf cfg.enable {
