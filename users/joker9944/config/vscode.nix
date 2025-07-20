@@ -22,6 +22,7 @@
       "editor.defaultFormatter" = "esbenp.prettier-vscode";
     };
     "cSpell.language" = "en,de-CH";
+    "git.confirmSync" = false;
   };
 
   mkProfile = profile:
