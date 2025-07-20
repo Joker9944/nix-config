@@ -43,6 +43,7 @@ jobs:
       - name: Merge Update flake.lock PR
         id: git-merge
         uses: juliangruber/merge-pull-request-action@9234b8714dda9a08f3d1df5b2a6a3abd7b695353 # v1.3.1
+        if: ${{ steps.nix-update.outputs.pull-request-number != null }}
         with:
           number: ${{ steps.nix-update.outputs.pull-request-number }}
           method: squash
