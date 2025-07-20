@@ -1,6 +1,6 @@
-{pkgs-unstable, ...}: {
+{pkgs, ...}: {
   home = {
-    packages = with pkgs-unstable; [
+    packages = with pkgs; [
       jetbrains.idea-ultimate
       jetbrains.pycharm-professional
       jetbrains.webstorm

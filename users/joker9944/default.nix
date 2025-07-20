@@ -69,6 +69,15 @@ in {
 
     _1password = {
       sshIdentityAgentHosts = ["*"];
+
+      sshAgentConfig = {
+        ssh-keys = [
+          {
+            vault = "Private";
+            item = "joker9944@" + hostname;
+          }
+        ];
+      };
     };
 
     home-manager.enable = true;

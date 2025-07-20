@@ -18,7 +18,7 @@ in {
     [
       (lib.path.append ./. hostname) # Import matching host modules
     ]
-    ++ (utility.listFilesRelative ./common);
+    ++ (utility.custom.listFilesRelative ./common);
 
   # Set args inherited from mkNixosConfiguration
   nixpkgs.overlays = overlays;

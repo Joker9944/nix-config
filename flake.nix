@@ -25,6 +25,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-math.url = "github:xddxdd/nix-math/master";
+    nix-std.url = "github:chessai/nix-std/master";
   };
 
   outputs = inputs @ {
@@ -51,7 +52,11 @@
 
     overlays = lib.mapAttrsToList (_: value: value) self.overlays;
 
-    utility = (import ./lib/utility.nix lib) // inputs.nix-math.lib.math;
+    utility = {
+      custom = import ./lib/utility.nix lib;
+      math = inputs.nix-math.lib.math;
+      std = inputs.nix-std.lib;
+    };
     mkNixosConfiguration = import ./lib/mkNixosConfiguration.nix {
       inherit inputs utility;
     };
@@ -94,8 +99,8 @@
         };
       };
 
-      nixosModules = utility.importFiles ./modules/nixos;
-      homeModules = utility.importFiles ./modules/home;
+      nixosModules = utility.custom.importFiles ./modules/nixos;
+      homeModules = utility.custom.importFiles ./modules/home;
 
       nixosConfigurations.HAL9000 = mkNixosConfiguration {
         inherit overlays nixosModules;
