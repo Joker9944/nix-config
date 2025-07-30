@@ -33,6 +33,7 @@ in {
     persistent = true;
     flake = "github:Joker9944/nix-config";
     dates = lib.mkDefault "*-*-* 04:00:00 UTC"; # 1 hour after github actions nix flake update
+    notify.enable = true;
   };
 
   # Enable automatic nix store garbage collection

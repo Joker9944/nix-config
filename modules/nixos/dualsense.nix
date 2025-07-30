@@ -6,7 +6,7 @@
   cfg = config.services.udev;
 in {
   options.services.udev = with lib; {
-    dualsenseFix = mkEnableOption "DualSense trackpad fix"
+    dualsenseFix = mkEnableOption "DualSense trackpad fix";
   };
 
   config = lib.mkIf cfg.dualsenseFix {
