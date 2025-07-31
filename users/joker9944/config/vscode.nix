@@ -73,6 +73,7 @@ in {
       sops # default -> used for git secret encryption
       alejandra # nix -> alejandra extension
       kubectl # k8s -> kubernetes tooling
+      helm # k8s -> kubernetes tooling
     ];
 
     programs.vscode = {
