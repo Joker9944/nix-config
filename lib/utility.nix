@@ -5,9 +5,15 @@ lib: rec {
 
   listFilesRelative = dir: lib.map (file: lib.path.append dir file) (listFiles dir);
 
-  importFiles = dir:
-    lib.listToAttrs (map (filename: {
-      name = lib.removeSuffix ".nix" filename;
-      value = import (lib.path.append dir filename);
-    }) (listFiles dir));
+  applyFunctionRecursive = dir: fun:
+    lib.attrsets.listToAttrs (
+      lib.lists.map (entry: {
+        name = lib.strings.removeSuffix ".nix" entry.name;
+        value =
+          if entry.value == "directory"
+          then applyFunctionRecursive (lib.path.append dir entry.name) fun
+          else fun (lib.path.append dir entry.name);
+      })
+      (lib.attrsets.attrsToList (builtins.readDir dir))
+    );
 }

@@ -67,10 +67,7 @@
     inputs.flake-utils.lib.eachDefaultSystem (system: let
       pkgs = nixpkgs.legacyPackages.${system};
     in {
-      packages = {
-        firefox-profile-switcher-connector = pkgs.callPackage ./pkgs/firefox-profile-switcher-connector.nix {};
-        vscode-extensions.streetsidesoftware.code-spell-checker-swiss-german = pkgs.callPackage ./pkgs/vscode-extensions.streetsidesoftware.code-spell-checker-swiss-german.nix {};
-      };
+      packages = utility.custom.applyFunctionRecursive ./pkgs (filename: pkgs.callPackage filename {});
 
       devShells.default = pkgs.mkShell {
         name = "flake-dev";
@@ -97,10 +94,17 @@
               streetsidesoftware = prev.vscode-extensions.streetsidesoftware // {inherit (self.packages.${prev.system}.vscode-extensions.streetsidesoftware) code-spell-checker-swiss-german;};
             };
         };
+        vscode-extensions-blueglassblock-better-json5 = final: prev: {
+          vscode-extensions =
+            prev.vscode-extensions
+            // {
+              blueglassblock = {inherit (self.packages.${prev.system}.vscode-extensions.blueglassblock) better-json5;};
+            };
+        };
       };
 
-      nixosModules = utility.custom.importFiles ./modules/nixos;
-      homeModules = utility.custom.importFiles ./modules/home;
+      nixosModules = utility.custom.applyFunctionRecursive ./modules/nixos (filename: import filename);
+      homeModules = utility.custom.applyFunctionRecursive ./modules/home (filename: import filename);
 
       nixosConfigurations.HAL9000 = mkNixosConfiguration {
         inherit overlays nixosModules;

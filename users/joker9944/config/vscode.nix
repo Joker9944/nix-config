@@ -1,8 +1,11 @@
 {
   lib,
   pkgs,
+  pkgs-unstable,
   ...
 }: let
+  vscodeExtensions = pkgs.vscode-extensions;
+
   commonProfiles = [
     {
       # vscode settings
@@ -19,23 +22,23 @@
       };
     }
     {
-      extensions = with pkgs.vscode-extensions; [
-        dracula-theme.theme-dracula
+      extensions = [
+        vscodeExtensions.dracula-theme.theme-dracula
       ];
 
       userSettings."workbench.colorTheme" = "Dracula Theme";
     }
     {
-      extensions = with pkgs.vscode-extensions; [
-        streetsidesoftware.code-spell-checker
-        streetsidesoftware.code-spell-checker-swiss-german
+      extensions = with vscodeExtensions.streetsidesoftware; [
+        code-spell-checker
+        code-spell-checker-swiss-german
       ];
 
       userSettings."cSpell.language" = "en,de-CH";
     }
     {
-      extensions = with pkgs.vscode-extensions; [
-        esbenp.prettier-vscode
+      extensions = [
+        vscodeExtensions.esbenp.prettier-vscode
       ];
 
       userSettings = {
@@ -45,8 +48,19 @@
       };
     }
     {
-      extensions = with pkgs.vscode-extensions; [
-        k--kato.intellij-idea-keybindings
+      extensions = [
+        vscodeExtensions.blueglassblock.better-json5
+      ];
+
+      userSettings = {
+        "[json5]" = {
+          "editor.defaultFormatter" = "BlueGlassBlock.better-json5";
+        };
+      };
+    }
+    {
+      extensions = [
+        vscodeExtensions.k--kato.intellij-idea-keybindings
       ];
     }
   ];
@@ -71,13 +85,14 @@ in {
     home.packages = with pkgs; [
       jetbrains-mono # default -> font configured
       sops # default -> used for git secret encryption
+      pre-commit # default -> used for git pre commit checks
       alejandra # nix -> alejandra extension
       kubectl # k8s -> kubernetes tooling
-      helm # k8s -> kubernetes tooling
+      kubernetes-helm # k8s -> kubernetes tooling
     ];
 
     programs.vscode = {
-      package = pkgs.vscodium;
+      package = pkgs-unstable.vscodium;
 
       profiles = {
         default = mkProfile {
@@ -87,8 +102,8 @@ in {
 
         nix = mkProfile [
           {
-            extensions = with pkgs.vscode-extensions; [
-              jnoortheen.nix-ide
+            extensions = [
+              vscodeExtensions.jnoortheen.nix-ide
             ];
 
             userSettings = {
@@ -98,8 +113,8 @@ in {
             };
           }
           {
-            extensions = with pkgs.vscode-extensions; [
-              kamadorueda.alejandra
+            extensions = [
+              vscodeExtensions.kamadorueda.alejandra
             ];
 
             userSettings = {
@@ -115,22 +130,28 @@ in {
         ];
 
         notes = mkProfile {
-          extensions = with pkgs.vscode-extensions; [
-            foam.foam-vscode
-            yzhang.markdown-all-in-one
+          extensions = [
+            vscodeExtensions.foam.foam-vscode
+            vscodeExtensions.yzhang.markdown-all-in-one
           ];
         };
 
         k8s = mkProfile [
           {
-            extensions = with pkgs.vscode-extensions; [
-              ms-kubernetes-tools.vscode-kubernetes-tools
-              ms-vscode-remote.remote-containers
+            extensions = [
+              vscodeExtensions.ms-kubernetes-tools.vscode-kubernetes-tools
+              vscodeExtensions.ms-vscode-remote.remote-containers
             ];
+
+            userSettings = {
+              "vs-kubernetes" = {
+                "vs-kubernetes.crd-code-completion" = "enabled";
+              };
+            };
           }
           {
-            extensions = with pkgs.vscode-extensions; [
-              redhat.vscode-yaml
+            extensions = [
+              vscodeExtensions.redhat.vscode-yaml
             ];
 
             userSettings = {
