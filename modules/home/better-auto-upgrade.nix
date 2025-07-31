@@ -138,7 +138,7 @@ in {
     systemd.user = {
       services.home-manager-upgrade = {
         Unit = {
-          Description = "Home Manager Upgrade Service";
+          Description = "Home Manager Upgrade";
 
           Wants = "network-online.target";
           After = "network-online.target";
@@ -164,7 +164,7 @@ in {
       };
 
       timers.home-manager-upgrade = {
-        Unit.Description = "Home Manager Upgrade Timer";
+        Unit.Description = "Home Manager Upgrade";
 
         Install.WantedBy = ["timers.target"];
 
