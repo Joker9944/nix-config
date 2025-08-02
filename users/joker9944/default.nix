@@ -3,10 +3,10 @@
   config,
   pkgs,
   pkgs-unstable,
-  hostname,
+  osConfig,
   ...
 }: let
-  hostModule = lib.path.append ./. "hosts/${hostname}.nix";
+  hostModule = lib.path.append ./. "hosts/${osConfig.networking.hostName}.nix";
 in {
   imports =
     [
@@ -75,7 +75,7 @@ in {
         ssh-keys = [
           {
             vault = "Private";
-            item = "joker9944@" + hostname;
+            item = "joker9944@" + osConfig.networking.hostName;
           }
         ];
       };

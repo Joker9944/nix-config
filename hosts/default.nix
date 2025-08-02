@@ -3,8 +3,7 @@
   utility,
   config,
   pkgs,
-  hostname,
-  overlays,
+  customConfig,
   ...
 }: let
   locale = {
@@ -16,13 +15,12 @@
 in {
   imports =
     [
-      (lib.path.append ./. hostname) # Import matching host modules
+      (lib.path.append ./. customConfig.hostname) # Import matching host modules
     ]
     ++ (utility.custom.listFilesRelative ./common);
 
   # Set args inherited from mkNixosConfiguration
-  nixpkgs.overlays = overlays;
-  networking.hostName = hostname;
+  networking.hostName = customConfig.hostname;
 
   # Enable experimental flake support and experimental nix command
   nix.settings.experimental-features = ["nix-command" "flakes"];
@@ -81,9 +79,6 @@ in {
   };
 
   console.useXkbConfig = true;
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
 
   # Set default desktop environment
   common.desktopEnvironment.gnome.enable = lib.mkDefault true;

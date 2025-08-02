@@ -1,30 +1,26 @@
 {
   lib,
   config,
-  username,
-  overlays,
+  customConfig,
+  osConfig,
   ...
 }: let
-  userSecrets = lib.path.append ./. "${username}/secrets.yaml";
+  userSecrets = lib.path.append ./. "${customConfig.username}/secrets.yaml";
 in {
   imports = [
-    (lib.path.append ./. username)
+    (lib.path.append ./. customConfig.username)
   ];
 
   # Set args inherited from mkHomeConfiguration
   home = {
-    username = username;
-    homeDirectory = "/home/${username}";
+    username = customConfig.username;
+    homeDirectory = "/home/${customConfig.username}";
   };
-  nixpkgs.overlays = overlays;
 
   # Enable automatic upgrades
   services.betterAutoUpgrade = {
-    enable = true;
-    persistent = true;
-    flake = "github:Joker9944/nix-config";
-    frequency = "daily";
-    notify.enable = true;
+    inherit (osConfig.system.autoUpgrade) enable persistent flake notify;
+    frequency = osConfig.system.autoUpgrade.dates;
   };
 
   # Allow unfree packages

@@ -1,12 +1,12 @@
 {
   inputs,
   utility,
+  overlays,
+  nixosModules,
 }: {
   system,
   hostname,
   usernames,
-  overlays,
-  nixosModules,
 }:
 with inputs.nixpkgs.lib; let
   hostsPath = ../hosts;
@@ -19,13 +19,29 @@ in
     inherit system;
 
     specialArgs = {
-      inherit inputs utility hostname overlays disks swapSize;
+      inherit inputs utility;
+
       pkgs-unstable = import inputs.nixpkgs-unstable {
         inherit system;
         # TODO find a way to configure this somewhere else
+        overlays = overlays;
         config.allowUnfree = true;
+      };
+
+      customConfig = {
+        inherit hostname;
       };
     };
 
-    modules = [hostsPath] ++ nixosModules ++ usersNixosModulePaths;
+    modules =
+      [hostsPath]
+      ++ nixosModules
+      ++ usersNixosModulePaths
+      ++ [
+        ({...}: {
+          # TODO find a way to configure this somewhere else
+          nixpkgs.overlays = overlays;
+          nixpkgs.config.allowUnfree = true;
+        })
+      ];
   }

@@ -29,6 +29,7 @@
       enable = true;
       extraPackages = with pkgs; [mangohud winetricks gamemode umu-launcher];
       protonPackages = [pkgs-unstable.proton-ge-bin];
+      steamPackage = osConfig.programs.steam.package;
     };
   };
 

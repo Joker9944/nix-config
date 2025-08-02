@@ -57,11 +57,13 @@
       math = inputs.nix-math.lib.math;
       std = inputs.nix-std.lib;
     };
+
     mkNixosConfiguration = import ./lib/mkNixosConfiguration.nix {
-      inherit inputs utility;
+      inherit inputs utility nixosModules overlays;
     };
+
     mkHomeConfiguration = import ./lib/mkHomeConfiguration.nix {
-      inherit inputs utility;
+      inherit inputs utility homeModules overlays;
     };
   in
     inputs.flake-utils.lib.eachDefaultSystem (system: let
@@ -87,18 +89,25 @@
     // {
       overlays = {
         firefox-profile-switcher-connector = final: prev: {inherit (self.packages.${prev.system}) firefox-profile-switcher-connector;};
-        vscode-extensions-streetsidesoftware-code-spell-checker-swiss-german = final: prev: {
+        "vscode-extensions.streetsidesoftware.code-spell-checker-swiss-german" = final: prev: {
           vscode-extensions =
             prev.vscode-extensions
             // {
               streetsidesoftware = prev.vscode-extensions.streetsidesoftware // {inherit (self.packages.${prev.system}.vscode-extensions.streetsidesoftware) code-spell-checker-swiss-german;};
             };
         };
-        vscode-extensions-blueglassblock-better-json5 = final: prev: {
+        "vscode-extensions.blueglassblock.better-json5" = final: prev: {
           vscode-extensions =
             prev.vscode-extensions
             // {
               blueglassblock = {inherit (self.packages.${prev.system}.vscode-extensions.blueglassblock) better-json5;};
+            };
+        };
+        "vscode-extensions.Weaveworks.vscode-gitops-tools" = final: prev: {
+          vscode-extensions =
+            prev.vscode-extensions
+            // {
+              Weaveworks = {inherit (self.packages.${prev.system}.vscode-extensions.Weaveworks) vscode-gitops-tools;};
             };
         };
       };
@@ -106,32 +115,42 @@
       nixosModules = utility.custom.applyFunctionRecursive ./modules/nixos (filename: import filename);
       homeModules = utility.custom.applyFunctionRecursive ./modules/home (filename: import filename);
 
-      nixosConfigurations.HAL9000 = mkNixosConfiguration {
-        inherit overlays nixosModules;
-        system = "x86_64-linux";
-        hostname = "HAL9000";
-        usernames = ["joker9944"];
-      };
+      nixosConfigurations = lib.attrsets.listToAttrs (
+        lib.lists.map (cfg: {
+          name = cfg.hostname;
+          value = mkNixosConfiguration cfg;
+        }) [
+          {
+            system = "x86_64-linux";
+            hostname = "HAL9000";
+            usernames = ["joker9944"];
+          }
+          {
+            system = "x86_64-linux";
+            hostname = "wintermute";
+            usernames = ["joker9944"];
+          }
+        ]
+      );
 
-      nixosConfigurations.wintermute = mkNixosConfiguration {
-        inherit overlays nixosModules;
-        system = "x86_64-linux";
-        hostname = "wintermute";
-        usernames = ["joker9944"];
-      };
-
-      homeConfigurations."joker9944@HAL9000" = mkHomeConfiguration {
-        inherit overlays homeModules;
-        system = "x86_64-linux";
-        hostname = "HAL9000";
-        username = "joker9944";
-      };
-
-      homeConfigurations."joker9944@wintermute" = mkHomeConfiguration {
-        inherit overlays homeModules;
-        system = "x86_64-linux";
-        hostname = "wintermute";
-        username = "joker9944";
-      };
+      homeConfigurations = lib.attrsets.listToAttrs (
+        lib.lists.map (cfg: {
+          name = cfg.username + "@" + cfg.hostname;
+          value = mkHomeConfiguration (cfg // {
+            osConfig = self.nixosConfigurations.${cfg.hostname}.config;
+          });
+        }) [
+          {
+            system = "x86_64-linux";
+            hostname = "HAL9000";
+            username = "joker9944";
+          }
+          {
+            system = "x86_64-linux";
+            hostname = "wintermute";
+            username = "joker9944";
+          }
+        ]
+      );
     };
 }

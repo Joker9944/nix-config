@@ -11,9 +11,9 @@ vscode-utils.buildVscodeMarketplaceExtension {
   };
   meta = {
     changelog = "https://marketplace.visualstudio.com/items/blueglassblock.better-json5/changelog";
-    description = "Syntax highlighting, validation, formatting, and JSON schema based intellisense / completion for JSON5 files in Visual Studio Code.";
+    description = "JSON5 highlighter + intellisense + formatter + validator for VS Code";
     downloadPage = "https://marketplace.visualstudio.com/items?itemName=BlueGlassBlock.better-json5";
-    homepage = "https://github.com/BlueGlassBlock/better-json5";
+    homepage = "https://github.com/BlueGlassBlock/better-json5#readme";
     license = lib.licenses.mit;
   };
 }

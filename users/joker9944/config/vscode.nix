@@ -87,8 +87,9 @@ in {
       sops # default -> used for git secret encryption
       pre-commit # default -> used for git pre commit checks
       alejandra # nix -> alejandra extension
-      kubectl # k8s -> kubernetes tooling
-      kubernetes-helm # k8s -> kubernetes tooling
+      kubectl # k8s -> vscode-kubernetes-tools extension
+      kubernetes-helm # k8s -> vscode-kubernetes-tools extension
+      fluxcd # k8s -> vscode-gitops-tools extension
     ];
 
     programs.vscode = {
@@ -118,29 +119,30 @@ in {
             ];
 
             userSettings = {
+              "alejandra.program" = "alejandra";
               "[nix]" = {
                 "editor.defaultFormatter" = "kamadorueda.alejandra";
                 "editor.formatOnPaste" = true;
                 "editor.formatOnSave" = true;
                 "editor.formatOnType" = false;
               };
-              "alejandra.program" = "alejandra";
             };
           }
         ];
 
         notes = mkProfile {
-          extensions = [
-            vscodeExtensions.foam.foam-vscode
-            vscodeExtensions.yzhang.markdown-all-in-one
+          extensions = with vscodeExtensions; [
+            foam.foam-vscode
+            yzhang.markdown-all-in-one
           ];
         };
 
         k8s = mkProfile [
           {
-            extensions = [
-              vscodeExtensions.ms-kubernetes-tools.vscode-kubernetes-tools
-              vscodeExtensions.ms-vscode-remote.remote-containers
+            extensions = with vscodeExtensions; [
+              ms-kubernetes-tools.vscode-kubernetes-tools
+              ms-vscode-remote.remote-containers
+              Weaveworks.vscode-gitops-tools
             ];
 
             userSettings = {
@@ -156,6 +158,9 @@ in {
 
             userSettings = {
               "redhat.telemetry.enabled" = false;
+              "[yaml]" = {
+                "editor.defaultFormatter" = "redhat.vscode-yaml";
+              };
             };
           }
         ];
