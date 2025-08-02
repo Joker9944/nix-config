@@ -10,7 +10,6 @@
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    home-manager-xdg-autostart.url = "github:Zocker1999NET/home-manager-xdg-autostart/main";
     sops-nix = {
       url = "github:Mic92/sops-nix/master";
       inputs.nixpkgs.follows = "nixpkgs";

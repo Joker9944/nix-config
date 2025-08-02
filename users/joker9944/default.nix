@@ -18,7 +18,6 @@ in {
       ./config/kanidm.nix
       ./config/kde-plasma.nix
       ./config/vscode.nix
-      ./config/xdg.nix
     ]
     ++ lib.optional (builtins.pathExists hostModule) hostModule;
 
@@ -52,6 +51,12 @@ in {
     minio-client
   ];
 
+  xdg.autostart = {
+    enable = true;
+
+    entries = ["${pkgs.telegram-desktop}/share/applications/org.telegram.desktop.desktop"];
+  };
+
   programs = {
     bash.enable = true;
 
@@ -79,6 +84,8 @@ in {
           }
         ];
       };
+
+      autostart.enable = true;
     };
 
     home-manager.enable = true;
