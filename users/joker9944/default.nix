@@ -1,5 +1,6 @@
 {
   lib,
+  utility,
   config,
   pkgs,
   pkgs-unstable,
@@ -9,19 +10,13 @@
   hostModule = lib.path.append ./. "hosts/${osConfig.networking.hostName}.nix";
 in {
   imports =
-    [
-      ./config/bash.nix
-      ./config/cloud.nix
-      ./config/font.nix
-      ./config/gnome.nix
-      ./config/jetbrains.nix
-      ./config/kanidm.nix
-      ./config/kde-plasma.nix
-      ./config/vscode.nix
-    ]
-    ++ lib.optional (builtins.pathExists hostModule) hostModule;
+    lib.optional (builtins.pathExists hostModule) hostModule
+    ++ (utility.custom.listFilesRelative ./config);
 
+  # TODO rename common to custom
   common.desktopEnvironment.gnome.enable = lib.mkDefault true;
+
+  # TODO firefoxpwa setup https://nix-community.github.io/home-manager/options.xhtml#opt-programs.firefoxpwa.enable
 
   home.packages = with pkgs; [
     fastfetch

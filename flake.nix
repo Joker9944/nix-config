@@ -43,7 +43,6 @@
 
     homeModules =
       [
-        inputs.home-manager-xdg-autostart.homeManagerModules.xdg-autostart
         inputs.sops-nix.homeManagerModules.sops
         inputs.plasma-manager.homeManagerModules.plasma-manager
       ]

@@ -11,19 +11,32 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    services.xserver = {
-      enable = true;
+    services = {
+      xserver = {
+        enable = true;
 
-      displayManager.gdm.enable = true;
-      desktopManager.gnome.enable = true;
+        displayManager.gdm.enable = true;
+        desktopManager.gnome.enable = true;
+      };
+
+      # Must be on for the Firefox GNOME shell integration extension
+      gnome.gnome-browser-connector.enable = config.programs.firefox.enable;
     };
-
-    programs.gnupg.agent.pinentryPackage = pkgs.pinentry-gnome3;
 
     environment.gnome.excludePackages = with pkgs; [
       gnome-tour
       gnome-connections
       epiphany # web browser
     ];
+
+    programs = {
+      gnupg.agent.pinentryPackage = pkgs.pinentry-gnome3;
+
+      # Force install the GNOME shell integration extension
+      firefox.policies.ExtensionSettings."chrome-gnome-shell@gnome.org" = {
+        install_url = "https://addons.mozilla.org/firefox/downloads/latest/gnome-shell-integration/latest.xpi";
+        installation_mode = "force_installed";
+      };
+    };
   };
 }

@@ -85,7 +85,6 @@ in {
 
   # Enable default programs
   programs = {
-    firefox.enable = lib.mkDefault true;
     _1password-gui.enable = lib.mkDefault true;
     ffmpeg.enable = lib.mkDefault true;
     # Disable nano and switch to vim as default

@@ -21,6 +21,10 @@
       protonPackages = [pkgs-unstable.proton-ge-bin];
       steamPackage = osConfig.programs.steam.package;
     };
+
+    librewolf.profiles."Homework" = {
+      id = 10;
+    };
   };
 
   gnome-settings.peripherals.touchpad.enable = false;
