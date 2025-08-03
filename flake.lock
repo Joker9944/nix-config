@@ -79,22 +79,6 @@
         "type": "github"
       }
     },
-    "home-manager-xdg-autostart": {
-      "locked": {
-        "lastModified": 1723314998,
-        "narHash": "sha256-BwP56CHfU3P7ZHr2SzAEjF3uveiN1dZ5hFHTzRLS/WI=",
-        "owner": "Zocker1999NET",
-        "repo": "home-manager-xdg-autostart",
-        "rev": "4d1def4a330d6812fe18be140781e94003c3cc0a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "Zocker1999NET",
-        "ref": "main",
-        "repo": "home-manager-xdg-autostart",
-        "type": "github"
-      }
-    },
     "home-manager_2": {
       "inputs": {
         "nixpkgs": [
@@ -239,7 +223,6 @@
         "disko": "disko",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
-        "home-manager-xdg-autostart": "home-manager-xdg-autostart",
         "nix-math": "nix-math",
         "nix-std": "nix-std",
         "nixpkgs": "nixpkgs_2",
