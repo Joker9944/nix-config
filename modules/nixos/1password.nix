@@ -1,6 +1,7 @@
 {
-  config,
   lib,
+  config,
+  pkgs,
   ...
 }: let
   cfg = config.programs._1password-gui;
@@ -17,9 +18,12 @@ in {
 
   config = lib.mkIf config.programs._1password-gui.enable {
     environment.etc."1password/custom_allowed_browsers".text = let
+      firefoxCfg = config.programs.firefox;
+
       browsers =
         cfg.additionalAllowedBrowsers
-        ++ lib.optional config.programs.firefox.enable "firefox";
+        ++ lib.optional (firefoxCfg.enable && firefoxCfg.package == pkgs.firefox) "firefox"
+        ++ lib.optional (firefoxCfg.enable && firefoxCfg.package == pkgs.librewolf) "librewolf";
     in
       lib.mkIf (browsers != []) (lib.concatLines browsers);
   };

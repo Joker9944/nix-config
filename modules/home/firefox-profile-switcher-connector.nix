@@ -16,8 +16,8 @@ in {
     home.packages = [pkg];
 
     programs = {
-      firefox.nativeMessagingHosts = [pkg];
-      librewolf.nativeMessagingHosts = [pkg];
+      firefox.nativeMessagingHosts = lib.mkIf config.programs.firefox.enable [pkg];
+      librewolf.nativeMessagingHosts = lib.mkIf config.programs.librewolf.enable [pkg];
     };
   };
 }
