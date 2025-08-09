@@ -10,19 +10,38 @@
   };
 
   # Additional disk
-  disko.devices.disk.games = {
-    device = "/dev/nvme0n1";
-    type = "disk";
-    content = {
-      type = "gpt";
-      partitions = {
-        games = {
-          end = "-100G";
-          content = {
-            type = "filesystem";
-            format = "xfs";
-            mountpoint = "/mnt/games";
-            mountOptions = ["defaults" "nofail"];
+  disko.devices.disk = {
+    games = {
+      device = "/dev/nvme0n1";
+      type = "disk";
+      content = {
+        type = "gpt";
+        partitions = {
+          games = {
+            end = "-100G";
+            content = {
+              type = "filesystem";
+              format = "xfs";
+              mountpoint = "/mnt/games";
+              mountOptions = ["defaults" "nofail"];
+            };
+          };
+        };
+      };
+    };
+
+    windows = {
+      device = "/dev/sda";
+      type = "disk";
+      content = {
+        type = "gpt";
+        partitions = {
+          windows = {
+            end = "-100G";
+            content = {
+              type = "filesystem";
+              format = "ntfs";
+            };
           };
         };
       };
