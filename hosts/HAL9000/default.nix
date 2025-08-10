@@ -10,6 +10,9 @@
   # Setup for dual boot with windows
   boot.loader.grub.useOSProber = true;
   time.hardwareClockInLocalTime = true;
+  boot.loader.systemd-boot.enable = false;
+  boot.loader.grub.enable = false;
+  boot.lanzaboote.enable = true;
 
   programs = {
     steam.enable = true;

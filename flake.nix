@@ -2,27 +2,34 @@
   description = "NixOS flake";
 
   inputs = {
-    # nix pkgs
+    # nixpkgs
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-    # nix helpers
-    home-manager = {
-      url = "github:nix-community/home-manager/release-25.05";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # nixpkgs helpers
     sops-nix = {
       url = "github:Mic92/sops-nix/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    flake-utils.url = "github:numtide/flake-utils/main";
     disko = {
       url = "github:nix-community/disko/v1.11.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v0.4.2";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # Home Manger
+    home-manager = {
+      url = "github:nix-community/home-manager/release-25.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # Home Manger helpers
     plasma-manager = {
       url = "github:nix-community/plasma-manager/trunk";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # nix utils
+    flake-utils.url = "github:numtide/flake-utils/main";
     nix-math.url = "github:xddxdd/nix-math/master";
     nix-std.url = "github:chessai/nix-std/master";
   };
@@ -36,8 +43,9 @@
 
     nixosModules =
       [
-        inputs.disko.nixosModules.disko
         inputs.sops-nix.nixosModules.sops
+        inputs.disko.nixosModules.disko
+        inputs.lanzaboote.nixosModules.lanzaboote
       ]
       ++ (lib.mapAttrsToList (_: value: value) self.nixosModules);
 

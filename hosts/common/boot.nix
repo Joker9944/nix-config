@@ -1,4 +1,9 @@
-{lib, ...}: {
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}: {
   # Set default bootloader settings
   boot = {
     initrd.systemd.enable = true;
