@@ -7,9 +7,7 @@
     ./docker.nix
   ];
 
-  # Setup for dual boot with windows
-  boot.loader.grub.useOSProber = true;
-  time.hardwareClockInLocalTime = true;
+  custom.boot.windows.enable = true;
 
   programs = {
     steam.enable = true;

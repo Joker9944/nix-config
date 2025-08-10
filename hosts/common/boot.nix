@@ -1,5 +1,18 @@
-{lib, ...}: {
-  # Set default bootloader settings
+{
+  inputs,
+  lib,
+  pkgs,
+  ...
+}: {
+  # WORKAROUND Secure Boot for Limine is only available on unstable, so just override the module from unstable.
+  # https://wiki.nixos.org/wiki/Limine
+  disabledModules = ["system/boot/loader/limine/limine.nix"];
+  imports = [
+    (import "${inputs.nixpkgs-unstable}/nixos/modules/system/boot/loader/limine/limine.nix")
+  ];
+
+  environment.systemPackages = [pkgs.sbctl];
+
   boot = {
     initrd.systemd.enable = true;
 
@@ -13,9 +26,15 @@
       };
 
       grub = {
-        enable = lib.mkDefault true;
+        enable = lib.mkDefault false;
         efiSupport = true;
         devices = ["nodev"];
+      };
+
+      limine = {
+        enable = lib.mkDefault true;
+        maxGenerations = 10;
+        secureBoot.enable = true;
       };
     };
   };
