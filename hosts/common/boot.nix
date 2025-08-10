@@ -1,6 +1,7 @@
 {
   inputs,
   lib,
+  config,
   pkgs,
   ...
 }: {
@@ -35,6 +36,12 @@
         enable = lib.mkDefault true;
         maxGenerations = 10;
         secureBoot.enable = true;
+
+        style = {
+          wallpapers = [];
+          backdrop = "000000";
+          interface.branding = config.networking.hostName;
+        };
       };
     };
   };
