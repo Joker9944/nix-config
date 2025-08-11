@@ -1,4 +1,9 @@
-{...}: let
+{
+  lib,
+  config,
+  custom,
+  ...
+}: let
   username = "joker9944";
 in {
   users = {
@@ -6,6 +11,8 @@ in {
       uid = 1000;
       isNormalUser = true;
       group = username;
+      createHome = true;
+      home = "/home/${username}";
       homeMode = "750";
       description = "Felix von Arx";
       extraGroups = ["networkmanager" "wheel" "keys" "docker"];
@@ -16,4 +23,9 @@ in {
       members = [username];
     };
   };
+
+  systemd.tmpfiles.rules = lib.mkIf config.common.desktopEnvironment.gnome.enable [
+    "f+ /var/lib/AccountsService/users/${username}  0600 root root - [User]\\nSession=\\nIcon=/var/lib/AccountsService/icons/${username}\\nSystemAccount=false\\n"
+    "L+ /var/lib/AccountsService/icons/${username}  - - - - ${custom.assets.images.profile.the-seer."512x512"}/share/avatars/the-seer.avatar.512x512.jpg"
+  ];
 }

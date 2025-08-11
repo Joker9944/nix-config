@@ -59,8 +59,8 @@
     overlays = lib.mapAttrsToList (_: value: value) self.overlays;
 
     utility = {
+      inherit (inputs.nix-math.lib) math;
       custom = import ./lib/utility.nix lib;
-      math = inputs.nix-math.lib.math;
       std = inputs.nix-std.lib;
     };
 
