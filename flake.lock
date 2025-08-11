@@ -100,6 +100,30 @@
         "type": "github"
       }
     },
+    "nix-assets": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1754880034,
+        "narHash": "sha256-IFQX5/AwYCod2zd+HbCWRKHwLn2DjV+AnyVwFPwq3Eo=",
+        "owner": "joker9944",
+        "repo": "nix-assets",
+        "rev": "e0c84aae6b4d7222d9805e7d7b29124cd6a95b67",
+        "type": "github"
+      },
+      "original": {
+        "owner": "joker9944",
+        "ref": "main",
+        "repo": "nix-assets",
+        "type": "github"
+      }
+    },
     "nix-math": {
       "inputs": {
         "flake-parts": "flake-parts",
@@ -223,6 +247,7 @@
         "disko": "disko",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
+        "nix-assets": "nix-assets",
         "nix-math": "nix-math",
         "nix-std": "nix-std",
         "nixpkgs": "nixpkgs_2",

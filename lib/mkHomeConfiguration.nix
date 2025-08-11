@@ -24,8 +24,10 @@ in
         config.allowUnfree = true;
       };
 
-      customConfig = {
-        inherit username;
+      custom = {
+        config = {inherit hostname username;};
+
+        assets = inputs.nix-assets.packages.${system};
       };
     };
 

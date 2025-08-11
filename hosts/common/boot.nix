@@ -3,6 +3,7 @@
   lib,
   config,
   pkgs,
+  custom,
   ...
 }: {
   # WORKAROUND Secure Boot for Limine is only available on unstable, so just override the module from unstable.
@@ -38,8 +39,7 @@
         secureBoot.enable = true;
 
         style = {
-          wallpapers = [];
-          backdrop = "000000";
+          wallpapers = ["${custom.assets.images.wallpapers.black-sand-dunes}/share/backgrounds/black-sand-dunes.3840x2160.jpeg"];
           interface.branding = config.networking.hostName;
         };
       };

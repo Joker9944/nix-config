@@ -68,7 +68,10 @@ in {
       enable = true;
       userEmail = "9194199+Joker9944@users.noreply.github.com";
       userName = "Joker9944";
-      extraConfig.pull.rebase = false;
+      extraConfig = {
+        init.defaultBranch = "main";
+        pull.rebase = false;
+      };
     };
 
     ssh.enable = true;

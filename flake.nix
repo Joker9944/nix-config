@@ -5,6 +5,14 @@
     # nix pkgs
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    # nix assets
+    nix-assets = {
+      url = "github:joker9944/nix-assets/main";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
     # nix helpers
     home-manager = {
       url = "github:nix-community/home-manager/release-25.05";
@@ -87,26 +95,23 @@
     // {
       overlays = {
         firefox-profile-switcher-connector = final: prev: {inherit (self.packages.${prev.system}) firefox-profile-switcher-connector;};
+
         "vscode-extensions.streetsidesoftware.code-spell-checker-swiss-german" = final: prev: {
-          vscode-extensions =
-            prev.vscode-extensions
-            // {
-              streetsidesoftware = prev.vscode-extensions.streetsidesoftware // {inherit (self.packages.${prev.system}.vscode-extensions.streetsidesoftware) code-spell-checker-swiss-german;};
-            };
+          vscode-extensions = lib.attrsets.recursiveUpdate (lib.attrsets.optionalAttrs (prev ? vscode-extensions) prev.vscode-extensions) {
+            streetsidesoftware = {inherit (self.packages.${prev.system}.vscode-extensions.streetsidesoftware) code-spell-checker-swiss-german;};
+          };
         };
+
         "vscode-extensions.blueglassblock.better-json5" = final: prev: {
-          vscode-extensions =
-            prev.vscode-extensions
-            // {
-              blueglassblock = {inherit (self.packages.${prev.system}.vscode-extensions.blueglassblock) better-json5;};
-            };
+          vscode-extensions = lib.attrsets.recursiveUpdate (lib.attrsets.optionalAttrs (prev ? vscode-extensions) prev.vscode-extensions) {
+            blueglassblock = {inherit (self.packages.${prev.system}.vscode-extensions.blueglassblock) better-json5;};
+          };
         };
+
         "vscode-extensions.Weaveworks.vscode-gitops-tools" = final: prev: {
-          vscode-extensions =
-            prev.vscode-extensions
-            // {
-              Weaveworks = {inherit (self.packages.${prev.system}.vscode-extensions.Weaveworks) vscode-gitops-tools;};
-            };
+          vscode-extensions = lib.attrsets.recursiveUpdate (lib.attrsets.optionalAttrs (prev ? vscode-extensions) prev.vscode-extensions) {
+            Weaveworks = {inherit (self.packages.${prev.system}.vscode-extensions.Weaveworks) vscode-gitops-tools;};
+          };
         };
       };
 
@@ -134,9 +139,10 @@
       homeConfigurations = lib.attrsets.listToAttrs (
         lib.lists.map (cfg: {
           name = cfg.username + "@" + cfg.hostname;
-          value = mkHomeConfiguration (cfg // {
-            osConfig = self.nixosConfigurations.${cfg.hostname}.config;
-          });
+          value = mkHomeConfiguration (cfg
+            // {
+              osConfig = self.nixosConfigurations.${cfg.hostname}.config;
+            });
         }) [
           {
             system = "x86_64-linux";

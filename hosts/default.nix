@@ -3,7 +3,7 @@
   utility,
   config,
   pkgs,
-  customConfig,
+  custom,
   ...
 }: let
   locale = {
@@ -15,12 +15,12 @@
 in {
   imports =
     [
-      (lib.path.append ./. customConfig.hostname) # Import matching host modules
+      (lib.path.append ./. custom.config.hostname) # Import matching host modules
     ]
     ++ (utility.custom.listFilesRelative ./common);
 
   # Set args inherited from mkNixosConfiguration
-  networking.hostName = customConfig.hostname;
+  networking.hostName = custom.config.hostname;
 
   # Enable experimental flake support and experimental nix command
   nix.settings.experimental-features = ["nix-command" "flakes"];

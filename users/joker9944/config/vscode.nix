@@ -67,7 +67,7 @@
 
   mergeProfiles = profiles:
     lib.lists.foldr (el: acc:
-      (lib.recursiveUpdate acc el)
+      (lib.attrsets.recursiveUpdate acc el)
       // {
         extensions = acc.extensions ++ (el.extensions or []);
       }) {
