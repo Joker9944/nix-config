@@ -5,9 +5,9 @@
   nixosModules,
 }: {
   system,
-  hostname,
   usernames,
-}:
+  ...
+} @ args:
 with inputs.nixpkgs.lib; let
   hostsPath = ../hosts;
   usersPath = ../users;
@@ -29,7 +29,7 @@ in
       };
 
       custom = {
-        config = {inherit hostname usernames;};
+        config = args;
 
         assets = inputs.nix-assets.packages.${system};
       };

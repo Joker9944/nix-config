@@ -39,7 +39,7 @@
         secureBoot.enable = true;
 
         style = {
-          wallpapers = ["${custom.assets.images.wallpapers.black-sand-dunes}/share/backgrounds/black-sand-dunes.3840x2160.jpeg"];
+          wallpapers = ["${custom.assets.images.backgrounds.black-sand-dunes.${custom.config.resolution}}/share/backgrounds/black-sand-dunes.${custom.config.resolution}.jpeg"];
           interface.branding = config.networking.hostName;
         };
       };

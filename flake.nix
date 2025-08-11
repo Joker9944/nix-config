@@ -40,7 +40,7 @@
     nixpkgs,
     ...
   }: let
-    lib = nixpkgs.lib;
+    inherit (nixpkgs) lib;
 
     nixosModules =
       [
@@ -64,13 +64,9 @@
       std = inputs.nix-std.lib;
     };
 
-    mkNixosConfiguration = import ./lib/mkNixosConfiguration.nix {
-      inherit inputs utility nixosModules overlays;
-    };
+    mkNixosConfiguration = import ./lib/mkNixosConfiguration.nix {inherit inputs utility nixosModules overlays;};
 
-    mkHomeConfiguration = import ./lib/mkHomeConfiguration.nix {
-      inherit inputs utility homeModules overlays;
-    };
+    mkHomeConfiguration = import ./lib/mkHomeConfiguration.nix {inherit inputs utility homeModules overlays;};
   in
     inputs.flake-utils.lib.eachDefaultSystem (system: let
       pkgs = nixpkgs.legacyPackages.${system};
@@ -127,11 +123,13 @@
             system = "x86_64-linux";
             hostname = "HAL9000";
             usernames = ["joker9944"];
+            resolution = "2560x1440";
           }
           {
             system = "x86_64-linux";
             hostname = "wintermute";
             usernames = ["joker9944"];
+            resolution = "3840x2160";
           }
         ]
       );
@@ -139,10 +137,7 @@
       homeConfigurations = lib.attrsets.listToAttrs (
         lib.lists.map (cfg: {
           name = cfg.username + "@" + cfg.hostname;
-          value = mkHomeConfiguration (cfg
-            // {
-              osConfig = self.nixosConfigurations.${cfg.hostname}.config;
-            });
+          value = mkHomeConfiguration self.nixosConfigurations.${cfg.hostname}.config cfg;
         }) [
           {
             system = "x86_64-linux";
