@@ -107,6 +107,7 @@ in {
     yq
     openssl
     pciutils
+    file
 
     # Languages
     python3

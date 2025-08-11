@@ -25,6 +25,7 @@
         untar = "tar -xvf";
         nix-update = "sudo nixos-rebuild switch --flake /home/joker9944/Workspace/nix-config";
         home-update = "home-manager switch --flake /home/joker9944/Workspace/nix-config";
+        open = "xdg-open";
       };
     };
   };
