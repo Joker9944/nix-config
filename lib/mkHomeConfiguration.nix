@@ -3,12 +3,7 @@
   utility,
   overlays,
   homeModules,
-}: {
-  system,
-  username,
-  osConfig,
-  hostname
-}: let
+}: osConfig: {system, ...} @ args: let
   usersPath = ../users;
 in
   inputs.home-manager.lib.homeManagerConfiguration {
@@ -24,8 +19,10 @@ in
         config.allowUnfree = true;
       };
 
-      customConfig = {
-        inherit username;
+      custom = {
+        config = args;
+
+        assets = inputs.nix-assets.packages.${system};
       };
     };
 

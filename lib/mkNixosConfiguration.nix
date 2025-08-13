@@ -5,9 +5,9 @@
   nixosModules,
 }: {
   system,
-  hostname,
   usernames,
-}:
+  ...
+} @ args:
 with inputs.nixpkgs.lib; let
   hostsPath = ../hosts;
   usersPath = ../users;
@@ -28,8 +28,10 @@ in
         config.allowUnfree = true;
       };
 
-      customConfig = {
-        inherit hostname;
+      custom = {
+        config = args;
+
+        assets = inputs.nix-assets.packages.${system};
       };
     };
 

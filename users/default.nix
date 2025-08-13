@@ -1,20 +1,20 @@
 {
   lib,
   config,
-  customConfig,
+  custom,
   osConfig,
   ...
 }: let
-  userSecrets = lib.path.append ./. "${customConfig.username}/secrets.yaml";
+  userSecrets = lib.path.append ./. "${custom.config.username}/secrets.yaml";
 in {
   imports = [
-    (lib.path.append ./. customConfig.username)
+    (lib.path.append ./. custom.config.username)
   ];
 
   # Set args inherited from mkHomeConfiguration
   home = {
-    username = customConfig.username;
-    homeDirectory = "/home/${customConfig.username}";
+    username = custom.config.username;
+    homeDirectory = "/home/${custom.config.username}";
   };
 
   # Enable automatic upgrades
@@ -22,9 +22,6 @@ in {
     inherit (osConfig.system.autoUpgrade) enable persistent flake notify;
     frequency = osConfig.system.autoUpgrade.dates;
   };
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
 
   # Setup sops if user secrets file exists
   sops = lib.mkIf (builtins.pathExists userSecrets) {

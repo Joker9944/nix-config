@@ -42,7 +42,7 @@ in {
     customShortcuts = mkOption {
       type = types.listOf (types.submodule customShortcutOptions);
       default = [];
-      example = lib.literalExpression ''
+      example = literalExpression ''
         [
           {
             name = "Launch Console";

@@ -15,8 +15,11 @@
     };
   };
 
-  # Manually add kernel modules which do net get picked up in hardware scan
-  boot.kernelModules = ["iwlwifi"];
+  boot = {
+    # Manually add kernel modules which do net get picked up in hardware scan
+    kernelModules = ["iwlwifi"];
+    loader.limine.style.interface.brandingColor = 4; # blue
+  };
 
   # Enable finger print reader service
   services.fprintd.enable = true;
