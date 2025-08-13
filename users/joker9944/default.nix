@@ -21,7 +21,10 @@ in {
     ]
     ++ lib.optional (builtins.pathExists hostModule) hostModule;
 
-  common.desktopEnvironment.gnome.enable = lib.mkDefault true;
+  desktopEnvironment = {
+    gnome.enable = osConfig.desktopEnvironment.gnome.enable;
+    kde-plasma.enable = osConfig.desktopEnvironment.kde-plasma.enable;
+  };
 
   home.packages = with pkgs; [
     fastfetch

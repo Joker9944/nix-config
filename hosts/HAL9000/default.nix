@@ -7,11 +7,14 @@
     ./docker.nix
   ];
 
-  custom.boot.windows.enable = true;
-  boot.loader.limine.style.interface.brandingColor = 1; # red
+  boot = {
+    windowsSupport.enable = true;
+    loader.limine.style.interface.brandingColor = 1; # red
+  };
 
   programs = {
     steam.enable = true;
+    ffmpeg.enable = true;
   };
 
   # This value determines the NixOS release from which the default

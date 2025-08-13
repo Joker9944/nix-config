@@ -24,7 +24,8 @@ in {
     };
   };
 
-  systemd.tmpfiles.rules = lib.mkIf config.common.desktopEnvironment.gnome.enable [
+  # WORKAROUND Setting the profile avatar from userspace using the AccountsService is not documented so this has to suffice
+  systemd.tmpfiles.rules = lib.mkIf config.desktopEnvironment.gnome.enable [
     "f+ /var/lib/AccountsService/users/${username}  0600 root root - [User]\\nSession=\\nIcon=/var/lib/AccountsService/icons/${username}\\nSystemAccount=false\\n"
     "L+ /var/lib/AccountsService/icons/${username}  - - - - ${custom.assets.images.profile.the-seer."512x512"}/share/avatars/the-seer.avatar.512x512.jpg"
   ];

@@ -1,7 +1,7 @@
 {lib, config, ...}: let
-  cfg = config.custom.boot.windows;
+  cfg = config.boot.windowsSupport;
 in {
-  options.custom.boot.windows = with lib; {
+  options.boot.windowsSupport = with lib; {
     enable = mkEnableOption "dualboot bootloader config";
   };
 

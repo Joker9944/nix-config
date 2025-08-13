@@ -6,8 +6,6 @@
 }: let
   cfg = config.programs.ffmpeg;
 in {
-  # TODO migrate to hosts common
-
   options.programs.ffmpeg = with lib; {
     enable = mkEnableOption "ffmpeg";
   };

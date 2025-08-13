@@ -7,7 +7,7 @@
   # * https://wiki.archlinux.org/title/Lenovo_ThinkPad_X1_Yoga_(Gen_4)
 
   # Disk setup
-  common.disks.main = {
+  hardware.disko.main = {
     name = "nvme0n1";
     size = {
       main = "-100G";

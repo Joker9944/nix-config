@@ -4,9 +4,9 @@
   pkgs,
   ...
 }: let
-  cfg = config.common.desktopEnvironment.gnome;
+  cfg = config.desktopEnvironment.gnome;
 in {
-  options.common.desktopEnvironment.gnome = with lib; {
+  options.desktopEnvironment.gnome = with lib; {
     enable = mkEnableOption "Whether to enable GNOME desktop environment.";
   };
 

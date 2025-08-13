@@ -81,13 +81,12 @@ in {
   console.useXkbConfig = true;
 
   # Set default desktop environment
-  common.desktopEnvironment.gnome.enable = lib.mkDefault true;
+  desktopEnvironment.gnome.enable = lib.mkDefault true;
 
   # Enable default programs
   programs = {
     firefox.enable = lib.mkDefault true;
     _1password-gui.enable = lib.mkDefault true;
-    ffmpeg.enable = lib.mkDefault true;
     # Disable nano and switch to vim as default
     nano.enable = lib.mkDefault false;
     vim.enable = lib.mkDefault true;

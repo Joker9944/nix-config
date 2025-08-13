@@ -3,10 +3,10 @@
   lib,
   ...
 }: let
-  cfg = config.common.disks.main;
+  cfg = config.hardware.disko.main;
   devicePath = "/dev/${cfg.name}";
 in {
-  options.common.disks.main = with lib; {
+  options.hardware.disko.main = with lib; {
     name = mkOption {
       type = lib.types.nullOr types.str;
       default = null;

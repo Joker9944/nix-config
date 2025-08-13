@@ -1,6 +1,6 @@
 {...}: {
   # Disk setup
-  common.disks.main = {
+  hardware.disko.main = {
     name = "nvme1n1";
     size = {
       boot = "1G";

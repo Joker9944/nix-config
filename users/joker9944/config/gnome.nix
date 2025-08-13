@@ -5,7 +5,7 @@
   ...
 }:
 with lib; let
-  cfg = config.common.desktopEnvironment.gnome;
+  cfg = config.desktopEnvironment.gnome;
 
   mkAutoMoveWindowsApplicationList = attrs: attrValues (mapAttrs (app: index: app + ":" + toString index) attrs);
 
@@ -18,7 +18,7 @@ with lib; let
     package = pkg;
   });
 in {
-  options.common.desktopEnvironment.gnome = with lib; {
+  options.desktopEnvironment.gnome = with lib; {
     enable = mkEnableOption "Whether to enable GNOME desktop environment config.";
   };
 
