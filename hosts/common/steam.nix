@@ -27,6 +27,9 @@
       systemPackages = [mangohud pkgs-unstable.r2modman];
     };
 
+    # Support for 32-bit games
+    hardware.graphics.enable32Bit = true;
+
     services.udev.dualsenseFix = true;
   };
 }

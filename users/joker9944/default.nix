@@ -8,23 +8,22 @@
 }: let
   hostModule = lib.path.append ./. "hosts/${osConfig.networking.hostName}.nix";
 in {
+  inherit (osConfig) desktopEnvironment;
+
+  # TODO auto import
   imports =
     [
       ./config/bash.nix
       ./config/cloud.nix
       ./config/font.nix
       ./config/gnome.nix
+      ./config/hyprland.nix
       ./config/jetbrains.nix
       ./config/kanidm.nix
       ./config/kde-plasma.nix
       ./config/vscode.nix
     ]
     ++ lib.optional (builtins.pathExists hostModule) hostModule;
-
-  desktopEnvironment = {
-    gnome.enable = osConfig.desktopEnvironment.gnome.enable;
-    kde-plasma.enable = osConfig.desktopEnvironment.kde-plasma.enable;
-  };
 
   home.packages = with pkgs; [
     fastfetch

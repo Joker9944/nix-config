@@ -7,6 +7,8 @@
     ./docker.nix
   ];
 
+  desktopEnvironment.hyprland.enable = true;
+
   boot = {
     windowsSupport.enable = true;
     loader.limine.style.interface.brandingColor = 1; # red

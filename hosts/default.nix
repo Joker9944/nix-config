@@ -25,11 +25,19 @@ in {
   # Enable experimental flake support and experimental nix command
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
+  # Third-party Chachix
+  nix.settings = {
+    substituters = ["https://hyprland.cachix.org"];
+    trusted-substituters = ["https://hyprland.cachix.org"];
+    trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
+  };
+
   # Enable automatic upgrades
   system.autoUpgrade = {
     enable = lib.mkDefault true;
     persistent = true;
-    flake = "github:Joker9944/nix-config";
+    # TODO Temporarily setting to branch since dev will take some time
+    flake = "github:Joker9944/nix-config/hyprland";
     dates = lib.mkDefault "*-*-* 04:00:00 UTC"; # 1 hour after github actions nix flake update
     notify.enable = true;
   };

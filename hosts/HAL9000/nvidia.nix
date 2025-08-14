@@ -5,8 +5,6 @@
 }: {
   # GPU driver
   hardware.nvidia = {
-    # Modesetting is required.
-    modesetting.enable = true;
 
     # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
     # Enable this if you have graphical corruption issues or application crashes after waking
@@ -16,13 +14,13 @@
 
     open = true;
 
+    nvidiaSettings = true;
+
     package = config.boot.kernelPackages.nvidiaPackages.latest;
   };
 
   # Load nvidia driver for Xorg and Wayland
   services.xserver.videoDrivers = ["nvidia"];
 
-  environment.systemPackages = with pkgs; [
-    nvtopPackages.nvidia
-  ];
+  environment.systemPackages = [pkgs.nvtopPackages.nvidia];
 }
