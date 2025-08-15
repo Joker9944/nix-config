@@ -36,8 +36,8 @@
 
         # Utilities
         "$mainMod CTRL, V, exec, $clipboard"
-        "$mainMod, ESCAPE, exec, $screenLock"
-        "$mainMod, L, exec, $screenLock"
+        "$mainMod, ESCAPE, exec, loginctl lock-session"
+        "$mainMod, L, exec, loginctl lock-session"
       ]
       ++ (lib.lists.flatten (lib.lists.genList (index: let
           key = toString (utility.math.mod (index + 1) 10);

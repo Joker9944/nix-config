@@ -126,7 +126,6 @@ in {
           "$browser" = "firefox";
           "$editor" = "codium";
           "$systemMonitor" = "btop";
-          "$screenLock" = "hyprlock";
 
           # autostart
           exec-once = [
