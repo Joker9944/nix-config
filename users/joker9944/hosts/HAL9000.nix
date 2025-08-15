@@ -32,4 +32,6 @@
       "DP-3, 1920x1080@60.00Hz, 4480x0, 1"
     ];
   };
+
+  programs.hyprlock.inputFieldMonitor = "DP-2";
 }
