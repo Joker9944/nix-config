@@ -11,7 +11,7 @@
       # vscode settings
       userSettings = {
         "diffEditor.ignoreTrimWhitespace" = false;
-        "editor.fontFamily" = "'JetBrains Mono', 'Adwaita Mono', monospace";
+        "editor.fontFamily" = "monospace, emoji, 'Font Awesome 6 Free', 'Font Awesome 6 Brands'";
         "editor.renderWhitespace" = "boundary";
         "editor.tabSize" = 2;
         "files.autoSave" = "afterDelay";
@@ -84,6 +84,8 @@ in {
   config = {
     home.packages = with pkgs; [
       jetbrains-mono # default -> font configured
+      noto-fonts-color-emoji # default -> emoji fallback font
+      font-awesome # default -> emoji fallback font
       sops # default -> used for git secret encryption
       pre-commit # default -> used for git pre commit checks
       alejandra # nix -> alejandra extension

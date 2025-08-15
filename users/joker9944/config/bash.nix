@@ -8,6 +8,10 @@
       enableCompletion = true;
 
       initExtra = ''
+        nix-search() {
+          nix-instantiate --eval-only --expr "(import <nixpkgs> {}).$1.outPath" | cut -d '"' -f 2
+        }
+
         fastfetch
       '';
 

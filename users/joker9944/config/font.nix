@@ -3,6 +3,7 @@
     jetbrains-mono
     lato
     roboto
+    noto-fonts-color-emoji
   ];
 
   fonts.fontconfig = {
@@ -13,6 +14,9 @@
       sansSerif = [
         "Lato"
         "Roboto"
+      ];
+      emoji = [
+        "Noto Color Emoji"
       ];
     };
   };

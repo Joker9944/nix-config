@@ -69,7 +69,7 @@ in {
         enable = true;
         package = pkgs-hyprland.waybar;
 
-        systemd.enable = config.wayland.windowManager.hyprland.systemd.enable;
+        systemd.enable = true;
       };
 
       hyprlock = {
@@ -104,9 +104,10 @@ in {
     # - Investigate hyprpolkitagent
     # - There are a lot of styling utils take a look once theming
     # - Enable ly once saying goodbye to GNOME
+    # - hyprshot
 
     wayland = {
-      systemd.target = "hyprland-session.target";
+      systemd.target = lib.mkIf config.wayland.windowManager.hyprland.systemd.enable "hyprland-session.target";
 
       windowManager.hyprland = {
         enable = true;
