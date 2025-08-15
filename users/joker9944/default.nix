@@ -17,7 +17,7 @@ in {
       ./config/cloud.nix
       ./config/font.nix
       ./config/gnome.nix
-      ./config/hyprland.nix
+      ./config/hyprland
       ./config/jetbrains.nix
       ./config/kanidm.nix
       ./config/kde-plasma.nix

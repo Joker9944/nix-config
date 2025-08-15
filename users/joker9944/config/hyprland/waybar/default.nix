@@ -1,11 +1,22 @@
+/**
+* status bar
+*/
 {
   lib,
-  pkgs,
+  config,
+  pkgs-hyprland,
+  utility,
   ...
-}: {
-  home.packages = [pkgs.font-awesome];
+}:
+utility.custom.mkHyprlandModule config {
+  home.packages = [pkgs-hyprland.font-awesome];
 
   programs.waybar = {
+    enable = true;
+    package = pkgs-hyprland.waybar;
+
+    systemd.enable = true;
+
     settings.mainBar = {
       height = 30;
       spacing = 4;

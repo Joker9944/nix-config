@@ -1,4 +1,9 @@
-{...}: {
+{
+  config,
+  utility,
+  ...
+}:
+utility.custom.mkHyprlandModule config {
   wayland.windowManager.hyprland.settings = {
     "$appMod" = "ALT";
 

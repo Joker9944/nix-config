@@ -25,7 +25,7 @@
 
   gnome-settings.peripherals.touchpad.enable = false;
 
-  desktopEnvironment.hyprland = {
+  wayland.windowManager.hyprland = {
     monitor = [
       "DP-1, 1920x1080@60.00Hz, 0x0, 1"
       "DP-2, 2560x1440@143.97Hz, 1920x0, 1"

@@ -17,7 +17,9 @@ in {
     [
       (lib.path.append ./. custom.config.hostname) # Import matching host modules
     ]
-    ++ (utility.custom.listFilesRelative ./common);
+    ++ (utility.custom.ls.lookup {
+      dir = ./common;
+    });
 
   # Set args inherited from mkNixosConfiguration
   networking.hostName = custom.config.hostname;

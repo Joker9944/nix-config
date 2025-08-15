@@ -1,26 +1,23 @@
 {
   lib,
+  config,
+  pkgs-hyprland,
   utility,
   ...
-}: {
+}:
+utility.custom.mkHyprlandModule config {
+  home.packages = [pkgs-hyprland.playerctl]; # media applications control utility
+
   wayland.windowManager.hyprland.settings = {
     "$mainMod" = "SUPER";
     "$workspaceMod" = "SHIFT";
 
-    bindr = [
-      "$mainMod, $mainMod + L, exec, pkill wofi || $menu" # TODO find a way to not ref wofi directly.
-    ];
-
     bind =
       [
         # default binds
-        "$mainMod, T, exec, $terminal"
         "$mainMod, C, killactive,"
         "$mainMod, M, exit,"
-        "$mainMod, E, exec, $fileManager"
         "$mainMod, V, togglefloating,"
-        
-        "$mainMod, R, exec, $menu"
         "$mainMod, P, pseudo," # dwindle
         "$mainMod, J, togglesplit," #dwindle
 
@@ -33,11 +30,6 @@
         # Example special workspace (scratchpad)
         "$mainMod, S, togglespecialworkspace, magic"
         "$mainMod $workspaceMod, S, movetoworkspace, special:magic"
-
-        # Utilities
-        "$mainMod CTRL, V, exec, $clipboard"
-        "$mainMod, ESCAPE, exec, loginctl lock-session"
-        "$mainMod, L, exec, loginctl lock-session"
       ]
       ++ (lib.lists.flatten (lib.lists.genList (index: let
           key = toString (utility.math.mod (index + 1) 10);

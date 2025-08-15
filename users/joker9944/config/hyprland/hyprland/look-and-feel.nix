@@ -1,5 +1,18 @@
-{...}: {
+{
+  lib,
+  config,
+  utility,
+  ...
+}:
+utility.custom.mkHyprlandModule config {
   wayland.windowManager.hyprland.settings = {
+    # Environment variables
+    # https://wiki.hyprland.org/Configuring/Environment-variables/
+    env = lib.attrsets.mapAttrsToList (name: value: name + "," + value) {
+      "XCURSOR_SIZE" = "24";
+      "HYPRCURSOR_SIZE" = "24";
+    };
+
     general = {
       gaps_in = 5;
       gaps_out = 20;

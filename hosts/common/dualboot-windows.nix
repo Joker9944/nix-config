@@ -1,4 +1,8 @@
-{lib, config, ...}: let
+{
+  lib,
+  config,
+  ...
+}: let
   cfg = config.boot.windowsSupport;
 in {
   options.boot.windowsSupport = with lib; {
