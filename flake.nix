@@ -31,7 +31,10 @@
       url = "github:nix-community/plasma-manager/trunk";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-math.url = "github:xddxdd/nix-math/master";
+    nix-math = {
+      url = "github:xddxdd/nix-math/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nix-std.url = "github:chessai/nix-std/master";
   };
 
