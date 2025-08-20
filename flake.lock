@@ -110,11 +110,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1755599276,
-        "narHash": "sha256-PPSlU/nTTOrfLiu16lykdZqGEYv3rrmInPkGdKLi4/A=",
+        "lastModified": 1755705444,
+        "narHash": "sha256-g4XBhG8cyIeAP/kSZ9HHuJrMvd+V9Xzwh06EPq2JNlA=",
         "owner": "joker9944",
         "repo": "nix-assets",
-        "rev": "21fd00ff71018783e858aafabc90ebd6059e9245",
+        "rev": "c5a0c07c74f74b18d4b72ffe6fc9d90aa803f62f",
         "type": "github"
       },
       "original": {
