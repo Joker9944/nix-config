@@ -18,11 +18,16 @@ in
         overlays = overlays;
         config.allowUnfree = true;
       };
+      pkgs-hyprland = inputs.hyprland.inputs.nixpkgs.legacyPackages.${system};
 
       custom = {
         config = args;
 
-        assets = inputs.nix-assets.packages.${system};
+        assets =
+          inputs.nix-assets.packages.${system}
+          // {
+            palettes = inputs.nix-assets.palettes;
+          };
       };
     };
 

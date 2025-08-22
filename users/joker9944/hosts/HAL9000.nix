@@ -11,8 +11,6 @@
   ];
 
   programs = {
-    btop.package = pkgs.btop-cuda;
-
     _1password.gitSigningKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP9R2V8FqyXifBoVO3OndfpRrqxdwK1H/3qlm645l7rg";
 
     lutris = {
@@ -24,4 +22,14 @@
   };
 
   gnome-settings.peripherals.touchpad.enable = false;
+
+  wayland.windowManager.hyprland.settings = {
+    monitor = [
+      "DP-1, 1920x1080@60.00Hz, 0x0, 1"
+      "DP-2, 2560x1440@143.97Hz, 1920x0, 1"
+      "DP-3, 1920x1080@60.00Hz, 4480x0, 1"
+    ];
+  };
+
+  programs.hyprlock.settings.input-field.monitor = "DP-2";
 }

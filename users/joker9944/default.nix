@@ -8,23 +8,22 @@
 }: let
   hostModule = lib.path.append ./. "hosts/${osConfig.networking.hostName}.nix";
 in {
+  inherit (osConfig) desktopEnvironment;
+
+  # TODO auto import
   imports =
     [
       ./config/bash.nix
       ./config/cloud.nix
       ./config/font.nix
       ./config/gnome.nix
+      ./config/hyprland
       ./config/jetbrains.nix
       ./config/kanidm.nix
       ./config/kde-plasma.nix
       ./config/vscode.nix
     ]
     ++ lib.optional (builtins.pathExists hostModule) hostModule;
-
-  desktopEnvironment = {
-    gnome.enable = osConfig.desktopEnvironment.gnome.enable;
-    kde-plasma.enable = osConfig.desktopEnvironment.kde-plasma.enable;
-  };
 
   home.packages = with pkgs; [
     fastfetch
@@ -44,11 +43,7 @@ in {
     inkscape
     audacity
 
-    spotify
     vlc
-
-    discord
-    telegram-desktop
 
     nextcloud-client
     minio-client
@@ -65,7 +60,9 @@ in {
 
     vscode.enable = true;
 
-    btop.enable = true;
+    telegram.enable = true;
+    spotify.enable = true;
+    discord.enable = true;
 
     git = {
       enable = true;

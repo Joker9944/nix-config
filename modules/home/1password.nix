@@ -104,5 +104,7 @@ in {
           else [_1passwordDesktopPath];
       };
     };
+
+    wayland.windowManager.hyprland.settings.exec-once = lib.mkIf cfg.autostart.enable [("1password" + (lib.strings.optionalString cfg.autostart.silent " --silent"))];
   };
 }

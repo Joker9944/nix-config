@@ -17,13 +17,22 @@ in {
     [
       (lib.path.append ./. custom.config.hostname) # Import matching host modules
     ]
-    ++ (utility.custom.listFilesRelative ./common);
+    ++ (utility.custom.ls.lookup {
+      dir = ./common;
+    });
 
   # Set args inherited from mkNixosConfiguration
   networking.hostName = custom.config.hostname;
 
   # Enable experimental flake support and experimental nix command
   nix.settings.experimental-features = ["nix-command" "flakes"];
+
+  # Third-party Chachix
+  nix.settings = {
+    substituters = ["https://hyprland.cachix.org"];
+    trusted-substituters = ["https://hyprland.cachix.org"];
+    trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
+  };
 
   # Enable automatic upgrades
   system.autoUpgrade = {

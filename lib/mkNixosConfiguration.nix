@@ -27,6 +27,7 @@ in
         overlays = overlays;
         config.allowUnfree = true;
       };
+      pkgs-hyprland = inputs.hyprland.inputs.nixpkgs.legacyPackages.${system};
 
       custom = {
         config = args;

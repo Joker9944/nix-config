@@ -1,11 +1,10 @@
-{...}: {
-  imports = [
-    ./hardware-configuration.nix
-    ./disks.nix
-    ./pipewire.nix
-    ./nvidia.nix
-    ./docker.nix
-  ];
+{utility, ...}: {
+  imports = utility.custom.ls.lookup {
+    dir = ./.;
+    exclude = [./default.nix];
+  };
+
+  desktopEnvironment.hyprland.enable = true;
 
   boot = {
     windowsSupport.enable = true;

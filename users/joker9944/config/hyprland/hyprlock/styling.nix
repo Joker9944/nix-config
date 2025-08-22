@@ -1,0 +1,88 @@
+{
+  lib,
+  config,
+  utility,
+  custom,
+  ...
+}: let
+  cfg = config.desktopEnvironment.hyprland;
+in
+  utility.custom.mkHyprlandModule config {
+    programs.hyprlock.settings = with cfg.style; {
+      animations = {
+        enabled = true;
+        bezier = "linear, 1, 1, 0, 0";
+        animation = [
+          "fadeIn, 1, 5, linear"
+          "fadeOut, 1, 5, linear"
+          "inputFieldDots, 1, 2, linear"
+        ];
+      };
+
+      background = {
+        #monitor =
+        path = "screenshot";
+        blur_passes = 3;
+      };
+
+      input-field = {
+        size = "20%, 5%";
+        rounding = border.corners.rounding;
+        outline_thickness = border.size;
+
+        #inner_color = "rgba(0, 0, 0, 0.0)"; # no fill
+        inner_color = pallet.background.normal.rgba 0.93;
+        outer_color = pallet.functional.focus.rgba 0.93;
+        check_color = pallet.functional.info.rgba 0.93;
+        fail_color = pallet.functional.danger.rgba 0.93;
+
+        font_color = pallet.foreground.rgb;
+        font_family = font.name;
+
+        dots_spacing = 0.3;
+
+        position = "0, -20";
+        halign = "center";
+        valign = "center";
+      };
+
+      image = [
+        {
+          # User avatar
+          monitor =
+            lib.mkIf (config.programs.hyprlock.settings.input-field.monitor != null)
+            config.programs.hyprlock.settings.input-field.monitor;
+          path = "${custom.assets.images.profile.the-seer."512x512"}/share/profile/the-seer.512x512.jpg";
+
+          border_size = border.size;
+          border_color = pallet.background.normal.rgba 0.93;
+
+          size = "150";
+          position = "0, 130";
+        }
+      ];
+
+      label = [
+        {
+          # Time
+          text = "$TIME"; # ref. https://wiki.hyprland.org/Hypr-Ecosystem/hyprlock/#variable-substitution
+          font_size = 90;
+          font_family = cfg.style.font.name;
+
+          position = "-30, 0";
+          halign = "right";
+          valign = "top";
+        }
+        {
+          # Date
+          text = "cmd[update:60000] date +\"%A, %d %B %Y\""; # update every 60 seconds
+          font_size = 25;
+          font_family = cfg.style.font.name;
+
+          position = "-30, -150";
+          halign = "right";
+          valign = "top";
+        }
+      ];
+    };
+  }

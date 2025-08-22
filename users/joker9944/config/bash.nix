@@ -8,6 +8,10 @@
       enableCompletion = true;
 
       initExtra = ''
+        nix-search() {
+          nix-instantiate --eval-only --expr "(import <nixpkgs> {}).$1.outPath" | cut -d '"' -f 2
+        }
+
         fastfetch
       '';
 
@@ -23,9 +27,10 @@
         sops-decrypt = "sops --indent 2 --decrypt --in-place";
         mktar = "tar -czvf";
         untar = "tar -xvf";
-        nix-update = "sudo nixos-rebuild switch --flake /home/joker9944/Workspace/nix-config";
-        home-update = "home-manager switch --flake /home/joker9944/Workspace/nix-config";
+        nix-update = "sudo nixos-rebuild switch --flake \"$HOME/Workspace/nix-config\"";
+        home-update = "home-manager switch --flake \"$HOME/Workspace/nix-config\"";
         open = "xdg-open";
+        code = "codium";
       };
     };
   };
