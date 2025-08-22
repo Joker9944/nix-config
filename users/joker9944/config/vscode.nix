@@ -85,8 +85,8 @@ in {
     home.packages = with pkgs; [
       sops # default -> used for git secret encryption
       pre-commit # default -> used for git pre commit checks
-      alejandra # nix -> alejandra extension
-      nil # nix -> nix language server
+      nixfmt-rfc-style # nix -> formatter
+      nil # nix -> language server
       kubectl # k8s -> vscode-kubernetes-tools extension
       kubernetes-helm # k8s -> vscode-kubernetes-tools extension
       fluxcd # k8s -> vscode-gitops-tools extension
@@ -110,23 +110,9 @@ in {
             userSettings = {
               "nix.enableLanguageServer" = true;
               "nix.serverPath" = "nil";
+              "nix.serverSettings".nil.formatting.command = [ "nixfmt" ];
               "[nix]" = {
                 "editor.tabSize" = 2;
-              };
-            };
-          }
-          {
-            extensions = [
-              vscodeExtensions.kamadorueda.alejandra
-            ];
-
-            userSettings = {
-              "alejandra.program" = "alejandra";
-              "[nix]" = {
-                "editor.defaultFormatter" = "kamadorueda.alejandra";
-                "editor.formatOnPaste" = true;
-                "editor.formatOnSave" = true;
-                "editor.formatOnType" = false;
               };
             };
           }
