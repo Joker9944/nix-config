@@ -35,12 +35,14 @@ with cfg.style;
   }
 
   #custom-cpu-label, #custom-gpu-label, #custom-memory-label, #custom-disk-label, #custom-network-label, #custom-volume-label {
-    padding-right: 1px;
+    padding-right: 3px;
+    margin-right: 1px;
   }
 
   #cpu, #custom-gpu, #memory, #disk, #network, #wireplumber {
     font-weight: normal;
-    padding-left: 1px;
+    padding-left: 3px;
+    margin-left: 1px;
     font-family: monospace;
   }
 
