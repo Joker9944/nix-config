@@ -2,9 +2,11 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.services.udev;
-in {
+in
+{
   options.services.udev = with lib; {
     dualsenseFix = mkEnableOption "DualSense trackpad fix";
   };

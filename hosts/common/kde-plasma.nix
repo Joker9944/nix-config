@@ -3,9 +3,11 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.desktopEnvironment.kde-plasma;
-in {
+in
+{
   options.desktopEnvironment.kde-plasma = with lib; {
     enable = mkEnableOption "Whether to enable KDE Plasma desktop environment.";
   };

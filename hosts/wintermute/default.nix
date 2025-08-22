@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   imports = [
     ./hardware-configuration.nix
   ];
@@ -17,7 +18,7 @@
 
   boot = {
     # Manually add kernel modules which do net get picked up in hardware scan
-    kernelModules = ["iwlwifi"];
+    kernelModules = [ "iwlwifi" ];
     loader.limine.style.interface.brandingColor = 4; # blue
   };
 

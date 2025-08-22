@@ -5,33 +5,37 @@
   pkgs,
   custom,
   ...
-}: let
+}:
+let
   locale = {
     us = "us";
     de = "de";
     en_US = "en_US.UTF-8";
     de_CH = "de_CH.UTF-8";
   };
-in {
-  imports =
-    [
-      (lib.path.append ./. custom.config.hostname) # Import matching host modules
-    ]
-    ++ (utility.custom.ls.lookup {
-      dir = ./common;
-    });
+in
+{
+  imports = [
+    (lib.path.append ./. custom.config.hostname) # Import matching host modules
+  ]
+  ++ (utility.custom.ls.lookup {
+    dir = ./common;
+  });
 
   # Set args inherited from mkNixosConfiguration
   networking.hostName = custom.config.hostname;
 
   # Enable experimental flake support and experimental nix command
-  nix.settings.experimental-features = ["nix-command" "flakes"];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   # Third-party Chachix
   nix.settings = {
-    substituters = ["https://hyprland.cachix.org"];
-    trusted-substituters = ["https://hyprland.cachix.org"];
-    trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
+    substituters = [ "https://hyprland.cachix.org" ];
+    trusted-substituters = [ "https://hyprland.cachix.org" ];
+    trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
   };
 
   # Enable automatic upgrades
@@ -53,7 +57,7 @@ in {
   # Enable automatic nix store optimization
   nix.optimise = {
     automatic = lib.mkDefault true;
-    dates = lib.mkDefault ["weekly"];
+    dates = lib.mkDefault [ "weekly" ];
   };
 
   # Set default session environment variables
@@ -137,7 +141,7 @@ in {
   # Enable cups by default
   services.printing = {
     enable = lib.mkDefault true;
-    drivers = [pkgs.epson-escpr];
+    drivers = [ pkgs.epson-escpr ];
   };
 
   # Enable GnuPG by default

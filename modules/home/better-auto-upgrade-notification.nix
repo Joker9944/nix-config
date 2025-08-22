@@ -3,9 +3,11 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.services.betterAutoUpgrade.notify;
-in {
+in
+{
   options.services.betterAutoUpgrade.notify = with lib; {
     enable = mkEnableOption "NixOS Upgrade Service failure notification";
 
@@ -63,7 +65,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [pkgs.libnotify];
+    home.packages = [ pkgs.libnotify ];
 
     systemd.user.services = {
       home-manager-upgrade.Unit.OnFailure = "home-manager-upgrade-notify@%n.service";
@@ -76,17 +78,20 @@ in {
         Service = {
           Type = "simple";
 
-          ExecStart = let
-            bin = {
-              notify-send = "${pkgs.libnotify}/bin/notify-send";
-            };
-          in
-            toString (pkgs.writeShellScript "home-manager-upgrade-notify_-start" ''
-              set -e
+          ExecStart =
+            let
+              bin = {
+                notify-send = "${pkgs.libnotify}/bin/notify-send";
+              };
+            in
+            toString (
+              pkgs.writeShellScript "home-manager-upgrade-notify_-start" ''
+                set -e
 
-              instance=$1
-              ${bin.notify-send} --app-name="${cfg.name}" --urgency=${cfg.urgency} --icon="${cfg.icon}" "${cfg.summary}" "${cfg.body}"
-            '')
+                instance=$1
+                ${bin.notify-send} --app-name="${cfg.name}" --urgency=${cfg.urgency} --icon="${cfg.icon}" "${cfg.summary}" "${cfg.body}"
+              ''
+            )
             + " %i";
         };
       };

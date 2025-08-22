@@ -8,7 +8,8 @@
 # Remove once issue has been resolved https://github.com/nix-community/home-manager/issues/338
 let
   cfg = config.services.betterAutoUpgrade;
-in {
+in
+{
   options.services.betterAutoUpgrade = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -45,7 +46,7 @@ in {
 
     flags = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = [];
+      default = [ ];
       example = [
         "-I"
         "stuff=/home/alice/nixos-stuff"
@@ -126,14 +127,17 @@ in {
     ];
 
     services.betterAutoUpgrade.flags =
-      if cfg.flake == null
-      then
-        ["--no-build-output"]
+      if cfg.flake == null then
+        [ "--no-build-output" ]
         ++ lib.optionals (cfg.channel != null) [
           "-I"
           "nixpkgs=${cfg.channel}/nixexprs.tar.xz"
         ]
-      else ["--refresh" "--flake ${cfg.flake}"];
+      else
+        [
+          "--refresh"
+          "--flake ${cfg.flake}"
+        ];
 
     systemd.user = {
       services.home-manager-upgrade = {
@@ -149,15 +153,20 @@ in {
         Service = {
           Type = "oneshot";
 
-          ExecStart = let
-            home-manager = "${pkgs.home-manager}/bin/home-manager";
-            nix-channel = "${pkgs.nix}/bin/nix-channel";
-          in
-            toString (pkgs.writeShellScript "home-manager-upgrade-start" (lib.concatLines (
-              ["set -e"]
-              ++ (lib.optional (cfg.channel == null) "${nix-channel} --update")
-              ++ ["${home-manager} switch ${toString (cfg.flags)}"]
-            )));
+          ExecStart =
+            let
+              home-manager = "${pkgs.home-manager}/bin/home-manager";
+              nix-channel = "${pkgs.nix}/bin/nix-channel";
+            in
+            toString (
+              pkgs.writeShellScript "home-manager-upgrade-start" (
+                lib.concatLines (
+                  [ "set -e" ]
+                  ++ (lib.optional (cfg.channel == null) "${nix-channel} --update")
+                  ++ [ "${home-manager} switch ${toString (cfg.flags)}" ]
+                )
+              )
+            );
 
           X-RestartIfChanged = false;
         };
@@ -166,7 +175,7 @@ in {
       timers.home-manager-upgrade = {
         Unit.Description = "Home Manager Upgrade";
 
-        Install.WantedBy = ["timers.target"];
+        Install.WantedBy = [ "timers.target" ];
 
         Timer = {
           FixedRandomDelay = cfg.fixedRandomDelay;

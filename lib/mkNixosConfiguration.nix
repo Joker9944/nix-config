@@ -3,48 +3,54 @@
   utility,
   overlays,
   nixosModules,
-}: {
+}:
+{
   system,
   usernames,
   ...
-} @ args:
-with inputs.nixpkgs.lib; let
+}@args:
+with inputs.nixpkgs.lib;
+let
   hostsPath = ../hosts;
   usersPath = ../users;
 
   usersNixosModulePaths = map (username: userNixosModulePath username) usernames;
   userNixosModulePath = username: path.append usersPath "${username}/nixos.nix";
 in
-  nixosSystem {
-    inherit system;
+nixosSystem {
+  inherit system;
 
-    specialArgs = {
-      inherit inputs utility;
+  specialArgs = {
+    inherit inputs utility;
 
-      pkgs-unstable = import inputs.nixpkgs-unstable {
-        inherit system;
-        # TODO find a way to configure this somewhere else
-        overlays = overlays;
-        config.allowUnfree = true;
-      };
-      pkgs-hyprland = inputs.hyprland.inputs.nixpkgs.legacyPackages.${system};
-
-      custom = {
-        config = args;
-
-        assets = inputs.nix-assets.packages.${system};
-      };
+    pkgs-unstable = import inputs.nixpkgs-unstable {
+      inherit system;
+      # TODO find a way to configure this somewhere else
+      overlays = overlays;
+      config.allowUnfree = true;
     };
+    pkgs-hyprland = inputs.hyprland.inputs.nixpkgs.legacyPackages.${system};
 
-    modules =
-      [hostsPath]
-      ++ nixosModules
-      ++ usersNixosModulePaths
-      ++ [
-        ({...}: {
-          # TODO find a way to configure this somewhere else
-          nixpkgs.overlays = overlays;
-          nixpkgs.config.allowUnfree = true;
-        })
-      ];
-  }
+    custom = {
+      config = args;
+
+      assets = inputs.nix-assets.packages.${system};
+    };
+  };
+
+  modules = [
+    hostsPath
+  ]
+  ++ nixosModules
+  ++ usersNixosModulePaths
+  ++ [
+    (
+      { ... }:
+      {
+        # TODO find a way to configure this somewhere else
+        nixpkgs.overlays = overlays;
+        nixpkgs.config.allowUnfree = true;
+      }
+    )
+  ];
+}

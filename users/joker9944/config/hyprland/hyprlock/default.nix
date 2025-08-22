@@ -1,5 +1,5 @@
 /**
-* lock screen
+  * lock screen
 */
 {
   lib,
@@ -7,36 +7,37 @@
   pkgs-hyprland,
   utility,
   ...
-}: let
+}:
+let
   cfg = config.desktopEnvironment.hyprland;
 in
-  utility.custom.mkHyprlandModule config {
-    imports = utility.custom.ls.lookup {
-      dir = ./.;
-      exclude = [./default.nix];
-    };
+utility.custom.mkHyprlandModule config {
+  imports = utility.custom.ls.lookup {
+    dir = ./.;
+    exclude = [ ./default.nix ];
+  };
 
-    config.programs.hyprlock = {
-      enable = true;
-      package = pkgs-hyprland.hyprlock;
+  config.programs.hyprlock = {
+    enable = true;
+    package = pkgs-hyprland.hyprlock;
 
-      settings = {
-        general = {
-          hide_cursor = true;
-        };
+    settings = {
+      general = {
+        hide_cursor = true;
+      };
 
-        auth.fingerprint = {
-          enabled = lib.mkDefault false;
-          ready_message = "Scan fingerprint to unlock";
-          present_message = "Scanning...";
-        };
+      auth.fingerprint = {
+        enabled = lib.mkDefault false;
+        ready_message = "Scan fingerprint to unlock";
+        present_message = "Scanning...";
+      };
 
-        input-field = {
-          fade_on_empty = false;
+      input-field = {
+        fade_on_empty = false;
 
-          placeholder_text = "Input password...";
-          fail_text = "$PAMFAIL";
-        };
+        placeholder_text = "Input password...";
+        fail_text = "$PAMFAIL";
       };
     };
-  }
+  };
+}

@@ -4,9 +4,11 @@
   utility,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.programs._1password;
-in {
+in
+{
   options.programs._1password = with lib; {
     enable = mkEnableOption "1Password configuration";
 
@@ -21,8 +23,8 @@ in {
 
     sshIdentityAgentHosts = mkOption {
       type = types.listOf types.str;
-      default = [];
-      example = ["*"];
+      default = [ ];
+      example = [ "*" ];
       description = ''
         List of host on which the 1Password SSH agent should act.
       '';
@@ -78,33 +80,44 @@ in {
         };
       };
 
-      ssh.extraConfig = lib.mkIf (cfg.sshIdentityAgentHosts != []) (lib.foldr (el: acc: el + "\n" + acc) "" (map (host: ''
-          Host ${host}
-            IdentityAgent ~/.1password/agent.sock
-        '')
-        cfg.sshIdentityAgentHosts));
+      ssh.extraConfig = lib.mkIf (cfg.sshIdentityAgentHosts != [ ]) (
+        lib.foldr (el: acc: el + "\n" + acc) "" (
+          map (host: ''
+            Host ${host}
+              IdentityAgent ~/.1password/agent.sock
+          '') cfg.sshIdentityAgentHosts
+        )
+      );
     };
 
     xdg = {
-      configFile."1Password/ssh/agent.toml".text = lib.mkIf (cfg.sshAgentConfig != null) (utility.std.serde.toTOML cfg.sshAgentConfig);
+      configFile."1Password/ssh/agent.toml".text = lib.mkIf (cfg.sshAgentConfig != null) (
+        utility.std.serde.toTOML cfg.sshAgentConfig
+      );
 
       autostart = lib.mkIf cfg.autostart.enable {
         enable = lib.mkDefault true;
 
-        entries = let
-          _1passwordDesktopPath = "${pkgs._1password-gui}/share/applications/1password.desktop";
-        in
-          if cfg.autostart.silent
-          then [
-            (pkgs.writeTextFile {
-              name = builtins.baseNameOf _1passwordDesktopPath;
-              text = lib.strings.replaceString "1password %U" "1password --silent %U" (lib.strings.readFile _1passwordDesktopPath);
-            })
-          ]
-          else [_1passwordDesktopPath];
+        entries =
+          let
+            _1passwordDesktopPath = "${pkgs._1password-gui}/share/applications/1password.desktop";
+          in
+          if cfg.autostart.silent then
+            [
+              (pkgs.writeTextFile {
+                name = builtins.baseNameOf _1passwordDesktopPath;
+                text = lib.strings.replaceString "1password %U" "1password --silent %U" (
+                  lib.strings.readFile _1passwordDesktopPath
+                );
+              })
+            ]
+          else
+            [ _1passwordDesktopPath ];
       };
     };
 
-    wayland.windowManager.hyprland.settings.exec-once = lib.mkIf cfg.autostart.enable [("1password" + (lib.strings.optionalString cfg.autostart.silent " --silent"))];
+    wayland.windowManager.hyprland.settings.exec-once = lib.mkIf cfg.autostart.enable [
+      ("1password" + (lib.strings.optionalString cfg.autostart.silent " --silent"))
+    ];
   };
 }

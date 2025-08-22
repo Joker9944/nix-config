@@ -2,7 +2,8 @@
   lib,
   config,
   ...
-}: {
+}:
+{
   config = lib.mkIf config.programs.bash.enable {
     programs.bash = {
       enableCompletion = true;

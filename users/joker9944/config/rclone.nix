@@ -3,13 +3,15 @@
   pkgs,
   ...
 }:
-with pkgs; let
+with pkgs;
+let
   mkdirBin = "${coreutils}/bin/mkdir";
   oidcAddBin = "${oidc-agent}/bin/oidc-add";
   rcloneBin = "${rclone}/bin/rclone";
   fusermountBin = "${fuse}/bin/fusermount";
-in {
-  home.packages = with pkgs; [rclone];
+in
+{
+  home.packages = with pkgs; [ rclone ];
 
   services.oidc-agent.enable = true;
 
@@ -29,7 +31,10 @@ in {
     services.rclone-mount-owncloud-file-joker9944 = {
       Unit = {
         Description = "Joker9944's ownCloud Files rclone Mount";
-        After = ["network.target" "oidc-agent.service"];
+        After = [
+          "network.target"
+          "oidc-agent.service"
+        ];
         Requires = "oidc-agent.service";
         Wants = "network-online.target";
       };
@@ -47,7 +52,7 @@ in {
       };
 
       Install = {
-        WantedBy = ["default.target"];
+        WantedBy = [ "default.target" ];
       };
     };
   };

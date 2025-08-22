@@ -2,14 +2,16 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   cfg = config.gnome-settings.gnome-online-accounts;
-in {
+in
+{
   options.gnome-settings.gnome-online-accounts = with lib; {
     enable = mkEnableOption "Whether to enable GNOME online accounts config.";
     accounts = mkOption {
       type = with types; attrsOf attrs;
-      default = {};
+      default = { };
       example = literalExpression ''
         {
           "account_1745833011_0" = {
@@ -30,10 +32,8 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    xdg.configFile."goa-1.0/accounts.conf".text =
-      lib.generators.toINI {
-        mkSectionName = name: lib.escape ["[" "]"] ("Account " + name);
-      }
-      cfg.accounts;
+    xdg.configFile."goa-1.0/accounts.conf".text = lib.generators.toINI {
+      mkSectionName = name: lib.escape [ "[" "]" ] ("Account " + name);
+    } cfg.accounts;
   };
 }

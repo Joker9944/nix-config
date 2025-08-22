@@ -5,25 +5,26 @@
   pkgs-unstable,
   osConfig,
   ...
-}: let
+}:
+let
   hostModule = lib.path.append ./. "hosts/${osConfig.networking.hostName}.nix";
-in {
+in
+{
   inherit (osConfig) desktopEnvironment;
 
   # TODO auto import
-  imports =
-    [
-      ./config/bash.nix
-      ./config/cloud.nix
-      ./config/font.nix
-      ./config/gnome.nix
-      ./config/hyprland
-      ./config/jetbrains.nix
-      ./config/kanidm.nix
-      ./config/kde-plasma.nix
-      ./config/vscode.nix
-    ]
-    ++ lib.optional (builtins.pathExists hostModule) hostModule;
+  imports = [
+    ./config/bash.nix
+    ./config/cloud.nix
+    ./config/font.nix
+    ./config/gnome.nix
+    ./config/hyprland
+    ./config/jetbrains.nix
+    ./config/kanidm.nix
+    ./config/kde-plasma.nix
+    ./config/vscode.nix
+  ]
+  ++ lib.optional (builtins.pathExists hostModule) hostModule;
 
   home.packages = with pkgs; [
     fastfetch
@@ -52,7 +53,7 @@ in {
   xdg.autostart = {
     enable = true;
 
-    entries = ["${pkgs.telegram-desktop}/share/applications/org.telegram.desktop.desktop"];
+    entries = [ "${pkgs.telegram-desktop}/share/applications/org.telegram.desktop.desktop" ];
   };
 
   programs = {
@@ -77,7 +78,7 @@ in {
     ssh.enable = true;
 
     _1password = {
-      sshIdentityAgentHosts = ["*"];
+      sshIdentityAgentHosts = [ "*" ];
 
       sshAgentConfig = {
         ssh-keys = [

@@ -1,10 +1,12 @@
-{...}: let
+{ ... }:
+let
   nyx = {
     ingress = "192.168.0.128";
   };
-in {
+in
+{
   # redirects for temporary nyx cluster setup
   networking.hosts = {
-    ${nyx.ingress} = ["longhorn.vonarx.online"];
+    ${nyx.ingress} = [ "longhorn.vonarx.online" ];
   };
 }

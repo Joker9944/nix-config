@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   home = {
     packages = with pkgs; [
       jetbrains.idea-ultimate
@@ -8,5 +9,10 @@
     ];
   };
 
-  programs.openjdk.versions = [8 11 17 21];
+  programs.openjdk.versions = [
+    8
+    11
+    17
+    21
+  ];
 }

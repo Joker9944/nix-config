@@ -1,7 +1,9 @@
-{pkgs, ...}:
-with pkgs; let
+{ pkgs, ... }:
+with pkgs;
+let
   firefoxBin = "${firefox}/bin/firefox";
-in {
+in
+{
   xdg.configFile."firefoxprofileswitcher/config.json".text = ''
     {"browser_binary": "${firefoxBin}"}
   '';

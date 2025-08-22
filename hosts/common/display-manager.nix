@@ -1,6 +1,8 @@
-{config, ...}: let
+{ config, ... }:
+let
   xserverDisplayManagerCfg = config.services.xserver.displayManager;
-in {
+in
+{
   services = {
     displayManager = {
       ly = {

@@ -2,9 +2,11 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   cfg = config.boot.windowsSupport;
-in {
+in
+{
   options.boot.windowsSupport = with lib; {
     enable = mkEnableOption "dualboot bootloader config";
   };

@@ -4,12 +4,14 @@
   pkgs,
   ...
 }:
-with pkgs; let
+with pkgs;
+let
   oidcAgentBin = "${oidc-agent}/bin/oidc-agent";
   shBin = "${bashInteractive}/bin/sh";
   echoBin = "${coreutils}/bin/echo";
   rmBin = "${coreutils}/bin/rm";
-in {
+in
+{
   options.services.oidc-agent = with lib; {
     enable = mkOption {
       type = types.bool;
@@ -21,7 +23,7 @@ in {
   };
 
   config = lib.mkIf config.services.oidc-agent.enable {
-    home.packages = with pkgs; [oidc-agent];
+    home.packages = with pkgs; [ oidc-agent ];
 
     systemd.user.services.oidc-agent = {
       Unit = {
@@ -45,7 +47,7 @@ in {
       };
 
       Install = {
-        WantedBy = ["default.target"];
+        WantedBy = [ "default.target" ];
       };
     };
 

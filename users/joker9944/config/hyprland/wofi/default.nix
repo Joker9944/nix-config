@@ -1,7 +1,7 @@
 /**
-* Covers:
-*  - app launcher
-*  - clipboard history
+  * Covers:
+  *  - app launcher
+  *  - clipboard history
 */
 {
   lib,
@@ -10,7 +10,8 @@
   pkgs-hyprland,
   utility,
   ...
-}: let
+}:
+let
   cfg = config.desktopEnvironment.hyprland;
   pkg.wl-clipboard = pkgs-hyprland.wl-clipboard;
   bin = {
@@ -21,46 +22,47 @@
     wofi = "${config.programs.wofi.package}/bin/wofi";
   };
 in
-  utility.custom.mkHyprlandModule config {
-    home.packages = [pkg.wl-clipboard]; # Wayland clipboard utilities
+utility.custom.mkHyprlandModule config {
+  home.packages = [ pkg.wl-clipboard ]; # Wayland clipboard utilities
 
-    services.cliphist = {
-      enable = true;
-      package = pkgs-hyprland.cliphist;
+  services.cliphist = {
+    enable = true;
+    package = pkgs-hyprland.cliphist;
+  };
+
+  programs.wofi = {
+    enable = true;
+    package = pkgs-hyprland.wofi;
+
+    settings = {
+      ### Behavior ###
+      show = "drun";
+      allow_images = true;
+      prompt = "Search...";
+      hide_scroll = true;
     };
 
-    programs.wofi = {
-      enable = true;
-      package = pkgs-hyprland.wofi;
+    style = import ./style.css.nix { inherit cfg; };
+  };
 
-      settings = {
-        ### Behavior ###
-        show = "drun";
-        allow_images = true;
-        prompt = "Search...";
-        hide_scroll = true;
-      };
-
-      style = import ./style.css.nix {inherit cfg;};
-    };
-
-    wayland.windowManager.hyprland.settings = let
+  wayland.windowManager.hyprland.settings =
+    let
       mods = cfg.bind.mods;
     in
-      lib.mkIf config.programs.wofi.enable {
-        exec-once = [
-          "${bin.wl-paste} --type text --watch ${bin.cliphist} store"
-        ];
+    lib.mkIf config.programs.wofi.enable {
+      exec-once = [
+        "${bin.wl-paste} --type text --watch ${bin.cliphist} store"
+      ];
 
-        bindr = [
-          "${mods.main}, SUPER_L, exec, ${bin.pkill} --exact \".wofi-wrapped\" || ${bin.wofi}"
-        ];
+      bindr = [
+        "${mods.main}, SUPER_L, exec, ${bin.pkill} --exact \".wofi-wrapped\" || ${bin.wofi}"
+      ];
 
-        bind = [
-          "${mods.main}, R, exec, ${bin.wofi}"
-          "${mods.utility}, V, exec, ${bin.cliphist} list | ${bin.wofi} --dmenu | ${bin.cliphist} decode | ${bin.wl-copy}"
-        ];
-      };
+      bind = [
+        "${mods.main}, R, exec, ${bin.wofi}"
+        "${mods.utility}, V, exec, ${bin.cliphist} list | ${bin.wofi} --dmenu | ${bin.cliphist} decode | ${bin.wl-copy}"
+      ];
+    };
 
-    services.dunst.settings.dmenu.general = lib.mkIf config.programs.wofi.enable "${bin.wofi} --dmenu";
-  }
+  services.dunst.settings.dmenu.general = lib.mkIf config.programs.wofi.enable "${bin.wofi} --dmenu";
+}

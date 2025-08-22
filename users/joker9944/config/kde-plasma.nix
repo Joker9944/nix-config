@@ -3,7 +3,8 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.desktopEnvironment.kde-plasma;
 
   colors = {
@@ -23,7 +24,8 @@
   workspaceIndex = name: (lib.lists.findFirstIndex (workspace: workspace == name) 0 workspaces) + 1;
   workspaceInternalName = name: "Desktop_" + (builtins.toString (workspaceIndex name));
   calcDesktopLength = n: n * 8;
-in {
+in
+{
   options.desktopEnvironment.kde-plasma = with lib; {
     enable = mkEnableOption "Whether to enable KDE Plasma desktop environment config.";
   };
@@ -48,20 +50,30 @@ in {
 
       # Shortcuts
       shortcuts = {
-        "ksmserver"."Lock Session" = ["Meta+Esc" "Meta+L" "Screensaver"];
-        "services/org.kde.plasma-systemmonitor.desktop"."_launch" = [];
+        "ksmserver"."Lock Session" = [
+          "Meta+Esc"
+          "Meta+L"
+          "Screensaver"
+        ];
+        "services/org.kde.plasma-systemmonitor.desktop"."_launch" = [ ];
         "kwin" = {
-          "Overview" = ["Meta" "Meta+D"]; # Mission Control
-          "Window One Desktop Up" = ["Meta+Shift+Up"];
-          "Window One Desktop to the Right" = ["Meta+Shift+Right"];
-          "Window One Desktop Down" = ["Meta+Shift+Down"];
-          "Window One Desktop to the Left" = ["Meta+Shift+Left"];
-          "Window to Next Screen" = [];
-          "Window to Previous Screen" = [];
-          "Edit Tiles" = [];
-          "Show Desktop" = [];
+          "Overview" = [
+            "Meta"
+            "Meta+D"
+          ]; # Mission Control
+          "Window One Desktop Up" = [ "Meta+Shift+Up" ];
+          "Window One Desktop to the Right" = [ "Meta+Shift+Right" ];
+          "Window One Desktop Down" = [ "Meta+Shift+Down" ];
+          "Window One Desktop to the Left" = [ "Meta+Shift+Left" ];
+          "Window to Next Screen" = [ ];
+          "Window to Previous Screen" = [ ];
+          "Edit Tiles" = [ ];
+          "Show Desktop" = [ ];
         };
-        "plasmashell"."activate application launcher" = ["Meta+A" "Alt+F1"];
+        "plasmashell"."activate application launcher" = [
+          "Meta+A"
+          "Alt+F1"
+        ];
       };
       hotkeys.commands = {
         "launch-konsole" = {
@@ -91,28 +103,26 @@ in {
               };
             }
             {
-              panelSpacer = {};
+              panelSpacer = { };
             }
             {
-              digitalClock = {};
+              digitalClock = { };
             }
             "org.kde.plasma.notifications"
             {
-              panelSpacer = {};
+              panelSpacer = { };
             }
             {
               # CPU Chart
               systemMonitor = {
                 title = "Individual Core Usage";
                 displayStyle = "org.kde.ksysguard.barchart";
-                totalSensors = ["cpu/all/usage"];
-                sensors =
-                  lib.lists.genList (i: {
-                    name = "cpu/cpu" + (builtins.toString i) + "/usage";
-                    color = colors.primary;
-                    label = "Core " + (builtins.toString i);
-                  })
-                  24;
+                totalSensors = [ "cpu/all/usage" ];
+                sensors = lib.lists.genList (i: {
+                  name = "cpu/cpu" + (builtins.toString i) + "/usage";
+                  color = colors.primary;
+                  label = "Core " + (builtins.toString i);
+                }) 24;
               };
             }
             {
@@ -120,8 +130,8 @@ in {
               systemMonitor = {
                 title = "Memory Usage";
                 displayStyle = "org.kde.ksysguard.piechart";
-                totalSensors = ["memory/physical/usedPercent"];
-                textOnlySensors = ["memory/physical/total"];
+                totalSensors = [ "memory/physical/usedPercent" ];
+                textOnlySensors = [ "memory/physical/total" ];
                 sensors = [
                   {
                     name = "memory/physical/used";
@@ -136,8 +146,8 @@ in {
               systemMonitor = {
                 title = "Swap Usage";
                 displayStyle = "org.kde.ksysguard.piechart";
-                totalSensors = ["memory/swap/usedPercent"];
-                textOnlySensors = ["memory/swap/total"];
+                totalSensors = [ "memory/swap/usedPercent" ];
+                textOnlySensors = [ "memory/swap/total" ];
                 sensors = [
                   {
                     name = "memory/swap/used";
@@ -328,37 +338,39 @@ in {
       };
 
       window-rules =
-        lib.mapAttrsToList (name: value: {
-          description = name;
-          match.window-class.value = value.windowClass;
-          apply = {
-            desktops = {
-              value = workspaceInternalName value.workspace;
-              apply = "force";
+        lib.mapAttrsToList
+          (name: value: {
+            description = name;
+            match.window-class.value = value.windowClass;
+            apply = {
+              desktops = {
+                value = workspaceInternalName value.workspace;
+                apply = "force";
+              };
+            };
+          })
+          {
+            "Steam" = {
+              windowClass = "steamwebhelper steam";
+              workspace = "Default";
+            };
+            "Telegram" = {
+              windowClass = "telegram-desktop org.telegram.desktop";
+              workspace = "Social";
+            };
+            "Discord" = {
+              windowClass = "discord discord";
+              workspace = "Social";
+            };
+            "Visual Studio Code" = {
+              windowClass = "code Code";
+              workspace = "Coding";
+            };
+            "Spotify" = {
+              windowClass = "spotify Spotify";
+              workspace = "Media";
             };
           };
-        }) {
-          "Steam" = {
-            windowClass = "steamwebhelper steam";
-            workspace = "Default";
-          };
-          "Telegram" = {
-            windowClass = "telegram-desktop org.telegram.desktop";
-            workspace = "Social";
-          };
-          "Discord" = {
-            windowClass = "discord discord";
-            workspace = "Social";
-          };
-          "Visual Studio Code" = {
-            windowClass = "code Code";
-            workspace = "Coding";
-          };
-          "Spotify" = {
-            windowClass = "spotify Spotify";
-            workspace = "Media";
-          };
-        };
     };
   };
 }

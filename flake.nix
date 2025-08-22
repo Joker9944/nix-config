@@ -41,90 +41,127 @@
     nix-std.url = "github:chessai/nix-std/master";
   };
 
-  outputs = inputs @ {
-    self,
-    nixpkgs,
-    ...
-  }: let
-    inherit (nixpkgs) lib;
+  outputs =
+    inputs@{
+      self,
+      nixpkgs,
+      ...
+    }:
+    let
+      inherit (nixpkgs) lib;
 
-    nixosModules =
-      [
+      nixosModules = [
         inputs.disko.nixosModules.disko
         inputs.sops-nix.nixosModules.sops
       ]
       ++ (lib.mapAttrsToList (_: value: value) self.nixosModules);
 
-    homeModules =
-      [
+      homeModules = [
         inputs.sops-nix.homeManagerModules.sops
         inputs.plasma-manager.homeManagerModules.plasma-manager
       ]
       ++ (lib.mapAttrsToList (_: value: value) self.homeModules);
 
-    overlays = lib.mapAttrsToList (_: value: value) self.overlays;
+      overlays = lib.mapAttrsToList (_: value: value) self.overlays;
 
-    utility = {
-      inherit (inputs.nix-math.lib) math;
-      custom = import ./lib/utility.nix lib;
-      std = inputs.nix-std.lib;
-    };
-
-    mkNixosConfiguration = import ./lib/mkNixosConfiguration.nix {inherit inputs utility nixosModules overlays;};
-
-    mkHomeConfiguration = import ./lib/mkHomeConfiguration.nix {inherit inputs utility homeModules overlays;};
-  in
-    inputs.flake-utils.lib.eachDefaultSystem (system: let
-      pkgs = nixpkgs.legacyPackages.${system};
-    in {
-      packages = utility.custom.applyFunctionRecursive ./pkgs (filename: pkgs.callPackage filename {});
-
-      devShells.default = pkgs.mkShell {
-        name = "flake-dev";
-
-        packages = with pkgs; [
-          alejandra
-          home-manager
-          sops
-          age
-          gnome-tweaks
-          dconf-editor
-        ];
+      utility = {
+        inherit (inputs.nix-math.lib) math;
+        custom = import ./lib/utility.nix lib;
+        std = inputs.nix-std.lib;
       };
 
-      formatter = pkgs.treefmt.withConfig {
-        runtimeInputs = [ pkgs.nixfmt-rfc-style ];
+      mkNixosConfiguration = import ./lib/mkNixosConfiguration.nix {
+        inherit
+          inputs
+          utility
+          nixosModules
+          overlays
+          ;
+      };
 
-        settings = {
-          on-unmatched = "info";
+      mkHomeConfiguration = import ./lib/mkHomeConfiguration.nix {
+        inherit
+          inputs
+          utility
+          homeModules
+          overlays
+          ;
+      };
+    in
+    inputs.flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in
+      {
+        packages = utility.custom.applyFunctionRecursive ./pkgs (filename: pkgs.callPackage filename { });
 
-          formatter.nixfmt = {
-            command = "nixfmt";
-            includes = [ "*.nix" ];
+        devShells.default = pkgs.mkShell {
+          name = "flake-dev";
+
+          packages = with pkgs; [
+            alejandra
+            home-manager
+            sops
+            age
+            gnome-tweaks
+            dconf-editor
+          ];
+        };
+
+        formatter = pkgs.treefmt.withConfig {
+          runtimeInputs = [ pkgs.nixfmt-rfc-style ];
+
+          settings = {
+            on-unmatched = "info";
+
+            formatter.nixfmt = {
+              command = "nixfmt";
+              includes = [ "*.nix" ];
+            };
           };
         };
-      };
-    })
+      }
+    )
     // {
       overlays = {
-        firefox-profile-switcher-connector = final: prev: {inherit (self.packages.${prev.system}) firefox-profile-switcher-connector;};
+        firefox-profile-switcher-connector = final: prev: {
+          inherit (self.packages.${prev.system}) firefox-profile-switcher-connector;
+        };
 
         "vscode-extensions.streetsidesoftware.code-spell-checker-swiss-german" = final: prev: {
-          vscode-extensions = lib.attrsets.recursiveUpdate (lib.attrsets.optionalAttrs (prev ? vscode-extensions) prev.vscode-extensions) {
-            streetsidesoftware = {inherit (self.packages.${prev.system}.vscode-extensions.streetsidesoftware) code-spell-checker-swiss-german;};
-          };
+          vscode-extensions =
+            lib.attrsets.recursiveUpdate
+              (lib.attrsets.optionalAttrs (prev ? vscode-extensions) prev.vscode-extensions)
+              {
+                streetsidesoftware = {
+                  inherit (self.packages.${prev.system}.vscode-extensions.streetsidesoftware)
+                    code-spell-checker-swiss-german
+                    ;
+                };
+              };
         };
 
         "vscode-extensions.blueglassblock.better-json5" = final: prev: {
-          vscode-extensions = lib.attrsets.recursiveUpdate (lib.attrsets.optionalAttrs (prev ? vscode-extensions) prev.vscode-extensions) {
-            blueglassblock = {inherit (self.packages.${prev.system}.vscode-extensions.blueglassblock) better-json5;};
-          };
+          vscode-extensions =
+            lib.attrsets.recursiveUpdate
+              (lib.attrsets.optionalAttrs (prev ? vscode-extensions) prev.vscode-extensions)
+              {
+                blueglassblock = {
+                  inherit (self.packages.${prev.system}.vscode-extensions.blueglassblock) better-json5;
+                };
+              };
         };
 
         "vscode-extensions.Weaveworks.vscode-gitops-tools" = final: prev: {
-          vscode-extensions = lib.attrsets.recursiveUpdate (lib.attrsets.optionalAttrs (prev ? vscode-extensions) prev.vscode-extensions) {
-            Weaveworks = {inherit (self.packages.${prev.system}.vscode-extensions.Weaveworks) vscode-gitops-tools;};
-          };
+          vscode-extensions =
+            lib.attrsets.recursiveUpdate
+              (lib.attrsets.optionalAttrs (prev ? vscode-extensions) prev.vscode-extensions)
+              {
+                Weaveworks = {
+                  inherit (self.packages.${prev.system}.vscode-extensions.Weaveworks) vscode-gitops-tools;
+                };
+              };
         };
       };
 
@@ -132,43 +169,47 @@
       homeModules = utility.custom.applyFunctionRecursive ./modules/home (filename: import filename);
 
       nixosConfigurations = lib.attrsets.listToAttrs (
-        lib.lists.map (cfg: {
-          name = cfg.hostname;
-          value = mkNixosConfiguration cfg;
-        }) [
-          {
-            system = "x86_64-linux";
-            hostname = "HAL9000";
-            usernames = ["joker9944"];
-            resolution = "2560x1440";
-          }
-          {
-            system = "x86_64-linux";
-            hostname = "wintermute";
-            usernames = ["joker9944"];
-            resolution = "3840x2160";
-          }
-        ]
+        lib.lists.map
+          (cfg: {
+            name = cfg.hostname;
+            value = mkNixosConfiguration cfg;
+          })
+          [
+            {
+              system = "x86_64-linux";
+              hostname = "HAL9000";
+              usernames = [ "joker9944" ];
+              resolution = "2560x1440";
+            }
+            {
+              system = "x86_64-linux";
+              hostname = "wintermute";
+              usernames = [ "joker9944" ];
+              resolution = "3840x2160";
+            }
+          ]
       );
 
       homeConfigurations = lib.attrsets.listToAttrs (
-        lib.lists.map (cfg: {
-          name = cfg.username + "@" + cfg.hostname;
-          value = mkHomeConfiguration self.nixosConfigurations.${cfg.hostname}.config cfg;
-        }) [
-          {
-            system = "x86_64-linux";
-            hostname = "HAL9000";
-            username = "joker9944";
-            resolution = "2560x1440";
-          }
-          {
-            system = "x86_64-linux";
-            hostname = "wintermute";
-            username = "joker9944";
-            resolution = "3840x2160";
-          }
-        ]
+        lib.lists.map
+          (cfg: {
+            name = cfg.username + "@" + cfg.hostname;
+            value = mkHomeConfiguration self.nixosConfigurations.${cfg.hostname}.config cfg;
+          })
+          [
+            {
+              system = "x86_64-linux";
+              hostname = "HAL9000";
+              username = "joker9944";
+              resolution = "2560x1440";
+            }
+            {
+              system = "x86_64-linux";
+              hostname = "wintermute";
+              username = "joker9944";
+              resolution = "3840x2160";
+            }
+          ]
       );
     };
 }

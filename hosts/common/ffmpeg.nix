@@ -3,9 +3,11 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.programs.ffmpeg;
-in {
+in
+{
   options.programs.ffmpeg = with lib; {
     enable = mkEnableOption "ffmpeg";
   };

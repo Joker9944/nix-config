@@ -1,5 +1,6 @@
-{cfg, ...}:
-with cfg.style; ''
+{ cfg, ... }:
+with cfg.style;
+''
   window#waybar {
     background-color: ${pallet.background.normal.rgba opacity.active};
     font-family: 'Symbols Nerd Font', inherit;

@@ -2,18 +2,21 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   cfg = config.gnome-tweaks.fonts;
 
   defaultFontSize = 10;
-  injectDefaults = fontConfig:
+  injectDefaults =
+    fontConfig:
     fontConfig
     // lib.attrsets.optionalAttrs (fontConfig.size == null) {
       size = defaultFontSize;
     };
 
   optionalPackage = opt: lib.optional (opt != null && opt.package != null) opt.package;
-in {
+in
+{
   options.gnome-tweaks.fonts = with lib; {
     enable = mkEnableOption "Whether to enable GNOME fonts config.";
 
@@ -64,10 +67,13 @@ in {
         };
 
       homePkgs =
-        lib.lists.optional (cfg.interfaceText != null && !cfg.gtkFontCompatibility) cfg.interfaceText.package
+        lib.lists.optional (
+          cfg.interfaceText != null && !cfg.gtkFontCompatibility
+        ) cfg.interfaceText.package
         ++ lib.lists.optional (cfg.documentText != null) cfg.documentText.package
         ++ lib.lists.optional (cfg.monospaceText != null) cfg.monospaceText.package;
-    in {
+    in
+    {
       dconf.settings."org/gnome/desktop/interface" = dconfSettings;
 
       home.packages = homePkgs;

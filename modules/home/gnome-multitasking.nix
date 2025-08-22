@@ -2,9 +2,11 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   cfg = config.gnome-settings.multitasking;
-in {
+in
+{
   options.gnome-settings.multitasking = with lib; {
     enable = mkEnableOption "Whether to enable GNOME multitasking config.";
     hotCorner = mkOption {

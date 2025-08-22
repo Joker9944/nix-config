@@ -3,7 +3,8 @@
   pkgs,
   pkgs-unstable,
   ...
-}: let
+}:
+let
   vscodeExtensions = pkgs.vscode-extensions;
 
   commonProfiles = [
@@ -65,22 +66,30 @@
     }
   ];
 
-  mergeProfiles = profiles:
-    lib.lists.foldr (el: acc:
-      (lib.attrsets.recursiveUpdate acc el)
-      // {
-        extensions = acc.extensions ++ (el.extensions or []);
-      }) {
-      extensions = [];
-      userSettings = {};
-    }
-    profiles;
+  mergeProfiles =
+    profiles:
+    lib.lists.foldr
+      (
+        el: acc:
+        (lib.attrsets.recursiveUpdate acc el)
+        // {
+          extensions = acc.extensions ++ (el.extensions or [ ]);
+        }
+      )
+      {
+        extensions = [ ];
+        userSettings = { };
+      }
+      profiles;
 
-  mkProfile = profiles:
-    if lib.lists.isList profiles
-    then mergeProfiles (commonProfiles ++ profiles)
-    else mergeProfiles (commonProfiles ++ [profiles]);
-in {
+  mkProfile =
+    profiles:
+    if lib.lists.isList profiles then
+      mergeProfiles (commonProfiles ++ profiles)
+    else
+      mergeProfiles (commonProfiles ++ [ profiles ]);
+in
+{
   config = {
     home.packages = with pkgs; [
       sops # default -> used for git secret encryption

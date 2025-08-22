@@ -3,42 +3,47 @@
   utility,
   overlays,
   homeModules,
-}: osConfig: {system, ...} @ args: let
+}:
+osConfig:
+{ system, ... }@args:
+let
   usersPath = ../users;
 in
-  inputs.home-manager.lib.homeManagerConfiguration {
-    pkgs = inputs.nixpkgs.legacyPackages.${system};
+inputs.home-manager.lib.homeManagerConfiguration {
+  pkgs = inputs.nixpkgs.legacyPackages.${system};
 
-    extraSpecialArgs = {
-      inherit inputs utility osConfig;
+  extraSpecialArgs = {
+    inherit inputs utility osConfig;
 
-      pkgs-unstable = import inputs.nixpkgs-unstable {
-        inherit system;
-        # TODO find a way to configure this somewhere else
-        overlays = overlays;
-        config.allowUnfree = true;
-      };
-      pkgs-hyprland = inputs.hyprland.inputs.nixpkgs.legacyPackages.${system};
+    pkgs-unstable = import inputs.nixpkgs-unstable {
+      inherit system;
+      # TODO find a way to configure this somewhere else
+      overlays = overlays;
+      config.allowUnfree = true;
+    };
+    pkgs-hyprland = inputs.hyprland.inputs.nixpkgs.legacyPackages.${system};
 
-      custom = {
-        config = args;
+    custom = {
+      config = args;
 
-        assets =
-          inputs.nix-assets.packages.${system}
-          // {
-            palettes = inputs.nix-assets.palettes;
-          };
+      assets = inputs.nix-assets.packages.${system} // {
+        palettes = inputs.nix-assets.palettes;
       };
     };
+  };
 
-    modules =
-      [usersPath]
-      ++ homeModules
-      ++ [
-        ({...}: {
-          # TODO find a way to configure this somewhere else
-          nixpkgs.overlays = overlays;
-          nixpkgs.config.allowUnfree = true;
-        })
-      ];
-  }
+  modules = [
+    usersPath
+  ]
+  ++ homeModules
+  ++ [
+    (
+      { ... }:
+      {
+        # TODO find a way to configure this somewhere else
+        nixpkgs.overlays = overlays;
+        nixpkgs.config.allowUnfree = true;
+      }
+    )
+  ];
+}

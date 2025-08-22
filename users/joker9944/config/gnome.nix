@@ -4,10 +4,12 @@
   pkgs,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.desktopEnvironment.gnome;
 
-  mkAutoMoveWindowsApplicationList = attrs: attrValues (mapAttrs (app: index: app + ":" + toString index) attrs);
+  mkAutoMoveWindowsApplicationList =
+    attrs: attrValues (mapAttrs (app: index: app + ":" + toString index) attrs);
 
   mkGnomeShellExtensionsList = lib.lists.map (name: {
     id = name + "@gnome-shell-extensions.gcampax.github.com";
@@ -17,7 +19,8 @@ with lib; let
     id = pkg.extensionUuid;
     package = pkg;
   });
-in {
+in
+{
   options.desktopEnvironment.gnome = with lib; {
     enable = mkEnableOption "Whether to enable GNOME desktop environment config.";
   };
@@ -27,7 +30,8 @@ in {
       gnome-shell = {
         enable = true;
 
-        extensions = with pkgs.gnomeExtensions;
+        extensions =
+          with pkgs.gnomeExtensions;
           mkGnomeShellExtensionsList [
             "auto-move-windows"
             "places-menu"
@@ -168,17 +172,20 @@ in {
         move-to-monitor-down = mkEmptyArray type.string;
         move-to-monitor-left = mkEmptyArray type.string;
         move-to-monitor-right = mkEmptyArray type.string;
-        move-to-workspace-left = ["<Shift><Super>Left"];
-        move-to-workspace-right = ["<Shift><Super>Right"];
-        switch-to-workspace-left = ["<Control><Super>Left"];
-        switch-to-workspace-right = ["<Control><Super>Right"];
-        maximize = ["<Super>Page_Up"];
-        unmaximize = ["<Super>Page_Down"];
+        move-to-workspace-left = [ "<Shift><Super>Left" ];
+        move-to-workspace-right = [ "<Shift><Super>Right" ];
+        switch-to-workspace-left = [ "<Control><Super>Left" ];
+        switch-to-workspace-right = [ "<Control><Super>Right" ];
+        maximize = [ "<Super>Page_Up" ];
+        unmaximize = [ "<Super>Page_Down" ];
       };
       "org/gnome/settings-daemon/plugins/media-keys" = {
-        home = ["<Super>e"];
-        calculator = ["<Super>c"];
-        screensaver = ["<Super>Escape" "<Super>l"];
+        home = [ "<Super>e" ];
+        calculator = [ "<Super>c" ];
+        screensaver = [
+          "<Super>Escape"
+          "<Super>l"
+        ];
       };
       "org/gnome/mutter/wayland/keybindings" = {
         restore-shortcuts = mkEmptyArray type.string;

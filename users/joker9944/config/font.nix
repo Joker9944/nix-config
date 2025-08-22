@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
     lato
@@ -10,7 +11,7 @@
     enable = true;
 
     defaultFonts = {
-      monospace = ["JetBrains Mono Nerd Font"];
+      monospace = [ "JetBrains Mono Nerd Font" ];
       sansSerif = [
         "Lato"
         "Roboto"

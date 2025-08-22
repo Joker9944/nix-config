@@ -2,10 +2,12 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.hardware.disko.main;
   devicePath = "/dev/${cfg.name}";
-in {
+in
+{
   options.hardware.disko.main = with lib; {
     name = mkOption {
       type = lib.types.nullOr types.str;
@@ -71,7 +73,7 @@ in {
 
             content = {
               type = "btrfs";
-              extraArgs = ["-f"];
+              extraArgs = [ "-f" ];
 
               subvolumes = {
                 "root" = {
@@ -80,12 +82,15 @@ in {
 
                 "home" = {
                   mountpoint = "/home";
-                  mountOptions = ["compress=zstd"];
+                  mountOptions = [ "compress=zstd" ];
                 };
 
                 "nix" = {
                   mountpoint = "/nix";
-                  mountOptions = ["compress=zstd" "noatime"];
+                  mountOptions = [
+                    "compress=zstd"
+                    "noatime"
+                  ];
                 };
 
                 "swap" = lib.mkIf (cfg.size.swap != null) {

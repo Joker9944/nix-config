@@ -4,9 +4,11 @@
   custom,
   osConfig,
   ...
-}: let
+}:
+let
   userSecrets = lib.path.append ./. "${custom.config.username}/secrets.yaml";
-in {
+in
+{
   imports = [
     (lib.path.append ./. custom.config.username)
   ];
@@ -19,7 +21,12 @@ in {
 
   # Enable automatic upgrades
   services.betterAutoUpgrade = {
-    inherit (osConfig.system.autoUpgrade) enable persistent flake notify;
+    inherit (osConfig.system.autoUpgrade)
+      enable
+      persistent
+      flake
+      notify
+      ;
     frequency = osConfig.system.autoUpgrade.dates;
   };
 

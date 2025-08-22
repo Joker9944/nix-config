@@ -4,37 +4,38 @@
   pkgs-hyprland,
   utility,
   ...
-}: let
+}:
+let
   cfg = config.desktopEnvironment.hyprland;
 in
-  utility.custom.mkHyprlandModule config {
-    imports = utility.custom.ls.lookup {
-      dir = ./.;
-      exclude = [./default.nix];
-    };
+utility.custom.mkHyprlandModule config {
+  imports = utility.custom.ls.lookup {
+    dir = ./.;
+    exclude = [ ./default.nix ];
+  };
 
-    config.services.dunst = {
-      enable = true;
-      package = pkgs-hyprland.dunst;
+  config.services.dunst = {
+    enable = true;
+    package = pkgs-hyprland.dunst;
 
-      settings = {
-        global = {
-          ### Display ###
+    settings = {
+      global = {
+        ### Display ###
 
-          follow = "mouse";
+        follow = "mouse";
 
-          enable_posix_regex = true;
+        enable_posix_regex = true;
 
-          ### Geometry ###
+        ### Geometry ###
 
-          width = 500;
-          height = "(0, 300)";
+        width = 500;
+        height = "(0, 300)";
 
-          origin = "top-center";
-          offset = "(0, 20)";
+        origin = "top-center";
+        offset = "(0, 20)";
 
-          notification_limit = 5;
-        };
+        notification_limit = 5;
       };
     };
-  }
+  };
+}

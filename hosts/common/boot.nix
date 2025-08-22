@@ -5,15 +5,16 @@
   pkgs,
   custom,
   ...
-}: {
+}:
+{
   # WORKAROUND Secure Boot for Limine is only available on unstable, so just override the module from unstable.
   # https://wiki.nixos.org/wiki/Limine
-  disabledModules = ["system/boot/loader/limine/limine.nix"];
+  disabledModules = [ "system/boot/loader/limine/limine.nix" ];
   imports = [
     (import "${inputs.nixpkgs-unstable}/nixos/modules/system/boot/loader/limine/limine.nix")
   ];
 
-  environment.systemPackages = [pkgs.sbctl];
+  environment.systemPackages = [ pkgs.sbctl ];
 
   boot = {
     initrd.systemd.enable = true;
@@ -30,7 +31,7 @@
       grub = {
         enable = lib.mkDefault false;
         efiSupport = true;
-        devices = ["nodev"];
+        devices = [ "nodev" ];
       };
 
       limine = {
@@ -39,7 +40,11 @@
         secureBoot.enable = true;
 
         style = {
-          wallpapers = ["${custom.assets.images.backgrounds.black-sand-dunes.${custom.config.resolution}}/share/backgrounds/black-sand-dunes.${custom.config.resolution}.jpeg"];
+          wallpapers = [
+            "${
+              custom.assets.images.backgrounds.black-sand-dunes.${custom.config.resolution}
+            }/share/backgrounds/black-sand-dunes.${custom.config.resolution}.jpeg"
+          ];
           interface.branding = config.networking.hostName;
         };
       };

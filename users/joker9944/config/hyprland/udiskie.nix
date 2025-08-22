@@ -1,5 +1,5 @@
 /**
-* mount daemon
+  * mount daemon
 */
 {
   lib,

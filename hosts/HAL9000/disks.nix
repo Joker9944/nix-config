@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   # Disk setup
   hardware.disko.main = {
     name = "nvme1n1";
@@ -22,7 +23,10 @@
             type = "filesystem";
             format = "xfs";
             mountpoint = "/mnt/games";
-            mountOptions = ["defaults" "nofail"];
+            mountOptions = [
+              "defaults"
+              "nofail"
+            ];
           };
         };
       };

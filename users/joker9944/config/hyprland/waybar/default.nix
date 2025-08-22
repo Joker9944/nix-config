@@ -1,5 +1,5 @@
 /**
-* status bar
+  * status bar
 */
 {
   lib,
@@ -8,26 +8,27 @@
   pkgs-hyprland,
   utility,
   ...
-}: let
+}:
+let
   cfg = config.desktopEnvironment.hyprland;
 in
-  utility.custom.mkHyprlandModule config {
-    home.packages = [pkgs.nerd-fonts.symbols-only];
+utility.custom.mkHyprlandModule config {
+  home.packages = [ pkgs.nerd-fonts.symbols-only ];
 
-    programs.waybar = {
-      enable = true;
-      package = pkgs-hyprland.waybar;
+  programs.waybar = {
+    enable = true;
+    package = pkgs-hyprland.waybar;
 
-      systemd.enable = true;
+    systemd.enable = true;
 
-      settings = import ./settings.main.nix {inherit cfg;};
-      style = import ./style.css.nix {inherit cfg;};
-    };
+    settings = import ./settings.main.nix { inherit cfg; };
+    style = import ./style.css.nix { inherit cfg; };
+  };
 
-    wayland.windowManager.hyprland.settings = {
-      decoration.layerrule = [
-        "blur, waybar"
-        "xray 1, waybar"
-      ];
-    };
-  }
+  wayland.windowManager.hyprland.settings = {
+    decoration.layerrule = [
+      "blur, waybar"
+      "xray 1, waybar"
+    ];
+  };
+}

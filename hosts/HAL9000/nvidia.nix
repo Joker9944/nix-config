@@ -2,7 +2,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   # TODO investigate if this is properly setup
 
   # GPU driver
@@ -21,7 +22,7 @@
   };
 
   # Load nvidia driver for Xorg and Wayland
-  services.xserver.videoDrivers = ["nvidia"];
+  services.xserver.videoDrivers = [ "nvidia" ];
 
-  environment.systemPackages = [pkgs.nvtopPackages.nvidia];
+  environment.systemPackages = [ pkgs.nvtopPackages.nvidia ];
 }

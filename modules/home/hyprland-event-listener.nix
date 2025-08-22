@@ -4,43 +4,51 @@
   pkgs,
   utility,
   ...
-}: let
+}:
+let
   cfg = config.services.hyprland.eventListener;
 
   mkScript = pkgs.writeShellScript "hyprland-event-listener.sh";
 
-  script = let
-    bin.socat = "${cfg.socat.package}/bin/socat";
+  script =
+    let
+      bin.socat = "${cfg.socat.package}/bin/socat";
 
-    functions = lib.concatLines (lib.map (entry: ''
-      ${entry.name}() {
-      ${utility.custom.indentLines 2 (lib.removeSuffix "\n" entry.value.body)}
+      functions = lib.concatLines (
+        lib.map (entry: ''
+          ${entry.name}() {
+          ${utility.custom.indentLines 2 (lib.removeSuffix "\n" entry.value.body)}
+          }
+        '') (lib.attrsToList cfg.listener)
+      );
+
+      handleCases = lib.concatLines (
+        lib.map (entry: "${entry.value.event}) ${entry.name} \"\$2\" ;;") (lib.attrsToList cfg.listener)
+      );
+    in
+    ''
+      set -e
+
+      ${functions}
+      handle() {
+        case "$1" in
+      ${utility.custom.indentLines 4 (lib.removeSuffix "\n" handleCases)}
+        esac
       }
-    '') (lib.attrsToList cfg.listener));
 
-    handleCases = lib.concatLines (lib.map (entry: "${entry.value.event}) ${entry.name} \"\$2\" ;;") (lib.attrsToList cfg.listener));
-  in ''
-    set -e
-
-    ${functions}
-    handle() {
-      case "$1" in
-    ${utility.custom.indentLines 4 (lib.removeSuffix "\n" handleCases)}
-      esac
-    }
-
-    ${bin.socat} -U - UNIX-CONNECT:$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock |
-    while read -r line; do
-      event="''${line%%>>*}"
-      data="''${line#*>>}"
-      handle "$event" "$data"
-    done
-  '';
-in {
+      ${bin.socat} -U - UNIX-CONNECT:$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock |
+      while read -r line; do
+        event="''${line%%>>*}"
+        data="''${line#*>>}"
+        handle "$event" "$data"
+      done
+    '';
+in
+{
   options.services.hyprland.eventListener = with lib; {
     enable = mkEnableOption "Hyprland event listener service";
 
-    socat.package = mkPackageOption pkgs "socat" {};
+    socat.package = mkPackageOption pkgs "socat" { };
 
     systemd = {
       enable = mkOption {
@@ -61,31 +69,35 @@ in {
       };
     };
 
-    listener = let
-      listenerSubmodule = types.submodule ({...}: {
-        options = {
-          event = mkOption {
-            type = types.str;
-            default = null;
-            description = ''
-              event type
-            '';
-          };
+    listener =
+      let
+        listenerSubmodule = types.submodule (
+          { ... }:
+          {
+            options = {
+              event = mkOption {
+                type = types.str;
+                default = null;
+                description = ''
+                  event type
+                '';
+              };
 
-          body = mkOption {
-            type = types.lines;
-            default = null;
-            description = ''
-              function body
-            '';
-          };
-        };
-      });
-    in
+              body = mkOption {
+                type = types.lines;
+                default = null;
+                description = ''
+                  function body
+                '';
+              };
+            };
+          }
+        );
+      in
       mkOption {
         type = types.attrsOf listenerSubmodule;
-        default = {};
-        example = {};
+        default = { };
+        example = { };
         description = ''
           lmao
         '';
@@ -93,12 +105,12 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [cfg.socat.package];
+    home.packages = [ cfg.socat.package ];
 
     systemd.user.services.hyprland-event-listener = {
       Unit = {
         Description = "Hyprland event listener";
-        After = [cfg.systemd.target];
+        After = [ cfg.systemd.target ];
       };
 
       Service = {
@@ -106,7 +118,7 @@ in {
         Restart = "on-failure";
       };
 
-      Install.WantedBy = [cfg.systemd.target];
+      Install.WantedBy = [ cfg.systemd.target ];
     };
   };
 }

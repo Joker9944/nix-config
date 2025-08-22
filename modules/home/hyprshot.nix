@@ -3,12 +3,14 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.programs.hyprshot;
-in {
+in
+{
   options.programs.hyprshot = with lib; {
     enable = mkEnableOption "the hyprshot screenshot utility";
-    package = mkPackageOption pkgs "hyprshot" {};
+    package = mkPackageOption pkgs "hyprshot" { };
     saveLocation = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
       default = null;
@@ -25,7 +27,7 @@ in {
   };
 
   config.home = lib.mkIf cfg.enable {
-    packages = [cfg.package];
+    packages = [ cfg.package ];
 
     sessionVariables.HYPRSHOT_DIR = cfg.saveLocation;
   };

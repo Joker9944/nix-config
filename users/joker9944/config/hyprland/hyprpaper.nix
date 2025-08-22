@@ -1,5 +1,5 @@
 /**
-* wallpaper management daemon
+  * wallpaper management daemon
 */
 {
   config,
@@ -7,18 +7,21 @@
   utility,
   custom,
   ...
-}: let
-  wallpaper = "${custom.assets.images.backgrounds.dracula-leaves-dark.${custom.config.resolution}}/share/backgrounds/dracula-leaves-dark.${custom.config.resolution}.png";
+}:
+let
+  wallpaper = "${
+    custom.assets.images.backgrounds.dracula-leaves-dark.${custom.config.resolution}
+  }/share/backgrounds/dracula-leaves-dark.${custom.config.resolution}.png";
 in
-  utility.custom.mkHyprlandModule config {
-    services.hyprpaper = {
-      enable = true;
-      package = pkgs-hyprland.hyprpaper;
+utility.custom.mkHyprlandModule config {
+  services.hyprpaper = {
+    enable = true;
+    package = pkgs-hyprland.hyprpaper;
 
-      settings = {
-        preload = [wallpaper];
+    settings = {
+      preload = [ wallpaper ];
 
-        wallpaper = [", ${wallpaper}"];
-      };
+      wallpaper = [ ", ${wallpaper}" ];
     };
-  }
+  };
+}
