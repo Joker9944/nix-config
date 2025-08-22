@@ -35,6 +35,12 @@
       "DP-2, 2560x1440@143.97Hz, 1920x0, 1"
       "DP-3, 1920x1080@60.00Hz, 4480x0, 1"
     ];
+
+    workspace = [
+      "1, monitor:DP-2, default:true"
+      "5, monitor:DP-1, default:true"
+      "6, monitor:DP-3, default:true"
+    ];
   };
 
   programs.hyprlock.settings.input-field.monitor = "DP-2";
