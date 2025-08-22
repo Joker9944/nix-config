@@ -2,10 +2,15 @@
   description = "NixOS flake";
 
   inputs = {
-    # nix pkgs
+    # nixpkgs
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-    # nix assets
+    # home manager
+    home-manager = {
+      url = "github:nix-community/home-manager/release-25.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # third party pkgs
     nix-assets = {
       url = "github:joker9944/nix-assets/main";
       inputs = {
@@ -13,25 +18,22 @@
         flake-utils.follows = "flake-utils";
       };
     };
-    # nix helpers
-    hyprland.url = "github:hyprwm/Hyprland";
-    home-manager = {
-      url = "github:nix-community/home-manager/release-25.05";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # helpers
     sops-nix = {
       url = "github:Mic92/sops-nix/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    flake-utils.url = "github:numtide/flake-utils/main";
     disko = {
       url = "github:nix-community/disko/v1.11.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    hyprland.url = "github:hyprwm/Hyprland";
     plasma-manager = {
       url = "github:nix-community/plasma-manager/trunk";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # libs
+    flake-utils.url = "github:numtide/flake-utils/main";
     nix-math = {
       url = "github:xddxdd/nix-math/master";
       inputs.nixpkgs.follows = "nixpkgs";
