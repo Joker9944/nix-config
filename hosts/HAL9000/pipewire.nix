@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}:
+{ ... }:
 {
   services.pipewire.wireplumber.extraConfig = {
     "alsa-rename" = {
@@ -10,7 +6,7 @@
         {
           matches = [
             {
-              "device.name" = "alsa_card.pci-0000_0b_00.4";
+              "node.name" = "alsa_output.pci-0000_0b_00.4.iec958-stereo";
             }
           ];
           actions = {

@@ -2,8 +2,8 @@
   * status bar
 */
 {
-  lib,
   config,
+  osConfig,
   pkgs,
   pkgs-hyprland,
   utility,
@@ -13,7 +13,10 @@ let
   cfg = config.desktopEnvironment.hyprland;
 in
 utility.custom.mkHyprlandModule config {
-  home.packages = [ pkgs.nerd-fonts.symbols-only ];
+  home.packages = [
+    pkgs.nerd-fonts.symbols-only
+    pkgs.audiomenu
+  ];
 
   programs.waybar = {
     enable = true;
@@ -21,7 +24,7 @@ utility.custom.mkHyprlandModule config {
 
     systemd.enable = true;
 
-    settings = import ./settings.main.nix { inherit cfg; };
+    settings = import ./settings.main.nix { inherit osConfig cfg pkgs; };
     style = import ./style.css.nix { inherit cfg; };
   };
 

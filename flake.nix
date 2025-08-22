@@ -18,6 +18,11 @@
         flake-utils.follows = "flake-utils";
       };
     };
+    # TODO switch to https://github.com/jalil-salame/audiomenu once https://github.com/jalil-salame/audiomenu/pull/2 is resolved
+    audiomenu = {
+      url = "github:joker9944/audiomenu/wofi";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # helpers
     sops-nix = {
       url = "github:Mic92/sops-nix/master";
@@ -62,7 +67,10 @@
       ]
       ++ (lib.mapAttrsToList (_: value: value) self.homeModules);
 
-      overlays = lib.mapAttrsToList (_: value: value) self.overlays;
+      overlays = [
+        inputs.audiomenu.overlays.default
+      ]
+      ++ lib.mapAttrsToList (_: value: value) self.overlays;
 
       utility = {
         inherit (inputs.nix-math.lib) math;

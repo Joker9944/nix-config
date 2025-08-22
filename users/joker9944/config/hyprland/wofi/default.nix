@@ -21,6 +21,7 @@ let
     cliphist = "${config.services.cliphist.package}/bin/cliphist";
     wofi = "${config.programs.wofi.package}/bin/wofi";
   };
+  dmenuCommand = cfg.launcher.mkDmenuCommand { };
 in
 utility.custom.mkHyprlandModule config {
   home.packages = [ pkg.wl-clipboard ]; # Wayland clipboard utilities
@@ -45,6 +46,30 @@ utility.custom.mkHyprlandModule config {
     style = import ./style.css.nix { inherit cfg; };
   };
 
+  desktopEnvironment.hyprland.launcher = {
+    mkDmenuCommand =
+      {
+        location ? null,
+        search ? true,
+        width ? null,
+        height ? null,
+        x ? null,
+        y ? null,
+        extraArgs ? [],
+        ...
+      }:
+      lib.concatStringsSep " " (
+        [ "${bin.wofi} --dmenu" ]
+        ++ lib.optional (location != null) "--location ${location}"
+        ++ lib.optional (!search) "--define hide_search=true"
+        ++ lib.optional (width != null) "--width ${toString width}"
+        ++ lib.optional (height != null) "--height ${toString height}"
+        ++ lib.optional (x != null) "--xoffset ${toString x}"
+        ++ lib.optional (y != null) "--yoffset ${toString y}"
+        ++ extraArgs
+      );
+  };
+
   wayland.windowManager.hyprland.settings =
     let
       mods = cfg.bind.mods;
@@ -60,9 +85,9 @@ utility.custom.mkHyprlandModule config {
 
       bind = [
         "${mods.main}, R, exec, ${bin.wofi}"
-        "${mods.utility}, V, exec, ${bin.cliphist} list | ${bin.wofi} --dmenu | ${bin.cliphist} decode | ${bin.wl-copy}"
+        "${mods.utility}, V, exec, ${bin.cliphist} list | ${dmenuCommand} | ${bin.cliphist} decode | ${bin.wl-copy}"
       ];
     };
 
-  services.dunst.settings.dmenu.general = lib.mkIf config.programs.wofi.enable "${bin.wofi} --dmenu";
+  services.dunst.settings.dmenu.general = lib.mkIf config.programs.wofi.enable dmenuCommand;
 }

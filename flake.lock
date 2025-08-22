@@ -33,6 +33,27 @@
         "type": "github"
       }
     },
+    "audiomenu": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1755878705,
+        "narHash": "sha256-IRUUniEEslalgzLjkXIxYJmopAZFeQpB7wfDThA/Xj4=",
+        "owner": "joker9944",
+        "repo": "audiomenu",
+        "rev": "a7e35d0ee6843bf86c305bb7211def6db509970a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "joker9944",
+        "ref": "wofi",
+        "repo": "audiomenu",
+        "type": "github"
+      }
+    },
     "disko": {
       "inputs": {
         "nixpkgs": [
@@ -599,6 +620,7 @@
     },
     "root": {
       "inputs": {
+        "audiomenu": "audiomenu",
         "disko": "disko",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",

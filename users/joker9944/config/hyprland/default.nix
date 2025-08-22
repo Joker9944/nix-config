@@ -73,6 +73,15 @@ utility.custom.mkHyprlandModule config {
       };
     };
 
+    launcher = {
+      mkDmenuCommand = mkOption {
+        type = types.functionTo types.str;
+        description = ''
+          Function used to generate a dmenu like command.
+        '';
+      };
+    };
+
     steam = {
       appRegex = mkOption {
         type = types.str;
