@@ -92,7 +92,9 @@
         ];
       };
 
-      formatter = pkgs.alejandra;
+      formatter = pkgs.treefmt.withConfig {
+        runtimeInputs = [ pkgs.nixfmt-rfc-style ];
+      };
     })
     // {
       overlays = {
