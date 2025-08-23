@@ -5,7 +5,7 @@
   ...
 }:
 let
-  mods = config.desktopEnvironment.hyprland.bind.mods;
+  inherit (config.desktopEnvironment.hyprland.bind) mods;
   specialWorkspaces = {
     discord = "discord";
     spotify = "spotify";

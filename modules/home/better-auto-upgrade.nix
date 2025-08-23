@@ -163,7 +163,7 @@ in
                 lib.concatLines (
                   [ "set -e" ]
                   ++ (lib.optional (cfg.channel == null) "${nix-channel} --update")
-                  ++ [ "${home-manager} switch ${toString (cfg.flags)}" ]
+                  ++ [ "${home-manager} switch ${toString cfg.flags}" ]
                 )
               )
             );

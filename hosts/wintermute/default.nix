@@ -22,16 +22,18 @@
     loader.limine.style.interface.brandingColor = 4; # blue
   };
 
-  # Enable finger print reader service
-  services.fprintd.enable = true;
+  services = {
+    # Enable finger print reader service
+    fprintd.enable = true;
 
-  # Supports Linux Vendor Firmware Service (lvfs)
-  services.fwupd.enable = true;
+    # Supports Linux Vendor Firmware Service (lvfs)
+    fwupd.enable = true;
 
-  # Override keyboard layout
-  services.xserver.xkb = {
-    layout = "ch";
-    variant = "";
+    # Override keyboard layout
+    xserver.xkb = {
+      layout = "ch";
+      variant = "";
+    };
   };
 
   # This value determines the NixOS release from which the default

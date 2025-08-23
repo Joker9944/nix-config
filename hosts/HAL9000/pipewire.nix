@@ -1,5 +1,4 @@
-{ ... }:
-{
+_: {
   services.pipewire.wireplumber.extraConfig = {
     "alsa-rename" = {
       "monitor.alsa.rules" = [

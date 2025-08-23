@@ -72,7 +72,7 @@ utility.custom.mkHyprlandModule config {
 
   wayland.windowManager.hyprland.settings =
     let
-      mods = cfg.bind.mods;
+      inherit (cfg.bind) mods;
     in
     lib.mkIf config.programs.wofi.enable {
       exec-once = [

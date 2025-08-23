@@ -15,7 +15,7 @@ in
 
   # Set args inherited from mkHomeConfiguration
   home = {
-    username = custom.config.username;
+    inherit (custom.config) username;
     homeDirectory = "/home/${custom.config.username}";
   };
 

@@ -72,28 +72,25 @@ in
 
     listener =
       let
-        listenerSubmodule = types.submodule (
-          { ... }:
-          {
-            options = {
-              event = mkOption {
-                type = types.str;
-                default = null;
-                description = ''
-                  event type
-                '';
-              };
-
-              body = mkOption {
-                type = types.lines;
-                default = null;
-                description = ''
-                  function body
-                '';
-              };
+        listenerSubmodule = types.submodule (_: {
+          options = {
+            event = mkOption {
+              type = types.str;
+              default = null;
+              description = ''
+                event type
+              '';
             };
-          }
-        );
+
+            body = mkOption {
+              type = types.lines;
+              default = null;
+              description = ''
+                function body
+              '';
+            };
+          };
+        });
       in
       mkOption {
         type = types.attrsOf listenerSubmodule;

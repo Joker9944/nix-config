@@ -24,17 +24,32 @@ in
   # Set args inherited from mkNixosConfiguration
   networking.hostName = custom.config.hostname;
 
-  # Enable experimental flake support and experimental nix command
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
+  nix = {
+    settings = {
+      # Enable experimental flake support and experimental nix command
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
 
-  # Third-party Cachix
-  nix.settings = {
-    substituters = [ "https://hyprland.cachix.org" ];
-    trusted-substituters = [ "https://hyprland.cachix.org" ];
-    trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ]; # cSpell:disable-line
+      # Third-party Cachix
+      substituters = [ "https://hyprland.cachix.org" ];
+      trusted-substituters = [ "https://hyprland.cachix.org" ];
+      trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ]; # cSpell:disable-line
+    };
+
+    # Enable automatic nix store garbage collection
+    gc = {
+      automatic = lib.mkDefault true;
+      persistent = true;
+      dates = lib.mkDefault "weekly";
+    };
+
+    # Enable automatic nix store optimization
+    optimise = {
+      automatic = lib.mkDefault true;
+      dates = lib.mkDefault [ "weekly" ];
+    };
   };
 
   # Enable automatic upgrades
@@ -44,19 +59,6 @@ in
     flake = "github:Joker9944/nix-config";
     dates = lib.mkDefault "*-*-* 04:00:00 UTC"; # 1 hour after GitHub actions nix flake update
     notify.enable = true;
-  };
-
-  # Enable automatic nix store garbage collection
-  nix.gc = {
-    automatic = lib.mkDefault true;
-    persistent = true;
-    dates = lib.mkDefault "weekly";
-  };
-
-  # Enable automatic nix store optimization
-  nix.optimise = {
-    automatic = lib.mkDefault true;
-    dates = lib.mkDefault [ "weekly" ];
   };
 
   # Set default session environment variables
@@ -84,10 +86,21 @@ in
     };
   };
 
-  # Set default keymap
-  services.xserver.xkb = with locale; {
-    layout = lib.mkDefault de;
-    variant = lib.mkDefault us;
+  services = {
+    # Set default keymap
+    xserver.xkb = with locale; {
+      layout = lib.mkDefault de;
+      variant = lib.mkDefault us;
+    };
+
+    # Enable Tailscale by default
+    tailscale.enable = true;
+
+    # Enable cups by default
+    printing = {
+      enable = lib.mkDefault true;
+      drivers = [ pkgs.epson-escpr ];
+    };
   };
 
   console.useXkbConfig = true;
@@ -133,15 +146,6 @@ in
 
   # Enable networking by default
   networking.networkmanager.enable = lib.mkDefault true;
-
-  # Enable Tailscale by default
-  services.tailscale.enable = true;
-
-  # Enable cups by default
-  services.printing = {
-    enable = lib.mkDefault true;
-    drivers = [ pkgs.epson-escpr ];
-  };
 
   # Enable GnuPG by default
   programs.gnupg = {

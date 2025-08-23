@@ -6,35 +6,33 @@
 let
   cfg = config.gnome-settings.keyboard.shortcuts;
 
-  customShortcutOptions =
-    { ... }:
-    {
-      options = with lib; {
-        name = mkOption {
-          type = types.str;
-          example = "Launch Console";
-          description = ''
-            The name of the custom shortcut.
-          '';
-        };
+  customShortcutOptions = _: {
+    options = with lib; {
+      name = mkOption {
+        type = types.str;
+        example = "Launch Console";
+        description = ''
+          The name of the custom shortcut.
+        '';
+      };
 
-        command = mkOption {
-          type = types.str;
-          example = "kgx";
-          description = ''
-            The command that should be run when the shortcut is pressed.
-          '';
-        };
+      command = mkOption {
+        type = types.str;
+        example = "kgx";
+        description = ''
+          The command that should be run when the shortcut is pressed.
+        '';
+      };
 
-        binding = mkOption {
-          type = types.str;
-          example = "<Super>t";
-          description = ''
-            The shortcut binding.
-          '';
-        };
+      binding = mkOption {
+        type = types.str;
+        example = "<Super>t";
+        description = ''
+          The shortcut binding.
+        '';
       };
     };
+  };
 
   mkCustomKeybindingKey =
     index: "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom${toString index}";

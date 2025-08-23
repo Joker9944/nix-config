@@ -31,7 +31,7 @@ utility.custom.mkHyprlandModule config {
 
     # https://wiki.hyprland.org/Configuring/Variables/#decoration
     decoration = {
-      rounding = border.corners.rounding;
+      inherit (border.corners) rounding;
       rounding_power = border.corners.power;
 
       # Change transparency of focused and unfocused windows

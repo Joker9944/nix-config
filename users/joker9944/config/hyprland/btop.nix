@@ -23,7 +23,7 @@ utility.custom.mkHyprlandModule config {
   wayland.windowManager.hyprland.settings = {
     bind =
       let
-        mods = cfg.bind.mods;
+        inherit (cfg.bind) mods;
         command = cfg.terminal.mkTuiCommand {
           id = "btop";
           command = bin.btop;

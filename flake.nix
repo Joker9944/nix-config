@@ -119,19 +119,27 @@
             ];
           };
 
-          preCommitHooks = pkgs.mkShell {
-            inherit (self.checks.${system}.preCommitCheck) shellHook;
-            buildInputs = self.checks.${system}.preCommitCheck.enabledPackages;
+          gitHooks = pkgs.mkShell {
+            inherit (self.checks.${system}.preCommitHooksCheck) shellHook;
+            buildInputs = self.checks.${system}.preCommitHooksCheck.enabledPackages;
           };
         };
 
         checks = {
-          preCommitCheck = inputs.pre-commit-hooks.lib.${system}.run {
+          preCommitHooksCheck = inputs.pre-commit-hooks.lib.${system}.run {
             src = ./.;
             hooks = {
+              trim-trailing-whitespace.enable = true;
+              end-of-file-fixer.enable = true;
+              fix-byte-order-marker.enable = true;
+              mixed-line-endings = {
+                enable = true;
+                args = [ "--fix=lf" ];
+              };
               cspell.enable = true;
               nixfmt-rfc-style.enable = true;
               nil.enable = true;
+              statix.enable = true;
             };
           };
         };
@@ -190,8 +198,8 @@
         };
       };
 
-      nixosModules = utility.custom.applyFunctionRecursive ./modules/nixos (filename: import filename);
-      homeModules = utility.custom.applyFunctionRecursive ./modules/home (filename: import filename);
+      nixosModules = utility.custom.applyFunctionRecursive ./modules/nixos import;
+      homeModules = utility.custom.applyFunctionRecursive ./modules/home import;
 
       nixosConfigurations = lib.attrsets.listToAttrs (
         lib.lists.map

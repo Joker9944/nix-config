@@ -1,5 +1,4 @@
-{ ... }:
-{
+_: {
   # Disk setup
   hardware.disko.main = {
     name = "nvme1n1";

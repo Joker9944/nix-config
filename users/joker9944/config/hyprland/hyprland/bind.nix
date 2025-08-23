@@ -7,7 +7,7 @@
   ...
 }:
 let
-  mods = config.desktopEnvironment.hyprland.bind.mods;
+  inherit (config.desktopEnvironment.hyprland.bind) mods;
   pkg.playerctl = pkgs-hyprland.playerctl;
   bin = {
     wpctl = "${osConfig.services.pipewire.wireplumber.package}/bin/wpctl";

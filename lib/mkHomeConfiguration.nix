@@ -16,9 +16,8 @@ inputs.home-manager.lib.homeManagerConfiguration {
     inherit inputs utility osConfig;
 
     pkgs-unstable = import inputs.nixpkgs-unstable {
-      inherit system;
+      inherit system overlays;
       # TODO find a way to configure this somewhere else
-      overlays = overlays;
       config.allowUnfree = true;
     };
     pkgs-hyprland = inputs.hyprland.inputs.nixpkgs.legacyPackages.${system};
@@ -27,7 +26,7 @@ inputs.home-manager.lib.homeManagerConfiguration {
       config = args;
 
       assets = inputs.nix-assets.packages.${system} // {
-        palettes = inputs.nix-assets.palettes;
+        inherit (inputs.nix-assets) palettes;
       };
     };
   };
@@ -37,13 +36,10 @@ inputs.home-manager.lib.homeManagerConfiguration {
   ]
   ++ homeModules
   ++ [
-    (
-      { ... }:
-      {
-        # TODO find a way to configure this somewhere else
-        nixpkgs.overlays = overlays;
-        nixpkgs.config.allowUnfree = true;
-      }
-    )
+    (_: {
+      # TODO find a way to configure this somewhere else
+      nixpkgs.overlays = overlays;
+      nixpkgs.config.allowUnfree = true;
+    })
   ];
 }

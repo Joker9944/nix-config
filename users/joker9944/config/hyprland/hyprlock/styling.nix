@@ -27,8 +27,9 @@ utility.custom.mkHyprlandModule config {
     };
 
     input-field = {
+      inherit (border.corners) rounding;
+
       size = "20%, 5%";
-      rounding = border.corners.rounding;
       outline_thickness = border.size;
 
       #inner_color = "rgba(0, 0, 0, 0.0)"; # no fill

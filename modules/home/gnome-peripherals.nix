@@ -21,87 +21,83 @@ let
     device: default:
     with lib;
     mkOption {
+      inherit default;
       type = types.enum [
         "traditional"
         "natural"
       ];
-      default = default;
       description = ''
         The ${device} scroll direction.
       '';
     };
 
-  mouseOptions =
-    { ... }:
-    {
-      options = with lib; {
-        pointerSpeed = mkPointerSpeedOption "mouse";
+  mouseOptions = _: {
+    options = with lib; {
+      pointerSpeed = mkPointerSpeedOption "mouse";
 
-        mouseAcceleration = mkOption {
-          type = types.bool;
-          default = true;
-          description = "Whether to enable mouse acceleration.";
-        };
-
-        scrollDirection = mkScrollDirectionOption "mouse" "traditional";
+      mouseAcceleration = mkOption {
+        type = types.bool;
+        default = true;
+        description = "Whether to enable mouse acceleration.";
       };
+
+      scrollDirection = mkScrollDirectionOption "mouse" "traditional";
     };
+  };
 
-  touchpadOptions =
-    { ... }:
-    {
-      options = with lib; {
-        enable = mkOption {
-          type = types.bool;
-          default = true;
-          description = ''
-            Whether to the touchpad.
-          '';
-        };
-
-        disableTouchpadWhileTyping = mkOption {
-          type = types.bool;
-          default = true;
-          description = ''
-            Whether to disable the touchpad while typing.
-          '';
-        };
-
-        pointerSpeed = mkPointerSpeedOption "touchpad";
-
-        secondaryClick = mkOption {
-          type = types.enum [
-            "two-finger-push"
-            "corner-push"
-          ];
-          default = "two-finger-push";
-          description = ''
-            How to generate software-emulated buttons.
-          '';
-        };
-
-        tapToClick = mkOption {
-          type = types.bool;
-          default = true;
-          description = ''
-            Whether to enable double tapping as a click.
-          '';
-        };
-
-        scrollMethod = mkOption {
-          type = types.enum [
-            "two-fingers"
-            "edge"
-          ];
-          default = "two-fingers";
-          description = ''
-            The scroll method.
-          '';
-        };
-
-        scrollDirection = mkScrollDirectionOption "touchpad" "natural";
+  touchpadOptions = _: {
+    options = with lib; {
+      enable = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Whether to the touchpad.
+        '';
       };
+
+      disableTouchpadWhileTyping = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Whether to disable the touchpad while typing.
+        '';
+      };
+
+      pointerSpeed = mkPointerSpeedOption "touchpad";
+
+      secondaryClick = mkOption {
+        type = types.enum [
+          "two-finger-push"
+          "corner-push"
+        ];
+        default = "two-finger-push";
+        description = ''
+          How to generate software-emulated buttons.
+        '';
+      };
+
+      tapToClick = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Whether to enable double tapping as a click.
+        '';
+      };
+
+      scrollMethod = mkOption {
+        type = types.enum [
+          "two-fingers"
+          "edge"
+        ];
+        default = "two-fingers";
+        description = ''
+          The scroll method.
+        '';
+      };
+
+      scrollDirection = mkScrollDirectionOption "touchpad" "natural";
     };
+  };
 in
 {
   options.gnome-settings.peripherals = with lib; {

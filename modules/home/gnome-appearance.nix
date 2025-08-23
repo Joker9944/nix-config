@@ -6,75 +6,73 @@
 let
   cfg = config.gnome-settings.appearance;
 
-  backgroundOptions =
-    { ... }:
-    {
-      options = with lib; {
-        picturePath = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-          example = "/run/current-system/sw/share/backgrounds/gnome/blobs-l.svg";
-          description = ''
-            File path of the image used as wallpaper. If not set the color config will be used.
-          '';
-        };
-        darkStylePicturePath = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-          example = "/run/current-system/sw/share/backgrounds/gnome/blobs-d.svg";
-          description = ''
-            File path of the image used as wallpaper in prefer-dark appearance style. If not set the main image path will be used as fallback.
-          '';
-        };
-        pictureOption = mkOption {
-          type = types.enum [
-            "none"
-            "wallpaper"
-            "centered"
-            "scaled"
-            "stretched"
-            "zoom"
-            "spanned"
-          ];
-          default = "zoom";
-          description = ''
-            Determines how the image is rendered.
-          '';
-        };
-        pictureOpacity = mkOption {
-          type = types.ints.between 0 100;
-          default = 100;
-          description = ''
-            Opacity with which to draw the background picture.
-          '';
-        };
-        colorShadingType = mkOption {
-          type = types.enum [
-            "horizontal"
-            "vertical"
-            "solid"
-          ];
-          default = "solid";
-          description = ''
-            How to shade the background color.
-          '';
-        };
-        primaryColor = mkOption {
-          type = types.str;
-          default = "#023c88";
-          description = ''
-            Left or Top color when drawing gradients, or the solid color.
-          '';
-        };
-        secondaryColor = mkOption {
-          type = types.str;
-          default = "#5789ca";
-          description = ''
-            Right or Bottom color when drawing gradients, not used for solid color.
-          '';
-        };
+  backgroundOptions = _: {
+    options = with lib; {
+      picturePath = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = "/run/current-system/sw/share/backgrounds/gnome/blobs-l.svg";
+        description = ''
+          File path of the image used as wallpaper. If not set the color config will be used.
+        '';
+      };
+      darkStylePicturePath = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = "/run/current-system/sw/share/backgrounds/gnome/blobs-d.svg";
+        description = ''
+          File path of the image used as wallpaper in prefer-dark appearance style. If not set the main image path will be used as fallback.
+        '';
+      };
+      pictureOption = mkOption {
+        type = types.enum [
+          "none"
+          "wallpaper"
+          "centered"
+          "scaled"
+          "stretched"
+          "zoom"
+          "spanned"
+        ];
+        default = "zoom";
+        description = ''
+          Determines how the image is rendered.
+        '';
+      };
+      pictureOpacity = mkOption {
+        type = types.ints.between 0 100;
+        default = 100;
+        description = ''
+          Opacity with which to draw the background picture.
+        '';
+      };
+      colorShadingType = mkOption {
+        type = types.enum [
+          "horizontal"
+          "vertical"
+          "solid"
+        ];
+        default = "solid";
+        description = ''
+          How to shade the background color.
+        '';
+      };
+      primaryColor = mkOption {
+        type = types.str;
+        default = "#023c88";
+        description = ''
+          Left or Top color when drawing gradients, or the solid color.
+        '';
+      };
+      secondaryColor = mkOption {
+        type = types.str;
+        default = "#5789ca";
+        description = ''
+          Right or Bottom color when drawing gradients, not used for solid color.
+        '';
       };
     };
+  };
 in
 {
   options.gnome-settings.appearance = with lib; {

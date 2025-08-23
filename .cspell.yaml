@@ -1,11 +1,12 @@
 ---
-# cSpell:words hyprland nixpkgs
 $schema: https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json
 version: '0.2'
 caseSensitive: false
 ignorePaths:
-  - result
   - '**/secrets.yaml'
+  - /result
+  - .sops.yaml
+  - .cspell.yaml
 dictionaryDefinitions:
   - name: project
     path: ./.cspell.txt

@@ -10,7 +10,7 @@
   ...
 }:
 let
-  mods = config.desktopEnvironment.hyprland.bind.mods;
+  inherit (config.desktopEnvironment.hyprland.bind) mods;
   bin = {
     pkill = "${pkgs.procps}/bin/pkill";
     hyprlock = "${config.programs.hyprlock.package}/bin/hyprlock";
