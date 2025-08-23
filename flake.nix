@@ -18,13 +18,15 @@
         flake-utils.follows = "flake-utils";
       };
     };
-    # TODO switch to https://github.com/jalil-salame/audiomenu once https://github.com/jalil-salame/audiomenu/pull/2 is resolved
     audiomenu = {
-      url = "github:joker9944/audiomenu/wofi";
+      url = "github:jalil-salame/audiomenu/main"; # cSpell: ignore jalil-salame
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # helpers
-    pre-commit-hooks.url = "github:cachix/git-hooks.nix";
+    pre-commit-hooks = {
+      url = "github:cachix/git-hooks.nix/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     sops-nix = {
       url = "github:Mic92/sops-nix/master";
       inputs.nixpkgs.follows = "nixpkgs";
