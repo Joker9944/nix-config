@@ -24,6 +24,7 @@ utility.custom.mkHyprlandModule config {
       "${bin.telegram}"
     ];
 
+    # cSpell:ignore wrappe
     bind = [
       "${mods.app}, D, exec, ${bin.pgrep} -x \".Discord-wrappe\" > /dev/null && hyprctl dispatch togglespecialworkspace ${specialWorkspaces.discord} || ${bin.discord}"
       "${mods.app}, S, exec, ${bin.pgrep} -x \".spotify-wrappe\" > /dev/null && hyprctl dispatch togglespecialworkspace ${specialWorkspaces.spotify} || ${bin.spotify}"

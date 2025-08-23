@@ -6,7 +6,6 @@
    - https://wiki.hypr.land/Nvidia/
 */
 {
-  inputs,
   lib,
   config,
   pkgs-hyprland,

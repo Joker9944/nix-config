@@ -2,7 +2,6 @@
   * idle management daemon
 */
 {
-  lib,
   config,
   osConfig,
   pkgs,

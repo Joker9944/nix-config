@@ -1,7 +1,6 @@
 {
   lib,
   utility,
-  config,
   pkgs,
   custom,
   ...
@@ -31,11 +30,11 @@ in
     "flakes"
   ];
 
-  # Third-party Chachix
+  # Third-party Cachix
   nix.settings = {
     substituters = [ "https://hyprland.cachix.org" ];
     trusted-substituters = [ "https://hyprland.cachix.org" ];
-    trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
+    trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ]; # cSpell:disable-line
   };
 
   # Enable automatic upgrades
@@ -43,7 +42,7 @@ in
     enable = lib.mkDefault true;
     persistent = true;
     flake = "github:Joker9944/nix-config";
-    dates = lib.mkDefault "*-*-* 04:00:00 UTC"; # 1 hour after github actions nix flake update
+    dates = lib.mkDefault "*-*-* 04:00:00 UTC"; # 1 hour after GitHub actions nix flake update
     notify.enable = true;
   };
 
@@ -68,7 +67,7 @@ in
     XDG_STATE_HOME = "$HOME/.local/state";
   };
 
-  # Set default localisation
+  # Set default localization
   time.timeZone = "Europe/Zurich";
   i18n = with locale; {
     defaultLocale = en_US;

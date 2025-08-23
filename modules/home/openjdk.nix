@@ -23,7 +23,7 @@ in
 
   config.home.file = lib.listToAttrs (
     lib.map (jdkVersion: {
-      name = ".jdks/${jdkVersion}";
+      name = ".jdks/${jdkVersion}"; # cSpell:words jdks
       value = {
         source = "${pkgs-unstable.${jdkVersion}}/lib/openjdk";
       };

@@ -8,7 +8,7 @@ let
 in
 {
   options.boot.windowsSupport = with lib; {
-    enable = mkEnableOption "dualboot bootloader config";
+    enable = mkEnableOption "dual boot bootloader config";
   };
 
   config = lib.mkIf cfg.enable {

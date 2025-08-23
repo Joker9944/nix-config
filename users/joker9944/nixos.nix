@@ -32,7 +32,7 @@ in
     };
   };
 
-  # WORKAROUND Setting the profile avatar from userspace using the AccountsService is not documented so this has to suffice
+  # WORKAROUND Setting the profile avatar from home manager using the AccountsService is not documented so this has to suffice
   systemd.tmpfiles.rules = lib.mkIf config.desktopEnvironment.gnome.enable [
     "f+ /var/lib/AccountsService/users/${username}  0600 root root - [User]\\nSession=\\nIcon=/var/lib/AccountsService/icons/${username}\\nSystemAccount=false\\n"
     "L+ /var/lib/AccountsService/icons/${username}  - - - - ${

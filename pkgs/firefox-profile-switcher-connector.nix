@@ -21,6 +21,7 @@ rustPlatform.buildRustPackage rec {
 
   cargoHash = "sha256-MLz2c82hUYZHvWuEIlqMIYxjAtc1DuK/kmTpcmGpUxc=";
 
+  # cSpell:words pswitch
   postInstall = ''
     mkdir -p $out/lib/mozilla/native-messaging-hosts
     sed -i s#/usr/bin/ff-pswitch-connector#$out/bin/firefox_profile_switcher_connector# manifest/manifest-linux.json

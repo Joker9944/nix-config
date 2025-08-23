@@ -12,7 +12,7 @@ let
     attrs: attrValues (mapAttrs (app: index: app + ":" + toString index) attrs);
 
   mkGnomeShellExtensionsList = lib.lists.map (name: {
-    id = name + "@gnome-shell-extensions.gcampax.github.com";
+    id = name + "@gnome-shell-extensions.gcampax.github.com"; # cSpell:ignore gcampax
     package = pkgs.gnome-shell-extensions;
   });
   mkGeneralShellExtensionsList = lib.lists.map (pkg: {
@@ -155,7 +155,7 @@ in
         network-usage-unit = "bits";
       };
 
-      # Behaviour
+      # Behavior
       "org/gnome/shell/extensions/auto-move-windows" = {
         application-list = mkAutoMoveWindowsApplicationList {
           "steam.desktop" = 1;
@@ -177,7 +177,7 @@ in
         switch-to-workspace-left = [ "<Control><Super>Left" ];
         switch-to-workspace-right = [ "<Control><Super>Right" ];
         maximize = [ "<Super>Page_Up" ];
-        unmaximize = [ "<Super>Page_Down" ];
+        unmaximize = [ "<Super>Page_Down" ]; # cSpell:words unmaximize
       };
       "org/gnome/settings-daemon/plugins/media-keys" = {
         home = [ "<Super>e" ];

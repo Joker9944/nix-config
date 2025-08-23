@@ -19,7 +19,7 @@ let
         "files.insertFinalNewline" = true;
         "git.confirmSync" = false;
         "git.blame.editorDecoration.enabled" = true;
-        "git.autofetch" = true;
+        "git.autofetch" = true; # cSpell:ignore autofetch
       };
     }
     {
@@ -30,16 +30,13 @@ let
       userSettings."workbench.colorTheme" = "Dracula Theme";
     }
     {
-      extensions = with vscodeExtensions.streetsidesoftware; [
-        code-spell-checker
-        code-spell-checker-swiss-german
+      extensions = [
+        vscodeExtensions.streetsidesoftware.code-spell-checker
       ];
-
-      userSettings."cSpell.language" = "en,de-CH";
     }
     {
       extensions = [
-        vscodeExtensions.esbenp.prettier-vscode
+        vscodeExtensions.esbenp.prettier-vscode # cSpell:words esbenp
       ];
 
       userSettings = {
@@ -61,7 +58,7 @@ let
     }
     {
       extensions = [
-        vscodeExtensions.k--kato.intellij-idea-keybindings
+        vscodeExtensions.k--kato.intellij-idea-keybindings # cSpell:words k--kato
       ];
     }
   ];
@@ -113,7 +110,7 @@ in
         nix = mkProfile [
           {
             extensions = [
-              vscodeExtensions.jnoortheen.nix-ide
+              vscodeExtensions.jnoortheen.nix-ide # cSpell:words jnoortheen
             ];
 
             userSettings = {
@@ -127,12 +124,14 @@ in
           }
         ];
 
-        notes = mkProfile {
-          extensions = with vscodeExtensions; [
-            foam.foam-vscode
-            yzhang.markdown-all-in-one
-          ];
-        };
+        notes = mkProfile [
+          {
+            extensions = with vscodeExtensions; [
+              foam.foam-vscode
+              yzhang.markdown-all-in-one # cSpell:words yzhang
+            ];
+          }
+        ];
 
         k8s = mkProfile [
           {

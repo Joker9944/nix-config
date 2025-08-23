@@ -18,7 +18,7 @@ in
       description = ''
         Set the `$HYPRSHOT_DIR` environment variable to the given location.
 
-        Hypershot will save new screen shots to the first expression that resolves:
+        Hyprshot will save new screen shots to the first expression that resolves:
          - `$HYPRSHOT_DIR`
          - `$XDG_PICTURES_DIR`
          - `$(xdg-user-dir PICTURES)`

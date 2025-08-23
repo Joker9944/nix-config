@@ -1,13 +1,9 @@
 {
-  lib,
   config,
   pkgs-hyprland,
   utility,
   ...
 }:
-let
-  cfg = config.desktopEnvironment.hyprland;
-in
 utility.custom.mkHyprlandModule config {
   imports = utility.custom.ls.lookup {
     dir = ./.;

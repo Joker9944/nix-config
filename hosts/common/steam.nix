@@ -12,7 +12,7 @@
         remotePlay.openFirewall = true;
         localNetworkGameTransfers.openFirewall = true;
 
-        extraCompatPackages = with pkgs; [ pkgs-unstable.proton-ge-bin ];
+        extraCompatPackages = [ pkgs-unstable.proton-ge-bin ];
       };
 
       gamescope.enable = true;

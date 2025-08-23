@@ -40,7 +40,7 @@ in
         Supported vars:
          - instance
          - username
-         - busroute
+         - bus_route
       '';
     };
 
@@ -53,7 +53,7 @@ in
         Supported vars:
          - instance
          - username
-         - busroute
+         - bus_route
       '';
     };
 
@@ -100,10 +100,10 @@ in
           ''
             instance=$1
             for username in $(${bin.who} | ${bin.cut} -f1 -d" " | ${bin.sort} -u); do
-              busroute="/run/user/$(${bin.id} -u "$username")/bus"
-              if [[ -e "$busroute" ]]; then
+              bus_route="/run/user/$(${bin.id} -u "$username")/bus"
+              if [[ -e "$bus_route" ]]; then
                 ${bin.sudo} -u "$username" \
-                  DBUS_SESSION_BUS_ADDRESS="unix:path=$busroute" \
+                  DBUS_SESSION_BUS_ADDRESS="unix:path=$bus_route" \
                   -- \
                   ${bin.notify-send} --app-name="${cfg.name}" --urgency=${cfg.urgency} --icon="${cfg.icon}" "${cfg.summary}" "${cfg.body}"
               fi

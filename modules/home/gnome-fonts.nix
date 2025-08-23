@@ -13,8 +13,6 @@ let
     // lib.attrsets.optionalAttrs (fontConfig.size == null) {
       size = defaultFontSize;
     };
-
-  optionalPackage = opt: lib.optional (opt != null && opt.package != null) opt.package;
 in
 {
   options.gnome-tweaks.fonts = with lib; {

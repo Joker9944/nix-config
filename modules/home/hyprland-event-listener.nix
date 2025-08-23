@@ -26,6 +26,7 @@ let
         lib.map (entry: "${entry.value.event}) ${entry.name} \"\$2\" ;;") (lib.attrsToList cfg.listener)
       );
     in
+    # cSpell:words hypr
     ''
       set -e
 
@@ -99,7 +100,7 @@ in
         default = { };
         example = { };
         description = ''
-          lmao
+          TODO finish this module
         '';
       };
   };

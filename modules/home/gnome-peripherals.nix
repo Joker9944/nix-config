@@ -114,7 +114,7 @@ in
       ];
       default = "right";
       description = ''
-        Order of physical buttons on mice and touchpads.
+        Order of physical buttons on mice and touchpad.
       '';
     };
 
@@ -133,7 +133,7 @@ in
         }
       '';
       description = ''
-        Mouse behaviour settings.
+        Mouse behavior settings.
       '';
     };
 

@@ -25,7 +25,7 @@ in
     flake = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
       default = null;
-      example = "github:kloenk/nix";
+      example = "github:kloenk/nix"; # cSpell:ignore kloenk
       description = ''
         The Flake URI of the NixOS configuration to build.
         Disables the option {option}`system.autoUpgrade.channel`.
@@ -131,7 +131,7 @@ in
         [ "--no-build-output" ]
         ++ lib.optionals (cfg.channel != null) [
           "-I"
-          "nixpkgs=${cfg.channel}/nixexprs.tar.xz"
+          "nixpkgs=${cfg.channel}/nixexprs.tar.xz" # cSpell:words nixexprs
         ]
       else
         [

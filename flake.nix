@@ -24,6 +24,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # helpers
+    pre-commit-hooks.url = "github:cachix/git-hooks.nix";
     sops-nix = {
       url = "github:Mic92/sops-nix/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -32,18 +33,18 @@
       url = "github:nix-community/disko/v1.11.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    hyprland.url = "github:hyprwm/Hyprland";
+    hyprland.url = "github:hyprwm/Hyprland"; # cSpell:ignore hyprwm
     plasma-manager = {
       url = "github:nix-community/plasma-manager/trunk";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # libs
-    flake-utils.url = "github:numtide/flake-utils/main";
+    flake-utils.url = "github:numtide/flake-utils/main"; # cSpell:ignore numtide
     nix-math = {
-      url = "github:xddxdd/nix-math/master";
+      url = "github:xddxdd/nix-math/master"; # cSpell:ignore xddxdd
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-std.url = "github:chessai/nix-std/master";
+    nix-std.url = "github:chessai/nix-std/master"; # cSpell:ignore chessai
   };
 
   outputs =
@@ -104,17 +105,35 @@
       {
         packages = utility.custom.applyFunctionRecursive ./pkgs (filename: pkgs.callPackage filename { });
 
-        devShells.default = pkgs.mkShell {
-          name = "flake-dev";
+        devShells = {
+          default = pkgs.mkShell {
+            name = "flake-dev";
 
-          packages = with pkgs; [
-            alejandra
-            home-manager
-            sops
-            age
-            gnome-tweaks
-            dconf-editor
-          ];
+            packages = with pkgs; [
+              home-manager
+              sops
+              age
+              gnome-tweaks
+              dconf-editor
+              nodePackages.cspell
+            ];
+          };
+
+          preCommitHooks = pkgs.mkShell {
+            inherit (self.checks.${system}.preCommitCheck) shellHook;
+            buildInputs = self.checks.${system}.preCommitCheck.enabledPackages;
+          };
+        };
+
+        checks = {
+          preCommitCheck = inputs.pre-commit-hooks.lib.${system}.run {
+            src = ./.;
+            hooks = {
+              cspell.enable = true;
+              nixfmt-rfc-style.enable = true;
+              nil.enable = true;
+            };
+          };
         };
 
         formatter = pkgs.treefmt.withConfig {
@@ -143,9 +162,7 @@
               (lib.attrsets.optionalAttrs (prev ? vscode-extensions) prev.vscode-extensions)
               {
                 streetsidesoftware = {
-                  inherit (self.packages.${prev.system}.vscode-extensions.streetsidesoftware)
-                    code-spell-checker-swiss-german
-                    ;
+                  inherit (self.packages.${prev.system}) code-spell-checker-swiss-german;
                 };
               };
         };
@@ -156,7 +173,7 @@
               (lib.attrsets.optionalAttrs (prev ? vscode-extensions) prev.vscode-extensions)
               {
                 blueglassblock = {
-                  inherit (self.packages.${prev.system}.vscode-extensions.blueglassblock) better-json5;
+                  inherit (self.packages.${prev.system}) better-json5;
                 };
               };
         };
@@ -167,7 +184,7 @@
               (lib.attrsets.optionalAttrs (prev ? vscode-extensions) prev.vscode-extensions)
               {
                 Weaveworks = {
-                  inherit (self.packages.${prev.system}.vscode-extensions.Weaveworks) vscode-gitops-tools;
+                  inherit (self.packages.${prev.system}) vscode-gitops-tools;
                 };
               };
         };

@@ -46,16 +46,17 @@ in
 
       # Theming
       workspace.lookAndFeel = "org.kde.breezedark.desktop";
-      configFile."kdeglobals"."General"."AccentColor" = colors.primary;
+      configFile."kdeglobals"."General"."AccentColor" = colors.primary; # cSpell:words kdeglobals
 
       # Shortcuts
+      # cSpell:words ksmserver plasmashell kwin
       shortcuts = {
         "ksmserver"."Lock Session" = [
           "Meta+Esc"
           "Meta+L"
           "Screensaver"
         ];
-        "services/org.kde.plasma-systemmonitor.desktop"."_launch" = [ ];
+        "services/org.kde.plasma-systemmonitor.desktop"."_launch" = [ ]; # cSpell:ignore systemmonitor
         "kwin" = {
           "Overview" = [
             "Meta"
@@ -90,6 +91,7 @@ in
       };
 
       # Panels
+      # cSpell:words kickerdash ksysguard barchart piechart linechart
       panels = [
         {
           location = "top";
@@ -351,7 +353,7 @@ in
           })
           {
             "Steam" = {
-              windowClass = "steamwebhelper steam";
+              windowClass = "steamwebhelper steam"; # cSpell:words steamwebhelper
               workspace = "Default";
             };
             "Telegram" = {

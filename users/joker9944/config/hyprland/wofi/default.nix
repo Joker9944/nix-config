@@ -55,7 +55,7 @@ utility.custom.mkHyprlandModule config {
         height ? null,
         x ? null,
         y ? null,
-        extraArgs ? [],
+        extraArgs ? [ ],
         ...
       }:
       lib.concatStringsSep " " (
