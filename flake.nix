@@ -122,13 +122,13 @@
           };
 
           gitHooks = pkgs.mkShell {
-            inherit (self.checks.${system}.preCommitHooksCheck) shellHook;
-            buildInputs = self.checks.${system}.preCommitHooksCheck.enabledPackages;
+            inherit (self.checks.${system}.preCommitHooks) shellHook;
+            buildInputs = self.checks.${system}.preCommitHooks.enabledPackages;
           };
         };
 
         checks = {
-          preCommitHooksCheck = inputs.pre-commit-hooks.lib.${system}.run {
+          preCommitHooks = inputs.pre-commit-hooks.lib.${system}.run {
             src = ./.;
             hooks = {
               trim-trailing-whitespace.enable = true;
@@ -146,18 +146,13 @@
           };
         };
 
-        formatter = pkgs.treefmt.withConfig {
-          runtimeInputs = [ pkgs.nixfmt-rfc-style ];
-
-          settings = {
-            on-unmatched = "info";
-
-            formatter.nixfmt = {
-              command = "nixfmt";
-              includes = [ "*.nix" ];
-            };
-          };
-        };
+        formatter =
+          let
+            inherit (self.checks.${system}.preCommitHooks.config) package configFile;
+          in
+          pkgs.writeShellScriptBin "pre-commit-run" ''
+            ${package}/bin/pre-commit run --all-files --config ${configFile}
+          '';
       }
     )
     // {

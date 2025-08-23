@@ -34,19 +34,27 @@ dictionaries:
   - user
 languageSettings:
   - languageId: conf
-    locale: 'en'
+    locale: '*'
     dictionaries:
       - hyprland
   - languageId: nix
-    locale: 'en'
+    locale: '*'
     dictionaries:
       - hyprland
       - linux
       - nix
       - nixpkgs
       - shell
-  - languageId: sh
-    locale: 'en'
+  - languageId: shellscript
+    locale: '*'
     dictionaries:
       - linux
+      - shell
+  - languageId: markdown
+    locale: '*'
+    dictionaries:
+      - hyprland
+      - linux
+      - nix
+      - nixpkgs
       - shell
