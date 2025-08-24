@@ -6,6 +6,7 @@ drun
 mountpoint
 PAMFAIL
 subvolumes
+UWSM
 vfat
 Weaveworks
 xoffset
