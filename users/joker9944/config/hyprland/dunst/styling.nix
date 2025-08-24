@@ -1,25 +1,23 @@
 {
+  lib,
   config,
   utility,
   ...
 }:
-let
-  cfg = config.desktopEnvironment.hyprland;
-in
 utility.custom.mkHyprlandModule config {
-  services.dunst.settings = with cfg.style; {
+  services.dunst.settings = with config.windowManager.hyprland.custom.style; {
     global = {
       ############
       ### TEXT ###
       ############
-      font = "${cfg.style.font.name} ${toString cfg.style.font.size}";
+      font = lib.mkIf (font != null) "${font.name} ${toString font.size}";
 
       #############
       ### ICONS ###
       #############
       min_icon_size = 0;
       max_icon_size = 128;
-      icon_theme = cfg.style.iconTheme.name;
+      icon_theme = lib.mkIf (icons != null) icons.name;
 
       ##############
       ### COLORS ###
@@ -30,8 +28,8 @@ utility.custom.mkHyprlandModule config {
       ###############
       ### BORDERS ###
       ###############
-      frame_width = cfg.style.border.size;
-      corner_radius = cfg.style.border.corners.rounding;
+      frame_width = border.size;
+      corner_radius = border.corners.rounding;
     };
 
     urgency_low = {

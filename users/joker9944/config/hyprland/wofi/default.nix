@@ -12,7 +12,8 @@
   ...
 }:
 let
-  cfg = config.desktopEnvironment.hyprland;
+  inherit (cfg.binds) mods;
+  cfg = config.windowManager.hyprland.custom;
   pkg.wl-clipboard = pkgs-hyprland.wl-clipboard;
   bin = {
     pkill = "${pkgs.procps}/bin/pkill";
@@ -21,7 +22,6 @@ let
     cliphist = "${config.services.cliphist.package}/bin/cliphist";
     wofi = "${config.programs.wofi.package}/bin/wofi";
   };
-  dmenuCommand = cfg.launcher.mkDmenuCommand { };
 in
 utility.custom.mkHyprlandModule config {
   home.packages = [ pkg.wl-clipboard ]; # Wayland clipboard utilities
@@ -46,7 +46,7 @@ utility.custom.mkHyprlandModule config {
     style = import ./style.css.nix { inherit cfg; };
   };
 
-  desktopEnvironment.hyprland.launcher = {
+  windowManager.hyprland.custom.launcher = {
     mkDmenuCommand =
       {
         location ? null,
@@ -70,24 +70,24 @@ utility.custom.mkHyprlandModule config {
       );
   };
 
-  wayland.windowManager.hyprland.settings =
-    let
-      inherit (cfg.bind) mods;
-    in
-    lib.mkIf config.programs.wofi.enable {
-      exec-once = [
-        "${bin.wl-paste} --type text --watch ${bin.cliphist} store"
-      ];
+  wayland.windowManager.hyprland.settings = lib.mkIf config.programs.wofi.enable {
+    exec-once = [
+      "${bin.wl-paste} --type text --watch ${bin.cliphist} store"
+    ];
 
-      bindr = [
-        "${mods.main}, SUPER_L, exec, ${bin.pkill} --exact \".wofi-wrapped\" || ${bin.wofi}"
-      ];
+    bindr = [
+      "${mods.main}, SUPER_L, exec, ${bin.pkill} --exact \".wofi-wrapped\" || ${bin.wofi}"
+    ];
 
-      bind = [
-        "${mods.main}, R, exec, ${bin.wofi}"
-        "${mods.utility}, V, exec, ${bin.cliphist} list | ${dmenuCommand} | ${bin.cliphist} decode | ${bin.wl-copy}"
-      ];
-    };
+    bind = [
+      "${mods.main}, R, exec, ${bin.wofi}"
+      "${mods.utility}, V, exec, ${bin.cliphist} list | ${
+        cfg.launcher.mkDmenuCommand { }
+      } | ${bin.cliphist} decode | ${bin.wl-copy}"
+    ];
+  };
 
-  services.dunst.settings.dmenu.general = lib.mkIf config.programs.wofi.enable dmenuCommand;
+  services.dunst.settings.global.dmenu = lib.mkIf config.programs.wofi.enable (
+    cfg.launcher.mkDmenuCommand { }
+  );
 }

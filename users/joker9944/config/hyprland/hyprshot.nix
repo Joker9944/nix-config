@@ -8,7 +8,7 @@
   ...
 }:
 let
-  inherit (config.desktopEnvironment.hyprland.bind) mods;
+  inherit (config.windowManager.hyprland.custom.binds) mods;
   bin.hyprshot = "${config.programs.hyprshot.package}/bin/hyprshot";
 in
 utility.custom.mkHyprlandModule config {

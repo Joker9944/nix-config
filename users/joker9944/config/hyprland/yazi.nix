@@ -8,7 +8,8 @@
   ...
 }:
 let
-  cfg = config.desktopEnvironment.hyprland;
+  inherit (cfg.binds) mods;
+  cfg = config.windowManager.hyprland.custom;
   bin.yazi = "${config.programs.yazi.package}/bin/yazi";
 in
 utility.custom.mkHyprlandModule config {
@@ -20,8 +21,7 @@ utility.custom.mkHyprlandModule config {
   wayland.windowManager.hyprland.settings = {
     bind =
       let
-        inherit (cfg.bind) mods;
-        command = cfg.terminal.mkTuiCommand {
+        command = cfg.terminal.mkRunCommand {
           id = "yazi";
           command = bin.yazi;
         };

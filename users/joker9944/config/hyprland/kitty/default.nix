@@ -8,7 +8,8 @@
   ...
 }:
 let
-  cfg = config.desktopEnvironment.hyprland;
+  inherit (cfg.binds) mods;
+  cfg = config.windowManager.hyprland.custom;
   bin.kitty = "${config.programs.kitty.package}/bin/kitty";
 in
 utility.custom.mkHyprlandModule config {
@@ -21,15 +22,10 @@ utility.custom.mkHyprlandModule config {
     programs.kitty = {
       enable = true;
       package = pkgs-hyprland.kitty;
-
-      settings = {
-        # look
-        cursor_shape = "beam";
-      };
     };
 
-    desktopEnvironment.hyprland.terminal = {
-      mkTuiCommand =
+    windowManager.hyprland.custom.terminal = {
+      mkRunCommand =
         {
           id,
           command,
@@ -41,11 +37,7 @@ utility.custom.mkHyprlandModule config {
     };
 
     wayland.windowManager.hyprland.settings = {
-      bind =
-        let
-          inherit (cfg.bind) mods;
-        in
-        [ "${mods.main}, T, exec, ${bin.kitty}" ];
+      bind = [ "${mods.main}, T, exec, ${bin.kitty}" ];
 
       windowrule = cfg.terminal.mkWindowRules {
         id = "kitty";

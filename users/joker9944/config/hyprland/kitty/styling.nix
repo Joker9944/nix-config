@@ -3,11 +3,10 @@
   utility,
   ...
 }:
-let
-  cfg = config.desktopEnvironment.hyprland;
-in
 utility.custom.mkHyprlandModule config {
-  programs.kitty.settings = with cfg.style; {
+  programs.kitty.settings = with config.windowManager.hyprland.custom.style; {
+    cursor_shape = "beam";
+
     cursor = pallet.cursor.hex;
     background = pallet.background.normal.hex;
     foreground = pallet.foreground.hex;

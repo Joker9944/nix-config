@@ -82,6 +82,7 @@ in
       type = types.enum [
         "default"
         "prefer-dark"
+        "prefer-light"
       ];
       default = "default";
       description = ''

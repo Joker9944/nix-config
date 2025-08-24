@@ -10,7 +10,7 @@
   ...
 }:
 let
-  cfg = config.desktopEnvironment.hyprland;
+  cfg = config.windowManager.hyprland.custom;
 in
 utility.custom.mkHyprlandModule config {
   home.packages = [

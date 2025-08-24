@@ -2,10 +2,7 @@
   * mount daemon
 */
 {
-  lib,
-  options,
   config,
-  pkgs-hyprland,
   utility,
   ...
 }:

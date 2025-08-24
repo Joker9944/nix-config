@@ -86,7 +86,7 @@ rec {
     else
       { config = condition module; };
 
-  mkHyprlandModule = cfg: mkConditionalModule (lib.mkIf cfg.desktopEnvironment.hyprland.enable);
+  mkHyprlandModule = cfg: mkConditionalModule (lib.mkIf cfg.windowManager.hyprland.custom.enable);
 
   mkSimpleProgramHomeModule =
     {

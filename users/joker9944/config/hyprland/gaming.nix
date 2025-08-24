@@ -4,13 +4,12 @@
   utility,
   ...
 }:
-let
-  cfg = config.desktopEnvironment.hyprland;
-in
 utility.custom.mkHyprlandModule config {
+  windowManager.hyprland.custom.system.allowMaximized = [ "steam_app_.+" ];
+
   wayland.windowManager.hyprland.settings = {
     windowrule = [
-      "content game, class:${cfg.steam.appRegex}"
+      "content game, class:steam_app_.+"
     ]
     ++ (lib.map (rule: "${rule}, content:game") [
       "noanim 1"

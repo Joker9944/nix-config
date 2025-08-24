@@ -4,17 +4,16 @@
   utility,
   ...
 }:
-let
-  cfg = config.desktopEnvironment.hyprland;
-in
 utility.custom.mkHyprlandModule config {
-  wayland.windowManager.hyprland.settings = with cfg.style; {
+  wayland.windowManager.hyprland.settings = with config.windowManager.hyprland.custom.style; {
     # Environment variables
     # https://wiki.hyprland.org/Configuring/Environment-variables/
-    env = lib.attrsets.mapAttrsToList (name: value: name + ", " + (toString value)) {
-      "XCURSOR_THEME" = config.gtk.cursorTheme.name;
-      "XCURSOR_SIZE" = if config.gtk.cursorTheme.size != null then config.gtk.cursorTheme.size else 16;
-    };
+    env = lib.attrsets.mapAttrsToList (name: value: name + ", " + (toString value)) (
+      lib.optionalAttrs (xCursor != null) {
+        "XCURSOR_THEME" = xCursor.name;
+        "XCURSOR_SIZE" = if xCursor.size != null then config.gtk.cursorTheme.size else 16;
+      }
+    );
 
     general = {
       border_size = border.size;
@@ -114,7 +113,7 @@ utility.custom.mkHyprlandModule config {
     # https://wiki.hyprland.org/Configuring/Variables/#misc
     misc = {
       disable_hyprland_logo = true;
-      background_color = cfg.style.pallet.background.normal.rgb;
+      background_color = pallet.background.normal.rgb;
     };
   };
 }

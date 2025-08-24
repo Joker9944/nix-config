@@ -5,11 +5,8 @@
   custom,
   ...
 }:
-let
-  cfg = config.desktopEnvironment.hyprland;
-in
 utility.custom.mkHyprlandModule config {
-  programs.hyprlock.settings = with cfg.style; {
+  programs.hyprlock.settings = with config.windowManager.hyprland.custom.style; {
     animations = {
       enabled = true;
       bezier = "linear, 1, 1, 0, 0";
@@ -39,7 +36,7 @@ utility.custom.mkHyprlandModule config {
       fail_color = pallet.functional.danger.rgba 0.93;
 
       font_color = pallet.foreground.rgb;
-      font_family = font.name;
+      font_family = lib.mkIf (font != null) font.name;
 
       dots_spacing = 0.3;
 
@@ -51,9 +48,7 @@ utility.custom.mkHyprlandModule config {
     image = [
       {
         # User avatar
-        monitor = lib.mkIf (
-          config.programs.hyprlock.settings.input-field.monitor != null
-        ) config.programs.hyprlock.settings.input-field.monitor;
+        inherit (config.programs.hyprlock.settings.input-field) monitor;
         path = "${custom.assets.images.profile.the-seer."512x512"}/share/profile/the-seer.512x512.jpg";
 
         border_size = border.size;
@@ -69,7 +64,7 @@ utility.custom.mkHyprlandModule config {
         # Time
         text = "$TIME"; # ref. https://wiki.hyprland.org/Hypr-Ecosystem/hyprlock/#variable-substitution
         font_size = 90;
-        font_family = cfg.style.font.name;
+        font_family = lib.mkIf (font != null) font.name;
 
         position = "-30, 0";
         halign = "right";
@@ -79,7 +74,7 @@ utility.custom.mkHyprlandModule config {
         # Date
         text = "cmd[update:60000] date +\"%A, %d %B %Y\""; # update every 60 seconds
         font_size = 25;
-        font_family = cfg.style.font.name;
+        font_family = lib.mkIf (font != null) font.name;
 
         position = "-30, -150";
         halign = "right";

@@ -7,7 +7,8 @@
   ...
 }:
 let
-  cfg = config.desktopEnvironment.hyprland;
+  inherit (cfg.binds) mods;
+  cfg = config.windowManager.hyprland.custom;
   bin.btop = "${config.programs.btop.package}/bin/btop";
 in
 utility.custom.mkHyprlandModule config {
@@ -23,8 +24,7 @@ utility.custom.mkHyprlandModule config {
   wayland.windowManager.hyprland.settings = {
     bind =
       let
-        inherit (cfg.bind) mods;
-        command = cfg.terminal.mkTuiCommand {
+        command = cfg.terminal.mkRunCommand {
           id = "btop";
           command = bin.btop;
         };

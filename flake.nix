@@ -195,8 +195,33 @@
         };
       };
 
-      nixosModules = utility.custom.applyFunctionRecursive ./modules/nixos import;
-      homeModules = utility.custom.applyFunctionRecursive ./modules/home import;
+      # Turn this into a custom function
+      nixosModules = lib.listToAttrs (
+        lib.map
+          (filepath: {
+            name = lib.strings.removeSuffix ".nix" (baseNameOf filepath);
+            value = import filepath;
+          })
+          (
+            utility.custom.ls.lookup {
+              dir = ./modules/nixos;
+              types = utility.custom.ls.filters.files;
+            }
+          )
+      );
+      homeModules = lib.listToAttrs (
+        lib.map
+          (filepath: {
+            name = lib.strings.removeSuffix ".nix" (baseNameOf filepath);
+            value = import filepath;
+          })
+          (
+            utility.custom.ls.lookup {
+              dir = ./modules/home;
+              types = utility.custom.ls.filters.files;
+            }
+          )
+      );
 
       nixosConfigurations = lib.attrsets.listToAttrs (
         lib.lists.map

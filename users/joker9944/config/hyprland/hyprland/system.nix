@@ -6,10 +6,21 @@
   ...
 }:
 let
-  cfg = config.desktopEnvironment.hyprland;
+  cfg = config.windowManager.hyprland.custom.system;
 in
 utility.custom.mkHyprlandModule config {
-  wayland.windowManager.hyprland.settings = {
+  options.windowManager.hyprland.custom.system = with lib; {
+    allowMaximized = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = [ "steam_app_.+" ];
+      description = ''
+        RegEx expressions of windows which should be allowed to maximize.
+      '';
+    };
+  };
+
+  config.wayland.windowManager.hyprland.settings = {
     monitor = lib.mkDefault [ ",preferred,auto,auto" ];
 
     # Permissions
@@ -55,12 +66,17 @@ utility.custom.mkHyprlandModule config {
     };
 
     # Windows and workspaces
-    windowrule = [
+    windowrule =
+      let
+        maximizeRegex = lib.concatStringsSep "|" cfg.allowMaximized;
+      in
+      [
+        # Fix some dragging issues with XWayland
+        "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0"
+      ]
       # Ignore maximize requests from apps. You'll probably like this.
-      # Match everything besides steam games
-      "suppressevent maximize, class:negative:${cfg.steam.appRegex}"
-      # Fix some dragging issues with XWayland
-      "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0"
-    ];
+      ++ lib.optional (
+        lib.length cfg.allowMaximized > 0
+      ) "suppressevent maximize, class:negative:(${maximizeRegex})";
   };
 }
