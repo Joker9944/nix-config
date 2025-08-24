@@ -2,6 +2,7 @@
   lib,
   pkgs,
   osConfig,
+  utility,
   ...
 }:
 let
@@ -11,18 +12,11 @@ in
   inherit (osConfig) desktopEnvironment;
 
   # TODO auto import
-  imports = [
-    ./config/bash.nix
-    ./config/cloud.nix
-    ./config/font.nix
-    ./config/gnome.nix
-    ./config/hyprland
-    ./config/jetbrains.nix
-    ./config/kanidm.nix
-    ./config/kde-plasma.nix
-    ./config/vscode.nix
-  ]
-  ++ lib.optional (builtins.pathExists hostModule) hostModule;
+  imports =
+    (utility.custom.ls.lookup {
+      dir = ./config;
+    })
+    ++ lib.optional (builtins.pathExists hostModule) hostModule; # Import matching host modules
 
   home.packages = with pkgs; [
     fastfetch

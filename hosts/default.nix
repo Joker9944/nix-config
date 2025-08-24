@@ -14,12 +14,13 @@ let
   };
 in
 {
-  imports = [
-    (lib.path.append ./. custom.config.hostname) # Import matching host modules
-  ]
-  ++ (utility.custom.ls.lookup {
-    dir = ./common;
-  });
+  imports =
+    (utility.custom.ls.lookup {
+      dir = ./common;
+    })
+    ++ [
+      (lib.path.append ./. custom.config.hostname) # Import matching host modules
+    ];
 
   # Set args inherited from mkNixosConfiguration
   networking.hostName = custom.config.hostname;

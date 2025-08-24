@@ -5,7 +5,10 @@
     exclude = [ ./default.nix ];
   };
 
-  desktopEnvironment.hyprland.enable = true;
+  desktopEnvironment = {
+    hyprland.enable = true;
+    gnome.enable = false;
+  };
 
   boot = {
     windowsSupport.enable = true;

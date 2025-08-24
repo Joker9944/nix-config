@@ -40,7 +40,11 @@ in
       package32 = pkgs-hyprland.pkgsi686Linux.mesa;
     };
 
-    # Needed for mounting disks without root privileges
-    services.udisks2.enable = true;
+    services = {
+      # Since I do like the GNOME ecosystem enable this for GNOME keyring, online accounts, etc.
+      gnome.core-os-services.enable = true;
+      # Needed for mounting disks without root privileges
+      udisks2.enable = true;
+    };
   };
 }
