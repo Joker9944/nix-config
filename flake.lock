@@ -107,6 +107,22 @@
         "type": "github"
       }
     },
+    "flake-compat_3": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1747046372,
+        "narHash": "sha256-CIVLLkVgvHYbgI2UpXvIIBJ12HWgX+fjA8Xf8PUmqCY=",
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "rev": "9100a0f413b0c601e0533d1d94ffd501ce2e7885",
+        "type": "github"
+      },
+      "original": {
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
     "flake-parts": {
       "inputs": {
         "nixpkgs-lib": "nixpkgs-lib"
@@ -169,6 +185,28 @@
     "gitignore_2": {
       "inputs": {
         "nixpkgs": [
+          "nix-assets",
+          "pre-commit-hooks",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1709087332,
+        "narHash": "sha256-HG2cCnktfHsKV0s4XW83gU3F57gaTljL9KNSuG6bnQs=",
+        "owner": "hercules-ci",
+        "repo": "gitignore.nix",
+        "rev": "637db329424fd7e46cf4185293b9cc8c88c95394",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "gitignore.nix",
+        "type": "github"
+      }
+    },
+    "gitignore_3": {
+      "inputs": {
+        "nixpkgs": [
           "pre-commit-hooks",
           "nixpkgs"
         ]
@@ -194,11 +232,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1755776884,
-        "narHash": "sha256-CPM7zm6csUx7vSfKvzMDIjepEJv1u/usmaT7zydzbuI=",
+        "lastModified": 1755928099,
+        "narHash": "sha256-OILVkfhRCm8u18IZ2DKR8gz8CVZM2ZcJmQBXmjFLIfk=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "4fb695d10890e9fc6a19deadf85ff79ffb78da86",
+        "rev": "4a44fb9f7555da362af9d499817084f4288a957f",
         "type": "github"
       },
       "original": {
@@ -303,11 +341,11 @@
         "xdph": "xdph"
       },
       "locked": {
-        "lastModified": 1755883465,
-        "narHash": "sha256-/yviTS9piazXoZAmnN0dXnYjDAFvooBnzJfPw2Gi30Y=",
+        "lastModified": 1755945900,
+        "narHash": "sha256-OIuSFzAbKHfRZtxrYP4CZRKGAhlAHEjY5G0Q7ZfeH7w=",
         "owner": "hyprwm",
         "repo": "Hyprland",
-        "rev": "0d45b277d6c750377b336034b8adc53eae238d91",
+        "rev": "d9cf1cb78ef3dfd82f03965aab70792bbe25c9e2",
         "type": "github"
       },
       "original": {
@@ -495,14 +533,15 @@
         ],
         "nixpkgs": [
           "nixpkgs"
-        ]
+        ],
+        "pre-commit-hooks": "pre-commit-hooks_2"
       },
       "locked": {
-        "lastModified": 1755792353,
-        "narHash": "sha256-qqJynOo3WmqHJu5MBbDIto3HzS5fNYgTUUWDrviV3zg=",
+        "lastModified": 1755972779,
+        "narHash": "sha256-OC2uV4W8V9qjPnBiIOAfYpRTmZtnY9FqDyYGqjFAH/M=",
         "owner": "joker9944",
         "repo": "nix-assets",
-        "rev": "b9fde6c4433553d3bb4db0af5bb3442528ff57e1",
+        "rev": "4aee4caeb506dc98337e66449f841b000a9bb353",
         "type": "github"
       },
       "original": {
@@ -660,15 +699,39 @@
         "flake-compat": "flake-compat_2",
         "gitignore": "gitignore_2",
         "nixpkgs": [
+          "nix-assets",
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1755879220,
-        "narHash": "sha256-2KZl6cU5rzEwXKMW369kLTzinJXXkF3TRExA6qEeVbc=",
+        "lastModified": 1755957816,
+        "narHash": "sha256-NNhqfrROJ+ZE6TCjBc5XvVWW6WsFY9+MhqPmi//vQuY=",
         "owner": "cachix",
         "repo": "git-hooks.nix",
-        "rev": "3ff4596663c8cbbffe06d863ee4c950bce2c3b78",
+        "rev": "c84098434e3a01b8a8b1cf572f1004f3aca77bfb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cachix",
+        "ref": "master",
+        "repo": "git-hooks.nix",
+        "type": "github"
+      }
+    },
+    "pre-commit-hooks_3": {
+      "inputs": {
+        "flake-compat": "flake-compat_3",
+        "gitignore": "gitignore_3",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1755960406,
+        "narHash": "sha256-RF7j6C1TmSTK9tYWO6CdEMtg6XZaUKcvZwOCD2SICZs=",
+        "owner": "cachix",
+        "repo": "git-hooks.nix",
+        "rev": "e891a93b193fcaf2fc8012d890dc7f0befe86ec2",
         "type": "github"
       },
       "original": {
@@ -691,7 +754,7 @@
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "plasma-manager": "plasma-manager",
-        "pre-commit-hooks": "pre-commit-hooks_2",
+        "pre-commit-hooks": "pre-commit-hooks_3",
         "sops-nix": "sops-nix"
       }
     },
