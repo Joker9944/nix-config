@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  utility,
   ...
 }:
 let
@@ -8,54 +9,62 @@ let
 in
 {
   options.gnome-settings.multitasking = with lib; {
-    enable = mkEnableOption "Whether to enable GNOME multitasking config.";
+    enable = mkEnableOption "GNOME multitasking config";
+
     hotCorner = mkOption {
-      type = types.bool;
-      default = true;
+      type = types.nullOr types.bool;
+      default = null;
       description = ''
         Whether to enable the top-left hot corner.
       '';
     };
+
     activeScreenEdges = mkOption {
-      type = types.bool;
-      default = true;
+      type = types.nullOr types.bool;
+      default = null;
       description = ''
         Whether to enable active screen edges.
       '';
     };
+
     workspaces = mkOption {
-      type = types.enum [
-        "dynamic"
-        "fixed"
-      ];
-      default = "dynamic";
+      type = types.nullOr (
+        types.enum [
+          "dynamic"
+          "fixed"
+        ]
+      );
+      default = null;
       description = ''
         Whether the number of workspaces should automatically expand or be fixed.
       '';
     };
+
     numberOfWorkspaces = mkOption {
-      type = types.int;
-      default = 4;
+      type = types.nullOr types.int;
+      default = null;
       description = ''
         The amount of by default open workspaces, only works with fixed workspaces.
       '';
     };
+
     multiMonitor = mkOption {
-      type = types.enum [
+      type = types.nullOr types.enum [
         "primary-only"
         "all-displays"
       ];
-      default = "primary-only";
+      default = null;
       description = ''
         Should workspaces only be on the primary display or all displays.
       '';
     };
+
     appSwitching = mkOption {
-      type = types.enum [
+      type = types.nullOr types.enum [
         "all-workspaces"
         "current-workspace"
       ];
-      default = "all-workspaces";
+      default = null;
       description = ''
         Should the app switcher include apps from all workspaces or the current workspace only
       '';
@@ -65,18 +74,23 @@ in
   config = lib.mkIf cfg.enable {
     dconf.settings = {
       "org/gnome/desktop/interface" = {
-        enable-hot-corners = cfg.hotCorner;
+        enable-hot-corners = utility.custom.nonNull cfg.hotCorner;
       };
+
       "org/gnome/mutter" = {
-        edge-tiling = cfg.activeScreenEdges;
-        dynamic-workspaces = cfg.workspaces == "dynamic";
-        workspaces-only-on-primary = cfg.multiMonitor == "primary-only";
+        edge-tiling = utility.custom.nonNull cfg.activeScreenEdges;
+        dynamic-workspaces = lib.mkIf (cfg.workspaces != null) (cfg.workspaces == "dynamic");
+        workspaces-only-on-primary = lib.mkIf (cfg.multiMonitor != null) cfg.multiMonitor == "primary-only";
       };
+
       "org/gnome/desktop/wm/preferences" = {
         num-workspaces = lib.mkIf (cfg.workspaces == "fixed") cfg.numberOfWorkspaces;
       };
+
       "org/gnome/shell/app-switcher" = {
-        current-workspace-only = cfg.appSwitching == "current-workspace";
+        current-workspace-only = lib.mkIf (cfg.appSwitching != null) (
+          cfg.appSwitching == "current-workspace"
+        );
       };
     };
   };

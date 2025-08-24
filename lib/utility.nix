@@ -12,6 +12,8 @@ rec {
     in
     lib.concatMapStringsSep "\n" (line: indentPrefix + line) (lib.splitString "\n" lines);
 
+  nonNull = value: lib.mkIf (value != null) value;
+
   ls = rec {
     filters = {
       all = [

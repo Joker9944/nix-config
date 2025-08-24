@@ -40,7 +40,7 @@ let
 in
 {
   options.gnome-settings.keyboard.shortcuts = with lib; {
-    enable = mkEnableOption "Whether to enable GNOME keyboard shortcuts config.";
+    enable = mkEnableOption "GNOME keyboard shortcuts config";
 
     customShortcuts = mkOption {
       type = types.listOf (types.submodule customShortcutOptions);

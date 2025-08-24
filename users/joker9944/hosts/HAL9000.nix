@@ -1,6 +1,8 @@
 {
+  lib,
   pkgs,
   pkgs-unstable,
+  config,
   osConfig,
   ...
 }:
@@ -27,7 +29,9 @@
     };
   };
 
-  gnome-settings.peripherals.touchpad.enable = false;
+  gnome-settings = lib.mkIf config.desktopEnvironment.gnome.enable {
+    peripherals.touchpad.enable = false;
+  };
 
   wayland.windowManager.hyprland.settings = {
     monitor = [

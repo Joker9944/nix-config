@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  utility,
   ...
 }:
 let
@@ -16,6 +17,7 @@ let
           File path of the image used as wallpaper. If not set the color config will be used.
         '';
       };
+
       darkStylePicturePath = mkOption {
         type = types.nullOr types.str;
         default = null;
@@ -24,49 +26,58 @@ let
           File path of the image used as wallpaper in prefer-dark appearance style. If not set the main image path will be used as fallback.
         '';
       };
+
       pictureOption = mkOption {
-        type = types.enum [
-          "none"
-          "wallpaper"
-          "centered"
-          "scaled"
-          "stretched"
-          "zoom"
-          "spanned"
-        ];
-        default = "zoom";
+        type = types.nullOr (
+          types.enum [
+            "none"
+            "wallpaper"
+            "centered"
+            "scaled"
+            "stretched"
+            "zoom"
+            "spanned"
+          ]
+        );
+        default = null;
         description = ''
           Determines how the image is rendered.
         '';
       };
+
       pictureOpacity = mkOption {
-        type = types.ints.between 0 100;
-        default = 100;
+        type = types.nullOr (types.ints.between 0 100);
+        default = null;
         description = ''
           Opacity with which to draw the background picture.
         '';
       };
+
       colorShadingType = mkOption {
-        type = types.enum [
-          "horizontal"
-          "vertical"
-          "solid"
-        ];
-        default = "solid";
+        type = types.nullOr (
+          types.enum [
+            "horizontal"
+            "vertical"
+            "solid"
+          ]
+        );
+        default = null;
         description = ''
           How to shade the background color.
         '';
       };
+
       primaryColor = mkOption {
-        type = types.str;
-        default = "#023c88";
+        type = types.nullOr types.str;
+        default = null;
         description = ''
           Left or Top color when drawing gradients, or the solid color.
         '';
       };
+
       secondaryColor = mkOption {
-        type = types.str;
-        default = "#5789ca";
+        type = types.nullOr types.str;
+        default = null;
         description = ''
           Right or Bottom color when drawing gradients, not used for solid color.
         '';
@@ -76,15 +87,17 @@ let
 in
 {
   options.gnome-settings.appearance = with lib; {
-    enable = mkEnableOption "Whether to enable GNOME appearance config.";
+    enable = mkEnableOption "GNOME appearance config";
 
     style = mkOption {
-      type = types.enum [
-        "default"
-        "prefer-dark"
-        "prefer-light"
-      ];
-      default = "default";
+      type = types.nullOr (
+        types.enum [
+          "default"
+          "prefer-dark"
+          "prefer-light"
+        ]
+      );
+      default = null;
       description = ''
         The style used for the GNOME shell.
       '';
@@ -99,26 +112,28 @@ in
     };
 
     accentColor = mkOption {
-      type = types.enum [
-        "blue"
-        "teal"
-        "green"
-        "yellow"
-        "orange"
-        "red"
-        "pink"
-        "purple"
-        "slate"
-      ];
-      default = "purple";
+      type = types.nullOr (
+        types.enum [
+          "blue"
+          "teal"
+          "green"
+          "yellow"
+          "orange"
+          "red"
+          "pink"
+          "purple"
+          "slate"
+        ]
+      );
+      default = null;
       description = ''
         The accent color used for the GNOME shell.
       '';
     };
 
     background = mkOption {
-      type = types.nullOr (types.submodule backgroundOptions);
-      default = null;
+      type = types.submodule backgroundOptions;
+      default = { };
       example = lib.literalExpression ''
         {
           picturePath = "/run/current-system/sw/share/backgrounds/gnome/blobs-l.svg";
@@ -136,49 +151,34 @@ in
     };
   };
 
-  config =
-    let
-      mkBackgroundDconfSettings = {
-        picture-options = cfg.background.pictureOption;
-        color-shading-type = cfg.background.colorShadingType;
-        primary-color = cfg.background.primaryColor;
-        secondary-color = cfg.background.secondaryColor;
-      }
-      // lib.attrsets.optionalAttrs (cfg.background.picturePath != null) {
-        picture-uri = "file://${cfg.background.picturePath}";
+  config = lib.mkIf cfg.enable {
+    dconf.settings = {
+      "org/gnome/desktop/interface" = {
+        color-scheme = utility.custom.nonNull cfg.style;
+        accent-color = utility.custom.nonNull cfg.accentColor;
       };
-      mkBackgroundWithDarkDconfSettings =
-        mkBackgroundDconfSettings
-        //
-          lib.attrsets.optionalAttrs
-            (cfg.background.picturePath != null && cfg.background.darkStylePicturePath == null)
-            {
-              picture-uri-dark = "file://${cfg.background.picturePath}";
-            }
-        //
-          lib.attrsets.optionalAttrs
-            (cfg.background.picturePath != null && cfg.background.darkStylePicturePath != null)
-            {
-              picture-uri-dark = "file://${cfg.background.darkStylePicturePath}";
-            };
-    in
-    lib.mkIf cfg.enable {
-      dconf.settings = {
-        "org/gnome/desktop/interface" = {
-          color-scheme = cfg.style;
-          accent-color = cfg.accentColor;
+
+      "org/gnome/desktop/background" =
+        with cfg.background;
+        let
+          mkPicturePath = path: "file://${path}";
+        in
+        {
+          picture-options = utility.custom.nonNull pictureOption;
+          color-shading-type = utility.custom.nonNull colorShadingType;
+          primary-color = utility.custom.nonNull primaryColor;
+          secondary-color = utility.custom.nonNull secondaryColor;
+          picture-uri = lib.mkIf (picturePath != null) (mkPicturePath picturePath);
+          picture-uri-dark = lib.mkIf (picturePath != null || darkStylePicturePath != null) (
+            mkPicturePath (if darkStylePicturePath != null then darkStylePicturePath else picturePath)
+          );
         };
-
-        "org/gnome/desktop/background" = lib.mkIf (
-          cfg.background != null
-        ) mkBackgroundWithDarkDconfSettings;
-        "org/gnome/desktop/screensaver" = lib.mkIf (cfg.background != null) mkBackgroundDconfSettings;
-      };
-
-      gtk = lib.mkIf cfg.gtkLegacyCompatibility {
-        enable = true;
-
-        gtk3.extraConfig.gtk-application-prefer-dark-theme = if (cfg.style == "default") then 0 else 1;
-      };
     };
+
+    gtk = lib.mkIf cfg.gtkLegacyCompatibility {
+      enable = true;
+
+      gtk3.extraConfig.gtk-application-prefer-dark-theme = if (cfg.style != "prefer-dark") then 0 else 1;
+    };
+  };
 }
