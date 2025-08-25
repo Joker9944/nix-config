@@ -22,6 +22,7 @@ in
     fastfetch
     imagemagick
     tree
+    trash-cli
 
     meld
     lens
