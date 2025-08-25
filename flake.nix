@@ -205,7 +205,6 @@
           (
             utility.custom.ls.lookup {
               dir = ./modules/nixos;
-              types = utility.custom.ls.filters.files;
             }
           )
       );
@@ -218,7 +217,6 @@
           (
             utility.custom.ls.lookup {
               dir = ./modules/home;
-              types = utility.custom.ls.filters.files;
             }
           )
       );
