@@ -20,14 +20,14 @@ in
   };
 
   # Enable automatic upgrades
-  services.betterAutoUpgrade = {
+  services.customAutoUpgrade = {
     inherit (osConfig.system.autoUpgrade)
       enable
       persistent
+      dates
       flake
       notify
       ;
-    frequency = osConfig.system.autoUpgrade.dates;
   };
 
   # Setup sops if user secrets file exists

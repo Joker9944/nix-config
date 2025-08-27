@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.services.betterAutoUpgrade.notify;
+  cfg = config.services.customAutoUpgrade.notify;
 in
 {
-  options.services.betterAutoUpgrade.notify = with lib; {
+  options.services.customAutoUpgrade.notify = with lib; {
     enable = mkEnableOption "NixOS Upgrade Service failure notification";
 
     urgency = mkOption {
