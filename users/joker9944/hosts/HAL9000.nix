@@ -46,6 +46,11 @@
       "6, monitor:DP-3, default:true"
       "name:gaming, monitor:DP-2"
     ];
+
+    input = {
+      sensitivity = 0.5;
+      accel_profile = "flat";
+    };
   };
 
   programs.hyprlock.settings.input-field.monitor = "DP-2";

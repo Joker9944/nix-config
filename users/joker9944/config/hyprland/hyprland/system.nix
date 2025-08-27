@@ -51,8 +51,6 @@ utility.custom.mkHyprlandModule config {
 
         follow_mouse = 1;
 
-        sensitivity = 0; # -1.0 - 1.0, 0 means no modification.
-
         # TODO get a feel on laptop
         touchpad = {
           natural_scroll = false;
