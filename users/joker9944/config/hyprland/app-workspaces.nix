@@ -34,6 +34,7 @@ utility.custom.mkHyprlandModule config {
     windowrule = [
       "workspace special:${specialWorkspaces.spotify}, class:Spotify"
       "workspace special:${specialWorkspaces.telegram} silent, class:org.telegram.desktop"
+      "float, class:org.telegram.desktop, title:Media viewer"
       "workspace special:${specialWorkspaces.discord}, class:discord"
     ];
   };
