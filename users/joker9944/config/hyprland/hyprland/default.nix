@@ -18,13 +18,10 @@ utility.custom.mkHyprlandModule config {
     systemd.target = lib.mkIf cfg.systemd.enable "hyprland-session.target";
 
     windowManager.hyprland = {
+      inherit (osConfig.programs.hyprland) package portalPackage;
       enable = true;
 
       systemd.enable = !osConfig.programs.hyprland.withUWSM;
-
-      # Hyprland installed trough NixOS
-      package = null;
-      portalPackage = null;
 
       # WORKAROUND This is a hack to workaround a hack in NixOS
       # See here: https://github.com/NixOS/nixpkgs/pull/297434#issuecomment-2348783988

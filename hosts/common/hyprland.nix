@@ -23,6 +23,7 @@ in
     programs.hyprland = {
       enable = true;
       package = pkgs-hyprland.hyprland;
+      portalPackage = pkgs-hyprland.xdg-desktop-portal-hyprland;
 
       withUWSM = true;
     };
