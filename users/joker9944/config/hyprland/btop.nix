@@ -9,7 +9,7 @@
 let
   inherit (cfg.binds) mods;
   cfg = config.windowManager.hyprland.custom;
-  bin.btop = "${config.programs.btop.package}/bin/btop";
+  bin.btop = lib.getExe config.programs.btop.package;
 in
 utility.custom.mkHyprlandModule config {
   programs.btop = {

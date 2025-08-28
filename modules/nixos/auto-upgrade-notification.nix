@@ -88,13 +88,14 @@ in
         scriptArgs = "%i";
         script =
           let
+            getCoreUtil = exeName: lib.getExe' pkgs.coreutils exeName;
             bin = {
-              who = "${pkgs.coreutils}/bin/who";
-              cut = "${pkgs.coreutils}/bin/cut";
-              sort = "${pkgs.coreutils}/bin/sort";
-              id = "${pkgs.coreutils}/bin/id";
-              sudo = "${pkgs.sudo}/bin/sudo";
-              notify-send = "${pkgs.libnotify}/bin/notify-send";
+              who = getCoreUtil "who";
+              cut = getCoreUtil "cut";
+              sort = getCoreUtil "sort";
+              id = getCoreUtil "id";
+              sudo = lib.getExe pkgs.sudo;
+              notify-send = lib.getExe pkgs.libnotify;
             };
           in
           ''

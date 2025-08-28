@@ -7,8 +7,8 @@
 }:
 let
   bin = {
-    cat = "${pkgs.coreutils}/bin/cat";
-    notify-send = "${pkgs.libnotify}/bin/notify-send";
+    cat = lib.getExe' pkgs.coreutils "cat";
+    notify-send = lib.getExe pkgs.libnotify;
   };
 
   mkPasswordCommand =
@@ -59,6 +59,8 @@ let
 in
 (lib.foldl (acc: cfg: lib.recursiveUpdate acc cfg) { } addressConfigs)
 // {
+  home.packages = [ pkgs.libnotify ];
+
   services.imapnotify = {
     enable = true;
   };

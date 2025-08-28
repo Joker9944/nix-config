@@ -107,20 +107,29 @@
       {
         packages = utility.custom.applyFunctionRecursive ./pkgs (filename: pkgs.callPackage filename { });
 
-        devShells = {
-          default = pkgs.mkShell {
-            name = "flake-dev";
-
-            packages = with pkgs; [
-              home-manager
-              sops
-              age
-              gnome-tweaks
-              dconf-editor
-              nodePackages.cspell
-            ];
+        apps = {
+          cspell = {
+            type = "app";
+            program = lib.getExe pkgs.nodePackages.cspell;
           };
 
+          dconf-editor = {
+            type = "app";
+            program = lib.getExe pkgs.dconf-editor;
+          };
+
+          gnome-tweaks = {
+            type = "app";
+            program = lib.getExe pkgs.gnome-tweaks;
+          };
+
+          home-manager = {
+            type = "app";
+            program = lib.getExe pkgs.home-manager;
+          };
+        };
+
+        devShells = {
           gitHooks = pkgs.mkShell {
             inherit (self.checks.${system}.preCommitHooks) shellHook;
             buildInputs = self.checks.${system}.preCommitHooks.enabledPackages;

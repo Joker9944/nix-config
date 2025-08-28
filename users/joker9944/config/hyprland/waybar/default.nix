@@ -3,15 +3,11 @@
 */
 {
   config,
-  osConfig,
   pkgs,
   pkgs-hyprland,
   utility,
   ...
-}:
-let
-  cfg = config.windowManager.hyprland.custom;
-in
+}@args:
 utility.custom.mkHyprlandModule config {
   home.packages = [
     pkgs.nerd-fonts.symbols-only
@@ -24,8 +20,8 @@ utility.custom.mkHyprlandModule config {
 
     systemd.enable = true;
 
-    settings = import ./settings.main.nix { inherit osConfig cfg pkgs; };
-    style = import ./style.css.nix { inherit cfg; };
+    settings = import ./settings.main.nix args;
+    style = import ./style.css.nix args;
   };
 
   wayland.windowManager.hyprland.settings = {

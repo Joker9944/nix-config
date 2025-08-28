@@ -2,6 +2,7 @@
   * screenshot utility
 */
 {
+  lib,
   config,
   pkgs-hyprland,
   utility,
@@ -9,7 +10,7 @@
 }:
 let
   inherit (config.windowManager.hyprland.custom.binds) mods;
-  bin.hyprshot = "${config.programs.hyprshot.package}/bin/hyprshot";
+  bin.hyprshot = lib.getExe config.programs.hyprshot.package;
 in
 utility.custom.mkHyprlandModule config {
   programs.hyprshot = {

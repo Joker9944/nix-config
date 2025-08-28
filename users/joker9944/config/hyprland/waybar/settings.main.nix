@@ -1,14 +1,16 @@
 {
+  lib,
+  config,
   osConfig,
-  cfg,
   pkgs,
   ...
 }:
 let
+  cfg = config.windowManager.hyprland.custom;
   resourceMonitorInterval = 2;
   bin = {
-    wpctl = "${osConfig.services.pipewire.wireplumber.package}/bin/wpctl";
-    audiomenu = "${pkgs.audiomenu}/bin/audiomenu";
+    wpctl = lib.getExe' osConfig.services.pipewire.wireplumber.package "wpctl";
+    audiomenu = lib.getExe pkgs.audiomenu;
   };
 in
 {

@@ -6,12 +6,10 @@
 }:
 utility.custom.mkHyprlandModule config {
   wayland.windowManager.hyprland.settings = with config.windowManager.hyprland.custom.style; {
-    # Environment variables
-    # https://wiki.hyprland.org/Configuring/Environment-variables/
     env = lib.attrsets.mapAttrsToList (name: value: name + ", " + (toString value)) (
       lib.optionalAttrs (xCursor != null) {
         "XCURSOR_THEME" = xCursor.name;
-        "XCURSOR_SIZE" = if xCursor.size != null then config.gtk.cursorTheme.size else 16;
+        "XCURSOR_SIZE" = if xCursor.size != null then xCursor.size else 16;
       }
     );
 
@@ -20,20 +18,16 @@ utility.custom.mkHyprlandModule config {
       gaps_in = 5;
       gaps_out = 10;
 
-      # https://wiki.hyprland.org/Configuring/Variables/#variable-types for info about colors
-      #"col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
       "col.active_border" = pallet.functional.focus.rgba 0.93;
       "col.inactive_border" = pallet.background.dark.rgba 0.66;
 
       layout = "dwindle";
     };
 
-    # https://wiki.hyprland.org/Configuring/Variables/#decoration
     decoration = {
       inherit (border.corners) rounding;
       rounding_power = border.corners.power;
 
-      # Change transparency of focused and unfocused windows
       active_opacity = opacity.active;
       inactive_opacity = opacity.inactive;
 
@@ -44,7 +38,6 @@ utility.custom.mkHyprlandModule config {
         color = pallet.background.darker.rgba 0.93;
       };
 
-      # https://wiki.hyprland.org/Configuring/Variables/#blur
       blur = {
         enabled = true;
         size = 4;
@@ -55,11 +48,8 @@ utility.custom.mkHyprlandModule config {
       };
     };
 
-    # https://wiki.hyprland.org/Configuring/Variables/#animations
     animations = {
       enabled = "yes, please :)";
-
-      # Default animations, see https://wiki.hyprland.org/Configuring/Animations/ for more
 
       bezier = [
         "easeOutQuint,0.23,1,0.32,1"
@@ -99,18 +89,15 @@ utility.custom.mkHyprlandModule config {
     # windowrule = bordersize 0, floating:0, onworkspace:f[1]
     # windowrule = rounding 0, floating:0, onworkspace:f[1]
 
-    # See https://wiki.hyprland.org/Configuring/Dwindle-Layout/ for more
     dwindle = {
       pseudotile = true;
       preserve_split = true;
     };
 
-    # See https://wiki.hyprland.org/Configuring/Master-Layout/ for more
     master = {
       new_status = "master";
     };
 
-    # https://wiki.hyprland.org/Configuring/Variables/#misc
     misc = {
       disable_hyprland_logo = true;
       background_color = pallet.background.normal.rgb;

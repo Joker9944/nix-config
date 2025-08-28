@@ -10,8 +10,8 @@ let
   inherit (config.windowManager.hyprland.custom.binds) mods;
   pkg.playerctl = pkgs-hyprland.playerctl;
   bin = {
-    wpctl = "${osConfig.services.pipewire.wireplumber.package}/bin/wpctl";
-    playerctl = "${pkg.playerctl}/bin/playerctl";
+    wpctl = lib.getExe' osConfig.services.pipewire.wireplumber.package "wpctl";
+    playerctl = lib.getExe pkg.playerctl;
   };
 in
 utility.custom.mkHyprlandModule config {

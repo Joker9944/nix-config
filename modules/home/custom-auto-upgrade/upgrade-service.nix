@@ -126,7 +126,7 @@ in
 
           ExecStart =
             let
-              bin.home-manager = "${pkgs.home-manager}/bin/home-manager";
+              bin.home-manager = lib.getExe pkgs.home-manager;
               scriptPath = pkgs.writeShellScript "home-manager-upgrade-start" ''
                 set -e
                 ${bin.home-manager} switch ${toString cfg.flags}

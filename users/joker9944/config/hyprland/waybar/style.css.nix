@@ -1,5 +1,5 @@
-{ cfg, ... }:
-with cfg.style;
+{ config, ... }:
+with config.windowManager.hyprland.custom.style;
 ''
   window#waybar {
     background-color: ${pallet.background.normal.rgba opacity.active};

@@ -12,7 +12,7 @@ let
 
   script =
     let
-      bin.socat = "${cfg.socat.package}/bin/socat";
+      bin.socat = lib.getExe cfg.socat.package;
 
       functions = lib.concatLines (
         lib.map (entry: ''

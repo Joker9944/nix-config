@@ -2,6 +2,7 @@
   * terminal
 */
 {
+  lib,
   config,
   pkgs-hyprland,
   utility,
@@ -10,7 +11,7 @@
 let
   inherit (cfg.binds) mods;
   cfg = config.windowManager.hyprland.custom;
-  bin.kitty = "${config.programs.kitty.package}/bin/kitty";
+  bin.kitty = lib.getExe config.programs.kitty.package;
 in
 utility.custom.mkHyprlandModule config {
   imports = utility.custom.ls.lookup {

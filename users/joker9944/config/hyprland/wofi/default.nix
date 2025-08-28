@@ -16,11 +16,11 @@ let
   cfg = config.windowManager.hyprland.custom;
   pkg.wl-clipboard = pkgs-hyprland.wl-clipboard;
   bin = {
-    pkill = "${pkgs.procps}/bin/pkill";
-    wl-paste = "${pkg.wl-clipboard}/bin/wl-paste";
-    wl-copy = "${pkg.wl-clipboard}/bin/wl-copy";
-    cliphist = "${config.services.cliphist.package}/bin/cliphist";
-    wofi = "${config.programs.wofi.package}/bin/wofi";
+    pkill = lib.getExe' pkgs.procps "pkill";
+    wl-paste = lib.getExe' pkg.wl-clipboard "wl-paste";
+    wl-copy = lib.getExe' pkg.wl-clipboard "wl-copy";
+    cliphist = lib.getExe config.services.cliphist.package;
+    wofi = lib.getExe config.programs.wofi.package;
   };
 in
 utility.custom.mkHyprlandModule config {

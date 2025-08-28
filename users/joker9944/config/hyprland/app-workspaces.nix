@@ -1,4 +1,5 @@
 {
+  lib,
   config,
   pkgs,
   utility,
@@ -12,10 +13,10 @@ let
     telegram = "telegram";
   };
   bin = {
-    pgrep = "${pkgs.procps}/bin/pgrep";
-    discord = "${config.programs.discord.package}/bin/discord";
-    spotify = "${config.programs.spotify.package}/bin/spotify";
-    telegram = "${config.programs.telegram.package}/bin/telegram-desktop";
+    pgrep = lib.getExe' pkgs.procps "pgrep";
+    discord = lib.getExe config.programs.discord.package;
+    spotify = lib.getExe config.programs.spotify.package;
+    telegram = lib.getExe config.programs.telegram.package;
   };
 in
 utility.custom.mkHyprlandModule config {

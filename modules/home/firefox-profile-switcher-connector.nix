@@ -1,10 +1,9 @@
-{ pkgs, ... }:
-with pkgs;
+{ lib, pkgs, ... }:
 let
-  firefoxBin = "${firefox}/bin/firefox";
+  bin.firefox = lib.getExe pkgs.firefox;
 in
 {
   xdg.configFile."firefoxprofileswitcher/config.json".text = ''
-    {"browser_binary": "${firefoxBin}"}
+    {"browser_binary": "${bin.firefox}"}
   '';
 }

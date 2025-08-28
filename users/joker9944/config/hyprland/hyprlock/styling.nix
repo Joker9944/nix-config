@@ -18,7 +18,6 @@ utility.custom.mkHyprlandModule config {
     };
 
     background = {
-      #monitor =
       path = "screenshot";
       blur_passes = 3;
     };
@@ -29,7 +28,6 @@ utility.custom.mkHyprlandModule config {
       size = "20%, 5%";
       outline_thickness = border.size;
 
-      #inner_color = "rgba(0, 0, 0, 0.0)"; # no fill
       inner_color = pallet.background.normal.rgba 0.93;
       outer_color = pallet.functional.focus.rgba 0.93;
       check_color = pallet.functional.info.rgba 0.93;

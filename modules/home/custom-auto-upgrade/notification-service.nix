@@ -80,19 +80,15 @@ in
 
           ExecStart =
             let
-              bin = {
-                notify-send = "${pkgs.libnotify}/bin/notify-send";
-              };
-            in
-            toString (
-              pkgs.writeShellScript "home-manager-upgrade-notify_-start" ''
+              bin.notify-send = lib.getExe pkgs.libnotify;
+              scriptPath = pkgs.writeShellScript "home-manager-upgrade-notify_-start" ''
                 set -e
 
                 instance=$1
                 ${bin.notify-send} --app-name="${cfg.name}" --urgency=${cfg.urgency} --icon="${cfg.icon}" "${cfg.summary}" "${cfg.body}"
-              ''
-            )
-            + " %i";
+              '';
+            in
+            "${toString scriptPath} %i";
         };
       };
     };

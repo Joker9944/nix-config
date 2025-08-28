@@ -2,6 +2,7 @@
   * idle management daemon
 */
 {
+  lib,
   config,
   osConfig,
   pkgs,
@@ -12,11 +13,11 @@
 let
   inherit (config.windowManager.hyprland.custom.binds) mods;
   bin = {
-    pkill = "${pkgs.procps}/bin/pkill";
-    hyprlock = "${config.programs.hyprlock.package}/bin/hyprlock";
-    hyprctl = "${osConfig.programs.hyprland.package}/bin/hyprctl";
-    loginctl = "${pkgs.systemd}/bin/loginctl";
-    systemctl = "${pkgs.systemd}/bin/systemctl";
+    pkill = lib.getExe' pkgs.procps "pkill";
+    hyprlock = lib.getExe config.programs.hyprlock.package;
+    hyprctl = lib.getExe' osConfig.programs.hyprland.package "hyprctl";
+    loginctl = lib.getExe' pkgs.systemd "loginctl";
+    systemctl = lib.getExe' pkgs.systemd "systemctl";
   };
 in
 utility.custom.mkHyprlandModule config {

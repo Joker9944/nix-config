@@ -66,7 +66,7 @@ utility.custom.mkHyprlandModule config {
     # Windows and workspaces
     windowrule =
       let
-        maximizeRegex = lib.concatStringsSep "|" cfg.allowMaximized;
+        maximizeRegex = "(${lib.concatStringsSep "|" cfg.allowMaximized})";
       in
       [
         # Fix some dragging issues with XWayland
@@ -75,6 +75,6 @@ utility.custom.mkHyprlandModule config {
       # Ignore maximize requests from apps. You'll probably like this.
       ++ lib.optional (
         lib.length cfg.allowMaximized > 0
-      ) "suppressevent maximize, class:negative:(${maximizeRegex})";
+      ) "suppressevent maximize, class:negative:${maximizeRegex}";
   };
 }

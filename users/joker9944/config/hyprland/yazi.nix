@@ -2,6 +2,7 @@
   * file explorer
 */
 {
+  lib,
   config,
   pkgs-hyprland,
   utility,
@@ -10,7 +11,7 @@
 let
   inherit (cfg.binds) mods;
   cfg = config.windowManager.hyprland.custom;
-  bin.yazi = "${config.programs.yazi.package}/bin/yazi";
+  bin.yazi = lib.getExe config.programs.yazi.package;
 in
 utility.custom.mkHyprlandModule config {
   programs.yazi = {
