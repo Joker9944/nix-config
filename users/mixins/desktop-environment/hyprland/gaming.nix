@@ -4,6 +4,7 @@ let
   regexes = [
     "steam_app_\\d+"
     "gamescope"
+    "class:forgedalliance.exe" # cSpell:ignore forgedalliance
   ];
 in
 mkHyprlandModule {

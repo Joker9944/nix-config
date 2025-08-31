@@ -32,6 +32,15 @@
         path = "homework";
       };
     };
+
+    faf = {
+      enable = true;
+      wine.prefixCommands = [ "gamemoderun" ];
+      steam = {
+        enable = true;
+        library.path = "/mnt/games/SteamLibrary";
+      };
+    };
   };
 
   gnome-settings = lib.mkIf config.mixins.desktopEnvironment.gnome.enable {
