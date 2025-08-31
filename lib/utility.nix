@@ -3,6 +3,8 @@ let
   mkIndentPrefix = count: lib.concatStrings (lib.genList (_: " ") count);
 in
 rec {
+  wrapWine = import ./wrapWine.nix { inherit lib; };
+
   indent = count: str: (mkIndentPrefix count) + str;
 
   indentLines =

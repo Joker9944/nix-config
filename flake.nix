@@ -202,6 +202,10 @@
                 };
               };
         };
+
+        "downlords-faf-client" = final: prev: {
+          inherit (self.packages.${prev.system}) downlords-faf-client;
+        };
       };
 
       # Turn this into a custom function

@@ -50,6 +50,16 @@ in
   };
 
   programs = {
+    # TEST
+    faf = {
+      enable = true;
+      wine.prefixCommands = [ "gamemoderun" ];
+      steam = {
+        enable = true;
+        library.path = "/mnt/games/SteamLibrary";
+      };
+    };
+
     bash.enable = true;
 
     vscode.enable = true;
