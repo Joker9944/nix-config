@@ -60,10 +60,12 @@ in
     };
 
     appSwitching = mkOption {
-      type = types.nullOr types.enum [
-        "all-workspaces"
-        "current-workspace"
-      ];
+      type = types.nullOr (
+        types.enum [
+          "all-workspaces"
+          "current-workspace"
+        ]
+      );
       default = null;
       description = ''
         Should the app switcher include apps from all workspaces or the current workspace only
@@ -83,8 +85,9 @@ in
         workspaces-only-on-primary = lib.mkIf (cfg.multiMonitor != null) cfg.multiMonitor == "primary-only";
       };
 
-      "org/gnome/desktop/wm/preferences" = {
-        num-workspaces = lib.mkIf (cfg.workspaces == "fixed") cfg.numberOfWorkspaces;
+      # TODO this ´lib.mkIf´ is a hack to get this to work, find a way to directly pass null.
+      "org/gnome/desktop/wm/preferences" = lib.mkIf (cfg.numberOfWorkspaces != null) {
+        num-workspaces = cfg.numberOfWorkspaces;
       };
 
       "org/gnome/shell/app-switcher" = {
