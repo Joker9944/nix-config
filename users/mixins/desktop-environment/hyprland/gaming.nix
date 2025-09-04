@@ -4,7 +4,9 @@ let
   regexes = [
     "steam_app_\\d+"
     "gamescope"
-    "class:forgedalliance.exe" # cSpell:ignore forgedalliance
+    "forgedalliance.exe" # cSpell:ignore forgedalliance
+    "explorer.exe"
+    "com.faforever.client.FafClientApplication"
   ];
 in
 mkHyprlandModule {
