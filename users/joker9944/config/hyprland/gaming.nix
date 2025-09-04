@@ -9,12 +9,16 @@ utility.custom.mkHyprlandModule config {
   windowManager.hyprland.custom.system.allowMaximized = [
     "steam_app_.+"
     "forgedalliance.exe"
+    "explorer.exe"
+    "com.faforever.client.FafClientApplication"
   ];
 
   wayland.windowManager.hyprland.settings = {
     windowrule = [
       "content game, class:steam_app_.+"
       "content game, class:forgedalliance.exe"
+      "content game, class:explorer.exe"
+      "content game, class:com.faforever.client.FafClientApplication"
     ]
     ++ (lib.map (rule: "${rule}, content:game") [
       "noanim 1"
