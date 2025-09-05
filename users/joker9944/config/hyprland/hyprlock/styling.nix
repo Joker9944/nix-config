@@ -43,20 +43,25 @@ utility.custom.mkHyprlandModule config {
       valign = "center";
     };
 
-    image = let
-      inputFieldCfg = config.programs.hyprlock.settings.input-field;
-    in [
-      ({
-        # User avatar
-        path = "${custom.assets.images.profile.the-seer."512x512"}/share/profile/the-seer.512x512.jpg";
+    image =
+      let
+        inputFieldCfg = config.programs.hyprlock.settings.input-field;
+      in
+      [
+        (
+          {
+            # User avatar
+            path = "${custom.assets.images.profile.the-seer."512x512"}/share/profile/the-seer.512x512.jpg";
 
-        border_size = border.size;
-        border_color = pallet.background.normal.rgba 0.93;
+            border_size = border.size;
+            border_color = pallet.background.normal.rgba 0.93;
 
-        size = "150";
-        position = "0, 130";
-      } // lib.optionalAttrs (lib.hasAttr "monitor" inputFieldCfg) {inherit (inputFieldCfg) monitor;})
-    ];
+            size = "150";
+            position = "0, 130";
+          }
+          // lib.optionalAttrs (lib.hasAttr "monitor" inputFieldCfg) { inherit (inputFieldCfg) monitor; }
+        )
+      ];
 
     label = [
       {

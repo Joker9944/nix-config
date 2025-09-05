@@ -33,6 +33,7 @@
     peripherals.touchpad.enable = false;
   };
 
+  # Hyprland
   wayland.windowManager.hyprland.settings = {
     monitor = [
       "DP-1, 1920x1080@60.00Hz, 0x0, 1"
@@ -52,6 +53,8 @@
       accel_profile = "flat";
     };
   };
+
+  windowManager.hyprland.custom.waybar.gpu = true;
 
   programs.hyprlock.settings.input-field.monitor = "DP-2";
 }

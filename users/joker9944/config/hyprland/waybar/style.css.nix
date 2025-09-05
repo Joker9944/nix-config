@@ -8,7 +8,7 @@ with config.windowManager.hyprland.custom.style;
 
   /* general styles */
 
-  #workspaces, #clock, #cpu-group, #gpu-group, #memory-group, #disk-group, #network-group, #volume-group {
+  #workspaces, #clock, #cpu-group, #gpu-group, #memory-group, #disk-group, #network-group, #volume-group, #battery-group {
     font-weight: bold;
     padding: 0 3px;
     margin: 0 5px;
@@ -34,12 +34,12 @@ with config.windowManager.hyprland.custom.style;
     background-color: @error_color;
   }
 
-  #custom-cpu-label, #custom-gpu-label, #custom-memory-label, #custom-disk-label, #custom-network-label, #custom-volume-label {
+  #custom-cpu-label, #custom-gpu-label, #custom-memory-label, #custom-disk-label, #custom-network-label, #custom-volume-label, #custom-battery-label {
     padding-right: 3px;
     margin-right: 1px;
   }
 
-  #cpu, #custom-gpu, #memory, #disk, #network, #wireplumber {
+  #cpu, #custom-gpu, #memory, #disk, #network, #wireplumber, #battery {
     font-weight: normal;
     padding-left: 3px;
     margin-left: 1px;

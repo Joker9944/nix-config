@@ -17,14 +17,18 @@ in
   main = {
     modules-left = [ "hyprland/workspaces" ];
     modules-center = [ "clock" ];
+
     modules-right = [
       "group/cpu-group"
-      "group/gpu-group"
+    ]
+    ++ (lib.optional cfg.waybar.gpu "group/gpu-group")
+    ++ [
       "group/memory-group"
       "group/disk-group"
       "group/network-group"
       "group/volume-group"
-    ];
+    ]
+    ++ (lib.optional cfg.waybar.battery "group/battery-group");
 
     clock = {
       interval = 1;
@@ -148,6 +152,24 @@ in
         "custom/volume-label"
         "wireplumber"
       ];
+    };
+
+    "group/battery-group" = {
+      orientation = "horizontal";
+      modules = [
+        "custom/battery-label"
+        "battery"
+      ];
+    };
+
+    "custom/battery-label" = {
+      format = "Chrg";
+    };
+
+    battery = {
+      interval = resourceMonitorInterval;
+      format = "{capacity:>3}%";
+      max-length = 4;
     };
   };
 }
