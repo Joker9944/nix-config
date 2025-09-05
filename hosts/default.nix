@@ -107,7 +107,7 @@ in
   console.useXkbConfig = true;
 
   # Set default desktop environment
-  desktopEnvironment.gnome.enable = lib.mkDefault true;
+  desktopEnvironment.hyprland.enable = lib.mkDefault true;
 
   # Enable default programs
   programs = {

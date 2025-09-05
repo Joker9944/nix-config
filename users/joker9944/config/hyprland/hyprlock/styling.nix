@@ -43,10 +43,11 @@ utility.custom.mkHyprlandModule config {
       valign = "center";
     };
 
-    image = [
-      {
+    image = let
+      inputFieldCfg = config.programs.hyprlock.settings.input-field;
+    in [
+      ({
         # User avatar
-        inherit (config.programs.hyprlock.settings.input-field) monitor;
         path = "${custom.assets.images.profile.the-seer."512x512"}/share/profile/the-seer.512x512.jpg";
 
         border_size = border.size;
@@ -54,7 +55,7 @@ utility.custom.mkHyprlandModule config {
 
         size = "150";
         position = "0, 130";
-      }
+      } // lib.optionalAttrs (lib.hasAttr "monitor" inputFieldCfg) {inherit (inputFieldCfg) monitor;})
     ];
 
     label = [

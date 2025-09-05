@@ -5,11 +5,6 @@
     exclude = [ ./default.nix ];
   };
 
-  desktopEnvironment = {
-    hyprland.enable = true;
-    gnome.enable = false;
-  };
-
   boot = {
     windowsSupport.enable = true;
     loader.limine.style.interface.brandingColor = 1; # red

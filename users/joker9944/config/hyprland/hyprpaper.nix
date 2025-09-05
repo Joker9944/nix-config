@@ -2,6 +2,7 @@
   * wallpaper management daemon
 */
 {
+  lib,
   config,
   pkgs-hyprland,
   utility,
@@ -18,7 +19,7 @@ utility.custom.mkHyprlandModule config {
     enable = true;
     package = pkgs-hyprland.hyprpaper;
 
-    settings = {
+    settings = lib.mkDefault {
       preload = [ wallpaper ];
 
       wallpaper = [ ", ${wallpaper}" ];
