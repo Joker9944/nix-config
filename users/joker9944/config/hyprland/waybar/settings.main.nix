@@ -163,7 +163,7 @@ in
     };
 
     "custom/battery-label" = {
-      format = "Chrg";
+      format = "Chrg"; # cSpell:ignore chrg
     };
 
     battery = {

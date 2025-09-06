@@ -8,14 +8,15 @@
 }:
 let
   inherit (config.windowManager.hyprland.custom.binds) mods;
-  pkg.playerctl = pkgs-hyprland.playerctl;
+  pkg = { inherit (pkgs-hyprland) brightnessctl playerctl; };
   bin = {
     wpctl = lib.getExe' osConfig.services.pipewire.wireplumber.package "wpctl";
+    brightnessctl = lib.getExe pkg.brightnessctl;
     playerctl = lib.getExe pkg.playerctl;
   };
 in
 utility.custom.mkHyprlandModule config {
-  home.packages = [ pkg.playerctl ]; # media applications control utility
+  home.packages = lib.attrValues pkg; # media applications control utility
 
   wayland.windowManager.hyprland.settings = {
     bind = [
@@ -35,6 +36,10 @@ utility.custom.mkHyprlandModule config {
       # Example special workspace (scratchpad)
       "${mods.main}, S, togglespecialworkspace, magic"
       "${mods.workspace}, S, movetoworkspace, special:magic"
+
+      # Multimedia keys
+      ", XF86AudioMute, exec, ${bin.wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle"
+      ", XF86AudioMicMute, exec, ${bin.wpctl} set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
     ]
     ++ (lib.lists.flatten (
       lib.lists.genList (
@@ -62,10 +67,8 @@ utility.custom.mkHyprlandModule config {
       # Laptop multimedia keys for volume and LCD brightness
       ", XF86AudioRaiseVolume, exec, ${bin.wpctl} set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"
       ", XF86AudioLowerVolume, exec, ${bin.wpctl} set-volume @DEFAULT_AUDIO_SINK@ 5%-"
-      ", XF86AudioMute, exec, ${bin.wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle" # TODO does this make sense to repeat?
-      ", XF86AudioMicMute, exec, ${bin.wpctl} set-mute @DEFAULT_AUDIO_SOURCE@ toggle" # TODO does this make sense to repeat?
-      ", XF86MonBrightnessUp, exec, brightnessctl -e4 -n2 set 5%+" # TODO brightnessctl missing
-      ", XF86MonBrightnessDown, exec, brightnessctl -e4 -n2 set 5%-" # TODO brightnessctl missing
+      ", XF86MonBrightnessUp, exec, ${bin.brightnessctl} -e4 -n2 set 5%+"
+      ", XF86MonBrightnessDown, exec, ${bin.brightnessctl} -e4 -n2 set 5%-"
     ];
 
     bindl = [
