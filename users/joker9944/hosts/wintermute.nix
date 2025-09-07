@@ -11,10 +11,6 @@
     xwayland = {
       force_zero_scaling = true;
     };
-
-    env = [
-      "GDK_SCALE,2"
-    ];
   };
 
   services.hyprpaper.settings =
@@ -29,5 +25,12 @@
       wallpaper = [ ", ${wallpaper}" ];
     };
 
-  windowManager.hyprland.custom.waybar.battery = true;
+  windowManager.hyprland.custom = {
+    system.environment = {
+      NIXOS_OZONE = 1;
+      GDK_SCALE = 2;
+    };
+
+    waybar.battery = true;
+  };
 }

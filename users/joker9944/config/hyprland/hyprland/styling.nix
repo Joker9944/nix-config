@@ -3,39 +3,40 @@
   config,
   utility,
   ...
-}:
+}: let
+  cfg = config.windowManager.hyprland.custom.style;
+in
 utility.custom.mkHyprlandModule config {
-  wayland.windowManager.hyprland.settings = with config.windowManager.hyprland.custom.style; {
-    env = lib.attrsets.mapAttrsToList (name: value: name + ", " + (toString value)) (
-      lib.optionalAttrs (xCursor != null) {
-        "XCURSOR_THEME" = xCursor.name;
-        "XCURSOR_SIZE" = if xCursor.size != null then xCursor.size else 16;
-      }
-    );
+  windowManager.hyprland.custom.system.environment = lib.mkIf (cfg.xCursor != null) {
+    XCURSOR_THEME = cfg.xCursor.name;
+    XCURSOR_SIZE = if cfg.xCursor.size != null then cfg.xCursor.size else 16;
+  };
+
+  wayland.windowManager.hyprland.settings =  {
 
     general = {
-      border_size = border.size;
+      border_size = cfg.border.size;
       gaps_in = 5;
       gaps_out = 10;
 
-      "col.active_border" = pallet.functional.focus.rgba 0.93;
-      "col.inactive_border" = pallet.background.dark.rgba 0.66;
+      "col.active_border" = cfg.pallet.functional.focus.rgba 0.93;
+      "col.inactive_border" = cfg.pallet.background.dark.rgba 0.66;
 
       layout = "dwindle";
     };
 
     decoration = {
-      inherit (border.corners) rounding;
-      rounding_power = border.corners.power;
+      inherit (cfg.border.corners) rounding;
+      rounding_power = cfg.border.corners.power;
 
-      active_opacity = opacity.active;
-      inactive_opacity = opacity.inactive;
+      active_opacity = cfg.opacity.active;
+      inactive_opacity = cfg.opacity.inactive;
 
       shadow = {
         enabled = true;
         range = 4;
         render_power = 3;
-        color = pallet.background.darker.rgba 0.93;
+        color = cfg.pallet.background.darker.rgba 0.93;
       };
 
       blur = {
@@ -100,7 +101,7 @@ utility.custom.mkHyprlandModule config {
 
     misc = {
       disable_hyprland_logo = true;
-      background_color = pallet.background.normal.rgb;
+      background_color = cfg.pallet.background.normal.rgb;
     };
   };
 }

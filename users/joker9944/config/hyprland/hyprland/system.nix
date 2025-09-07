@@ -10,6 +10,26 @@ let
 in
 utility.custom.mkHyprlandModule config {
   options.windowManager.hyprland.custom.system = with lib; {
+    environment = mkOption {
+      type = types.attrsOf (
+        types.oneOf [
+          types.str
+          types.int
+          types.bool
+        ]
+      );
+      default = { };
+      example = literalExpression ''
+        {
+          GDK_SCALE = 2;
+          NIXOS_OZONE_WL = 1;
+        }
+      '';
+      description = ''
+        Environment variables templated into Hyprland `env`.
+      '';
+    };
+
     allowMaximized = mkOption {
       type = types.listOf types.str;
       default = [ ];
@@ -22,6 +42,8 @@ utility.custom.mkHyprlandModule config {
 
   config.wayland.windowManager.hyprland.settings = {
     monitor = lib.mkDefault [ ",preferred,auto,auto" ];
+
+    env = lib.attrsets.mapAttrsToList (name: value: "${name}, ${toString value}") cfg.environment;
 
     # Permissions
     # TODO set this up
