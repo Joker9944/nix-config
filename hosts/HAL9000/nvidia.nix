@@ -1,9 +1,19 @@
 {
+  lib,
   config,
   pkgs,
   ...
 }:
 {
+  custom.nixpkgsCompat = {
+    allowUnfreePackages = [
+      "nvidia-x11"
+      "nvidia-settings"
+    ];
+
+    allowUnfreeLicenses = [ lib.licenses.nvidiaCuda ];
+  };
+
   # TODO investigate if this is properly setup
 
   # GPU driver

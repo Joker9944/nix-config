@@ -32,6 +32,17 @@ in
     };
   };
 
+  # Since NixOS system config is reused unfree packages have to be configured here, not optimal but an exactable trade off
+  custom.nixpkgsCompat.allowUnfreePackages = [
+    "discord"
+    "spotify"
+    "idea-ultimate"
+    "pycharm-professional"
+    "webstorm"
+    "lens-desktop"
+    "vscode-extension-ms-vscode-remote-remote-containers"
+  ];
+
   # WORKAROUND Setting the profile avatar from home manager using the AccountsService is not documented so this has to suffice
   systemd.tmpfiles.rules = lib.mkIf config.desktopEnvironment.gnome.enable [
     "f+ /var/lib/AccountsService/users/${username}  0600 root root - [User]\\nSession=\\nIcon=/var/lib/AccountsService/icons/${username}\\nSystemAccount=false\\n"

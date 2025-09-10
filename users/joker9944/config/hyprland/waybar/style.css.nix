@@ -1,5 +1,6 @@
 { config, ... }:
 with config.windowManager.hyprland.custom.style;
+# TODO make derivation with jinja to template this
 ''
   window#waybar {
     background-color: ${pallet.background.normal.rgba opacity.active};

@@ -4,6 +4,11 @@
   ...
 }:
 {
+  custom.nixpkgsCompat.allowUnfreePackages = [
+    "1password"
+    "1password-cli"
+  ];
+
   programs = {
     _1password.enable = true;
 

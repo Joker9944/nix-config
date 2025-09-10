@@ -1,45 +1,33 @@
 {
   inputs,
-  utility,
-  overlays,
   homeModules,
 }:
-osConfig:
-{ system, ... }@args:
+nixosSystem: args:
 let
+  inherit (inputs.nixpkgs) lib;
+
   usersPath = ../users;
+
+  osConfig = nixosSystem.config;
+  inherit (nixosSystem._module) specialArgs;
 in
 inputs.home-manager.lib.homeManagerConfiguration {
-  pkgs = inputs.nixpkgs.legacyPackages.${system};
+  inherit (nixosSystem) pkgs;
 
   extraSpecialArgs = {
-    inherit inputs utility osConfig;
+    inherit (specialArgs) inputs utility;
+    inherit osConfig;
 
-    pkgs-unstable = import inputs.nixpkgs-unstable {
-      inherit system overlays;
-      # TODO find a way to configure this somewhere else
-      config.allowUnfree = true;
-    };
-    pkgs-hyprland = inputs.hyprland.inputs.nixpkgs.legacyPackages.${system};
-
-    custom = {
+    custom = lib.recursiveUpdate specialArgs.custom {
       config = args;
-
-      assets = inputs.nix-assets.packages.${system} // {
-        inherit (inputs.nix-assets) palettes;
-      };
     };
-  };
+  }
+  // (lib.mapAttrs (
+    name: _: nixosSystem._module.args.${name}
+  ) osConfig.custom.nixpkgsCompat.additionalNixpkgsInstances);
 
   modules = [
     usersPath
   ]
-  ++ homeModules
-  ++ [
-    (_: {
-      # TODO find a way to configure this somewhere else
-      nixpkgs.overlays = overlays;
-      nixpkgs.config.allowUnfree = true;
-    })
-  ];
+  ++ homeModules;
 }

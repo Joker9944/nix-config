@@ -58,6 +58,15 @@
     let
       inherit (nixpkgs) lib;
 
+      importFiles =
+        files:
+        lib.listToAttrs (
+          lib.map (filepath: {
+            name = lib.strings.removeSuffix ".nix" (baseNameOf filepath);
+            value = import filepath;
+          }) files
+        );
+
       nixosModules = [
         inputs.disko.nixosModules.disko
         inputs.sops-nix.nixosModules.sops
@@ -91,12 +100,7 @@
       };
 
       mkHomeConfiguration = import ./lib/mkHomeConfiguration.nix {
-        inherit
-          inputs
-          utility
-          homeModules
-          overlays
-          ;
+        inherit inputs homeModules;
       };
     in
     inputs.flake-utils.lib.eachDefaultSystem (
@@ -204,30 +208,16 @@
         };
       };
 
-      # Turn this into a custom function
-      nixosModules = lib.listToAttrs (
-        lib.map
-          (filepath: {
-            name = lib.strings.removeSuffix ".nix" (baseNameOf filepath);
-            value = import filepath;
-          })
-          (
-            utility.custom.ls.lookup {
-              dir = ./modules/nixos;
-            }
-          )
+      nixosModules = importFiles (
+        utility.custom.ls.lookup {
+          dir = ./modules/nixos;
+        }
       );
-      homeModules = lib.listToAttrs (
-        lib.map
-          (filepath: {
-            name = lib.strings.removeSuffix ".nix" (baseNameOf filepath);
-            value = import filepath;
-          })
-          (
-            utility.custom.ls.lookup {
-              dir = ./modules/home;
-            }
-          )
+
+      homeModules = importFiles (
+        utility.custom.ls.lookup {
+          dir = ./modules/home;
+        }
       );
 
       nixosConfigurations = lib.attrsets.listToAttrs (
@@ -256,20 +246,16 @@
         lib.lists.map
           (cfg: {
             name = cfg.username + "@" + cfg.hostname;
-            value = mkHomeConfiguration self.nixosConfigurations.${cfg.hostname}.config cfg;
+            value = mkHomeConfiguration self.nixosConfigurations.${cfg.hostname} cfg;
           })
           [
             {
-              system = "x86_64-linux";
               hostname = "HAL9000";
               username = "joker9944";
-              resolution = "2560x1440";
             }
             {
-              system = "x86_64-linux";
               hostname = "wintermute";
               username = "joker9944";
-              resolution = "3840x2160";
             }
           ]
       );

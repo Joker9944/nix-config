@@ -14,7 +14,7 @@
 let
   inherit (cfg.binds) mods;
   cfg = config.windowManager.hyprland.custom;
-  pkg.wl-clipboard = pkgs-hyprland.wl-clipboard;
+  pkg = { inherit (pkgs-hyprland) wl-clipboard; };
   bin = {
     pkill = lib.getExe' pkgs.procps "pkill";
     wl-paste = lib.getExe' pkg.wl-clipboard "wl-paste";

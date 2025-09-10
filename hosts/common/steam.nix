@@ -7,6 +7,11 @@
 }:
 {
   config = lib.mkIf config.programs.steam.enable {
+    custom.nixpkgsCompat.allowUnfreePackages = [
+      "steam"
+      "steam-unwrapped"
+    ];
+
     programs = {
       steam = {
         remotePlay.openFirewall = true;

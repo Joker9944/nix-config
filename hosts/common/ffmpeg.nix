@@ -13,6 +13,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    custom.nixpkgsCompat.allowUnfreePackages = [ "ffmpeg" ];
+
     environment.systemPackages = with pkgs; [
       (ffmpeg.override {
         withUnfree = true;

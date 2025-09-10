@@ -9,44 +9,34 @@
   usernames,
   ...
 }@args:
-with inputs.nixpkgs.lib;
 let
+  inherit (inputs.nixpkgs) lib;
+
   hostsPath = ../hosts;
   usersPath = ../users;
 
-  usersNixosModulePaths = map userNixosModulePath usernames;
-  userNixosModulePath = username: path.append usersPath "${username}/nixos.nix";
+  usersNixosModulePaths = lib.map userNixosModulePath usernames;
+  userNixosModulePath = username: lib.path.append usersPath "${username}/nixos.nix";
 in
-nixosSystem {
+lib.nixosSystem {
   inherit system;
 
   specialArgs = {
     inherit inputs utility;
 
-    pkgs-unstable = import inputs.nixpkgs-unstable {
-      inherit system overlays;
-      # TODO find a way to configure this somewhere else
-      config.allowUnfree = true;
-    };
-    pkgs-hyprland = inputs.hyprland.inputs.nixpkgs.legacyPackages.${system};
-
     custom = {
       config = args;
 
-      assets = inputs.nix-assets.packages.${system};
+      assets = inputs.nix-assets.packages.${system} // {
+        inherit (inputs.nix-assets) palettes;
+      };
     };
   };
 
   modules = [
     hostsPath
+    (_: { nixpkgs.overlays = overlays; })
   ]
   ++ nixosModules
-  ++ usersNixosModulePaths
-  ++ [
-    (_: {
-      # TODO find a way to configure this somewhere else
-      nixpkgs.overlays = overlays;
-      nixpkgs.config.allowUnfree = true;
-    })
-  ];
+  ++ usersNixosModulePaths;
 }

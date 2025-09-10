@@ -3,7 +3,8 @@
   config,
   utility,
   ...
-}: let
+}:
+let
   cfg = config.windowManager.hyprland.custom.style;
 in
 utility.custom.mkHyprlandModule config {
@@ -12,7 +13,7 @@ utility.custom.mkHyprlandModule config {
     XCURSOR_SIZE = if cfg.xCursor.size != null then cfg.xCursor.size else 16;
   };
 
-  wayland.windowManager.hyprland.settings =  {
+  wayland.windowManager.hyprland.settings = {
 
     general = {
       border_size = cfg.border.size;
