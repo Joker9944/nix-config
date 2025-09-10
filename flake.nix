@@ -75,7 +75,7 @@
 
       homeModules = [
         inputs.sops-nix.homeManagerModules.sops
-        inputs.plasma-manager.homeManagerModules.plasma-manager
+        inputs.plasma-manager.homeModules.plasma-manager
       ]
       ++ (lib.mapAttrsToList (_: value: value) self.homeModules);
 
