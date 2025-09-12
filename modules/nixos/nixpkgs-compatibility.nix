@@ -75,10 +75,7 @@
         else
           [ pkg.meta.license.shortName ];
 
-      allowUnfreePackagesByLicense = pkg: all (lib.map isLicenseAllowed (getLicenses pkg));
-
-      any = lib.foldr (elem: acc: elem || acc) false;
-      all = lib.foldr (elem: acc: elem && acc) true;
+      allowUnfreePackagesByLicense = pkg: lib.all isLicenseAllowed (getLicenses pkg);
     in
     {
       custom.nixpkgsCompat.allowUnfreePredicates = [
@@ -87,7 +84,7 @@
       ];
 
       nixpkgs.config.allowUnfreePredicate =
-        pkg: any (lib.map (predicate: predicate pkg) cfg.allowUnfreePredicates);
+        pkg: lib.any (predicate: predicate pkg) cfg.allowUnfreePredicates;
 
       _module.args = lib.mapAttrs (
         _: nixpkgsInstance:

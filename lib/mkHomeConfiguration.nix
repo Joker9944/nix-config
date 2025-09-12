@@ -26,8 +26,5 @@ inputs.home-manager.lib.homeManagerConfiguration {
     name: _: nixosSystem._module.args.${name}
   ) osConfig.custom.nixpkgsCompat.additionalNixpkgsInstances);
 
-  modules = [
-    usersPath
-  ]
-  ++ homeModules;
+  modules = [ usersPath ] ++ homeModules;
 }
