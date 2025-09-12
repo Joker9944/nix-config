@@ -5,7 +5,7 @@
   ...
 }:
 let
-  vscodeExtensions = pkgs.vscode-extensions;
+  inherit (pkgs) vscode-extensions;
 
   commonProfiles = [
     {
@@ -24,19 +24,19 @@ let
     }
     {
       extensions = [
-        vscodeExtensions.dracula-theme.theme-dracula
+        vscode-extensions.dracula-theme.theme-dracula
       ];
 
       userSettings."workbench.colorTheme" = "Dracula Theme";
     }
     {
       extensions = [
-        vscodeExtensions.streetsidesoftware.code-spell-checker
+        vscode-extensions.streetsidesoftware.code-spell-checker
       ];
     }
     {
       extensions = [
-        vscodeExtensions.esbenp.prettier-vscode # cSpell:words esbenp
+        vscode-extensions.esbenp.prettier-vscode # cSpell:words esbenp
       ];
 
       userSettings = {
@@ -47,7 +47,7 @@ let
     }
     {
       extensions = [
-        vscodeExtensions.blueglassblock.better-json5
+        vscode-extensions.blueglassblock.better-json5
       ];
 
       userSettings = {
@@ -58,30 +58,28 @@ let
     }
     {
       extensions = [
-        vscodeExtensions.k--kato.intellij-idea-keybindings # cSpell:words k--kato
+        vscode-extensions.k--kato.intellij-idea-keybindings # cSpell:words k--kato
       ];
     }
   ];
 
   mergeProfiles =
-    profiles:
-    lib.lists.foldr
+    lib.foldl
       (
-        el: acc:
-        (lib.attrsets.recursiveUpdate acc el)
+        acc: el:
+        lib.recursiveUpdate acc el
         // {
-          extensions = acc.extensions ++ (el.extensions or [ ]);
+          extensions = acc.extensions ++ el.extensions or [ ];
         }
       )
       {
         extensions = [ ];
         userSettings = { };
-      }
-      profiles;
+      };
 
   mkProfile =
     profiles:
-    if lib.lists.isList profiles then
+    if lib.isList profiles then
       mergeProfiles (commonProfiles ++ profiles)
     else
       mergeProfiles (commonProfiles ++ [ profiles ]);
@@ -110,13 +108,19 @@ in
         nix = mkProfile [
           {
             extensions = [
-              vscodeExtensions.jnoortheen.nix-ide # cSpell:words jnoortheen
+              vscode-extensions.jnoortheen.nix-ide # cSpell:words jnoortheen
             ];
 
             userSettings = {
               "nix.enableLanguageServer" = true;
               "nix.serverPath" = "nil";
-              "nix.serverSettings".nil.formatting.command = [ "nixfmt" ];
+              "nix.serverSettings" = {
+                nil.formatting.command = [ "nixfmt" ];
+                nix.flake = {
+                  autoArchive = true;
+                  autoEvalInputs = true;
+                };
+              };
               "[nix]" = {
                 "editor.tabSize" = 2;
               };
@@ -126,7 +130,7 @@ in
 
         notes = mkProfile [
           {
-            extensions = with vscodeExtensions; [
+            extensions = with vscode-extensions; [
               foam.foam-vscode
               yzhang.markdown-all-in-one # cSpell:words yzhang
             ];
@@ -135,7 +139,7 @@ in
 
         k8s = mkProfile [
           {
-            extensions = with vscodeExtensions; [
+            extensions = with vscode-extensions; [
               ms-kubernetes-tools.vscode-kubernetes-tools
               ms-vscode-remote.remote-containers
               Weaveworks.vscode-gitops-tools
@@ -149,7 +153,7 @@ in
           }
           {
             extensions = [
-              vscodeExtensions.redhat.vscode-yaml
+              vscode-extensions.redhat.vscode-yaml
             ];
 
             userSettings = {
