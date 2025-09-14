@@ -41,6 +41,7 @@ in
     "webstorm"
     "lens-desktop"
     "vscode-extension-ms-vscode-remote-remote-containers"
+    "teamspeak3"
   ];
 
   # WORKAROUND Setting the profile avatar from home manager using the AccountsService is not documented so this has to suffice

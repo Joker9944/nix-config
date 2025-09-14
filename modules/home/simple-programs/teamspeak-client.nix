@@ -6,6 +6,6 @@
 }:
 utility.custom.mkSimpleProgramHomeModule {
   inherit pkgs config;
-  name = "telegram";
-  packageName = "telegram-desktop";
+  name = "teamspeak-client";
+  packageName = "teamspeak3";
 }

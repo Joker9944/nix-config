@@ -93,7 +93,7 @@ rec {
   mkSimpleProgramHomeModule =
     {
       name,
-      pkgName ? name,
+      packageName ? name,
       pkgs,
       config,
     }:
@@ -103,7 +103,7 @@ rec {
     {
       options.programs.${name} = with lib; {
         enable = mkEnableOption name;
-        package = mkPackageOption pkgs pkgName { };
+        package = mkPackageOption pkgs packageName { };
       };
 
       config = lib.mkIf cfg.enable {
