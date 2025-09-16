@@ -10,5 +10,6 @@ subvolumes
 UWSM
 vfat
 Weaveworks
+wxmaxima
 xoffset
 yoffset
