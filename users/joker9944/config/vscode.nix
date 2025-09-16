@@ -36,6 +36,11 @@ let
     }
     {
       extensions = [
+        vscode-extensions.asciidoctor.asciidoctor-vscode
+      ];
+    }
+    {
+      extensions = [
         vscode-extensions.esbenp.prettier-vscode # cSpell:words esbenp
       ];
 
