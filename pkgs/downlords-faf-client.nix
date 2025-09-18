@@ -13,7 +13,7 @@
 }:
 stdenv.mkDerivation rec {
   pname = "downlords-faf-client";
-  version = "2025.7.1";
+  version = "2025.9.1";
 
   src =
     let
@@ -21,7 +21,7 @@ stdenv.mkDerivation rec {
     in
     fetchzip {
       url = "https://github.com/FAForever/${pname}/releases/download/v${version}/faf_unix_${escapedVersion}.tar.gz";
-      sha256 = "sha256-DH0nb9VI62wun7mconayB40Z5W/umIGTEcxd9qePxq0=";
+      sha256 = "sha256-4h4hZkKLBrkNr+xLntMGkz+VYq7k9syXH4UVz6Lx2U4=";
     };
 
   nativeBuildInputs = [
