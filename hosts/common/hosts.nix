@@ -7,6 +7,9 @@ in
 {
   # redirects for temporary nyx cluster setup
   networking.hosts = {
-    ${nyx.ingress} = [ "longhorn.vonarx.online" ];
+    ${nyx.ingress} = [
+      "idm.vonarx.online"
+      "longhorn.vonarx.online"
+    ];
   };
 }
