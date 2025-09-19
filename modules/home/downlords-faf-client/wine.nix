@@ -102,7 +102,7 @@ in
       wrapperHomePathPart = ".local/share/downlords-faf-client/wrapper.sh";
 
       # Making sure only one is set with assertions
-      protonPath = if cfg.proton.package != null then cfg.proton.package else cfg.proton.path;
+      #protonPath = if cfg.proton.package != null then cfg.proton.package else cfg.proton.path;
 
       steamIntegrationSetup = lib.optionalString cfg.steam.enable ''
         export ENABLE_VK_LAYER_VALVE_steam_overlay_1=1
@@ -110,13 +110,27 @@ in
         export SteamAppId=9420
       '';
 
-      setup = steamIntegrationSetup + ''
-        export DXVK_CONFIG_FILE="${config.home.homeDirectory}/${dxvkConfPathPart}"
-        export DXVK_STATE_CACHE_PATH="${config.home.homeDirectory}/${dxvkCachePathPart}"
-        export STEAM_COMPAT_CLIENT_INSTALL_PATH="${cfg.steam.path}"
-        export WINE_LARGE_ADDRESS_AWARE=1
-        unset WINEESYNC WINEFSYNC
-      '';
+      # cSpell:ignore GAMEID PROTONPATH
+      setup =
+        let
+          geProton =
+            (pkgs.proton-ge-bin.overrideAttrs (oldAttrs: rec {
+              version = "GE-Proton9-27";
+              src = pkgs.fetchzip {
+                url = "https://github.com/GloriousEggroll/proton-ge-custom/releases/download/${version}/${version}.tar.gz";
+                hash = "sha256-70au1dx9co3X+X7xkBCDGf1BxEouuw3zN+7eDyT7i5c=";
+              };
+            })).steamcompattool; # cSpell:words steamcompattool
+        in
+        steamIntegrationSetup
+        + ''
+          export GAMEID=9420
+          export STORE=steam
+          export PROTONPATH="${geProton}"
+          export DXVK_CONFIG_FILE="${config.home.homeDirectory}/${dxvkConfPathPart}"
+          export DXVK_STATE_CACHE_PATH="${config.home.homeDirectory}/${dxvkCachePathPart}"
+          export WINE_LARGE_ADDRESS_AWARE=1
+        '';
 
       wrapper = wrapWine {
         inherit (cfg.wine) prefixName winetricksArgs;
@@ -124,13 +138,6 @@ in
         wine = cfg.wine.package;
 
         setupScript = setup;
-
-        # Basic 32bit wine is not compatible with setup_dxvk.sh but 64bit and wow wine should work.
-        firstRunScript =
-          if cfg.wine.package == pkgs.wine then
-            "${bin.cp} --verbose ${pkgs.dxvk.bin}/x32/*.dll $WINEPREFIX/drive_c/windows/system32"
-          else
-            "${bin.setup_dxvk} install";
 
         chdir = "${cfg.client.path}/bin";
 
