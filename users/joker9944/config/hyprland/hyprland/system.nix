@@ -79,12 +79,6 @@ utility.custom.mkHyprlandModule config {
         };
       };
 
-    # https://wiki.hyprland.org/Configuring/Variables/#gestures
-    # TODO get a feel on laptop
-    gestures = {
-      workspace_swipe = false;
-    };
-
     # Windows and workspaces
     windowrule =
       let
