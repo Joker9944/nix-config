@@ -7,7 +7,6 @@
   ...
 }:
 let
-  inherit (cfg.binds) mods;
   cfg = config.windowManager.hyprland.custom;
   bin.btop = lib.getExe config.programs.btop.package;
 in
@@ -29,7 +28,10 @@ utility.custom.mkHyprlandModule config {
           command = bin.btop;
         };
       in
-      [ "${mods.main}, B, exec, ${command}" ];
+      [
+        "CTRL ALT, DELETE, exec, ${command}"
+        "CTRL SHIFT, ESCAPE, exec, ${command}"
+      ];
 
     windowrule = cfg.terminal.mkWindowRules {
       id = "btop";
