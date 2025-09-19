@@ -4,6 +4,7 @@
 {
   prefixName,
   wine ? pkgs.wine,
+  x64 ? false,
   winetricksArgs ? [ ],
   setupScript ? "",
   firstRunScript ? "",
@@ -12,23 +13,32 @@
   wineFlags ? [ ],
 }:
 let
-  path = lib.makeBinPath [
-    wine
-    pkgs.cabextract
-  ];
+  umu = pkgs.umu-launcher.overrideAttrs {
+    extraLibraries = with pkgs; [
+      libpulseaudio # cSpell:words libpulseaudio
+      vulkan-loader
+      freetype # cSpell:words freetype
+      xorg.libXcomposite # cSpell:words libXcomposite
+      xorg.libXrandr # cSpell:words libXrandr
+      xorg.libXfixes # cSpell:words libXfixes
+      xorg.libXcursor
+      xorg.libXi
+    ];
+  };
 
   bin = {
     wine = lib.getExe wine;
     wineboot = lib.getExe' wine "wineboot";
     wineserver = lib.getExe' wine "wineserver";
     winetricks = lib.getExe pkgs.winetricks;
+    umu-run = lib.getExe umu;
   };
 
-  wineArch = if (lib.hasSuffix "64" bin.wine) then "win64" else "win32";
+  wineArch = if x64 then "win64" else "win32";
 
   tricksCommand =
     if (lib.length winetricksArgs) > 0 then
-      "${bin.winetricks} ${lib.concatStringsSep " " winetricksArgs}"
+      "${bin.umu-run} winetricks ${lib.concatStringsSep " " winetricksArgs}"
     else
       "# no winetricks set";
 
@@ -40,23 +50,18 @@ let
   script = pkgs.writeShellScriptBin prefixName ''
     set -eu -o pipefail
 
-    export PATH=$PATH:${path}
-
     export WINEARCH=${wineArch}
     export WINEPREFIX="$HOME/.wine/${prefixName}"
 
     ${setupScript}
     if [ ! -d "$WINEPREFIX" ] # if the prefix does not exist
     then
-      ${bin.wineboot} --update
-      ${bin.wineserver} --wait
       ${tricksCommand}
       ${firstRunScript}
     fi
     ${if chdir != null then "cd \"${chdir}\"" else "# don't change directory"}
 
-    exec ${prefixes}${bin.wine}${flags} "$@"
-    ${bin.wineserver} --wait
+    exec ${prefixes}${bin.umu-run}${flags} "$@"
   '';
 in
 script

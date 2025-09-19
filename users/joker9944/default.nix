@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  config,
   osConfig,
   utility,
   ...
@@ -53,9 +54,9 @@ in
     # TEST
     faf = {
       enable = true;
-      wine.prefixCommands = [ "gamemoderun" ];
+      proton.path = "${config.programs.faf.steam.library.path}/steamapps/common/Proton 10.0";
       steam = {
-        enable = true;
+        enable = false;
         library.path = "/mnt/games/SteamLibrary";
       };
     };
