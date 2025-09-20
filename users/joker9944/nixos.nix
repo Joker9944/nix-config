@@ -34,7 +34,6 @@ in
 
   # Since NixOS system config is reused unfree packages have to be configured here, not optimal but an exactable trade off
   custom.nixpkgsCompat.allowUnfreePackages = [
-    "discord"
     "spotify"
     "idea-ultimate"
     "pycharm-professional"

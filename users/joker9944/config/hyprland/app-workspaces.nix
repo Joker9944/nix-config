@@ -27,7 +27,7 @@ utility.custom.mkHyprlandModule config {
 
     # cSpell:ignore wrappe
     bind = [
-      "${mods.app}, D, exec, ${bin.pgrep} -x \".Discord-wrappe\" > /dev/null && hyprctl dispatch togglespecialworkspace ${specialWorkspaces.discord} || ${bin.discord}"
+      "${mods.app}, D, exec, ${bin.pgrep} -f \"electron.*Vesktop\" > /dev/null && hyprctl dispatch togglespecialworkspace ${specialWorkspaces.discord} || ${bin.discord}"
       "${mods.app}, S, exec, ${bin.pgrep} -x \".spotify-wrappe\" > /dev/null && hyprctl dispatch togglespecialworkspace ${specialWorkspaces.spotify} || ${bin.spotify}"
       "${mods.app}, T, togglespecialworkspace, ${specialWorkspaces.telegram}"
     ];
@@ -36,7 +36,7 @@ utility.custom.mkHyprlandModule config {
       "workspace special:${specialWorkspaces.spotify}, class:Spotify"
       "workspace special:${specialWorkspaces.telegram} silent, class:org.telegram.desktop"
       "float, class:org.telegram.desktop, title:Media viewer"
-      "workspace special:${specialWorkspaces.discord}, class:discord"
+      "workspace special:${specialWorkspaces.discord}, class:vesktop"
     ];
   };
 }

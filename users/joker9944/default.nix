@@ -56,7 +56,10 @@ in
 
     telegram.enable = true;
     spotify.enable = true;
-    discord.enable = true;
+    discord = {
+      enable = true;
+      package = pkgs.vesktop;
+    };
 
     git = {
       enable = true;
