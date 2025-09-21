@@ -12,6 +12,7 @@ in
       "alertmanager" # cSpell:words alertmanager
       "prometheus"
       "longhorn"
+      "openaudible" # cSpell:words openaudible
     ];
   };
 }
