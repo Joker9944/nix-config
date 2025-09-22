@@ -13,6 +13,7 @@ in
       "prometheus"
       "longhorn"
       "openaudible" # cSpell:words openaudible
+      "downloader"
     ];
   };
 }
