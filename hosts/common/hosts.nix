@@ -6,14 +6,21 @@ let
 in
 {
   # redirects for temporary nyx cluster setup
+  # cSpell:words alertmanager openaudible prowlarr radarr sonarr komga pgadmin
   networking.hosts = {
     ${nyx.ingress} = lib.map (subdomain: "${subdomain}.vonarx.online") [
       "idm"
-      "alertmanager" # cSpell:words alertmanager
+      "alertmanager"
       "prometheus"
       "longhorn"
-      "openaudible" # cSpell:words openaudible
+      "openaudible"
       "downloader"
+      "prowlarr"
+      "radarr-standard"
+      "sonarr-anime"
+      "sonarr-standard"
+      "komga"
+      "pgadmin"
     ];
   };
 }
