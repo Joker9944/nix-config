@@ -15,11 +15,6 @@ in
       "longhorn"
       "openaudible"
       "downloader"
-      "prowlarr"
-      "radarr-standard"
-      "sonarr-anime"
-      "sonarr-standard"
-      "komga"
       "pgadmin"
     ];
   };
