@@ -32,6 +32,7 @@ in
         [
           "Documents"
           "Templates"
+          "Notes"
           "Music"
           "Pictures"
           "Videos"
