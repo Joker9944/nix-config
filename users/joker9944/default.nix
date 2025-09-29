@@ -39,7 +39,6 @@ in
 
     vlc
 
-    nextcloud-client
     minio-client
   ];
 
@@ -53,6 +52,7 @@ in
     bash.enable = true;
 
     vscode.enable = true;
+    nextcloud-client.enable = true;
 
     telegram.enable = true;
     spotify.enable = true;
