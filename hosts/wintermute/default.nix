@@ -24,7 +24,7 @@
 
   services = {
     # Enable finger print reader service
-    fprintd.enable = true;
+    fprintd.enable = false;
 
     # Supports Linux Vendor Firmware Service (lvfs)
     fwupd.enable = true;
