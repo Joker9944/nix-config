@@ -3,6 +3,7 @@
   config,
   pkgs,
   pkgs-unstable,
+  custom,
   ...
 }:
 {
@@ -20,7 +21,21 @@
         extraCompatPackages = [ pkgs-unstable.proton-ge-bin ];
       };
 
-      gamescope.enable = true;
+      gamescope = {
+        enable = true;
+        args =
+          let
+            _resolution = lib.splitString "x" custom.config.resolution;
+          in
+          [
+            "--output-width=${lib.elemAt _resolution 0}"
+            "--output-height=${lib.elemAt _resolution 1}"
+            "--rt"
+            "--expose-wayland"
+            "--adaptive-sync"
+          ];
+        capSysNice = false;
+      };
 
       gamemode = {
         enable = true;

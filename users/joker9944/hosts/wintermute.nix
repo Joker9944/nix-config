@@ -6,11 +6,6 @@
     monitor = [
       "eDP-1, 3840x2160@60.00Hz, 0x0, 2"
     ];
-
-    # WORKAROUND Fix scaling for xwayland apps
-    xwayland = {
-      force_zero_scaling = true;
-    };
   };
 
   services.hyprpaper.settings =
@@ -27,7 +22,6 @@
 
   windowManager.hyprland.custom = {
     system.environment = {
-      NIXOS_OZONE = 1;
       GDK_SCALE = 2;
     };
 

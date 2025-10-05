@@ -5,11 +5,16 @@
   ...
 }:
 utility.custom.mkHyprlandModule config {
-  windowManager.hyprland.custom.system.allowMaximized = [ "steam_app_.+" ];
+  windowManager.hyprland.custom.system.allowMaximized = [
+    "steam_app_.+"
+    "gamescope"
+  ];
 
   wayland.windowManager.hyprland.settings = {
     windowrule = [
       "content game, class:steam_app_.+"
+      "content game, class:gamescope"
+      "float, class:gamescope"
     ]
     ++ (lib.map (rule: "${rule}, content:game") [
       "noanim 1"
