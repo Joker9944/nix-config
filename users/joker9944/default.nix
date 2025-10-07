@@ -31,6 +31,7 @@ in
     hunspell
     hunspellDicts.en_US
     hunspellDicts.de_CH
+    papers
 
     joplin-desktop
     xournalpp
