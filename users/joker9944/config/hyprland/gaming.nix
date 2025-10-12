@@ -12,9 +12,8 @@ utility.custom.mkHyprlandModule config {
 
   wayland.windowManager.hyprland.settings = {
     windowrule = [
-      "content game, class:steam_app_.+"
-      "content game, class:gamescope"
-      "float, class:gamescope"
+      "float, content game, class:steam_app_.+"
+      "float, content game, class:gamescope"
     ]
     ++ (lib.map (rule: "${rule}, content:game") [
       "noanim 1"

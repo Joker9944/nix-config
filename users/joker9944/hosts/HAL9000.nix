@@ -2,10 +2,14 @@
   lib,
   pkgs,
   pkgs-unstable,
+  pkgs-hyprland,
   config,
   osConfig,
   ...
 }:
+let
+  bin.xrandr = lib.getExe pkgs-hyprland.xorg.xrandr;
+in
 {
   xdg.autostart.entries = [ "${osConfig.programs.steam.package}/share/applications/steam.desktop" ];
 
@@ -41,6 +45,10 @@
       "DP-1, 1920x1080@60.00Hz, 0x0, 1"
       "DP-2, 2560x1440@143.97Hz, 1920x0, 1"
       "DP-3, 1920x1080@60.00Hz, 4480x0, 1"
+    ];
+
+    exec-once = [
+      "${bin.xrandr} --output DP-2 --primary"
     ];
 
     workspace = [
