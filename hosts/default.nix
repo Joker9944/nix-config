@@ -120,11 +120,12 @@ in
 
   # Enable default programs
   programs = {
-    firefox.enable = lib.mkDefault true;
     # Disable nano and switch to vim as default
     nano.enable = lib.mkDefault false;
-    vim.enable = lib.mkDefault true;
-    vim.defaultEditor = lib.mkDefault true;
+    vim = {
+      enable = lib.mkDefault true;
+      defaultEditor = lib.mkDefault true;
+    };
   };
 
   environment.systemPackages = with pkgs; [

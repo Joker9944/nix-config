@@ -1,9 +1,29 @@
-{ lib, pkgs, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 let
-  bin.firefox = lib.getExe pkgs.firefox;
+  cfg = config.services.firefox-profile-switcher-connector;
 in
 {
-  xdg.configFile."firefoxprofileswitcher/config.json".text = ''
-    {"browser_binary": "${bin.firefox}"}
-  '';
+  options.services.firefox-profile-switcher-connector =
+    let
+      inherit (lib) mkEnableOption mkPackageOption;
+    in
+    {
+      enable = mkEnableOption "Firefox profile switcher";
+      package = mkPackageOption pkgs "firefox-profile-switcher-connector" { };
+    };
+
+  config = {
+    home.packages = [ cfg.package ];
+
+    xdg.configFile."firefoxprofileswitcher/config.json".text = builtins.toJSON {
+      browser_binary = lib.getExe config.programs.firefox.package;
+    };
+
+    programs.firefox.nativeMessagingHosts = [ cfg.package ];
+  };
 }
