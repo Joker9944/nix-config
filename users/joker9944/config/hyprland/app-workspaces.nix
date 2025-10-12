@@ -1,7 +1,6 @@
 {
   lib,
   config,
-  pkgs,
   utility,
   ...
 }:
@@ -13,13 +12,13 @@ let
     telegram = "telegram";
   };
   bin = {
-    pgrep = lib.getExe' pkgs.procps "pgrep";
     discord = lib.getExe config.programs.discord.package;
     spotify = lib.getExe config.programs.spotify.package;
     telegram = lib.getExe config.programs.telegram.package;
   };
 in
 utility.custom.mkHyprlandModule config {
+  # TODO split these app into their own modules
   wayland.windowManager.hyprland.settings = {
     exec-once = [
       "${bin.telegram}"
@@ -27,15 +26,21 @@ utility.custom.mkHyprlandModule config {
 
     # cSpell:ignore wrappe
     bind = [
-      "${mods.app}, D, exec, ${bin.pgrep} -f \"electron.*Vesktop\" > /dev/null && hyprctl dispatch togglespecialworkspace ${specialWorkspaces.discord} || ${bin.discord}"
-      "${mods.app}, S, exec, ${bin.pgrep} -x \".spotify-wrappe\" > /dev/null && hyprctl dispatch togglespecialworkspace ${specialWorkspaces.spotify} || ${bin.spotify}"
+      "${mods.app}, D, togglespecialworkspace, ${specialWorkspaces.discord}"
+      "${mods.app}, S, togglespecialworkspace, ${specialWorkspaces.spotify}"
       "${mods.app}, T, togglespecialworkspace, ${specialWorkspaces.telegram}"
+    ];
+
+    workspace = [
+      "special:${specialWorkspaces.discord}, on-created-empty:${bin.discord}"
+      "special:${specialWorkspaces.spotify}, on-created-empty:${bin.spotify}"
+      "special:${specialWorkspaces.telegram}, on-created-empty:${bin.telegram}"
     ];
 
     windowrule = [
       "workspace special:${specialWorkspaces.spotify}, class:Spotify"
       "workspace special:${specialWorkspaces.telegram} silent, class:org.telegram.desktop"
-      "float, class:org.telegram.desktop, title:Media viewer"
+      "float, content photo, class:org.telegram.desktop, title:Media viewer"
       "workspace special:${specialWorkspaces.discord}, class:vesktop"
     ];
   };
