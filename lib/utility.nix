@@ -123,4 +123,9 @@ rec {
       deobfuscate =
         mask: obfuscated: lib.concatStrings (lib.map (int: ascii.toChar (lib.bitXor int mask)) obfuscated);
     };
+
+  lookupDesktopFiles = package: builtins.attrNames (builtins.readDir "${package}/share/applications");
+
+  first = list: lib.elemAt list 0;
+  last = list: lib.elemAt list ((lib.length list) - 1);
 }
