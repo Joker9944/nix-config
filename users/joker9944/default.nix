@@ -43,10 +43,14 @@ in
     minio-client
   ];
 
-  xdg.autostart = {
-    enable = true;
+  xdg = {
+    autostart = {
+      enable = true;
 
-    entries = [ "${pkgs.telegram-desktop}/share/applications/org.telegram.desktop.desktop" ];
+      entries = [ "${pkgs.telegram-desktop}/share/applications/org.telegram.desktop.desktop" ];
+    };
+
+    mimeApps.enable = true;
   };
 
   programs = {
