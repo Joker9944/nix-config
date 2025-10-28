@@ -4,27 +4,18 @@
   utility,
   ...
 }:
-utility.custom.mkHyprlandModule config {
-  windowManager.hyprland.custom.system.allowMaximized = [
-    "steam_app_.+"
+let
+  regexes = [
+    "steam_app_\\\\d+"
     "gamescope"
+    "DetectiveGrimoire"
   ];
+in
+utility.custom.mkHyprlandModule config {
+  windowManager.hyprland.custom.system.allowMaximized = regexes;
 
   wayland.windowManager.hyprland.settings = {
-    windowrule = [
-      "float, content game, class:steam_app_.+"
-      "float, content game, class:gamescope"
-    ]
-    ++ (lib.map (rule: "${rule}, content:game") [
-      "noanim 1"
-      "noblur 1"
-      "noborder 1"
-      "nodim 1"
-      "norounding 1"
-      "noshadow 1"
-      "immediate 1"
-      "opacity 1.0 override 1.0 override 1.0 override"
-    ]);
+    windowrule = lib.map (regex: "float, decorate 0, content game, class:${regex}") regexes;
 
     render = {
       # Enable direct scanout for fullscreen applications marked as game content

@@ -24,6 +24,9 @@ in
 
     lutris = {
       enable = true;
+      # WORKAROUND lutris package is currently borked on 25.05 but fixed on unstable, remove once patch is backported
+      # https://github.com/NixOS/nixpkgs/issues/454995
+      package = pkgs-unstable.lutris;
       extraPackages = with pkgs; [
         mangohud
         winetricks
@@ -54,7 +57,7 @@ in
     workspace = [
       "1, monitor:DP-2, default:true"
       "5, monitor:DP-1, default:true"
-      "6, monitor:DP-3, default:true"
+      "7, monitor:DP-3, default:true"
       "name:gaming, monitor:DP-2"
     ];
 
