@@ -174,6 +174,10 @@
           inherit (self.packages.${prev.system}) firefox-profile-switcher-connector;
         };
 
+        File-MimeInfo = final: prev: {
+          inherit (self.packages.${prev.system}) File-MimeInfo;
+        };
+
         "vscode-extensions.streetsidesoftware.code-spell-checker-swiss-german" = final: prev: {
           vscode-extensions =
             lib.attrsets.recursiveUpdate

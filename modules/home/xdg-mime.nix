@@ -12,15 +12,27 @@ in
       inherit (lib) mkOption types literalExpression;
     in
     {
-      apps.default = mkOption {
-        type = types.listOf types.path;
-        default = [ ];
-        example = literalExpression ''
-          apps.default = [ \"''${config.programs.papers.package}/share/applications/org.gnome.Papers.desktop\" ]
-        '';
-        description = ''
-          Paths of desktop files from which mime types should be set.
-        '';
+      apps = {
+        default = mkOption {
+          type = types.listOf types.path;
+          default = [ ];
+          example = literalExpression ''
+            apps.default = [ \"''${config.programs.papers.package}/share/applications/org.gnome.Papers.desktop\" ]
+          '';
+          description = ''
+            Paths of desktop files from which mime types should be set.
+          '';
+        };
+        associations.added = mkOption {
+          type = types.listOf types.path;
+          default = [ ];
+          example = literalExpression ''
+            apps.default = [ \"''${config.programs.papers.package}/share/applications/org.gnome.Papers.desktop\" ]
+          '';
+          description = ''
+            Paths of desktop files from which mime types should be set.
+          '';
+        };
       };
       mime.default = mkOption {
         type = types.attrsOf (types.attrsOf (types.listOf types.str));
@@ -87,5 +99,6 @@ in
     lib.mkIf cfg.enable {
       defaultApplications =
         (mapAppsTypes cfg.custom.apps.default) // (mapMimeTypes cfg.custom.mime.default);
+      associations.added = mapAppsTypes cfg.custom.apps.associations.added;
     };
 }

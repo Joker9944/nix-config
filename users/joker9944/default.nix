@@ -34,7 +34,6 @@ in
     papers
 
     joplin-desktop
-    xournalpp
     inkscape
     audacity
 

@@ -14,6 +14,11 @@ let
   bin.yazi = lib.getExe config.programs.yazi.package;
 in
 utility.custom.mkHyprlandModule config {
+  home.packages = with pkgs-hyprland; [
+    exiftool
+    mediainfo
+  ];
+
   programs.yazi = {
     enable = true;
     package = pkgs-hyprland.yazi;
