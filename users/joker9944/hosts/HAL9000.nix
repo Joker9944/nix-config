@@ -20,7 +20,7 @@ in
   programs = {
     _1password.gitSigningKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP9R2V8FqyXifBoVO3OndfpRrqxdwK1H/3qlm645l7rg";
 
-    teamspeak-client.enable = true;
+    teamspeak.enable = true;
 
     lutris = {
       enable = true;

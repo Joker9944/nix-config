@@ -90,27 +90,6 @@ rec {
 
   mkHyprlandModule = cfg: mkConditionalModule (lib.mkIf cfg.windowManager.hyprland.custom.enable);
 
-  mkSimpleProgramHomeModule =
-    {
-      name,
-      packageName ? name,
-      pkgs,
-      config,
-    }:
-    let
-      cfg = config.programs.${name};
-    in
-    {
-      options.programs.${name} = with lib; {
-        enable = mkEnableOption name;
-        package = mkPackageOption pkgs packageName { };
-      };
-
-      config = lib.mkIf cfg.enable {
-        home.packages = [ cfg.package ];
-      };
-    };
-
   # This is not for security, just to keep those pesky scrappers at bay.
   obfuscation =
     let
