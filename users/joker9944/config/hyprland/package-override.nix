@@ -5,5 +5,6 @@
   ...
 }:
 utility.custom.mkHyprlandModule config {
-  programs.nextcloud.package = pkgs-unstable.nextcloud-client;
+  programs.nextcloud-client.package = pkgs-unstable.nextcloud-client;
+  services.nextcloud-client.package = pkgs-unstable.nextcloud-client;
 }

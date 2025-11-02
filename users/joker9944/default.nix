@@ -56,7 +56,6 @@ in
     bash.enable = true;
 
     vscode.enable = true;
-    nextcloud.enable = true;
 
     telegram.enable = true;
     spotify.enable = true;

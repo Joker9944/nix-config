@@ -16,8 +16,7 @@ let
       name = "loupe";
     }
     {
-      name = "nextcloud";
-      package = "nextcloud-client";
+      name = "nextcloud-client";
     }
     {
       name = "papers";
