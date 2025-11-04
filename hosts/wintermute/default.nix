@@ -2,7 +2,10 @@
 {
   imports = custom.lib.ls {
     dir = ./.;
-    exclude = [ ./default.nix ];
+    exclude = [
+      ./default.nix
+      ./secrets
+    ];
   };
 
   mixins.keymap.type = "ch";

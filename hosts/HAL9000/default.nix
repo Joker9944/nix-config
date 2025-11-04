@@ -2,7 +2,10 @@
 {
   imports = custom.lib.ls {
     dir = ./.;
-    exclude = [ ./default.nix ];
+    exclude = [
+      ./default.nix
+      ./secrets
+    ];
   };
 
   boot.loader.limine.style.interface.brandingColor = 1; # red

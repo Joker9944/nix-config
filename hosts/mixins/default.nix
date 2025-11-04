@@ -47,6 +47,8 @@ in
     XDG_STATE_HOME = "$HOME/.local/state";
   };
 
+  sops.age.keyFile = "/var/lib/sops-nix/keys.txt";
+
   # Set default localization
   time.timeZone = "Europe/Zurich";
   i18n = with locale; {
