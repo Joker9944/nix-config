@@ -1,8 +1,12 @@
-{ ... }:
+{ utility, ... }:
 {
-  imports = [
-    ./hardware-configuration.nix
-  ];
+  imports = utility.custom.ls.lookup {
+    dir = ./.;
+    exclude = [
+      ./default.nix
+      ./secrets
+    ];
+  };
 
   # Lenovo ThinkPad X1 Yoga Gen 4
   # * https://wiki.archlinux.org/title/Lenovo_ThinkPad_X1_Yoga_(Gen_4)

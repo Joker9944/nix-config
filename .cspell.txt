@@ -4,8 +4,10 @@ blueglassblock
 breezedark
 crypted
 drun
+keepalive
 mountpoint
 PAMFAIL
+preshared
 subvolumes
 UWSM
 vfat

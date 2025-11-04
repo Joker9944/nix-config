@@ -11,6 +11,11 @@ creation_rules:
     key_groups:
       - age:
         - *joker9944
+  # host secrets
+  - path_regex: HAL9000/secrets/[^/]+\.(ya?ml|json|env|ini)$
+    key_groups:
+      - age:
+        - *joker9944
   # User secrets
   - path_regex: joker9944/[^/]+\.(ya?ml|json|env|ini)$
     key_groups:
