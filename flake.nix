@@ -58,14 +58,16 @@
     let
       inherit (nixpkgs) lib;
 
-      importFiles =
-        files:
-        lib.listToAttrs (
-          lib.map (filepath: {
-            name = lib.strings.removeSuffix ".nix" (baseNameOf filepath);
-            value = import filepath;
-          }) files
-        );
+      applyFnToDir =
+        dir: fn:
+        lib.pipe { inherit dir; } [
+          utility.custom.ls.lookup
+          (lib.map (path: {
+            name = lib.strings.removeSuffix ".nix" (baseNameOf path);
+            value = fn path;
+          }))
+          lib.listToAttrs
+        ];
 
       utility = {
         inherit (inputs.nix-math.lib) math;
@@ -79,7 +81,7 @@
         pkgs = nixpkgs.legacyPackages.${system};
       in
       {
-        packages = utility.custom.applyFunctionRecursive ./pkgs (filename: pkgs.callPackage filename { });
+        packages = applyFnToDir ./pkgs (path: pkgs.callPackage path { });
 
         apps = {
           cspell = {
@@ -198,17 +200,9 @@
         };
       };
 
-      nixosModules = importFiles (
-        utility.custom.ls.lookup {
-          dir = ./modules/nixos;
-        }
-      );
+      nixosModules = applyFnToDir ./modules/nixos import;
 
-      homeModules = importFiles (
-        utility.custom.ls.lookup {
-          dir = ./modules/home;
-        }
-      );
+      homeModules = applyFnToDir ./modules/home import;
 
       nixConfig = {
         substituters = [
