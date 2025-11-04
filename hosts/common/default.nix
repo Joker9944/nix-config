@@ -17,12 +17,10 @@ in
 {
   imports =
     (utility.custom.ls.lookup {
-      dir = ./common;
+      dir = ./.;
+      exclude = [ ./default.nix ];
     })
-    ++ [
-      (lib.path.append ./. custom.config.hostname) # Import matching host modules
-      inputs.sops-nix.nixosModules.sops
-    ];
+    ++ [ inputs.sops-nix.nixosModules.sops ];
 
   # Set args inherited from mkNixosConfiguration
   networking.hostName = custom.config.hostname;

@@ -5,18 +5,20 @@
   nixosModules,
 }:
 {
+  context ? ./..,
   system,
+  hostname,
   usernames,
   ...
 }@args:
 let
   inherit (inputs.nixpkgs) lib;
 
-  hostsPath = ../hosts;
-  usersPath = ../users;
-
-  usersNixosModulePaths = lib.map userNixosModulePath usernames;
-  userNixosModulePath = username: lib.path.append usersPath "${username}/nixos.nix";
+  commonModulePath = ../hosts/common;
+  hostModulePath = lib.path.append context "hosts/${hostname}";
+  userModulePaths = lib.map (
+    username: lib.path.append context "users/${username}/nixos.nix"
+  ) usernames;
 in
 lib.nixosSystem {
   inherit system;
@@ -34,9 +36,10 @@ lib.nixosSystem {
   };
 
   modules = [
-    hostsPath
+    commonModulePath
+    hostModulePath
     (_: { nixpkgs.overlays = overlays; })
   ]
   ++ nixosModules
-  ++ usersNixosModulePaths;
+  ++ userModulePaths;
 }

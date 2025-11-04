@@ -141,22 +141,6 @@
       }
     )
     // {
-      lib = {
-        mkNixosConfiguration = import ./lib/mkNixosConfiguration.nix {
-          inherit
-            inputs
-            utility
-            ;
-          nixosModules = lib.attrValues self.nixosModules;
-          overlays = lib.attrValues self.overlays;
-        };
-
-        mkHomeConfiguration = import ./lib/mkHomeConfiguration.nix {
-          inherit inputs;
-          homeModules = lib.attrValues self.homeModules;
-        };
-      };
-
       overlays = {
         firefox-profile-switcher-connector = final: prev: {
           inherit (self.packages.${prev.system}) firefox-profile-switcher-connector;
@@ -200,10 +184,6 @@
         };
       };
 
-      nixosModules = applyFnToDir ./modules/nixos import;
-
-      homeModules = applyFnToDir ./modules/home import;
-
       nixConfig = {
         substituters = [
           "https://nix-community.cachix.org"
@@ -221,12 +201,28 @@
         ];
       };
 
-      nixosConfigurations = lib.attrsets.listToAttrs (
-        lib.lists.map
-          (cfg: {
-            name = cfg.hostname;
-            value = self.lib.mkNixosConfiguration cfg;
-          })
+      nixosModules = applyFnToDir ./modules/nixos import;
+
+      homeModules = applyFnToDir ./modules/home import;
+
+      lib = {
+        mkNixosConfiguration = import ./lib/mkNixosConfiguration.nix {
+          inherit
+            inputs
+            utility
+            ;
+          nixosModules = lib.attrValues self.nixosModules;
+          overlays = lib.attrValues self.overlays;
+        };
+
+        mkHomeConfiguration = import ./lib/mkHomeConfiguration.nix {
+          inherit inputs;
+          homeModules = lib.attrValues self.homeModules;
+        };
+      };
+
+      nixosConfigurations =
+        lib.pipe
           [
             {
               system = "x86_64-linux";
@@ -241,14 +237,16 @@
               resolution = "3840x2160";
             }
           ]
-      );
+          [
+            (lib.map (cfg: {
+              name = cfg.hostname;
+              value = self.lib.mkNixosConfiguration cfg;
+            }))
+            lib.listToAttrs
+          ];
 
-      homeConfigurations = lib.attrsets.listToAttrs (
-        lib.lists.map
-          (cfg: {
-            name = cfg.username + "@" + cfg.hostname;
-            value = self.lib.mkHomeConfiguration self.nixosConfigurations.${cfg.hostname} cfg;
-          })
+      homeConfigurations =
+        lib.pipe
           [
             {
               hostname = "HAL9000";
@@ -259,6 +257,12 @@
               username = "joker9944";
             }
           ]
-      );
+          [
+            (lib.map (cfg: {
+              name = cfg.username + "@" + cfg.hostname;
+              value = self.lib.mkHomeConfiguration self.nixosConfigurations.${cfg.hostname} cfg;
+            }))
+            lib.listToAttrs
+          ];
     };
 }

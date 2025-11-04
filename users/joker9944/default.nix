@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  config,
   osConfig,
   utility,
   ...
@@ -17,6 +18,11 @@ in
       dir = ./config;
     })
     ++ lib.optional (builtins.pathExists hostModule) hostModule; # Import matching host modules
+
+  sops = {
+    defaultSopsFile = ./secrets.yaml;
+    age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
+  };
 
   home.packages = with pkgs; [
     fastfetch
