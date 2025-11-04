@@ -3,21 +3,15 @@
   pkgs,
   config,
   osConfig,
-  utility,
   ...
 }:
 let
-  hostModule = lib.path.append ./. "hosts/${osConfig.networking.hostName}.nix";
+  hostModule = lib.path.append ./hosts osConfig.networking.hostName;
 in
 {
   inherit (osConfig) desktopEnvironment;
 
-  # TODO auto import
-  imports =
-    (utility.custom.ls.lookup {
-      dir = ./config;
-    })
-    ++ lib.optional (builtins.pathExists hostModule) hostModule; # Import matching host modules
+  imports = [ ./config ] ++ lib.optional (builtins.pathExists hostModule) hostModule;
 
   sops = {
     defaultSopsFile = ./secrets.yaml;

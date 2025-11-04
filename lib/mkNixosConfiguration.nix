@@ -16,9 +16,7 @@ let
 
   commonModulePath = ../hosts/common;
   hostModulePath = lib.path.append context "hosts/${hostname}";
-  userModulePaths = lib.map (
-    username: lib.path.append context "users/${username}/nixos.nix"
-  ) usernames;
+  userModulePaths = lib.map (username: lib.path.append context "users/${username}/nixos") usernames;
 in
 lib.nixosSystem {
   inherit system;
