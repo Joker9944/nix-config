@@ -2,7 +2,10 @@
 {
   imports = utility.custom.ls.lookup {
     dir = ./.;
-    exclude = [ ./default.nix ];
+    exclude = [
+      ./default.nix
+      ./secrets
+    ];
   };
 
   boot.loader.limine.style.interface.brandingColor = 1; # red

@@ -4,6 +4,7 @@ version: '0.2'
 caseSensitive: false
 ignorePaths:
   - '**/secrets.yaml'
+  - '**/secrets/*.yaml'
   - /result
   - .sops.yaml
   - .cspell.yaml
