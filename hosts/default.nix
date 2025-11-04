@@ -1,4 +1,5 @@
 {
+  inputs,
   lib,
   utility,
   pkgs,
@@ -20,6 +21,7 @@ in
     })
     ++ [
       (lib.path.append ./. custom.config.hostname) # Import matching host modules
+      inputs.sops-nix.nixosModules.sops
     ];
 
   # Set args inherited from mkNixosConfiguration

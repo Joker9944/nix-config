@@ -1,4 +1,5 @@
 {
+  inputs,
   lib,
   config,
   custom,
@@ -42,6 +43,8 @@ in
     "vscode-extension-ms-vscode-remote-remote-containers"
     "teamspeak3"
   ];
+
+  nixpkgs.overlays = [ inputs.audiomenu.overlays.default ];
 
   # WORKAROUND Setting the profile avatar from home manager using the AccountsService is not documented so this has to suffice
   systemd.tmpfiles.rules = lib.mkIf config.desktopEnvironment.gnome.enable [

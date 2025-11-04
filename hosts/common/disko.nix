@@ -1,4 +1,5 @@
 {
+  inputs,
   config,
   lib,
   ...
@@ -8,6 +9,8 @@ let
   devicePath = "/dev/${cfg.name}";
 in
 {
+  imports = [ inputs.disko.nixosModules.disko ];
+
   options.hardware.disko.main = with lib; {
     name = mkOption {
       type = lib.types.nullOr types.str;

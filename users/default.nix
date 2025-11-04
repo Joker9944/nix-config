@@ -1,4 +1,5 @@
 {
+  inputs,
   lib,
   config,
   custom,
@@ -11,6 +12,7 @@ in
 {
   imports = [
     (lib.path.append ./. custom.config.username)
+    inputs.sops-nix.homeManagerModules.sops
   ];
 
   # Set args inherited from mkHomeConfiguration

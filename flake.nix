@@ -67,40 +67,10 @@
           }) files
         );
 
-      nixosModules = [
-        inputs.disko.nixosModules.disko
-        inputs.sops-nix.nixosModules.sops
-      ]
-      ++ (lib.mapAttrsToList (_: value: value) self.nixosModules);
-
-      homeModules = [
-        inputs.sops-nix.homeManagerModules.sops
-        inputs.plasma-manager.homeModules.plasma-manager
-      ]
-      ++ (lib.mapAttrsToList (_: value: value) self.homeModules);
-
-      overlays = [
-        inputs.audiomenu.overlays.default
-      ]
-      ++ lib.mapAttrsToList (_: value: value) self.overlays;
-
       utility = {
         inherit (inputs.nix-math.lib) math;
         custom = import ./lib/utility.nix lib;
         std = inputs.nix-std.lib;
-      };
-
-      mkNixosConfiguration = import ./lib/mkNixosConfiguration.nix {
-        inherit
-          inputs
-          utility
-          nixosModules
-          overlays
-          ;
-      };
-
-      mkHomeConfiguration = import ./lib/mkHomeConfiguration.nix {
-        inherit inputs homeModules;
       };
     in
     inputs.flake-utils.lib.eachDefaultSystem (
@@ -169,6 +139,22 @@
       }
     )
     // {
+      lib = {
+        mkNixosConfiguration = import ./lib/mkNixosConfiguration.nix {
+          inherit
+            inputs
+            utility
+            ;
+          nixosModules = lib.attrValues self.nixosModules;
+          overlays = lib.attrValues self.overlays;
+        };
+
+        mkHomeConfiguration = import ./lib/mkHomeConfiguration.nix {
+          inherit inputs;
+          homeModules = lib.attrValues self.homeModules;
+        };
+      };
+
       overlays = {
         firefox-profile-switcher-connector = final: prev: {
           inherit (self.packages.${prev.system}) firefox-profile-switcher-connector;
@@ -245,7 +231,7 @@
         lib.lists.map
           (cfg: {
             name = cfg.hostname;
-            value = mkNixosConfiguration cfg;
+            value = self.lib.mkNixosConfiguration cfg;
           })
           [
             {
@@ -267,7 +253,7 @@
         lib.lists.map
           (cfg: {
             name = cfg.username + "@" + cfg.hostname;
-            value = mkHomeConfiguration self.nixosConfigurations.${cfg.hostname} cfg;
+            value = self.lib.mkHomeConfiguration self.nixosConfigurations.${cfg.hostname} cfg;
           })
           [
             {

@@ -1,4 +1,5 @@
 {
+  inputs,
   lib,
   config,
   pkgs,
@@ -26,6 +27,8 @@ let
   calcDesktopLength = n: n * 8;
 in
 {
+  imports = [ inputs.plasma-manager.homeModules.plasma-manager ];
+
   options.desktopEnvironment.kde-plasma = with lib; {
     enable = mkEnableOption "Whether to enable KDE Plasma desktop environment config.";
   };
