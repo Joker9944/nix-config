@@ -77,6 +77,8 @@ in
     ssh.enable = true;
 
     _1password = {
+      enable = true;
+
       sshIdentityAgentHosts = [ "*" ];
 
       sshAgentConfig = {

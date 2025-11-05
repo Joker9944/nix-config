@@ -13,7 +13,7 @@ in
     enable = mkEnableOption "1Password configuration";
 
     gitSigningKey = mkOption {
-      type = lib.types.nullOr types.str;
+      type = types.nullOr types.str;
       default = null;
       example = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP9R2V8FqyXifBoVO3OndfpRrqxdwK1H/3qlm645l7rg";
       description = ''
@@ -31,7 +31,7 @@ in
     };
 
     sshAgentConfig = mkOption {
-      type = types.attrs;
+      type = types.nullOr types.attrs;
       default = null;
       example = {
         ssh-keys = [
@@ -60,9 +60,9 @@ in
     };
   };
 
-  config = {
+  config = lib.mkIf cfg.enable {
     programs = {
-      git.extraConfig = lib.mkIf (cfg.gitSigningKey != "") {
+      git.extraConfig = lib.mkIf (cfg.gitSigningKey != null) {
         gpg = {
           format = "ssh";
         };
