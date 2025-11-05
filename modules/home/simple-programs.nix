@@ -39,28 +39,40 @@ let
       name = "xournalpp";
     }
   ];
-  mkSimpleProgramModule =
-    {
-      name,
-      package ? name,
-    }:
-    {
-      options.programs.${name} =
-        let
-          inherit (lib) mkEnableOption mkPackageOption;
-        in
-        {
-          enable = mkEnableOption name;
-          package = mkPackageOption pkgs package { };
-        };
-
-      config =
-        let
-          cfg = config.programs.${name};
-        in
-        lib.mkIf cfg.enable {
-          home.packages = [ cfg.package ];
-        };
-    };
 in
-lib.foldl (acc: module: lib.recursiveUpdate acc module) { } (lib.map mkSimpleProgramModule programs)
+{
+  options.programs = lib.pipe programs [
+    (lib.map (
+      {
+        name,
+        package ? name,
+      }:
+      {
+        inherit name;
+        value =
+          let
+            inherit (lib) mkEnableOption mkPackageOption;
+          in
+          {
+            enable = mkEnableOption name;
+            package = mkPackageOption pkgs package { };
+          };
+      }
+    ))
+    lib.listToAttrs
+  ];
+
+  config.home.packages = lib.pipe programs [
+    (lib.map (
+      {
+        name,
+        ...
+      }:
+      let
+        cfg = config.programs.${name};
+      in
+      lib.optional cfg.enable cfg.package
+    ))
+    lib.flatten
+  ];
+}
