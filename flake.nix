@@ -260,7 +260,9 @@
           [
             (lib.map (cfg: {
               name = cfg.username + "@" + cfg.hostname;
-              value = self.lib.mkHomeConfiguration self.nixosConfigurations.${cfg.hostname} cfg;
+              value = self.lib.mkHomeConfiguration {
+                nixosConfigurations = self.nixosConfigurations.${cfg.hostname};
+              } cfg;
             }))
             lib.listToAttrs
           ];

@@ -2,23 +2,26 @@
   inputs,
   homeModules,
 }:
-nixosSystem:
+{
+  nixosConfigurations,
+}:
 {
   context ? ./..,
   username,
+  additionalModules ? [ ],
   ...
 }@args:
 let
   inherit (inputs.nixpkgs) lib;
-  inherit (nixosSystem._module) specialArgs;
+  inherit (nixosConfigurations._module) specialArgs;
 
-  osConfig = nixosSystem.config;
+  osConfig = nixosConfigurations.config;
 
   commonModulePath = ../users/common;
   userModulePath = lib.path.append context "users/${username}";
 in
 inputs.home-manager.lib.homeManagerConfiguration {
-  inherit (nixosSystem) pkgs;
+  inherit (nixosConfigurations) pkgs;
 
   extraSpecialArgs = {
     inherit (specialArgs) inputs utility;
@@ -29,12 +32,13 @@ inputs.home-manager.lib.homeManagerConfiguration {
     };
   }
   // (lib.mapAttrs (
-    name: _: nixosSystem._module.args.${name}
+    name: _: nixosConfigurations._module.args.${name}
   ) osConfig.custom.nixpkgsCompat.additionalNixpkgsInstances);
 
   modules = [
     commonModulePath
     userModulePath
   ]
-  ++ homeModules;
+  ++ homeModules
+  ++ additionalModules;
 }

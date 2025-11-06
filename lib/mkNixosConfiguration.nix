@@ -9,6 +9,7 @@
   system,
   hostname,
   usernames,
+  additionalModules ? [ ],
   ...
 }@args:
 let
@@ -39,5 +40,6 @@ lib.nixosSystem {
     (_: { nixpkgs.overlays = overlays; })
   ]
   ++ nixosModules
-  ++ userModulePaths;
+  ++ userModulePaths
+  ++ additionalModules;
 }
