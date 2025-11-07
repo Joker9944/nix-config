@@ -150,6 +150,10 @@
           inherit (self.packages.${prev.system}) File-MimeInfo;
         };
 
+        freelens = final: prev: {
+          inherit (self.packages.${prev.system}) freelens;
+        };
+
         "vscode-extensions.streetsidesoftware.code-spell-checker-swiss-german" = final: prev: {
           vscode-extensions =
             lib.attrsets.recursiveUpdate

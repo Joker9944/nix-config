@@ -38,6 +38,9 @@ let
     {
       name = "xournalpp";
     }
+    {
+      name = "freelens";
+    }
   ];
 in
 {

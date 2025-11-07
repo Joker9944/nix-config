@@ -25,7 +25,6 @@ in
     trash-cli
 
     meld
-    lens
 
     libreoffice
     hunspell
@@ -56,6 +55,7 @@ in
     bash.enable = true;
 
     vscode.enable = true;
+    freelens.enable = true;
 
     telegram.enable = true;
     spotify.enable = true;
