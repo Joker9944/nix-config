@@ -1,96 +1,108 @@
 {
-  config,
   lib,
+  config,
   pkgs,
   ...
 }:
 let
-  cfg = config.services.customAutoUpgrade.notify;
+  upgradeServiceName = "home-manager-auto-upgrade";
+  notifyServiceName = "${upgradeServiceName}-notify";
 in
 {
-  options.services.customAutoUpgrade.notify = with lib; {
-    enable = mkEnableOption "NixOS Upgrade Service failure notification";
+  options.services.home-manager.autoUpgrade.notify =
+    let
+      inherit (lib) mkEnableOption mkOption types;
+    in
+    {
+      enable = mkEnableOption "NixOS Upgrade Service failure notification";
 
-    urgency = mkOption {
-      type = types.enum [
-        "low"
-        "normal"
-        "critical"
-      ];
-      default = "normal";
-      description = ''
-        Urgency level passed to `notify-send`.
-      '';
+      urgency = mkOption {
+        type = types.enum [
+          "low"
+          "normal"
+          "critical"
+        ];
+        default = "normal";
+        description = ''
+          Urgency level passed to `notify-send`.
+        '';
+      };
+
+      icon = mkOption {
+        type = types.str;
+        default = "${pkgs.nixos-icons}/share/icons/hicolor/24x24/apps/nix-snowflake.png";
+        description = ''
+          Icon filepath passed to `notify-send`.
+        '';
+      };
+
+      name = mkOption {
+        type = types.str;
+        default = "Home Manager";
+        description = ''
+          App name passed to `notify-send`.
+
+          Supported vars:
+           - instance
+        '';
+      };
+
+      summary = mkOption {
+        type = types.str;
+        default = "$instance failed";
+        description = ''
+          Summary passed to `notify-send`.
+
+          Supported vars:
+           - instance
+        '';
+      };
+
+      body = mkOption {
+        type = types.lines;
+        default = ''
+          Check the logs with \"journalctl --user-unit ${upgradeServiceName}.service\".
+        '';
+        description = ''
+          Body passed to `notify-send`.
+        '';
+      };
     };
 
-    icon = mkOption {
-      type = types.str;
-      default = "${pkgs.nixos-icons}/share/icons/hicolor/24x24/apps/nix-snowflake.png";
-      description = ''
-        Icon filepath passed to `notify-send`.
-      '';
-    };
+  config =
+    let
+      cfg = config.services.home-manager.autoUpgrade.notify;
+    in
+    lib.mkIf cfg.enable {
+      home.packages = [ pkgs.libnotify ];
 
-    name = mkOption {
-      type = types.str;
-      default = "Home Manager";
-      description = ''
-        App name passed to `notify-send`.
+      systemd.user.services = {
+        ${upgradeServiceName}.Unit.OnFailure = "${notifyServiceName}@%n.service";
 
-        Supported vars:
-         - instance
-      '';
-    };
+        "${notifyServiceName}@" = {
+          Unit = {
+            Description = "Home Manager Upgrade Notify";
+          };
 
-    summary = mkOption {
-      type = types.str;
-      default = "$instance failed";
-      description = ''
-        Summary passed to `notify-send`.
+          Service = {
+            Type = "simple";
 
-        Supported vars:
-         - instance
-      '';
-    };
+            Environment =
+              let
+                path = with pkgs; lib.makeBinPath [ libnotify ];
+              in
+              "\"PATH=$PATH:${path}\"";
 
-    body = mkOption {
-      type = types.lines;
-      default = ''
-        Check the logs with \"journalctl --user-unit home-manager-upgrade.service\".
-      '';
-      description = ''
-        Body passed to `notify-send`.
-      '';
-    };
-  };
-
-  config = lib.mkIf cfg.enable {
-    home.packages = [ pkgs.libnotify ];
-
-    systemd.user.services = {
-      home-manager-upgrade.Unit.OnFailure = "home-manager-upgrade-notify@%n.service";
-
-      "home-manager-upgrade-notify@" = {
-        Unit = {
-          Description = "Home Manager Upgrade Notify";
-        };
-
-        Service = {
-          Type = "simple";
-
-          ExecStart =
-            let
-              bin.notify-send = lib.getExe pkgs.libnotify;
-              scriptPath = pkgs.writeShellScript "home-manager-upgrade-notify_-start" ''
-                set -e
-
-                instance=$1
-                ${bin.notify-send} --app-name="${cfg.name}" --urgency=${cfg.urgency} --icon="${cfg.icon}" "${cfg.summary}" "${cfg.body}"
-              '';
-            in
-            "${toString scriptPath} %i";
+            ExecStart =
+              let
+                scriptPath = pkgs.writeShellScript "${notifyServiceName}_-start" ''
+                  instance=$1
+                  notify-send --app-name="${cfg.name}" --urgency=${cfg.urgency} --icon="${cfg.icon}" "${cfg.summary}" "${cfg.body}"
+                '';
+              in
+              "${scriptPath} %i";
+          };
         };
       };
     };
-  };
 }
