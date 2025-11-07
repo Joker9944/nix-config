@@ -1,11 +1,15 @@
-_: {
+{
   # Disk setup
-  hardware.disko.main = {
-    name = "nvme1n1";
-    size = {
-      boot = "1G";
-      main = "-100G";
-      swap = "40G";
+  mixins.hardware.disko = {
+    enable = true;
+
+    main = {
+      name = "nvme1n1";
+      size = {
+        boot = "1G";
+        main = "-100G";
+        swap = "40G";
+      };
     };
   };
 

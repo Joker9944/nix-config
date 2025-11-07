@@ -25,37 +25,15 @@ in
   # Set args inherited from mkNixosConfiguration
   networking.hostName = custom.config.hostname;
 
-  nix = {
-    settings = {
-      # Enable experimental flake support and experimental nix command
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
-    };
-
-    # Enable automatic nix store garbage collection
-    gc = {
-      automatic = lib.mkDefault true;
-      persistent = true;
-      dates = lib.mkDefault "weekly";
-    };
-
-    # Enable automatic nix store optimization
-    optimise = {
-      automatic = lib.mkDefault true;
-      dates = lib.mkDefault [ "weekly" ];
-    };
+  # import nixpkgs-unstable as module arg
+  custom.nixpkgsCompat.additionalNixpkgsInstances = {
+    pkgs-unstable = inputs.nixpkgs-unstable;
   };
 
-  # Enable automatic upgrades
-  system.autoUpgrade = {
-    enable = lib.mkDefault true;
-    persistent = true;
-    flake = "github:Joker9944/nix-config";
-    dates = lib.mkDefault "*-*-* 04:00:00 UTC"; # 1 hour after GitHub actions nix flake update
-    notify.enable = true;
-  };
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   # Set default session environment variables
   environment.sessionVariables = {
@@ -82,27 +60,15 @@ in
     };
   };
 
+  console.useXkbConfig = true;
+
   services = {
-    # Set default keymap
-    xserver.xkb = with locale; {
-      layout = lib.mkDefault de;
-      variant = lib.mkDefault us;
-    };
-
-    # Enable Tailscale by default
-    tailscale.enable = true;
-
     # Enable cups by default
     printing = {
       enable = lib.mkDefault true;
       drivers = [ pkgs.epson-escpr ];
     };
   };
-
-  console.useXkbConfig = true;
-
-  # Set default desktop environment
-  desktopEnvironment.hyprland.enable = lib.mkDefault true;
 
   # Enable default programs
   programs = {

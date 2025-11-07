@@ -5,15 +5,7 @@
     exclude = [ ./default.nix ];
   };
 
-  boot = {
-    windowsSupport.enable = true;
-    loader.limine.style.interface.brandingColor = 1; # red
-  };
-
-  programs = {
-    steam.enable = true;
-    ffmpeg.enable = true;
-  };
+  boot.loader.limine.style.interface.brandingColor = 1; # red
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

@@ -1,26 +1,16 @@
-{ ... }:
+{ utility, ... }:
 {
-  imports = [
-    ./hardware-configuration.nix
-  ];
+  imports = utility.custom.ls.lookup {
+    dir = ./.;
+    exclude = [ ./default.nix ];
+  };
+
+  mixins.keymap.type = "ch";
 
   # Lenovo ThinkPad X1 Yoga Gen 4
   # * https://wiki.archlinux.org/title/Lenovo_ThinkPad_X1_Yoga_(Gen_4)
 
-  # Disk setup
-  hardware.disko.main = {
-    name = "nvme0n1";
-    size = {
-      main = "-100G";
-      swap = "20G";
-    };
-  };
-
-  boot = {
-    # Manually add kernel modules which do net get picked up in hardware scan
-    kernelModules = [ "iwlwifi" ];
-    loader.limine.style.interface.brandingColor = 4; # blue
-  };
+  boot.loader.limine.style.interface.brandingColor = 4; # blue
 
   services = {
     # Enable finger print reader service
@@ -28,12 +18,6 @@
 
     # Supports Linux Vendor Firmware Service (lvfs)
     fwupd.enable = true;
-
-    # Override keyboard layout
-    xserver.xkb = {
-      layout = "ch";
-      variant = "";
-    };
   };
 
   # This value determines the NixOS release from which the default

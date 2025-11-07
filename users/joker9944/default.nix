@@ -9,7 +9,7 @@ let
   hostModule = lib.path.append ./hosts osConfig.networking.hostName;
 in
 {
-  inherit (osConfig) desktopEnvironment;
+  inherit (osConfig.mixins) desktopEnvironment;
 
   imports = [ ./config ] ++ lib.optional (builtins.pathExists hostModule) hostModule;
 
