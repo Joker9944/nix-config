@@ -4,11 +4,8 @@
   pkgs,
   ...
 }:
-let
-  cfg = config.services.customAutoUpgrade.notify;
-in
 {
-  options.services.customAutoUpgrade.notify = with lib; {
+  options.services.home-manager.autoUpgrade.notify = with lib; {
     enable = mkEnableOption "NixOS Upgrade Service failure notification";
 
     urgency = mkOption {
@@ -64,33 +61,44 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    home.packages = [ pkgs.libnotify ];
+  config =
+    let
+      cfg = config.services.home-manager.autoUpgrade.notify;
+    in
+    lib.mkIf cfg.enable {
+      home.packages = [ pkgs.libnotify ];
 
-    systemd.user.services = {
-      home-manager-upgrade.Unit.OnFailure = "home-manager-upgrade-notify@%n.service";
+      systemd.user.services =
+        let
+          serviceName = "home-manager-auto-upgrade";
+        in
+        {
+          ${serviceName}.Unit.OnFailure = "${serviceName}-notify@%n.service";
 
-      "home-manager-upgrade-notify@" = {
-        Unit = {
-          Description = "Home Manager Upgrade Notify";
+          "${serviceName}-notify@" = {
+            Unit = {
+              Description = "Home Manager Upgrade Notify";
+            };
+
+            Service = {
+              Type = "simple";
+
+              Environment =
+                let
+                  path = with pkgs; lib.makeBinPath [ libnotify ];
+                in
+                "\"PATH=$PATH:${path}\"";
+
+              ExecStart =
+                let
+                  scriptPath = pkgs.writeShellScript "${serviceName}-notify_-start" ''
+                    instance=$1
+                    notify-send --app-name="${cfg.name}" --urgency=${cfg.urgency} --icon="${cfg.icon}" "${cfg.summary}" "${cfg.body}"
+                  '';
+                in
+                "${scriptPath} %i";
+            };
+          };
         };
-
-        Service = {
-          Type = "simple";
-
-          ExecStart =
-            let
-              bin.notify-send = lib.getExe pkgs.libnotify;
-              scriptPath = pkgs.writeShellScript "home-manager-upgrade-notify_-start" ''
-                set -e
-
-                instance=$1
-                ${bin.notify-send} --app-name="${cfg.name}" --urgency=${cfg.urgency} --icon="${cfg.icon}" "${cfg.summary}" "${cfg.body}"
-              '';
-            in
-            "${toString scriptPath} %i";
-        };
-      };
     };
-  };
 }

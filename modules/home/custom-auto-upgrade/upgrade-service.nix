@@ -7,10 +7,10 @@
 # Lifted and adapted from https://github.com/NixOS/nixpkgs/blob/1807c2b91223227ad5599d7067a61665c52d1295/nixos/modules/tasks/auto-upgrade.nix
 # Remove once issue has been resolved https://github.com/nix-community/home-manager/issues/338
 let
-  cfg = config.services.customAutoUpgrade;
+  cfg = config.services.home-manager.autoUpgrade;
 in
 {
-  options.services.customAutoUpgrade = {
+  options.services.home-manager.autoUpgrade = {
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -104,14 +104,17 @@ in
     };
   };
 
+  # Unload default home-manager auto upgrade service
+  disabledModules = [ "services/home-manager-auto-upgrade.nix" ];
+
   config = lib.mkIf cfg.enable {
-    services.customAutoUpgrade.flags = [
+    services.home-manager.autoUpgrade.flags = [
       "--refresh"
       "--flake ${cfg.flake}"
     ];
 
     systemd.user = {
-      services.home-manager-upgrade = {
+      services.home-manager-auto-upgrade = {
         Unit = {
           Description = "Home Manager Upgrade";
 
@@ -124,21 +127,40 @@ in
         Service = {
           Type = "oneshot";
 
+          Environment =
+            let
+              path =
+                with pkgs;
+                lib.makeBinPath [
+                  home-manager
+                  nix
+                ];
+            in
+            "\"PATH=$PATH:${path}\"";
+
           ExecStart =
             let
-              bin.home-manager = lib.getExe pkgs.home-manager;
-              scriptPath = pkgs.writeShellScript "home-manager-upgrade-start" ''
-                set -e
-                ${bin.home-manager} switch ${toString cfg.flags}
-              '';
+              homeManagerCommand =
+                lib.pipe
+                  [
+                    "home-manager"
+                    "switch"
+                    cfg.flags
+                  ]
+                  [
+                    lib.flatten
+                    (lib.concatStringsSep " ")
+                  ];
             in
-            toString scriptPath;
+            pkgs.writeShellScript "home-manager-upgrade-start" ''
+              ${homeManagerCommand}
+            '';
 
           X-RestartIfChanged = false;
         };
       };
 
-      timers.home-manager-upgrade = {
+      timers.home-manager-auto-upgrade = {
         Unit.Description = "Home Manager Upgrade";
 
         Install.WantedBy = [ "timers.target" ];
