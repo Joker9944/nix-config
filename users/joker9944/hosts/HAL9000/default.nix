@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  pkgs-unstable,
   pkgs-hyprland,
   config,
   osConfig,
@@ -17,28 +16,15 @@ in
     prismlauncher
   ];
 
+  mixins.programs.lutris.enable = true;
+
   programs = {
     _1password.gitSigningKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP9R2V8FqyXifBoVO3OndfpRrqxdwK1H/3qlm645l7rg";
 
     teamspeak.enable = true;
-
-    lutris = {
-      enable = true;
-      # WORKAROUND lutris package is currently borked on 25.05 but fixed on unstable, remove once patch is backported
-      # https://github.com/NixOS/nixpkgs/issues/454995
-      package = pkgs-unstable.lutris;
-      extraPackages = with pkgs; [
-        mangohud
-        winetricks
-        gamemode
-        umu-launcher
-      ];
-      protonPackages = [ pkgs-unstable.proton-ge-bin ];
-      steamPackage = osConfig.programs.steam.package;
-    };
   };
 
-  gnome-settings = lib.mkIf config.desktopEnvironment.gnome.enable {
+  gnome-settings = lib.mkIf config.mixins.desktopEnvironment.gnome.enable {
     peripherals.touchpad.enable = false;
   };
 
@@ -56,8 +42,13 @@ in
 
     workspace = [
       "1, monitor:DP-2, default:true"
+      "2, monitor:DP-2, default:true"
+      "3, monitor:DP-2, default:true"
+      "4, monitor:DP-2, default:true"
       "5, monitor:DP-1, default:true"
+      "6, monitor:DP-1, default:true"
       "7, monitor:DP-3, default:true"
+      "8, monitor:DP-3, default:true"
       "name:gaming, monitor:DP-2"
     ];
 

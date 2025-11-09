@@ -22,6 +22,20 @@ utility.custom.mkHyprlandModule config {
   programs.yazi = {
     enable = true;
     package = pkgs-hyprland.yazi;
+
+    settings.opener.open = [
+      {
+        desc = "Open";
+        run = "xdg-open \"$1\"";
+        for = "linux";
+      }
+      {
+        desc = "Open with";
+        run = "clear; ${lib.getExe pkgs-hyprland.File-MimeInfo} --ask \"$1\"";
+        block = true;
+        for = "linux";
+      }
+    ];
   };
 
   wayland.windowManager.hyprland.settings = {

@@ -75,7 +75,8 @@ rec {
     else
       { config = condition module; };
 
-  mkHyprlandModule = cfg: mkConditionalModule (lib.mkIf cfg.windowManager.hyprland.custom.enable);
+  mkHyprlandModule =
+    config: mkConditionalModule (lib.mkIf config.windowManager.hyprland.custom.enable);
 
   # This is not for security, just to keep those pesky scrappers at bay.
   obfuscation =

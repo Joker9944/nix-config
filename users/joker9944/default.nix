@@ -9,9 +9,9 @@ let
   hostModule = lib.path.append ./hosts osConfig.networking.hostName;
 in
 {
-  inherit (osConfig.mixins) desktopEnvironment;
-
   imports = [ ./config ] ++ lib.optional (builtins.pathExists hostModule) hostModule;
+
+  mixins = { inherit (osConfig.mixins) desktopEnvironment; };
 
   sops = {
     defaultSopsFile = ./secrets.yaml;
@@ -19,7 +19,6 @@ in
   };
 
   home.packages = with pkgs; [
-    fastfetch
     imagemagick
     tree
     trash-cli
@@ -42,58 +41,17 @@ in
   ];
 
   xdg = {
-    autostart = {
-      enable = true;
-
-      entries = [ "${pkgs.telegram-desktop}/share/applications/org.telegram.desktop.desktop" ];
-    };
-
+    autostart.enable = true;
     mimeApps.enable = true;
   };
 
   programs = {
-    bash.enable = true;
-
-    vscode.enable = true;
     freelens.enable = true;
 
-    telegram.enable = true;
-    spotify.enable = true;
-    discord = {
-      enable = true;
-      package = pkgs.vesktop;
-    };
-
     git = {
-      enable = true;
       userEmail = "9194199+Joker9944@users.noreply.github.com";
       userName = "Joker9944";
-      extraConfig = {
-        init.defaultBranch = "main";
-        pull.rebase = false;
-      };
     };
-
-    ssh.enable = true;
-
-    _1password = {
-      enable = true;
-
-      sshIdentityAgentHosts = [ "*" ];
-
-      sshAgentConfig = {
-        ssh-keys = [
-          {
-            vault = "Private";
-            item = "joker9944@" + osConfig.networking.hostName;
-          }
-        ];
-      };
-
-      autostart.enable = true;
-    };
-
-    home-manager.enable = true;
   };
 
   home.stateVersion = "24.05";

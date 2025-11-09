@@ -17,7 +17,7 @@ let
 
   osConfig = nixosConfigurations.config;
 
-  commonModulePath = ../users/common;
+  commonModulePath = ../users/mixins;
   userModulePath = lib.path.append context "users/${username}";
 in
 inputs.home-manager.lib.homeManagerConfiguration {

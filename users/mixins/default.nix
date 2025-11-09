@@ -2,10 +2,16 @@
   inputs,
   custom,
   osConfig,
+  utility,
   ...
 }:
 {
-  imports = [ inputs.sops-nix.homeManagerModules.sops ];
+  imports =
+    (utility.custom.ls.lookup {
+      dir = ./.;
+      exclude = [ ./default.nix ];
+    })
+    ++ [ inputs.sops-nix.homeManagerModules.sops ];
 
   # Set args inherited from mkHomeConfiguration
   home = {
@@ -21,6 +27,20 @@
       dates
       flake
       ;
+
     notify.enable = true;
+  };
+
+  programs = {
+    ssh.enable = true;
+    home-manager.enable = true;
+
+    git = {
+      enable = true;
+      extraConfig = {
+        init.defaultBranch = "main";
+        pull.rebase = false;
+      };
+    };
   };
 }
