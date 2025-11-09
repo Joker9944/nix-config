@@ -1,21 +1,17 @@
 {
   lib,
-  pkgs,
+  pkgs-unstable,
   config,
   utility,
   ...
 }:
 let
-  cfg = config.custom.command-collection-helper;
+  cfg = config.custom.command-collection;
 in
 {
-  options.custom.command-collection-helper =
+  options.custom.command-collection =
     let
-      inherit (lib)
-        mkEnableOption
-        mkOption
-        types
-        ;
+      inherit (lib) mkEnableOption mkOption types;
 
       parameterModule = types.submodule (_: {
         options = {
@@ -124,11 +120,19 @@ in
     // {
       enable = mkEnableOption "helper";
 
+      name = mkOption {
+        type = types.str;
+        default = "command-collection";
+        description = ''
+          The top level command.
+        '';
+      };
+
       aliases = mkOption {
         type = types.listOf types.str;
         default = [ "cch" ];
         description = ''
-          Shell aliases which should be set for `command-collection-helper`.
+          Shell aliases which should be set for `command-collection`.
         '';
       };
 
@@ -143,27 +147,46 @@ in
       cliPackage =
         let
           rootTyperName = "root";
+
           imports = ''
             import typer
+            from typing_extensions import Annotated
             import subprocess
+            from pathlib import Path
           '';
-          configDict = lib.concatLines (
-            [ "config = {" ]
-            ++ (lib.mapAttrsToList (
-              name: value: utility.custom.indent 2 "\"${name}\": \"${toString value}\","
-            ) cfg.config)
-            ++ [ "}" ]
-          );
-          prefix = lib.concatLines (
-            [ imports ] ++ (lib.optional (lib.length (lib.attrNames cfg.config) > 0) configDict)
-          );
+
+          configDict =
+            lib.pipe
+              [
+                "config = {"
+                (lib.mapAttrsToList (
+                  name: value: utility.custom.indent 2 "\"${name}\": \"${toString value}\","
+                ) cfg.config)
+                "}"
+              ]
+              [
+                lib.flatten
+                lib.concatLines
+              ];
+
+          prefix =
+            lib.pipe
+              [
+                imports
+                (lib.optional (lib.length (lib.attrNames cfg.config) > 0) configDict)
+              ]
+              [
+                lib.flatten
+                lib.concatLines
+              ];
+
           suffix = ''
             if __name__ == "__main__":
               ${rootTyperName}()
           '';
 
           # helper
-          helpParameter = attrset: lib.optional (attrset.help != null) "help=\"${attrset.help}\"";
+          mkHelpParameter = attrset: lib.optional (attrset.help != null) "help=\"${attrset.help}\"";
 
           mkArguments = lib.concatStringsSep ", ";
 
@@ -174,21 +197,33 @@ in
               (lib.concatStringsSep ", ")
             ];
 
-          mkDefaultLeafCallback = typer: leaf: {
-            args = [ "invoke_without_command=True" ];
+          mkDefaultLeafCallback =
+            typer: leafName: leaf:
+            let
+              leafSwitchesWithoutContext = lib.filter (switch: switch.type != "typer.Context") leaf.switches;
 
-            switches = [
-              {
-                name = "ctx";
-                type = "typer.Context";
-              }
-            ];
+              leafArguments = lib.pipe leaf.switches [
+                (lib.map (switch: if switch.type != "typer.Context" then switch else { name = "ctx"; }))
+                (lib.map (switch: switch.name))
+                mkArguments
+              ];
+            in
+            {
+              args = [ "invoke_without_command=True" ];
 
-            code = ''
-              if ctx.invoked_subcommand is None:
-                ${typer}_${leaf}(ctx)
-            '';
-          };
+              switches = [
+                {
+                  name = "ctx";
+                  type = "typer.Context";
+                }
+              ]
+              ++ leafSwitchesWithoutContext;
+
+              code = ''
+                if ctx.invoked_subcommand is None:
+                  ${typer}_${leafName}(${leafArguments})
+              '';
+            };
 
           # branch
           mkBranch =
@@ -198,10 +233,10 @@ in
               _branch =
                 branch
                 // (lib.optionalAttrs (branch.defaultLeaf != null) {
-                  callback = mkDefaultLeafCallback typerName branch.defaultLeaf;
+                  callback = mkDefaultLeafCallback typerName branch.defaultLeaf branch.leafs.${branch.defaultLeaf};
                 });
               typerArgs = mkArguments (
-                (helpParameter _branch) ++ (lib.optional (_branch.callback == null) "no_args_is_help=True")
+                (mkHelpParameter _branch) ++ (lib.optional (_branch.callback == null) "no_args_is_help=True")
               );
               typer = "${typerName} = typer.Typer(${typerArgs})";
               typerLink = "${super}.add_typer(${typerName}, name=\"${branchName}\")";
@@ -236,39 +271,29 @@ in
 
           # leaf
           mkLeaf =
-            typer: name: leaf:
+            typer: leafName: leaf:
             let
-              args = mkArguments ([ "\"${name}\"" ] ++ leaf.args ++ (helpParameter leaf));
+              args = mkArguments ([ "\"${leafName}\"" ] ++ leaf.args ++ (mkHelpParameter leaf));
             in
             ''
               @${typer}.command(${args})
-              def ${typer}_${name}(${mkParameters leaf.switches}):
+              def ${typer}_${leafName}(${mkParameters leaf.switches}):
               ${utility.custom.indentLines 2 leaf.code}
             '';
         in
-        pkgs.callPackage ./package.nix {
+        pkgs-unstable.callPackage ./package.nix {
+          pname = cfg.name;
           code = lib.concatLines [
             prefix
             (mkBranch null rootTyperName cfg)
             suffix
           ];
         };
-      bin.cli = lib.getExe cliPackage;
     in
     {
-      programs.bash = {
-        shellAliases = lib.pipe cfg.aliases [
-          (lib.map (alias: {
-            name = alias;
-            value = "command-collection-helper";
-          }))
-          lib.listToAttrs
-        ];
-
-        initExtra = ''
-          eval "$(${bin.cli} --show-completion bash)"
-        '';
-      };
+      programs.bash.initExtra = ''
+        eval "$(${lib.getExe cliPackage} --show-completion bash)"
+      '';
 
       home.packages = [ cliPackage ];
     };

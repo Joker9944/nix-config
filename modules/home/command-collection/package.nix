@@ -1,17 +1,18 @@
 {
   lib,
+  pname,
   python3Packages,
   writeScript,
   code,
   ...
 }:
 python3Packages.buildPythonApplication {
-  pname = "command-collection-helper";
+  inherit pname;
   version = "1.0.0";
   pyproject = false; # cSpell:ignore pyproject dontUnpack
   dontUnpack = true;
 
-  src = writeScript "command-collection-helper.py" (
+  src = writeScript "${pname}.py" (
     lib.concatLines [
       "#!/usr/bin/env python3"
       code
@@ -22,8 +23,8 @@ python3Packages.buildPythonApplication {
 
   installPhase = ''
     mkdir -p $out/bin
-    cp $src $out/bin/command-collection-helper
+    cp $src $out/bin/${pname}
   '';
 
-  meta.mainProgram = "command-collection-helper";
+  meta.mainProgram = pname;
 }

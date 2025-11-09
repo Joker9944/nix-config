@@ -24,14 +24,9 @@
         ".." = "cd ..";
         "..." = "cd ../..";
         cls = "clear";
-        sops-encrypt = "sops --indent 2 --encrypt --in-place";
-        sops-decrypt = "sops --indent 2 --decrypt --in-place";
         mktar = "tar -czvf"; # cSpell:words mktar cSpell:ignore czvf
         untar = "tar -xvf"; # cSpell:words untar
-        nix-update = "sudo nixos-rebuild switch --flake \"$HOME/Workspace/nix-config\"";
-        home-update = "home-manager switch --flake \"$HOME/Workspace/nix-config\"";
         open = "xdg-open";
-        code = "codium";
       };
     };
   };

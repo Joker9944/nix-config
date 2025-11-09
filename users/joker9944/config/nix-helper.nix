@@ -1,6 +1,8 @@
-_: {
-  custom.command-collection-helper = {
+{
+  custom.command-collection = {
     enable = true;
+
+    name = "cc";
     help = "cli with a collection of common commands";
 
     config = {
@@ -10,22 +12,34 @@ _: {
 
     branches.update =
       let
-        mkUpdateLeaf = help: command: {
-          inherit help;
+        mkUpdateLeaf =
+          {
+            help,
+            command,
+            flakeDefault,
+          }:
+          {
+            inherit help;
 
-          args = [ "context_settings={\"allow_extra_args\": True, \"ignore_unknown_options\": True}" ];
+            args = [
+              "context_settings={\"allow_extra_args\": True, \"ignore_unknown_options\": True, \"help_option_names\": [\"--util-help\"]}"
+            ];
 
-          switches = [
-            {
-              name = "ctx";
-              type = "typer.Context";
-            }
-          ];
+            switches = [
+              {
+                name = "ctx";
+                type = "typer.Context";
+              }
+              {
+                name = "flake";
+                type = "Annotated[str, typer.Option()] = ${flakeDefault}";
+              }
+            ];
 
-          code = ''
-            subprocess.run(${command} + ctx.args)
-          '';
-        };
+            code = ''
+              subprocess.run(${command} + ctx.args)
+            '';
+          };
       in
       {
         help = "update system components";
@@ -35,20 +49,54 @@ _: {
             help = "update NixOS";
 
             defaultLeaf = "local";
-            leafs = {
-              local = mkUpdateLeaf "update NixOS from local config" "[\"sudo\", \"nixos-rebuild\", \"switch\", \"--flake\", config[\"flake_local\"]]";
-              git = mkUpdateLeaf "update NixOS from git config" "[\"sudo\", \"nixos-rebuild\", \"switch\", \"--flake\", config[\"flake_git\"]]";
-            };
+
+            leafs =
+              let
+                command = "[\"sudo\", \"nixos-rebuild\", \"switch\", \"--flake\", flake]";
+              in
+              {
+                local = mkUpdateLeaf {
+                  help = "update NixOS from local config";
+                  inherit command;
+                  flakeDefault = "config[\"flake_local\"]";
+                };
+
+                git = mkUpdateLeaf {
+                  help = "update NixOS from git config";
+                  inherit command;
+                  flakeDefault = "config[\"flake_git\"]";
+                };
+              };
           };
 
           home = {
             help = "update Home Manager";
 
             defaultLeaf = "local";
-            leafs = {
-              local = mkUpdateLeaf "update Home Manager from local config" "[\"home-manager\", \"switch\", \"--flake\", config[\"flake_local\"]]";
-              git = mkUpdateLeaf "update Home Manager from git config" "[\"home-manager\", \"switch\", \"--flake\", config[\"flake_git\"]]";
-            };
+
+            leafs =
+              let
+                command = "[\"home-manager\", \"switch\", \"--flake\", flake]";
+              in
+              {
+                local = mkUpdateLeaf {
+                  help = "update Home Manager from local config";
+                  inherit command;
+                  flakeDefault = "config[\"flake_local\"]";
+                };
+
+                git = mkUpdateLeaf {
+                  help = "update Home Manager from git config";
+                  inherit command;
+                  flakeDefault = "config[\"flake_git\"]";
+                };
+
+                news = mkUpdateLeaf {
+                  help = "show Home Manager news";
+                  command = "[\"home-manager\", \"news\", \"--flake\", flake]";
+                  flakeDefault = "config[\"flake_git\"]";
+                };
+              };
           };
         };
       };

@@ -101,74 +101,78 @@ in
       fluxcd # k8s -> vscode-gitops-tools extension
     ];
 
-    programs.vscode = {
-      package = pkgs-unstable.vscodium;
+    programs = {
+      bash.shellAliases.code = "codium";
 
-      profiles = {
-        default = mkProfile {
-          enableUpdateCheck = false;
-          enableExtensionUpdateCheck = false;
-        };
+      vscode = {
+        package = pkgs-unstable.vscodium;
 
-        nix = mkProfile [
-          {
-            extensions = [
-              vscode-extensions.jnoortheen.nix-ide # cSpell:words jnoortheen
-            ];
+        profiles = {
+          default = mkProfile {
+            enableUpdateCheck = false;
+            enableExtensionUpdateCheck = false;
+          };
 
-            userSettings = {
-              "nix.enableLanguageServer" = true;
-              "nix.serverPath" = "nil";
-              "nix.serverSettings" = {
-                nil.formatting.command = [ "nixfmt" ];
-                nix.flake = {
-                  autoArchive = true;
-                  autoEvalInputs = true;
+          nix = mkProfile [
+            {
+              extensions = [
+                vscode-extensions.jnoortheen.nix-ide # cSpell:words jnoortheen
+              ];
+
+              userSettings = {
+                "nix.enableLanguageServer" = true;
+                "nix.serverPath" = "nil";
+                "nix.serverSettings" = {
+                  nil.formatting.command = [ "nixfmt" ];
+                  nix.flake = {
+                    autoArchive = true;
+                    autoEvalInputs = true;
+                  };
+                };
+                "[nix]" = {
+                  "editor.tabSize" = 2;
                 };
               };
-              "[nix]" = {
-                "editor.tabSize" = 2;
+            }
+          ];
+
+          notes = mkProfile [
+            {
+              extensions = with vscode-extensions; [
+                foam.foam-vscode
+                yzhang.markdown-all-in-one # cSpell:words yzhang
+              ];
+            }
+          ];
+
+          k8s = mkProfile [
+            {
+              extensions = with vscode-extensions; [
+                ms-kubernetes-tools.vscode-kubernetes-tools
+                ms-vscode-remote.remote-containers
+                Weaveworks.vscode-gitops-tools
+              ];
+
+              userSettings = {
+                "vs-kubernetes" = {
+                  "vs-kubernetes.crd-code-completion" = "enabled";
+                };
               };
-            };
-          }
-        ];
+            }
+            {
+              extensions = [
+                vscode-extensions.redhat.vscode-yaml
+              ];
 
-        notes = mkProfile [
-          {
-            extensions = with vscode-extensions; [
-              foam.foam-vscode
-              yzhang.markdown-all-in-one # cSpell:words yzhang
-            ];
-          }
-        ];
-
-        k8s = mkProfile [
-          {
-            extensions = with vscode-extensions; [
-              ms-kubernetes-tools.vscode-kubernetes-tools
-              ms-vscode-remote.remote-containers
-              Weaveworks.vscode-gitops-tools
-            ];
-
-            userSettings = {
-              "vs-kubernetes" = {
-                "vs-kubernetes.crd-code-completion" = "enabled";
+              userSettings = {
+                "redhat.telemetry.enabled" = false;
+                "[yaml]" = {
+                  "editor.defaultFormatter" = "redhat.vscode-yaml";
+                };
               };
-            };
-          }
-          {
-            extensions = [
-              vscode-extensions.redhat.vscode-yaml
-            ];
-
-            userSettings = {
-              "redhat.telemetry.enabled" = false;
-              "[yaml]" = {
-                "editor.defaultFormatter" = "redhat.vscode-yaml";
-              };
-            };
-          }
-        ];
+            }
+          ];
+        };
       };
     };
   };
