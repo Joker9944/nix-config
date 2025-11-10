@@ -15,6 +15,7 @@
       firefox.enable = true;
       gnome-text-editor.enable = true;
       jetbrains.enable = true;
+      jupyter.enable = true;
       loupe.enable = true;
       nextcloud-client.enable = true;
       papers.enable = true;
