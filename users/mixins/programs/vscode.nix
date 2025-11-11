@@ -165,6 +165,7 @@
                   ms-kubernetes-tools.vscode-kubernetes-tools
                   ms-vscode-remote.remote-containers
                   Weaveworks.vscode-gitops-tools
+                  Grafana.grafana-alloy
                 ];
 
                 userSettings = {

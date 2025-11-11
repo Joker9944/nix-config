@@ -186,6 +186,17 @@
                 };
               };
         };
+
+        "vscode-extensions.Grafana.grafana-alloy" = final: prev: {
+          vscode-extensions =
+            lib.attrsets.recursiveUpdate
+              (lib.attrsets.optionalAttrs (prev ? vscode-extensions) prev.vscode-extensions)
+              {
+                Grafana = {
+                  inherit (self.packages.${prev.system}) grafana-alloy;
+                };
+              };
+        };
       };
 
       nixConfig = {
