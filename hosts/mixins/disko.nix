@@ -39,6 +39,10 @@
             example = "40G";
             description = ''
               Size of the swap file. The swap file is part of the main partition.
+
+              ram_size + round(sqrt(ram_size)))
+
+              32 + round(sqrt(32)) = 38
             '';
           };
 
@@ -48,6 +52,8 @@
             example = "-100G";
             description = ''
               Size of the main partition.
+
+              - round(disk_size * 0.1)
             '';
           };
         };
@@ -57,7 +63,7 @@
   config.disko.devices.disk.main =
     let
       cfg = config.mixins.hardware.disko;
-      devicePath = "/dev/${cfg.name}";
+      devicePath = "/dev/${cfg.main.name}";
     in
     lib.mkIf (cfg.enable && cfg.main.name != null) {
       device = devicePath;
