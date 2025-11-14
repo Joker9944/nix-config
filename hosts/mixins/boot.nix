@@ -18,6 +18,9 @@
     in
     {
       enable = mkEnableOption "boot config mixin";
+      secureBoot = mkEnableOption "secure boot" // {
+        default = true;
+      };
     };
 
   config =
@@ -48,7 +51,7 @@
           limine = {
             enable = lib.mkDefault true;
             maxGenerations = 10;
-            secureBoot.enable = true;
+            secureBoot.enable = cfg.secureBoot;
 
             style = {
               wallpapers = [

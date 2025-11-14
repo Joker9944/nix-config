@@ -33,6 +33,8 @@
           localNetworkGameTransfers.openFirewall = true;
 
           extraCompatPackages = [ pkgs-unstable.proton-ge-bin ];
+
+          protontricks.enable = true;
         };
 
         gamescope = {

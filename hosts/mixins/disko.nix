@@ -91,7 +91,7 @@
 
               content = {
                 type = "btrfs";
-                extraArgs = [ "-f" ];
+                extraArgs = [ "--force" ]; # Override existing partition
 
                 subvolumes = {
                   "root" = {
