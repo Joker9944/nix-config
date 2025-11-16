@@ -42,6 +42,7 @@ in
     "lens-desktop"
     "vscode-extension-ms-vscode-remote-remote-containers"
     "teamspeak3"
+    "zoom"
   ];
 
   nixpkgs.overlays = [ inputs.audiomenu.overlays.default ];

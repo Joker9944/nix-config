@@ -41,6 +41,10 @@ let
     {
       name = "freelens";
     }
+    {
+      name = "zoom";
+      package = "zoom-us";
+    }
   ];
 in
 {
