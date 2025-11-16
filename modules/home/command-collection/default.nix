@@ -135,11 +135,6 @@ in
           Shell aliases which should be set for `command-collection`.
         '';
       };
-
-      config = mkOption {
-        type = types.attrs;
-        default = { };
-      };
     };
 
   config =
@@ -155,30 +150,7 @@ in
             from pathlib import Path
           '';
 
-          configDict =
-            lib.pipe
-              [
-                "config = {"
-                (lib.mapAttrsToList (
-                  name: value: utility.custom.indent 2 "\"${name}\": \"${toString value}\","
-                ) cfg.config)
-                "}"
-              ]
-              [
-                lib.flatten
-                lib.concatLines
-              ];
-
-          prefix =
-            lib.pipe
-              [
-                imports
-                (lib.optional (lib.length (lib.attrNames cfg.config) > 0) configDict)
-              ]
-              [
-                lib.flatten
-                lib.concatLines
-              ];
+          prefix = imports;
 
           suffix = ''
             if __name__ == "__main__":
