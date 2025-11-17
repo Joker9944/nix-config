@@ -106,11 +106,6 @@
       # TODO directly ref in configs
       home.packages = with pkgs; [
         sops # default -> used for git secret encryption
-        pre-commit # default -> used for git pre commit checks
-        nixfmt-rfc-style # nix -> formatter
-        nil # nix -> language server
-        kubectl # k8s -> vscode-kubernetes-tools extension
-        kubernetes-helm # k8s -> vscode-kubernetes-tools extension
         fluxcd # k8s -> vscode-gitops-tools extension
       ];
 
@@ -135,9 +130,9 @@
 
                 userSettings = {
                   "nix.enableLanguageServer" = true;
-                  "nix.serverPath" = "nil";
+                  "nix.serverPath" = lib.getExe pkgs.nil;
                   "nix.serverSettings" = {
-                    nil.formatting.command = [ "nixfmt" ];
+                    nil.formatting.command = [ (lib.getExe pkgs.nixfmt-rfc-style) ];
                     nix.flake = {
                       autoArchive = true;
                       autoEvalInputs = true;
@@ -171,6 +166,8 @@
                 userSettings = {
                   "vs-kubernetes" = {
                     "vs-kubernetes.crd-code-completion" = "enabled";
+                    "vs-kubernetes.kubectl-path" = lib.getExe pkgs.kubectl;
+                    "vs-kubernetes.helm-path" = lib.getExe pkgs.kubernetes-helm;
                   };
                 };
               }
