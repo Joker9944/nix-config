@@ -22,6 +22,10 @@
       url = "github:jalil-salame/audiomenu/main"; # cSpell: ignore jalil-salame
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    dracula-rofi = {
+      url = "github:dracula/rofi/main";
+      flake = false;
+    };
     # helpers
     pre-commit-hooks = {
       url = "github:cachix/git-hooks.nix/master";
