@@ -16,7 +16,7 @@ utility.custom.mkHyprlandModule config {
       cfg = config.windowManager.hyprland.custom;
     in
     {
-      windowManager.hyprland.custom.launcher.type = "wofi";
+      windowManager.hyprland.custom.launcher.type = "rofi";
 
       wayland.windowManager.hyprland.settings =
         let

@@ -1,21 +1,12 @@
-/**
-  * Covers:
-  *  - app launcher
-  *  - clipboard history
-*/
 {
   lib,
   config,
-  pkgs,
   pkgs-hyprland,
   utility,
   ...
 }:
 let
-
-  bin = {
-    wofi = lib.getExe config.programs.wofi.package;
-  };
+  bin.wofi = lib.getExe config.programs.wofi.package;
 in
 utility.custom.mkHyprlandModule config {
   config =
@@ -56,7 +47,7 @@ utility.custom.mkHyprlandModule config {
           }:
           lib.pipe
             [
-              "wofi --dmenu"
+              "${bin.wofi} --dmenu"
               (lib.optional (location != null) "--location ${location}")
               (lib.optional (!search) "--define hide_search=true")
               (lib.optional (width != null) "--width ${toString width}")

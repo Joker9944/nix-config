@@ -75,6 +75,23 @@
         "type": "github"
       }
     },
+    "dracula-rofi": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1693050823,
+        "narHash": "sha256-Zx/+FLd5ocHg6+YkqOt67nWfeHR3+iitVm1uKnNXrzc=",
+        "owner": "dracula",
+        "repo": "rofi",
+        "rev": "459eee340059684bf429a5eb51f8e1cc4998eb74",
+        "type": "github"
+      },
+      "original": {
+        "owner": "dracula",
+        "ref": "main",
+        "repo": "rofi",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -775,6 +792,7 @@
       "inputs": {
         "audiomenu": "audiomenu",
         "disko": "disko",
+        "dracula-rofi": "dracula-rofi",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
         "hyprland": "hyprland",

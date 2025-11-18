@@ -26,6 +26,8 @@ utility.custom.mkHyprlandModule config {
     };
 
     windowManager.hyprland.custom.terminal = {
+      inherit (config.programs.kitty) package;
+
       mkRunCommand =
         {
           id,
