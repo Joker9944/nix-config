@@ -19,6 +19,7 @@
         "nvme"
         "usb_storage"
         "sd_mod"
+        "wacom"
       ];
       kernelModules = [ ];
     };
