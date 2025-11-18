@@ -10,28 +10,34 @@ utility.custom.mkHyprlandModule config {
     exclude = [ ./default.nix ];
   };
 
-  config.services.dunst = {
-    enable = true;
-    package = pkgs-hyprland.dunst;
+  config.services.dunst =
+    let
+      cfg = config.windowManager.hyprland.custom;
+    in
+    {
+      enable = true;
+      package = pkgs-hyprland.dunst;
 
-    settings = {
-      global = {
-        ### Display ###
+      settings = {
+        global = {
+          ### Display ###
 
-        follow = "mouse";
+          follow = "mouse";
 
-        enable_posix_regex = true;
+          enable_posix_regex = true;
 
-        ### Geometry ###
+          ### Geometry ###
 
-        width = 500;
-        height = "(0, 300)";
+          width = 500;
+          height = "(0, 300)";
 
-        origin = "top-center";
-        offset = "(0, 20)";
+          origin = "top-center";
+          offset = "(0, 20)";
 
-        notification_limit = 5;
+          notification_limit = 5;
+
+          dmenu = cfg.launcher.mkDmenuCommand { };
+        };
       };
     };
-  };
 }
