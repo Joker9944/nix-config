@@ -22,19 +22,13 @@ utility.custom.mkHyprlandModule config {
 
         extraConfig = {
           show-icons = true;
+          display-drun = "launch";
+          scroll-method = 1;
         };
-
-        font =
-          let
-            inherit (cfg.style) font;
-          in
-          "${font.name} ${toString font.size}";
 
         modes = [
           "drun"
-          "run"
           "window"
-          "ssh"
         ];
 
         plugins = [ pkgs-hyprland.rofi-calc ];
@@ -42,19 +36,10 @@ utility.custom.mkHyprlandModule config {
         terminal = lib.getExe cfg.terminal.package;
 
         # cSpell:words rasi
-        theme =
-          let
-            inherit (cfg.style) pallet;
-          in
-          lib.pipe "${inputs.dracula-rofi}/theme/config1.rasi" [
-            lib.readFile
-            (lib.replaceString "#f8f8f2" pallet.foreground.hex)
-            (lib.replaceString "#282a36" pallet.background.normal.hex)
-            (lib.replaceString "#6272a4" pallet.functional.focus.hex)
-            (lib.replaceString "#ff5555" pallet.red.dull.hex)
-            (pkgs.writeText "dracula.rasi")
-            builtins.toString
-          ];
+        theme = import ./theme.rasi.nix {
+          inherit cfg;
+          inherit (config.lib.formats) rasi;
+        };
       };
 
       windowManager.hyprland.custom.launcher = {
