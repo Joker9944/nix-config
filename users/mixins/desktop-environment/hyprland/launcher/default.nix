@@ -23,7 +23,11 @@ utility.custom.mkHyprlandModule config {
           inherit (cfg.binds) mods;
           bin.pkill = lib.getExe' pkgs.procps "pkill";
           trimmedProcessName = lib.substring 0 15 cfg.launcher.processName; # maximum process name length is 15 characters
-          command = "${bin.pkill} --exact \"${trimmedProcessName}\" || ${cfg.launcher.mkDrunCommand { }}";
+          drunCommand = cfg.launcher.mkDrunCommand {
+            icons = true;
+          };
+
+          command = "${bin.pkill} --exact \"${trimmedProcessName}\" || ${drunCommand}";
         in
         {
           bindr = [

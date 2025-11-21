@@ -19,8 +19,8 @@ utility.custom.mkHyprlandModule config {
         package = pkgs-hyprland.rofi;
 
         extraConfig = {
-          show-icons = true;
           display-drun = "launch";
+          display-window = "switch";
           scroll-method = 1;
         };
 
@@ -43,7 +43,21 @@ utility.custom.mkHyprlandModule config {
       windowManager.hyprland.custom.launcher = {
         processName = "rofi";
 
-        mkDrunCommand = _: "${bin.rofi} -show drun";
+        mkDrunCommand =
+          {
+            icons ? false,
+            ...
+          }:
+          lib.pipe
+            [
+              bin.rofi
+              "-show drun"
+              (lib.optional icons "-show-icons")
+            ]
+            [
+              lib.flatten
+              (lib.concatStringsSep " ")
+            ];
 
         mkDmenuCommand =
           {
@@ -108,7 +122,8 @@ utility.custom.mkHyprlandModule config {
           in
           lib.pipe
             [
-              "${bin.rofi} -dmenu"
+              bin.rofi
+              "-dmenu"
               (lib.optional (themeString != "") "-theme-str \"${themeString}\"")
               extraArgs
             ]
