@@ -48,16 +48,11 @@ utility.custom.mkHyprlandModule config {
             icons ? false,
             ...
           }:
-          lib.pipe
-            [
-              bin.rofi
-              "-show drun"
-              (lib.optional icons "-show-icons")
-            ]
-            [
-              lib.flatten
-              (lib.concatStringsSep " ")
-            ];
+          utility.custom.mkCommand [
+            bin.rofi
+            "-show drun"
+            (lib.optional icons "-show-icons")
+          ];
 
         mkDmenuCommand =
           {
@@ -120,17 +115,12 @@ utility.custom.mkHyprlandModule config {
                   (lib.concatStringsSep " ")
                 ];
           in
-          lib.pipe
-            [
-              bin.rofi
-              "-dmenu"
-              (lib.optional (themeString != "") "-theme-str \"${themeString}\"")
-              extraArgs
-            ]
-            [
-              lib.flatten
-              (lib.concatStringsSep " ")
-            ];
+          utility.custom.mkCommand [
+            bin.rofi
+            "-dmenu"
+            (lib.optional (themeString != "") "-theme-str \"${themeString}\"")
+            extraArgs
+          ];
       };
     };
 }

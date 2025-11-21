@@ -95,4 +95,11 @@ rec {
 
   first = list: lib.elemAt list 0;
   last = list: lib.elemAt list ((lib.length list) - 1);
+
+  mkCommand =
+    elems:
+    lib.pipe elems [
+      lib.flatten
+      (lib.concatStringsSep " ")
+    ];
 }

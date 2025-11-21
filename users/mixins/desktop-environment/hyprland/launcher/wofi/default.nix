@@ -45,21 +45,16 @@ utility.custom.mkHyprlandModule config {
             extraArgs ? [ ],
             ...
           }:
-          lib.pipe
-            [
-              "${bin.wofi} --dmenu"
-              (lib.optional (location != null) "--location ${location}")
-              (lib.optional (!search) "--define hide_search=true")
-              (lib.optional (width != null) "--width ${toString width}")
-              (lib.optional (height != null) "--height ${toString height}")
-              (lib.optional (x != null) "--xoffset ${toString x}")
-              (lib.optional (y != null) "--yoffset ${toString y}")
-              extraArgs
-            ]
-            [
-              lib.flatten
-              (lib.concatStringsSep " ")
-            ];
+          utility.custom.mkCommand [
+            "${bin.wofi} --dmenu"
+            (lib.optional (location != null) "--location ${location}")
+            (lib.optional (!search) "--define hide_search=true")
+            (lib.optional (width != null) "--width ${toString width}")
+            (lib.optional (height != null) "--height ${toString height}")
+            (lib.optional (x != null) "--xoffset ${toString x}")
+            (lib.optional (y != null) "--yoffset ${toString y}")
+            extraArgs
+          ];
       };
     };
 }
