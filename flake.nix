@@ -197,6 +197,18 @@
                 };
               };
         };
+
+        # WORKAROUND electron based application only recognize gnome keyring when XDG_CURRENT_DESKTOP is set to GNOME.
+        # remove once resolved https://github.com/electron/electron/issues/47436
+        element-desktop-gnome-keyring-fix = final: prev: {
+          element-desktop = prev.element-desktop.overrideAttrs (
+            finalAttrs: previousAttrs: {
+              desktopItem = previousAttrs.desktopItem.override {
+                exec = "element-desktop --password-store=gnome-libsecret %u"; # cSpell:words libsecret
+              };
+            }
+          );
+        };
       };
 
       nixConfig = {

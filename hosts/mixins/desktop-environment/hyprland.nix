@@ -59,5 +59,8 @@
         # Needed for mounting disks without root privileges
         udisks2.enable = true;
       };
+
+      # Allow hyprlock to be installed and used on user level
+      security.pam.services.hyprlock.enableGnomeKeyring = true;
     };
 }
