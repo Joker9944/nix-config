@@ -107,6 +107,7 @@
       home.packages = with pkgs; [
         sops # default -> used for git secret encryption
         fluxcd # k8s -> vscode-gitops-tools extension
+        grafana-alloy # k8s -> grafana-alloy extension
       ];
 
       programs = {
