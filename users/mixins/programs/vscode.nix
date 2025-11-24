@@ -57,11 +57,23 @@
             vscode-extensions.esbenp.prettier-vscode # cSpell:words esbenp
           ];
 
-          userSettings = {
-            "[markdown]" = {
-              "editor.defaultFormatter" = "esbenp.prettier-vscode";
-            };
-          };
+          userSettings =
+            lib.pipe
+              [
+                "markdown"
+                "json"
+                "yaml"
+              ]
+              [
+                (lib.map (filetype: "[${filetype}]"))
+                (lib.map (filetype: {
+                  name = filetype;
+                  value = {
+                    "editor.defaultFormatter" = "esbenp.prettier-vscode";
+                  };
+                }))
+                lib.listToAttrs
+              ];
         }
         {
           extensions = [

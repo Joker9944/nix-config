@@ -4,12 +4,18 @@
   pkgs-hyprland,
   config,
   osConfig,
+  utility,
   ...
 }:
 let
   bin.xrandr = lib.getExe pkgs-hyprland.xorg.xrandr;
 in
 {
+  imports = utility.custom.ls.lookup {
+    dir = ./.;
+    exclude = [ ./default.nix ];
+  };
+
   xdg.autostart.entries = [ "${osConfig.programs.steam.package}/share/applications/steam.desktop" ];
 
   home.packages = with pkgs; [
