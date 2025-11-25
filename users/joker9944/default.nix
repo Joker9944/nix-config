@@ -54,5 +54,8 @@ in
     };
   };
 
-  home.stateVersion = "24.05";
+  home = {
+    enableNixpkgsReleaseCheck = false;
+    stateVersion = "24.05";
+  };
 }
