@@ -7,9 +7,6 @@
 let
   programs = [
     {
-      name = "discord";
-    }
-    {
       name = "gnome-text-editor";
     }
     {

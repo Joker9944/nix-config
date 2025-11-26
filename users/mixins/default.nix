@@ -32,12 +32,16 @@
   };
 
   programs = {
-    ssh.enable = true;
+    ssh = {
+      enable = true;
+      enableDefaultConfig = false;
+    };
+
     home-manager.enable = true;
 
     git = {
       enable = true;
-      extraConfig = {
+      settings = {
         init.defaultBranch = "main";
         pull.rebase = false;
       };

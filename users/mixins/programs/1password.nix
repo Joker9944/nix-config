@@ -26,7 +26,7 @@
     lib.mkIf cfg.enable {
       enable = true;
 
-      sshIdentityAgentHosts = [ "*" ];
+      blocks = [ "*" ];
 
       sshAgentConfig.ssh-keys = [
         {

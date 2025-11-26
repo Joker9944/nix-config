@@ -7,6 +7,7 @@
 }:
 let
   cfg = config.programs._1password;
+  tomlFormat = pkgs.formats.toml { };
 in
 {
   options.programs._1password = with lib; {
@@ -21,17 +22,17 @@ in
       '';
     };
 
-    sshIdentityAgentHosts = mkOption {
+    blocks = mkOption {
       type = types.listOf types.str;
       default = [ ];
       example = [ "*" ];
       description = ''
-        List of host on which the 1Password SSH agent should act.
+        List of blocks on which the 1Password SSH agent should act.
       '';
     };
 
     sshAgentConfig = mkOption {
-      type = types.nullOr types.attrs;
+      inherit (tomlFormat) type;
       default = null;
       example = {
         ssh-keys = [
@@ -43,7 +44,7 @@ in
       };
       description = ''
         Config file for the 1Password SSH agent.
-        https://developer.1password.com/docs/ssh/agent/config/
+        <https://developer.1password.com/docs/ssh/agent/config/>
       '';
     };
 
@@ -62,38 +63,33 @@ in
 
   config = lib.mkIf cfg.enable {
     programs = {
-      git.extraConfig = lib.mkIf (cfg.gitSigningKey != null) {
-        gpg = {
-          format = "ssh";
-        };
+      git.signing = lib.mkIf (cfg.gitSigningKey != null) {
+        format = "ssh";
 
-        "gpg \"ssh\"" = {
-          program = "${lib.getExe' pkgs._1password-gui "op-ssh-sign"}";
-        };
+        key = cfg.gitSigningKey;
 
-        commit = {
-          gpgsign = true;
-        };
+        signByDefault = true;
 
-        user = {
-          signingkey = cfg.gitSigningKey;
-        };
+        signer = "${lib.getExe' pkgs._1password-gui "op-ssh-sign"}";
       };
 
-      ssh.extraConfig = lib.mkIf (cfg.sshIdentityAgentHosts != [ ]) (
-        lib.foldr (el: acc: el + "\n" + acc) "" (
-          map (host: ''
-            Host ${host}
-              IdentityAgent ~/.1password/agent.sock
-          '') cfg.sshIdentityAgentHosts
-        )
-      );
+      ssh.matchBlocks = lib.pipe cfg.blocks [
+        (lib.map (name: {
+          inherit name;
+          value = {
+            identityAgent = "~/.1password/agent.sock";
+          };
+        }))
+        lib.listToAttrs
+      ];
     };
 
     xdg = {
-      configFile."1Password/ssh/agent.toml".text = lib.mkIf (cfg.sshAgentConfig != null) (
-        utility.std.serde.toTOML cfg.sshAgentConfig
-      );
+      configFile."1Password/ssh/agent.toml".source =
+        let
+          agentToml = tomlFormat.generate "1password-agent.toml" cfg.sshAgentConfig;
+        in
+        lib.mkIf (cfg.sshAgentConfig != null) agentToml;
 
       autostart = lib.mkIf cfg.autostart.enable {
         enable = lib.mkDefault true;

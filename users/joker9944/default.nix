@@ -48,14 +48,11 @@ in
   programs = {
     freelens.enable = true;
 
-    git = {
-      userEmail = "9194199+Joker9944@users.noreply.github.com";
-      userName = "Joker9944";
+    git.settings.user = {
+      email = "9194199+Joker9944@users.noreply.github.com";
+      name = "Joker9944";
     };
   };
 
-  home = {
-    enableNixpkgsReleaseCheck = false;
-    stateVersion = "24.05";
-  };
+  home.stateVersion = "24.05";
 }
