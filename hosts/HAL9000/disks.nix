@@ -8,6 +8,7 @@
       size = {
         boot = "1G";
         main = "-100G";
+        # TODO Change to 38G if ever reformatting
         swap = "40G";
       };
     };
@@ -20,6 +21,7 @@
     content = {
       type = "gpt";
       partitions = {
+        # TODO rename to main if ever reformatting
         games = {
           end = "-100G";
           content = {
