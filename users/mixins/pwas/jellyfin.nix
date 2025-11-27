@@ -17,34 +17,30 @@
     let
       cfg = config.mixins.pwas.jellyfin;
       name = "Jellyfin";
-      url = "https://jellyfin.vonarx.online/";
+      urlBase = "https://jellyfin.vonarx.online";
+      ulid1 = "01KB0KV6DFPC17TBFBHNG8QHYF"; # cSpell:disable-line
+      ulid2 = "01KB0KWBEA7G5M4BFEZ2T42ETH"; # cSpell:disable-line
     in
     lib.mkIf cfg.enable {
       enable = lib.mkDefault true;
 
-      profiles =
-        let
-          ulid1 = "01KB0KV6DFPC17TBFBHNG8QHYF"; # cSpell:disable-line
-          ulid2 = "01KB0KWBEA7G5M4BFEZ2T42ETH"; # cSpell:disable-line
-        in
-        {
-          ${ulid1} = {
-            inherit name;
+      profiles.${ulid1} = {
+        inherit name;
 
-            sites.${ulid2} = {
-              inherit name url;
-              manifestUrl = "${url}web/manifest.json";
+        sites.${ulid2} = {
+          inherit name;
+          url = "${urlBase}/";
+          manifestUrl = "${urlBase}/web/manifest.json";
 
-              desktopEntry = {
-                categories = lib.toList "AudioVideo";
+          desktopEntry = {
+            categories = lib.toList "AudioVideo";
 
-                icon = pkgs.fetchurl {
-                  url = "${url}web/favicons/touchicon512.png"; # cSpell:ignore favicons touchicon
-                  sha256 = "sha256-SsYjD97xOjfxrt03QFEaoxXxAfqqtJ7BAsYosUYWT1U=";
-                };
-              };
+            icon = pkgs.fetchurl {
+              url = "${urlBase}/web/favicons/touchicon512.png"; # cSpell:ignore favicons touchicon
+              sha256 = "sha256-SsYjD97xOjfxrt03QFEaoxXxAfqqtJ7BAsYosUYWT1U=";
             };
           };
         };
+      };
     };
 }

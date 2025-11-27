@@ -28,6 +28,7 @@
     };
 
     pwas = {
+      audiobookshelf.enable = true;
       jellyfin.enable = true;
     };
   };
