@@ -26,5 +26,9 @@
       xournalpp.enable = true;
       zoom.enable = true;
     };
+
+    pwas = {
+      jellyfin.enable = true;
+    };
   };
 }
