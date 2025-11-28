@@ -52,10 +52,18 @@
         };
 
         style = {
-          font = {
-            name = "Inter";
-            package = pkgs.inter;
-            size = 10;
+          fonts = {
+            interface = {
+              name = "Inter";
+              package = pkgs.inter;
+              size = 10;
+            };
+
+            terminal = {
+              name = "JetBrains Mono Nerd Font";
+              package = pkgs.nerd-fonts.jetbrains-mono;
+              size = 10;
+            };
           };
 
           pallet = custom.assets.palettes.dracula;

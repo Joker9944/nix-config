@@ -1,6 +1,3 @@
-/**
-  * status bar
-*/
 {
   lib,
   config,

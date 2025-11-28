@@ -4,27 +4,34 @@
   options,
   ...
 }:
-let
-  cfg = config.windowManager.hyprland.custom.style;
-in
 {
   options.windowManager.hyprland.custom.style =
     let
       inherit (lib) mkOption types;
     in
     {
-      font = mkOption {
-        type = types.nullOr lib.hm.types.fontType;
-        default = null;
-        description = ''
-          Preferred interface text font for referenced.
-        '';
+      fonts = {
+        interface = mkOption {
+          type = types.nullOr lib.hm.types.fontType;
+          default = null;
+          description = ''
+            Preferred interface text font for reference.
+          '';
+        };
+
+        terminal = mkOption {
+          type = types.nullOr lib.hm.types.fontType;
+          default = null;
+          description = ''
+            Preferred terminal text font for reference.
+          '';
+        };
       };
 
       pallet = mkOption {
         type = types.nullOr types.attrs;
         description = ''
-          Color pallet that can be referenced.
+          Color pallet that can be reference.
         '';
       };
 
@@ -87,9 +94,18 @@ in
       };
     };
 
-  config.home.packages = lib.flatten [
-    (lib.optional (cfg.font != null && cfg.font.package != null) cfg.font.package)
-    (lib.optional (cfg.xCursor != null && cfg.xCursor.package != null) cfg.xCursor.package)
-    (lib.optional (cfg.icons != null && cfg.icons.package != null) cfg.icons.package)
-  ];
+  config.home.packages =
+    let
+      cfg = config.windowManager.hyprland.custom.style;
+    in
+    lib.flatten [
+      (lib.optional (
+        cfg.fonts.interface != null && cfg.fonts.interface.package != null
+      ) cfg.fonts.interface.package)
+      (lib.optional (
+        cfg.fonts.terminal != null && cfg.fonts.terminal.package != null
+      ) cfg.fonts.terminal.package)
+      (lib.optional (cfg.xCursor != null && cfg.xCursor.package != null) cfg.xCursor.package)
+      (lib.optional (cfg.icons != null && cfg.icons.package != null) cfg.icons.package)
+    ];
 }

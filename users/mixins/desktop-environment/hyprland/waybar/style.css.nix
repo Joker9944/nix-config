@@ -1,6 +1,8 @@
 { config, ... }:
-with config.windowManager.hyprland.custom.style;
-# TODO make derivation with jinja to template this
+# TODO make a nix to css lib
+let
+  inherit (config.windowManager.hyprland.custom.style) pallet opacity;
+in
 ''
   window#waybar {
     background-color: ${pallet.background.normal.rgba opacity.active};

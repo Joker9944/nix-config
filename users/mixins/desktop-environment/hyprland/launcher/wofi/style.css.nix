@@ -1,5 +1,7 @@
 { cfg, ... }:
-with cfg.style;
+let
+  inherit (cfg.style) pallet opacity;
+in
 ''
   #window {
     background-color: ${pallet.background.normal.rgba opacity.active};

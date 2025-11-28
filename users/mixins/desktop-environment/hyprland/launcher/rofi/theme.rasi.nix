@@ -1,25 +1,22 @@
 { cfg, rasi, ... }:
 let
-  inherit (cfg) style;
+  inherit (cfg.style) pallet opacity border;
   inherit (rasi) mkLiteral;
+  font = cfg.style.fonts.interface;
 in
 {
   # cSpell:words rasi mainbox inputbar listview
   "*" = {
-    font =
-      let
-        inherit (style) font;
-      in
-      "${font.name} ${toString font.size}";
-    text-color = mkLiteral style.pallet.cursor.rgb;
+    font = "${font.name} ${toString font.size}";
+    text-color = mkLiteral pallet.cursor.rgb;
     background-color = mkLiteral "transparent";
   };
 
   window = {
-    background-color = mkLiteral (style.pallet.background.normal.rgba style.opacity.active);
-    border = mkLiteral "${toString style.border.size}px";
-    border-radius = mkLiteral "${toString style.border.corners.rounding}px";
-    border-color = mkLiteral (style.pallet.functional.focus.rgba 0.93);
+    background-color = mkLiteral (pallet.background.normal.rgba opacity.active);
+    border = mkLiteral "${toString border.size}px";
+    border-radius = mkLiteral "${toString border.corners.rounding}px";
+    border-color = mkLiteral (pallet.functional.focus.rgba 0.93);
   };
 
   mainbox = {
@@ -34,19 +31,15 @@ in
       "case-indicator"
     ];
 
-    font =
-      let
-        inherit (style) font;
-      in
-      "${font.name} Bold ${toString font.size}";
+    font = "${font.name} Bold ${toString font.size}";
 
-    background-color = mkLiteral style.pallet.background.light.rgb;
+    background-color = mkLiteral pallet.background.light.rgb;
 
     padding = mkLiteral "5px";
 
     border = mkLiteral "1px";
-    border-radius = mkLiteral "${toString style.border.corners.rounding}px";
-    border-color = mkLiteral style.pallet.background.lighter.rgb;
+    border-radius = mkLiteral "${toString border.corners.rounding}px";
+    border-color = mkLiteral pallet.background.lighter.rgb;
   };
 
   prompt = {
@@ -75,19 +68,19 @@ in
 
   element = {
     padding = mkLiteral "5px";
-    border-radius = mkLiteral "${toString style.border.corners.rounding}px";
+    border-radius = mkLiteral "${toString border.corners.rounding}px";
   };
 
   "element selected" = {
-    background-color = mkLiteral (style.pallet.functional.focus.rgba style.opacity.active);
+    background-color = mkLiteral (pallet.functional.focus.rgba opacity.active);
   };
 
   "element normal.active, element selected.active" = {
-    text-color = mkLiteral style.pallet.blue.dull.rgb;
+    text-color = mkLiteral pallet.blue.dull.rgb;
   };
 
   "element normal.urgent, element selected.urgent" = {
-    text-color = mkLiteral style.pallet.red.dull.rgb;
+    text-color = mkLiteral pallet.red.dull.rgb;
   };
 
   element-icon = {

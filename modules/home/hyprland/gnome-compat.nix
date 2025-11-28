@@ -10,12 +10,16 @@ in
 {
   options.windowManager.hyprland.custom.gnome-compat = with lib; {
     inherit (options.gnome-settings.appearance) style accentColor;
-    inherit (options.gnome-tweaks.fonts) documentText monospaceText;
+    inherit (options.gnome-tweaks.fonts) documentText;
     inherit (options.gtk) theme;
     enable = mkEnableOption "compatibility config for GTK and GNOME apps";
 
     interfaceText = options.gnome-tweaks.fonts.interfaceText // {
-      default = config.windowManager.hyprland.custom.style.font;
+      default = config.windowManager.hyprland.custom.style.fonts.interface;
+    };
+
+    monospaceText = options.gnome-tweaks.fonts.monospaceText // {
+      default = config.windowManager.hyprland.custom.style.fonts.terminal;
     };
 
     cursorTheme = options.gtk.cursorTheme // {
