@@ -52,7 +52,7 @@ in
     margin = mkLiteral "0 5px 0 0";
 
     expand = false;
-    str = ">";
+    str = "»";
   };
 
   entry = {

@@ -1,8 +1,4 @@
-{
-  config,
-  utility,
-  ...
-}:
+{ config, utility, ... }:
 utility.custom.mkHyprlandModule config {
   programs.kitty =
     let
