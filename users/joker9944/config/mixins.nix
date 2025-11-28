@@ -25,6 +25,7 @@
     pwas = {
       audiobookshelf.enable = true;
       jellyfin.enable = true;
+      youtube.enable = true;
     };
   };
 }
