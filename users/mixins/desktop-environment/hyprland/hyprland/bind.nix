@@ -36,10 +36,6 @@ utility.custom.mkHyprlandModule config {
       # Example special workspace (scratchpad)
       "${mods.main}, S, togglespecialworkspace, magic"
       "${mods.workspace}, S, movetoworkspace, special:magic"
-
-      # Multimedia keys
-      ", XF86AudioMute, exec, ${bin.wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle"
-      ", XF86AudioMicMute, exec, ${bin.wpctl} set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
     ]
     ++ (lib.lists.flatten (
       lib.lists.genList (
@@ -77,6 +73,9 @@ utility.custom.mkHyprlandModule config {
       ", XF86AudioPause, exec, ${bin.playerctl} play-pause"
       ", XF86AudioPlay, exec, ${bin.playerctl} play-pause"
       ", XF86AudioPrev, exec, ${bin.playerctl} previous"
+      # Multimedia keys
+      ", XF86AudioMute, exec, ${bin.wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle"
+      ", XF86AudioMicMute, exec, ${bin.wpctl} set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
     ];
   };
 }

@@ -4,6 +4,7 @@
 
     programs = {
       _1password.enable = true;
+      atuin.enable = true;
       bash.enable = true;
       discord.enable = true;
       firefox.enable = true;
@@ -11,6 +12,7 @@
       intelli-shell.enable = true;
       jetbrains.enable = true;
       jupyter.enable = true;
+      kitty.enable = true;
       loupe.enable = true;
       nextcloud-client.enable = true;
       papers.enable = true;

@@ -11,7 +11,10 @@
 let
   inherit (cfg.binds) mods;
   cfg = config.windowManager.hyprland.custom;
-  bin.kitty = lib.getExe config.programs.kitty.package;
+  bin = {
+    kitty = lib.getExe config.programs.kitty.package;
+    kitten = lib.getExe' config.programs.kitty.package "kitten";
+  };
 in
 utility.custom.mkHyprlandModule config {
   imports = utility.custom.ls.lookup {
@@ -40,7 +43,10 @@ utility.custom.mkHyprlandModule config {
     };
 
     wayland.windowManager.hyprland.settings = {
-      bind = [ "${mods.main}, T, exec, ${bin.kitty}" ];
+      bind = [
+        "${mods.main}, T, exec, ${bin.kitty}"
+        "${mods.main}, SPACE, exec, SKIP_FASTFETCH=true ${bin.kitten} quick-access-terminal"
+      ];
 
       windowrule = cfg.terminal.mkWindowRules {
         id = "kitty";

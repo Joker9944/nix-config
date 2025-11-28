@@ -30,6 +30,7 @@ utility.custom.mkHyprlandModule config {
           command = "${bin.pkill} --exact \"${trimmedProcessName}\" || ${drunCommand}";
         in
         {
+          # Trigger on release so other key binds still work
           bindr = [
             "${mods.main}, SUPER_L, exec, ${command}"
           ];

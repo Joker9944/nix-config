@@ -28,7 +28,9 @@
             nix-instantiate --eval-only --expr "(import <nixpkgs> {}).$1.outPath" | cut -d '"' -f 2
           }
 
-          ${lib.getExe pkgs.fastfetch}
+          if [[ -z ''${SKIP_FASTFETCH+x} ]]; then
+            ${lib.getExe pkgs.fastfetch}
+          fi
         '';
 
         shellAliases = {
