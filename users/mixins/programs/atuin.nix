@@ -14,5 +14,7 @@
     in
     lib.mkIf cfg.enable {
       enable = true;
+
+      daemon.enable = true;
     };
 }
