@@ -263,7 +263,7 @@ in
           ];
         };
     in
-    {
+    lib.mkIf cfg.enable {
       programs.bash.initExtra = ''
         eval "$(${lib.getExe cliPackage} --show-completion bash)"
       '';
