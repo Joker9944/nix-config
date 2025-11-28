@@ -21,8 +21,6 @@
     lib.mkIf cfg.enable {
       enable = true;
 
-      # WORKAROUND lutris package is currently borked on 25.05 but fixed on unstable, remove once patch is backported
-      # https://github.com/NixOS/nixpkgs/issues/454995
       package = pkgs-unstable.lutris;
       extraPackages = with pkgs-unstable; [
         mangohud

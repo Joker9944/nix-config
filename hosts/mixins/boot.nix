@@ -1,5 +1,4 @@
 {
-  inputs,
   lib,
   config,
   pkgs,
@@ -7,11 +6,6 @@
   ...
 }:
 {
-  # WORKAROUND Secure Boot for Limine is only available on unstable, so just override the module from unstable.
-  # https://wiki.nixos.org/wiki/Limine
-  disabledModules = [ "system/boot/loader/limine/limine.nix" ];
-  imports = [ "${inputs.nixpkgs-unstable}/nixos/modules/system/boot/loader/limine/limine.nix" ];
-
   options.mixins.boot =
     let
       inherit (lib) mkEnableOption;
