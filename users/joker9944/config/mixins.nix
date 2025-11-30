@@ -29,5 +29,9 @@
       jellyfin.enable = true;
       youtube.enable = true;
     };
+
+    services = {
+      ollama.enable = true;
+    };
   };
 }

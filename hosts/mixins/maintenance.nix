@@ -47,8 +47,8 @@
 
       systemd = {
         slices.anti-hungry.sliceConfig = {
-          CPUAccounting = true;
-          CPUQuota = "50%";
+          CPUWeight = 20;
+          IOWeight = 20;
           MemoryAccounting = true;
           MemoryHigh = "50%";
           MemoryMax = "75%";
