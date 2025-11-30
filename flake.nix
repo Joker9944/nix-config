@@ -124,8 +124,9 @@
                 args = [ "--fix=lf" ];
               };
               cspell.enable = true;
-              nixfmt-rfc-style.enable = true;
+              deadnix.enable = true;
               nil.enable = true;
+              nixfmt-rfc-style.enable = true;
               statix.enable = true;
             };
           };
@@ -142,19 +143,19 @@
     )
     // {
       overlays = {
-        firefox-profile-switcher-connector = final: prev: {
+        firefox-profile-switcher-connector = _: prev: {
           inherit (self.packages.${prev.system}) firefox-profile-switcher-connector;
         };
 
-        File-MimeInfo = final: prev: {
+        File-MimeInfo = _: prev: {
           inherit (self.packages.${prev.system}) File-MimeInfo;
         };
 
-        freelens = final: prev: {
+        freelens = _: prev: {
           inherit (self.packages.${prev.system}) freelens;
         };
 
-        "vscode-extensions.streetsidesoftware.code-spell-checker-swiss-german" = final: prev: {
+        "vscode-extensions.streetsidesoftware.code-spell-checker-swiss-german" = _: prev: {
           vscode-extensions =
             lib.attrsets.recursiveUpdate
               (lib.attrsets.optionalAttrs (prev ? vscode-extensions) prev.vscode-extensions)
@@ -165,7 +166,7 @@
               };
         };
 
-        "vscode-extensions.blueglassblock.better-json5" = final: prev: {
+        "vscode-extensions.blueglassblock.better-json5" = _: prev: {
           vscode-extensions =
             lib.attrsets.recursiveUpdate
               (lib.attrsets.optionalAttrs (prev ? vscode-extensions) prev.vscode-extensions)
@@ -176,7 +177,7 @@
               };
         };
 
-        "vscode-extensions.Weaveworks.vscode-gitops-tools" = final: prev: {
+        "vscode-extensions.Weaveworks.vscode-gitops-tools" = _: prev: {
           vscode-extensions =
             lib.attrsets.recursiveUpdate
               (lib.attrsets.optionalAttrs (prev ? vscode-extensions) prev.vscode-extensions)
@@ -187,7 +188,7 @@
               };
         };
 
-        "vscode-extensions.Grafana.grafana-alloy" = final: prev: {
+        "vscode-extensions.Grafana.grafana-alloy" = _: prev: {
           vscode-extensions =
             lib.attrsets.recursiveUpdate
               (lib.attrsets.optionalAttrs (prev ? vscode-extensions) prev.vscode-extensions)
@@ -200,9 +201,9 @@
 
         # WORKAROUND electron based application only recognize gnome keyring when XDG_CURRENT_DESKTOP is set to GNOME.
         # remove once resolved https://github.com/electron/electron/issues/47436
-        element-desktop-gnome-keyring-fix = final: prev: {
+        element-desktop-gnome-keyring-fix = _: prev: {
           element-desktop = prev.element-desktop.overrideAttrs (
-            finalAttrs: previousAttrs: {
+            _: previousAttrs: {
               desktopItem = previousAttrs.desktopItem.override {
                 exec = "element-desktop --password-store=gnome-libsecret %u"; # cSpell:words libsecret
               };
