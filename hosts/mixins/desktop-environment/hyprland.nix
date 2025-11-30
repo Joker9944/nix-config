@@ -12,7 +12,6 @@
   pkgs-hyprland,
   ...
 }:
-
 {
   options.mixins.desktopEnvironment.hyprland =
     let
@@ -30,6 +29,11 @@
 
       custom.nixpkgsCompat.additionalNixpkgsInstances = {
         pkgs-hyprland = inputs.hyprland.inputs.nixpkgs;
+      };
+
+      nix.settings = {
+        substituters = lib.toList "https://hyprland.cachix.org";
+        trusted-public-keys = lib.toList "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="; # cSpell:disable-line
       };
 
       programs.hyprland = {

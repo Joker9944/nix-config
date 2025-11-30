@@ -11,8 +11,13 @@
       "nvidia-settings"
     ];
 
-    allowUnfreeLicenses = [ lib.licenses.nvidiaCuda ];
+    allowUnfreeLicenses = [
+      "CUDA EULA"
+      "cuDNN EULA"
+    ];
   };
+
+  nixpkgs.config.cudaSupport = true;
 
   # TODO investigate if this is properly setup
 

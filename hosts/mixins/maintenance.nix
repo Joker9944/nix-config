@@ -44,5 +44,22 @@
         dates = lib.mkDefault "*-*-* 04:00:00 UTC"; # 1 hour after GitHub actions nix flake update
         notify.enable = true;
       };
+
+      systemd = {
+        slices.anti-hungry.sliceConfig = {
+          CPUAccounting = true;
+          CPUQuota = "50%";
+          MemoryAccounting = true;
+          MemoryHigh = "50%";
+          MemoryMax = "75%";
+          MemorySwapMax = "50%";
+          MemoryZSwapMax = "50%";
+        };
+
+        services = {
+          nix-daemon.serviceConfig.Slice = "anti-hungry.slice";
+          nixos-upgrade.serviceConfig.Slice = "anti-hungry.slice";
+        };
+      };
     };
 }

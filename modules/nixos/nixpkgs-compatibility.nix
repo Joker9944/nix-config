@@ -24,15 +24,16 @@
       };
 
       allowUnfreeLicenses = mkOption {
-        type = types.listOf types.attrs;
+        type = types.listOf types.str;
         default = [ ];
         example = literalExpression ''
           [
-            lib.licenses.nvidiaCuda
+            "CUDA EULA"
+            "cuDNN EULA"
           ]
         '';
         description = ''
-          Package licenses which should be allowed.
+          Unfree package licenses which should be allowed.
         '';
       };
 
@@ -41,7 +42,7 @@
         default = [ ];
         example = literalExpression "[ (pkg: builtins.elem (lib.getName pkg) [ \"1password\" ]) ]";
         description = ''
-          Predicates to match unfree pkgs which should be allowed, will be combined with logical or.
+          Predicates to match unfree pkgs which should be allowed, will be combined with logical OR.
         '';
       };
 
@@ -66,8 +67,7 @@
 
       allowUnfreePackagesByName = pkg: lib.elem (lib.getName pkg) cfg.allowUnfreePackages;
 
-      allowedLicensesNames = lib.map (license: license.shortName) cfg.allowUnfreeLicenses;
-      isLicenseAllowed = license: lib.elem license allowedLicensesNames;
+      isLicenseAllowed = license: lib.elem license cfg.allowUnfreeLicenses;
       getLicenses =
         pkg:
         if (lib.isList pkg.meta.license) then
