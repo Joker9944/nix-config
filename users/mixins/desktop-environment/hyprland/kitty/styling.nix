@@ -2,10 +2,14 @@
 utility.custom.mkHyprlandModule config {
   programs.kitty =
     let
-      inherit (config.windowManager.hyprland.custom.style) pallet fonts;
+      inherit (config.windowManager.hyprland.custom.style) pallet fonts opacity;
     in
     {
       font = fonts.terminal;
+
+      quickAccessTerminalConfig = {
+        background_opacity = opacity.active;
+      };
 
       settings = {
         cursor_shape = "beam";
