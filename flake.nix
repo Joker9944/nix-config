@@ -61,7 +61,7 @@
       applyFnToDir =
         dir: fn:
         lib.pipe { inherit dir; } [
-          self.lib.ls.lookup
+          self.lib.ls
           (lib.map (path: {
             name = lib.strings.removeSuffix ".nix" (baseNameOf path);
             value = fn path;

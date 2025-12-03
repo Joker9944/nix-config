@@ -6,7 +6,7 @@
 }:
 {
   imports =
-    (custom.lib.ls.lookup {
+    (custom.lib.ls {
       dir = ./.;
       exclude = [ ./default.nix ];
     })

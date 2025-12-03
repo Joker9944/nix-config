@@ -22,7 +22,7 @@
   ...
 }:
 {
-  imports = custom.lib.ls.lookup {
+  imports = custom.lib.ls {
     dir = ./.;
     exclude = [ ./default.nix ];
   };

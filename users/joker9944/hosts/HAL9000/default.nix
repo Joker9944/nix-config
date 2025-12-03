@@ -11,7 +11,7 @@ let
   bin.xrandr = lib.getExe pkgs-hyprland.xorg.xrandr;
 in
 {
-  imports = custom.lib.ls.lookup {
+  imports = custom.lib.ls {
     dir = ./.;
     exclude = [ ./default.nix ];
   };
