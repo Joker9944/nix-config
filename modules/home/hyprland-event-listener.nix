@@ -2,7 +2,7 @@
   lib,
   config,
   pkgs,
-  utility,
+  custom,
   ...
 }:
 let
@@ -17,7 +17,7 @@ let
       functions = lib.concatLines (
         lib.map (entry: ''
           ${entry.name}() {
-          ${utility.custom.indentLines 2 (lib.removeSuffix "\n" entry.value.body)}
+          ${custom.lib.indentLines 2 (lib.removeSuffix "\n" entry.value.body)}
           }
         '') (lib.attrsToList cfg.listener)
       );
@@ -33,7 +33,7 @@ let
       ${functions}
       handle() {
         case "$1" in
-      ${utility.custom.indentLines 4 (lib.removeSuffix "\n" handleCases)}
+      ${custom.lib.indentLines 4 (lib.removeSuffix "\n" handleCases)}
         esac
       }
 

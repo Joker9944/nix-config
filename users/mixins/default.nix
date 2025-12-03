@@ -1,13 +1,12 @@
 {
   inputs,
-  custom,
   osConfig,
-  utility,
+  custom,
   ...
 }:
 {
   imports =
-    (utility.custom.ls.lookup {
+    (custom.lib.ls.lookup {
       dir = ./.;
       exclude = [ ./default.nix ];
     })

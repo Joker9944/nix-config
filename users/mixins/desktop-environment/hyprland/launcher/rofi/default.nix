@@ -2,13 +2,13 @@
   lib,
   config,
   pkgs-hyprland,
-  utility,
+  custom,
   ...
 }:
 let
   bin.rofi = lib.getExe config.programs.rofi.package;
 in
-utility.custom.mkHyprlandModule config {
+custom.lib.mkHyprlandModule config {
   config =
     let
       cfg = config.windowManager.hyprland.custom;
@@ -48,7 +48,7 @@ utility.custom.mkHyprlandModule config {
             icons ? false,
             ...
           }:
-          utility.custom.mkCommand [
+          custom.lib.mkCommand [
             bin.rofi
             "-show drun"
             (lib.optional icons "-show-icons")
@@ -115,7 +115,7 @@ utility.custom.mkHyprlandModule config {
                   (lib.concatStringsSep " ")
                 ];
           in
-          utility.custom.mkCommand [
+          custom.lib.mkCommand [
             bin.rofi
             "-dmenu"
             (lib.optional (themeString != "") "-theme-str \"${themeString}\"")

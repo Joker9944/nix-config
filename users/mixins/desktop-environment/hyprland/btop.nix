@@ -3,14 +3,14 @@
   config,
   osConfig,
   pkgs-hyprland,
-  utility,
+  custom,
   ...
 }:
 let
   cfg = config.windowManager.hyprland.custom;
   bin.btop = lib.getExe config.programs.btop.package;
 in
-utility.custom.mkHyprlandModule config {
+custom.lib.mkHyprlandModule config {
   programs.btop = {
     enable = true;
     package =

@@ -1,10 +1,10 @@
 {
   config,
   pkgs-hyprland,
-  utility,
+  custom,
   ...
 }:
-utility.custom.mkHyprlandModule config {
+custom.lib.mkHyprlandModule config {
   config.services.hyprsunset = {
     enable = true;
     package = pkgs-hyprland.hyprsunset;

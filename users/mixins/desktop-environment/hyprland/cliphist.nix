@@ -2,13 +2,13 @@
   lib,
   config,
   pkgs-hyprland,
-  utility,
+  custom,
   ...
 }:
 let
   cfg = config.windowManager.hyprland.custom;
 in
-utility.custom.mkHyprlandModule config {
+custom.lib.mkHyprlandModule config {
   home.packages = [ pkgs-hyprland.wl-clipboard ]; # Wayland clipboard utilities
 
   services.cliphist = {

@@ -1,7 +1,7 @@
 {
   lib,
   config,
-  utility,
+  custom,
   ...
 }:
 let
@@ -11,7 +11,7 @@ let
     "DetectiveGrimoire"
   ];
 in
-utility.custom.mkHyprlandModule config {
+custom.lib.mkHyprlandModule config {
   windowManager.hyprland.custom.system.allowMaximized = regexes;
 
   wayland.windowManager.hyprland.settings = {

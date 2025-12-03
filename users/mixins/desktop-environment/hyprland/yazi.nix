@@ -5,7 +5,7 @@
   lib,
   config,
   pkgs-hyprland,
-  utility,
+  custom,
   ...
 }:
 let
@@ -13,7 +13,7 @@ let
   cfg = config.windowManager.hyprland.custom;
   bin.yazi = lib.getExe config.programs.yazi.package;
 in
-utility.custom.mkHyprlandModule config {
+custom.lib.mkHyprlandModule config {
   home.packages = with pkgs-hyprland; [
     exiftool
     mediainfo

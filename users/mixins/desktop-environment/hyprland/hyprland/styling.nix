@@ -1,13 +1,13 @@
 {
   lib,
   config,
-  utility,
+  custom,
   ...
 }:
 let
   cfg = config.windowManager.hyprland.custom.style;
 in
-utility.custom.mkHyprlandModule config {
+custom.lib.mkHyprlandModule config {
   windowManager.hyprland.custom.system.environment = lib.mkIf (cfg.xCursor != null) {
     XCURSOR_THEME = cfg.xCursor.name;
     XCURSOR_SIZE = if cfg.xCursor.size != null then cfg.xCursor.size else 16;

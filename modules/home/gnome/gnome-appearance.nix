@@ -1,7 +1,7 @@
 {
   lib,
   config,
-  utility,
+  custom,
   ...
 }:
 let
@@ -154,8 +154,8 @@ in
   config = lib.mkIf cfg.enable {
     dconf.settings = {
       "org/gnome/desktop/interface" = {
-        color-scheme = utility.custom.nonNull cfg.style;
-        accent-color = utility.custom.nonNull cfg.accentColor;
+        color-scheme = custom.lib.nonNull cfg.style;
+        accent-color = custom.lib.nonNull cfg.accentColor;
       };
 
       "org/gnome/desktop/background" =
@@ -164,10 +164,10 @@ in
           mkPicturePath = path: "file://${path}";
         in
         {
-          picture-options = utility.custom.nonNull pictureOption;
-          color-shading-type = utility.custom.nonNull colorShadingType;
-          primary-color = utility.custom.nonNull primaryColor;
-          secondary-color = utility.custom.nonNull secondaryColor;
+          picture-options = custom.lib.nonNull pictureOption;
+          color-shading-type = custom.lib.nonNull colorShadingType;
+          primary-color = custom.lib.nonNull primaryColor;
+          secondary-color = custom.lib.nonNull secondaryColor;
           picture-uri = lib.mkIf (picturePath != null) (mkPicturePath picturePath);
           picture-uri-dark = lib.mkIf (picturePath != null || darkStylePicturePath != null) (
             mkPicturePath (if darkStylePicturePath != null then darkStylePicturePath else picturePath)

@@ -3,7 +3,7 @@
   config,
   osConfig,
   pkgs-hyprland,
-  utility,
+  custom,
   ...
 }:
 let
@@ -15,7 +15,7 @@ let
     playerctl = lib.getExe pkg.playerctl;
   };
 in
-utility.custom.mkHyprlandModule config {
+custom.lib.mkHyprlandModule config {
   home.packages = lib.attrValues pkg; # media applications control utility
 
   wayland.windowManager.hyprland.settings = {
@@ -41,7 +41,7 @@ utility.custom.mkHyprlandModule config {
       lib.lists.genList (
         index:
         let
-          key = toString (utility.math.mod (index + 1) 10);
+          key = toString (custom.math.mod (index + 1) 10);
           workspace = toString (index + 1);
         in
         [

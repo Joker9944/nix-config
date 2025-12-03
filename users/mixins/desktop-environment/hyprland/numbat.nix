@@ -1,7 +1,7 @@
 {
   lib,
   config,
-  utility,
+  custom,
   ...
 }:
 let
@@ -9,7 +9,7 @@ let
   cfg = config.windowManager.hyprland.custom;
   bin.numbat = lib.getExe config.programs.numbat.package;
 in
-utility.custom.mkHyprlandModule config {
+custom.lib.mkHyprlandModule config {
   programs.numbat = {
     enable = true;
 

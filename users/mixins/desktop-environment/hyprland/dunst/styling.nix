@@ -1,10 +1,10 @@
 {
   lib,
   config,
-  utility,
+  custom,
   ...
 }:
-utility.custom.mkHyprlandModule config {
+custom.lib.mkHyprlandModule config {
   services.dunst.settings =
     let
       inherit (config.windowManager.hyprland.custom.style) pallet border icons;

@@ -5,14 +5,14 @@
   lib,
   config,
   pkgs-hyprland,
-  utility,
+  custom,
   ...
 }:
 let
   inherit (config.windowManager.hyprland.custom.binds) mods;
   bin.hyprshot = lib.getExe config.programs.hyprshot.package;
 in
-utility.custom.mkHyprlandModule config {
+custom.lib.mkHyprlandModule config {
   programs.hyprshot = {
     enable = true;
     package = pkgs-hyprland.hyprshot;

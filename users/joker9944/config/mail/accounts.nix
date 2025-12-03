@@ -1,6 +1,6 @@
-utility:
+custom:
 builtins.fromJSON (
-  utility.custom.obfuscation.deobfuscate 483 [
+  custom.lib.obfuscation.deobfuscate 483 [
     408
     449
     391

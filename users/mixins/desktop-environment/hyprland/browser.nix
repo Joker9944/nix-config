@@ -1,7 +1,7 @@
 {
   lib,
   config,
-  utility,
+  custom,
   ...
 }:
 let
@@ -9,6 +9,6 @@ let
   cfg = config.windowManager.hyprland.custom;
   bin.browser = lib.getExe config.programs.firefox.package;
 in
-utility.custom.mkHyprlandModule config {
+custom.lib.mkHyprlandModule config {
   wayland.windowManager.hyprland.settings.bind = [ "${mods.main}, B, exec, ${bin.browser}" ];
 }

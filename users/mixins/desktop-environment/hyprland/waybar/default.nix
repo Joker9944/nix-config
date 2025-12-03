@@ -3,10 +3,10 @@
   config,
   pkgs,
   pkgs-hyprland,
-  utility,
+  custom,
   ...
 }@args:
-utility.custom.mkHyprlandModule config {
+custom.lib.mkHyprlandModule config {
   options.windowManager.hyprland.custom.waybar = with lib; {
     gpu = mkEnableOption "gpu metrics";
     battery = mkEnableOption "battery metrics";

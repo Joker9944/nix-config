@@ -5,7 +5,6 @@
   lib,
   config,
   pkgs-hyprland,
-  utility,
   custom,
   ...
 }:
@@ -14,7 +13,7 @@ let
     custom.assets.images.backgrounds.dracula-leaves-dark.${custom.config.resolution}
   }/share/backgrounds/dracula-leaves-dark.${custom.config.resolution}.png";
 in
-utility.custom.mkHyprlandModule config {
+custom.lib.mkHyprlandModule config {
   services.hyprpaper = {
     enable = true;
     package = pkgs-hyprland.hyprpaper;

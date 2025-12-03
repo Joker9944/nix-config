@@ -2,13 +2,13 @@
   lib,
   config,
   pkgs-hyprland,
-  utility,
+  custom,
   ...
 }:
 let
   bin.wofi = lib.getExe config.programs.wofi.package;
 in
-utility.custom.mkHyprlandModule config {
+custom.lib.mkHyprlandModule config {
   config =
     let
       cfg = config.windowManager.hyprland.custom;
@@ -45,7 +45,7 @@ utility.custom.mkHyprlandModule config {
             extraArgs ? [ ],
             ...
           }:
-          utility.custom.mkCommand [
+          custom.lib.mkCommand [
             "${bin.wofi} --dmenu"
             (lib.optional (location != null) "--location ${location}")
             (lib.optional (!search) "--define hide_search=true")

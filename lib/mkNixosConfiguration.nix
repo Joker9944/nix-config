@@ -1,8 +1,11 @@
 {
+  lib,
   inputs,
-  utility,
   overlays,
   nixosModules,
+  self,
+  custom,
+  ...
 }:
 {
   context ? ./..,
@@ -13,8 +16,6 @@
   ...
 }@args:
 let
-  inherit (inputs.nixpkgs) lib;
-
   mixinsModulePath = ../hosts/mixins;
   hostModulePath = lib.path.append context "hosts/${hostname}";
   userModulePaths = lib.map (username: lib.path.append context "users/${username}/nixos") usernames;
@@ -23,9 +24,10 @@ lib.nixosSystem {
   inherit system;
 
   specialArgs = {
-    inherit inputs utility;
+    inherit inputs;
 
-    custom = {
+    custom = custom // {
+      lib = self;
       config = args;
 
       assets = inputs.nix-assets.packages.${system} // {

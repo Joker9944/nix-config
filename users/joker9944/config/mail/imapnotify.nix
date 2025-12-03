@@ -2,7 +2,7 @@
   lib,
   pkgs,
   config,
-  utility,
+  custom,
   ...
 }:
 let
@@ -23,7 +23,7 @@ let
     name:
     "${bin.notify-send} --app-name imapnotify --urgency normal --category mail \"New mail arrived: ${name} %s\"";
 
-  accounts = import ./accounts.nix utility;
+  accounts = import ./accounts.nix custom;
 
   addressConfigs = lib.map (
     entry:

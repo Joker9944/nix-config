@@ -61,19 +61,13 @@
       applyFnToDir =
         dir: fn:
         lib.pipe { inherit dir; } [
-          utility.custom.ls.lookup
+          self.lib.ls.lookup
           (lib.map (path: {
             name = lib.strings.removeSuffix ".nix" (baseNameOf path);
             value = fn path;
           }))
           lib.listToAttrs
         ];
-
-      utility = {
-        inherit (inputs.nix-math.lib) math;
-        custom = import ./lib/utility.nix lib;
-        std = inputs.nix-std.lib;
-      };
     in
     inputs.flake-utils.lib.eachDefaultSystem (
       system:
@@ -233,19 +227,16 @@
 
       homeModules = applyFnToDir ./modules/home import;
 
-      lib = {
-        mkNixosConfiguration = import ./lib/mkNixosConfiguration.nix {
-          inherit
-            inputs
-            utility
-            ;
-          nixosModules = lib.attrValues self.nixosModules;
-          overlays = lib.attrValues self.overlays;
-        };
+      lib = import ./lib {
+        inherit lib inputs;
 
-        mkHomeConfiguration = import ./lib/mkHomeConfiguration.nix {
-          inherit inputs;
-          homeModules = lib.attrValues self.homeModules;
+        nixosModules = lib.attrValues self.nixosModules;
+        overlays = lib.attrValues self.overlays;
+        homeModules = lib.attrValues self.homeModules;
+
+        custom = {
+          inherit (inputs.nix-math.lib) math;
+          std = inputs.nix-std.lib;
         };
       };
 

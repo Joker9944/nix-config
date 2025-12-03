@@ -1,11 +1,10 @@
 {
   lib,
   config,
-  utility,
   custom,
   ...
 }:
-utility.custom.mkHyprlandModule config {
+custom.lib.mkHyprlandModule config {
   programs.hyprlock.settings =
     let
       inherit (config.windowManager.hyprland.custom.style) pallet border fonts;

@@ -2,13 +2,13 @@
   lib,
   config,
   osConfig,
-  utility,
+  custom,
   ...
 }:
 let
   cfg = config.windowManager.hyprland.custom.system;
 in
-utility.custom.mkHyprlandModule config {
+custom.lib.mkHyprlandModule config {
   options.windowManager.hyprland.custom.system = with lib; {
     environment = mkOption {
       type = types.attrsOf (

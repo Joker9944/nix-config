@@ -1,6 +1,6 @@
-{ lib, utility, ... }:
+{ lib, custom, ... }:
 {
-  imports = utility.custom.ls.lookup {
+  imports = custom.lib.ls.lookup {
     dir = ./.;
     exclude = [ ./default.nix ];
   };

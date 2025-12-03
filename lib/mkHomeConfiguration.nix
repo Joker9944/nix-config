@@ -1,6 +1,7 @@
 {
-  inputs,
+  lib,
   homeModules,
+  ...
 }:
 {
   nixosConfigurations,
@@ -12,8 +13,8 @@
   ...
 }@args:
 let
-  inherit (inputs.nixpkgs) lib;
   inherit (nixosConfigurations._module) specialArgs;
+  inherit (specialArgs) inputs;
 
   osConfig = nixosConfigurations.config;
 
@@ -24,8 +25,7 @@ inputs.home-manager.lib.homeManagerConfiguration {
   inherit (nixosConfigurations) pkgs;
 
   extraSpecialArgs = {
-    inherit (specialArgs) inputs utility;
-    inherit osConfig;
+    inherit inputs osConfig;
 
     custom = lib.recursiveUpdate specialArgs.custom {
       config = args;

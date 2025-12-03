@@ -1,10 +1,10 @@
 {
   pkgs-hyprland,
   config,
-  utility,
+  custom,
   ...
 }:
-utility.custom.mkHyprlandModule config {
+custom.lib.mkHyprlandModule config {
   home.packages = [ pkgs-hyprland.udiskie ];
 
   services = {

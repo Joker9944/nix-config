@@ -7,7 +7,7 @@
   osConfig,
   pkgs,
   pkgs-hyprland,
-  utility,
+  custom,
   ...
 }:
 let
@@ -20,7 +20,7 @@ let
     systemctl = lib.getExe' pkgs.systemd "systemctl";
   };
 in
-utility.custom.mkHyprlandModule config {
+custom.lib.mkHyprlandModule config {
   services.hypridle = {
     enable = true;
     package = pkgs-hyprland.hypridle;

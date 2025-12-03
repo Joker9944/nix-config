@@ -2,7 +2,7 @@
   lib,
   pkgs-unstable,
   config,
-  utility,
+  custom,
   ...
 }:
 let
@@ -238,7 +238,7 @@ in
             ''
               @${typer}.callback(${args})
               def ${typer}_callback(${mkParameters callback.switches}):
-              ${utility.custom.indentLines 2 callback.code}
+              ${custom.lib.indentLines 2 callback.code}
             '';
 
           # leaf
@@ -250,7 +250,7 @@ in
             ''
               @${typer}.command(${args})
               def ${typer}_${leafName}(${mkParameters leaf.switches}):
-              ${utility.custom.indentLines 2 leaf.code}
+              ${custom.lib.indentLines 2 leaf.code}
             '';
         in
         pkgs-unstable.callPackage ./package.nix {

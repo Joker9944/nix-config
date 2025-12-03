@@ -2,11 +2,11 @@
   lib,
   config,
   pkgs,
-  utility,
+  custom,
   ...
 }:
-utility.custom.mkHyprlandModule config {
-  imports = utility.custom.ls.lookup {
+custom.lib.mkHyprlandModule config {
+  imports = custom.lib.ls.lookup {
     dir = ./.;
     exclude = [ ./default.nix ];
   };

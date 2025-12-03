@@ -1,5 +1,5 @@
-{ config, utility, ... }:
-utility.custom.mkHyprlandModule config {
+{ config, custom, ... }:
+custom.lib.mkHyprlandModule config {
   programs.intelli-shell.settings.theme =
     let
       inherit (config.windowManager.hyprland.custom.style) pallet;

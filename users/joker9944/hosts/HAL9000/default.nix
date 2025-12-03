@@ -4,14 +4,14 @@
   pkgs-hyprland,
   config,
   osConfig,
-  utility,
+  custom,
   ...
 }:
 let
   bin.xrandr = lib.getExe pkgs-hyprland.xorg.xrandr;
 in
 {
-  imports = utility.custom.ls.lookup {
+  imports = custom.lib.ls.lookup {
     dir = ./.;
     exclude = [ ./default.nix ];
   };

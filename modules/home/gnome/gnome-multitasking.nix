@@ -1,7 +1,7 @@
 {
   lib,
   config,
-  utility,
+  custom,
   ...
 }:
 let
@@ -76,11 +76,11 @@ in
   config = lib.mkIf cfg.enable {
     dconf.settings = {
       "org/gnome/desktop/interface" = {
-        enable-hot-corners = utility.custom.nonNull cfg.hotCorner;
+        enable-hot-corners = custom.lib.nonNull cfg.hotCorner;
       };
 
       "org/gnome/mutter" = {
-        edge-tiling = utility.custom.nonNull cfg.activeScreenEdges;
+        edge-tiling = custom.lib.nonNull cfg.activeScreenEdges;
         dynamic-workspaces = lib.mkIf (cfg.workspaces != null) (cfg.workspaces == "dynamic");
         workspaces-only-on-primary = lib.mkIf (cfg.multiMonitor != null) cfg.multiMonitor == "primary-only";
       };
