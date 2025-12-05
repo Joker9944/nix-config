@@ -611,6 +611,21 @@
         "type": "github"
       }
     },
+    "nix-jail": {
+      "locked": {
+        "lastModified": 1764535788,
+        "narHash": "sha256-QGjXRCmsMxSayEyail0wEpSiRCUaZaejCv2uKpcNH0E=",
+        "owner": "~alexdavid",
+        "repo": "jail.nix",
+        "rev": "8f61c140858daf8ec21e6355b250cca6f5bf86fb",
+        "type": "sourcehut"
+      },
+      "original": {
+        "owner": "~alexdavid",
+        "repo": "jail.nix",
+        "type": "sourcehut"
+      }
+    },
     "nix-math": {
       "inputs": {
         "flake-parts": "flake-parts",
@@ -809,6 +824,7 @@
         "home-manager": "home-manager",
         "hyprland": "hyprland",
         "nix-assets": "nix-assets",
+        "nix-jail": "nix-jail",
         "nix-math": "nix-math",
         "nix-std": "nix-std",
         "nixpkgs": "nixpkgs_2",

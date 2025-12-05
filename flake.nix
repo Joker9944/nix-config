@@ -47,6 +47,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-std.url = "github:chessai/nix-std/master"; # cSpell:ignore chessai
+    nix-jail.url = "sourcehut:~alexdavid/jail.nix"; # cSPell:ignore alexdavid
   };
 
   outputs =
@@ -75,7 +76,12 @@
         pkgs = nixpkgs.legacyPackages.${system};
       in
       {
-        packages = applyFnToDir ./pkgs (path: pkgs.callPackage path { });
+        packages = applyFnToDir ./pkgs (
+          path:
+          pkgs.callPackage path {
+            jail = inputs.nix-jail.lib.init pkgs;
+          }
+        );
 
         apps = {
           cspell = {

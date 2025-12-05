@@ -1,7 +1,4 @@
-{
-  lib,
-  vscode-utils,
-}:
+{ lib, vscode-utils, ... }:
 vscode-utils.buildVscodeMarketplaceExtension {
   mktplcRef = {
     name = "code-spell-checker-swiss-german";
@@ -9,6 +6,7 @@ vscode-utils.buildVscodeMarketplaceExtension {
     version = "1.2.3";
     hash = "sha256-CY/2g0ufsxFcEL+hznde/NFzsgb7SdBPFxFlz/vfwPA=";
   };
+
   meta = {
     changelog = "https://marketplace.visualstudio.com/items/streetsidesoftware.code-spell-checker-swiss-german/changelog";
     description = "Swiss German dictionary extension for VS Code.";

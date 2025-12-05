@@ -1,7 +1,4 @@
-{
-  lib,
-  vscode-utils,
-}:
+{ lib, vscode-utils, ... }:
 vscode-utils.buildVscodeMarketplaceExtension {
   mktplcRef = {
     name = "vscode-gitops-tools";
@@ -9,6 +6,7 @@ vscode-utils.buildVscodeMarketplaceExtension {
     version = "0.27.0";
     hash = "sha256-7MCKDnHCot/CL/SqZ2WuTxbqFdF75EC5WC+OxW0dcaE=";
   };
+
   meta = {
     changelog = "https://marketplace.visualstudio.com/items/Weaveworks.vscode-gitops-tools/changelog";
     description = "GitOps automation tools for continuous delivery of Kubernetes and Cloud Native applications";

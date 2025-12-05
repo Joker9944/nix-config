@@ -2,6 +2,7 @@
   lib,
   perlPackages,
   fetchFromGitHub,
+  ...
 }:
 perlPackages.buildPerlPackage rec {
   pname = "File-MimeInfo";

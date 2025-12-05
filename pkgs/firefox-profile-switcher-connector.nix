@@ -3,6 +3,7 @@
   fetchFromGitHub,
   rustPlatform,
   cmake,
+  ...
 }:
 # Lifted from https://github.com/null-dev/firefox-profile-switcher-connector/issues/10#issuecomment-1238034441
 # Remove once packaged in nixpkgs https://github.com/NixOS/nixpkgs/issues/332470
