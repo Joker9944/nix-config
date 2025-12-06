@@ -43,6 +43,7 @@ in
     "vscode-extension-ms-vscode-remote-remote-containers"
     "teamspeak3"
     "zoom"
+    "goland"
   ];
 
   nixpkgs.overlays = [ inputs.audiomenu.overlays.default ];
