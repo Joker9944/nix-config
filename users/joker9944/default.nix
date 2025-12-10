@@ -35,8 +35,6 @@ in
     inkscape
     audacity
 
-    vlc
-
     minio-client
   ];
 

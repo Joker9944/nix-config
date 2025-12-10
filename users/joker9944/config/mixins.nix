@@ -14,10 +14,12 @@
       jupyter.enable = true;
       kitty.enable = true;
       loupe.enable = true;
+      mpv.enable = true;
       nextcloud-client.enable = true;
       papers.enable = true;
       spotify.enable = true;
       telegram.enable = true;
+      vlc.enable = true;
       vscode.enable = true;
       wxmaxima.enable = true;
       xournalpp.enable = true;
