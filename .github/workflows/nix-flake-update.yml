@@ -25,7 +25,7 @@ jobs:
 
       - name: Install Determinate Nix
         id: nix-install
-        uses: DeterminateSystems/determinate-nix-action@b3e3f405539b332fcb96794525f35fb10c230baa # v3.13.2
+        uses: DeterminateSystems/determinate-nix-action@9a921d81e9a16a9ad8423a63a7b31deb601139a6 # v3.14.0
 
       - name: Update flake.lock
         id: nix-update
