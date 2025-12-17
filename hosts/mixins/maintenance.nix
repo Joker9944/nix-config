@@ -50,16 +50,11 @@
           CPUWeight = 20;
           IOWeight = 20;
           MemoryAccounting = true;
-          MemoryHigh = "50%";
-          MemoryMax = "75%";
+          MemoryHigh = "75%";
           MemorySwapMax = "50%";
-          MemoryZSwapMax = "50%";
         };
 
-        services = {
-          nix-daemon.serviceConfig.Slice = "anti-hungry.slice";
-          nixos-upgrade.serviceConfig.Slice = "anti-hungry.slice";
-        };
+        services.nix-daemon.serviceConfig.Slice = "anti-hungry.slice";
       };
     };
 }
