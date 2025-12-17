@@ -116,6 +116,7 @@
           preCommitHooks = inputs.pre-commit-hooks.lib.${system}.run {
             src = ./.;
             hooks = {
+              # Files
               trim-trailing-whitespace.enable = true;
               end-of-file-fixer.enable = true;
               fix-byte-order-marker.enable = true;
@@ -123,11 +124,19 @@
                 enable = true;
                 args = [ "--fix=lf" ];
               };
+
+              # General
               cspell.enable = true;
+
+              # Nix
               deadnix.enable = true;
               nil.enable = true;
               nixfmt-rfc-style.enable = true;
               statix.enable = true;
+
+              # Shell
+              shellcheck.enable = true;
+              shfmt.enable = true;
             };
           };
         };

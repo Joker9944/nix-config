@@ -17,12 +17,10 @@
   config =
     let
       cfg = config.mixins.programs.vscode;
-
-      inherit (pkgs) vscode-extensions;
+      vscodeExtensions = pkgs.vscode-extensions;
 
       commonProfiles = [
         {
-          # vscode settings
           userSettings = {
             "diffEditor.ignoreTrimWhitespace" = false;
             "editor.fontFamily" = "monospace, emoji";
@@ -37,24 +35,24 @@
         }
         {
           extensions = [
-            vscode-extensions.dracula-theme.theme-dracula
+            vscodeExtensions.k--kato.intellij-idea-keybindings # cSpell:words k--kato
+          ];
+        }
+        {
+          extensions = [
+            vscodeExtensions.dracula-theme.theme-dracula
           ];
 
           userSettings."workbench.colorTheme" = "Dracula Theme";
         }
         {
           extensions = [
-            vscode-extensions.streetsidesoftware.code-spell-checker
+            vscodeExtensions.streetsidesoftware.code-spell-checker
           ];
         }
         {
           extensions = [
-            vscode-extensions.asciidoctor.asciidoctor-vscode
-          ];
-        }
-        {
-          extensions = [
-            vscode-extensions.esbenp.prettier-vscode # cSpell:words esbenp
+            vscodeExtensions.esbenp.prettier-vscode # cSpell:words esbenp
           ];
 
           userSettings =
@@ -77,7 +75,7 @@
         }
         {
           extensions = [
-            vscode-extensions.blueglassblock.better-json5
+            vscodeExtensions.blueglassblock.better-json5
           ];
 
           userSettings = {
@@ -88,7 +86,12 @@
         }
         {
           extensions = [
-            vscode-extensions.k--kato.intellij-idea-keybindings # cSpell:words k--kato
+            vscodeExtensions.mkhl.shfmt # cSpell:ignore mkhl
+          ];
+        }
+        {
+          extensions = [
+            vscodeExtensions.timonwong.shellcheck # cSpell:ignore timonwong
           ];
         }
       ];
@@ -138,7 +141,7 @@
             nix = mkProfile [
               {
                 extensions = [
-                  vscode-extensions.jnoortheen.nix-ide # cSpell:words jnoortheen
+                  vscodeExtensions.jnoortheen.nix-ide # cSpell:words jnoortheen
                 ];
 
                 userSettings = {
@@ -160,7 +163,7 @@
 
             notes = mkProfile [
               {
-                extensions = with vscode-extensions; [
+                extensions = with vscodeExtensions; [
                   foam.foam-vscode
                   yzhang.markdown-all-in-one # cSpell:words yzhang
                 ];
@@ -169,7 +172,7 @@
 
             k8s = mkProfile [
               {
-                extensions = with vscode-extensions; [
+                extensions = with vscodeExtensions; [
                   ms-kubernetes-tools.vscode-kubernetes-tools
                   ms-vscode-remote.remote-containers
                   Weaveworks.vscode-gitops-tools
@@ -186,7 +189,7 @@
               }
               {
                 extensions = [
-                  vscode-extensions.redhat.vscode-yaml
+                  vscodeExtensions.redhat.vscode-yaml
                 ];
 
                 userSettings = {
