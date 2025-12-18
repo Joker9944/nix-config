@@ -1,4 +1,5 @@
 {
+  lib,
   config,
   pkgs,
   ...
@@ -17,6 +18,11 @@
   };
 
   nixpkgs.config.cudaSupport = true;
+
+  nix.settings = {
+    substituters = lib.toList "https://cache.nixos-cuda.org";
+    trusted-public-keys = lib.toList "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="; # cSpell:disable-line
+  };
 
   # TODO investigate if this is properly setup
 
