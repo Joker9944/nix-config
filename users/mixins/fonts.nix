@@ -29,7 +29,7 @@
         enable = true;
 
         defaultFonts = {
-          monospace = [ "JetBrains Mono Nerd Font" ];
+          monospace = [ "JetBrainsMono Nerd Font Mono" ];
           sansSerif = [
             "Lato"
             "Roboto"

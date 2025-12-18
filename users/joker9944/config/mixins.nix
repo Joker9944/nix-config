@@ -4,6 +4,7 @@
 
     programs = {
       _1password.enable = true;
+      aerc.enable = true;
       atuin.enable = true;
       bash.enable = true;
       discord.enable = true;

@@ -18,6 +18,12 @@
       cfg = config.mixins.programs.bash;
     in
     lib.mkIf cfg.enable {
+      home = {
+        packages = [ pkgs.moor ];
+
+        sessionVariables.PAGER = "moor";
+      };
+
       programs.bash = {
         enable = true;
 
@@ -44,6 +50,7 @@
           mktar = "tar -czvf"; # cSpell:words mktar cSpell:ignore czvf
           untar = "tar -xvf"; # cSpell:words untar
           open = "xdg-open";
+          less = "moor";
         };
       };
     };

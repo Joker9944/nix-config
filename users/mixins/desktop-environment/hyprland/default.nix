@@ -59,7 +59,7 @@
             };
 
             terminal = {
-              name = "JetBrains Mono Nerd Font";
+              name = "JetBrainsMono Nerd Font Mono";
               package = pkgs.nerd-fonts.jetbrains-mono;
               size = 10;
             };

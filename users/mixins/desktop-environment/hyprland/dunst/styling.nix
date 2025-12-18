@@ -5,52 +5,56 @@
   ...
 }:
 custom.lib.mkHyprlandModule config {
-  services.dunst.settings =
+  services.dunst =
     let
       inherit (config.windowManager.hyprland.custom.style) pallet border icons;
       font = config.windowManager.hyprland.custom.style.fonts.interface;
     in
     {
-      global = {
-        ############
-        ### TEXT ###
-        ############
-        font = lib.mkIf (font != null) "${font.name} ${toString font.size}";
+      iconTheme = icons;
 
-        #############
-        ### ICONS ###
-        #############
-        min_icon_size = 0;
-        max_icon_size = 128;
-        icon_theme = lib.mkIf (icons != null) icons.name;
+      settings = {
+        global = {
+          ############
+          ### TEXT ###
+          ############
+          font = lib.mkIf (font != null) "${font.name} ${toString font.size}";
 
-        ##############
-        ### COLORS ###
-        ##############
-        frame_color = pallet.background.light.hex;
-        separator_color = "frame";
+          #############
+          ### ICONS ###
+          #############
+          min_icon_size = 0;
+          max_icon_size = 128;
+          enable_recursive_icon_lookup = true;
 
-        ###############
-        ### BORDERS ###
-        ###############
-        frame_width = border.size;
-        corner_radius = border.corners.rounding;
-      };
+          ##############
+          ### COLORS ###
+          ##############
+          frame_color = pallet.background.light.hex;
+          separator_color = "frame";
 
-      urgency_low = {
-        background = pallet.background.normal.hex;
-        foreground = pallet.foreground.hex;
-      };
+          ###############
+          ### BORDERS ###
+          ###############
+          frame_width = border.size;
+          corner_radius = border.corners.rounding;
+        };
 
-      urgency_normal = {
-        background = pallet.background.normal.hex;
-        foreground = pallet.foreground.hex;
-      };
+        urgency_low = {
+          background = pallet.background.normal.hex;
+          foreground = pallet.foreground.hex;
+        };
 
-      urgency_critical = {
-        background = pallet.red.dull.hex;
-        foreground = pallet.white.dull.hex;
-        frame_color = pallet.red.dull.hex;
+        urgency_normal = {
+          background = pallet.background.normal.hex;
+          foreground = pallet.foreground.hex;
+        };
+
+        urgency_critical = {
+          background = pallet.red.dull.hex;
+          foreground = pallet.white.dull.hex;
+          frame_color = pallet.red.dull.hex;
+        };
       };
     };
 }
