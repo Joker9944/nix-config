@@ -81,7 +81,7 @@
                 ];
               };
             in
-            "${lib.getExe hookScript} ${name} %s";
+            "${lib.getExe hookScript} \"${name}\" \"%s\"";
         in
         {
           accounts.email.accounts.${name} = lib.recursiveUpdate account {

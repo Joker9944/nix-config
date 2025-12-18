@@ -23,7 +23,6 @@ custom.lib.mkHyprlandModule config {
           ### Display ###
 
           follow = "mouse";
-
           enable_posix_regex = true;
 
           ### Geometry ###
@@ -36,7 +35,15 @@ custom.lib.mkHyprlandModule config {
 
           notification_limit = 5;
 
+          ### Misc/Advanced ###
+
           dmenu = cfg.launcher.mkDmenuCommand { };
+
+          ### Actions ###
+
+          mouse_left_click = "do_action, close_current";
+          mouse_middle_click = "none";
+          mouse_right_click = "close_all";
         };
       };
     };
