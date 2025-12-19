@@ -7,7 +7,10 @@
 custom.lib.mkHyprlandModule config {
   imports = custom.lib.ls {
     dir = ./.;
-    exclude = [ ./default.nix ];
+    exclude = [
+      ./files
+      ./default.nix
+    ];
   };
 
   config.services.dunst =
