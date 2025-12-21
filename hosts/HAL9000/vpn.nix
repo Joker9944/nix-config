@@ -1,6 +1,6 @@
-_: {
+{
   networking.networkmanager = {
-    custom.vpn.enable = true;
+    #  custom.vpn.enable = true;
 
     ensureProfiles.profiles.ch = {
       ipv4.address1 = "10.161.158.27/32";
@@ -8,13 +8,21 @@ _: {
     };
   };
 
+  mixins.services.vpn.enable = true;
+
   sops.secrets = {
     "vpn/ch/private-key" = {
       sopsFile = ./secrets/vpn.yaml;
+      owner = "root";
+      group = "networkmanager";
+      mode = "0440";
     };
 
     "vpn/ch/preshared-key" = {
       sopsFile = ./secrets/vpn.yaml;
+      owner = "root";
+      group = "networkmanager";
+      mode = "0440";
     };
   };
 }

@@ -4,14 +4,8 @@
   config,
   ...
 }:
-let
-  ch = {
-    id = "CH";
-    peerPublicKey = "PyLCXAQT8KkM4T+dUsOQfn+Ub3pGxfGlxkIApuig+hk=";
-  };
-in
 {
-  options.networking.networkmanager.custom.vpn =
+  options.mixins.services.vpn =
     let
       inherit (lib) mkEnableOption;
     in
@@ -21,7 +15,12 @@ in
 
   config.networking.networkmanager =
     let
-      cfg = config.networking.networkmanager.custom.vpn;
+      cfg = config.mixins.services.vpn;
+
+      ch = {
+        id = "CH";
+        peerPublicKey = "PyLCXAQT8KkM4T+dUsOQfn+Ub3pGxfGlxkIApuig+hk=";
+      };
     in
     lib.mkIf cfg.enable {
       dispatcherScripts = [
@@ -63,6 +62,7 @@ in
           };
 
           ipv4 = {
+            #address1 = "10.128.0.0/10";
             dns = "10.128.0.1;";
             dns-search = "~;";
             method = "manual";
@@ -70,6 +70,7 @@ in
 
           ipv6 = {
             addr-gen-mode = "default";
+            #address1 = "fd7d:76ee:e68f:a993::/64";
             dns = "fd7d:76ee:e68f:a993::1;";
             dns-search = "~;";
             method = "manual";
