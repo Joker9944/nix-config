@@ -6,11 +6,11 @@
 }:
 let
   pname = "freelens";
-  version = "1.6.1";
+  version = "1.7.0";
 
   src = fetchurl {
     url = "https://github.com/freelensapp/${pname}/releases/download/v${version}/Freelens-${version}-linux-amd64.AppImage";
-    sha256 = "sha256-RiA9OWcs6goRPN8dGsLV3ViBe/ZWB3M7yzTmDHgB3mo=";
+    sha256 = "sha256-VeWTfJf66Cq4ZyR/mO0kzm8wD+Auo1MZvXPYC1Bbf7U=";
   };
 
   appimageContents = appimageTools.extractType2 { inherit pname version src; };
