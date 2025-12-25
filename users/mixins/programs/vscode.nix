@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   pkgs-unstable,
   config,
   ...
@@ -17,7 +16,7 @@
   config =
     let
       cfg = config.mixins.programs.vscode;
-      vscodeExtensions = pkgs.vscode-extensions;
+      vscodeExtensions = pkgs-unstable.vscode-extensions;
 
       commonProfiles = [
         {
@@ -28,9 +27,13 @@
             "editor.tabSize" = 2;
             "files.autoSave" = "afterDelay";
             "files.insertFinalNewline" = true;
+            "git.path" = lib.getExe config.programs.git.package;
+            "git.enableCommitSigning" = true;
+            "git.defaultCloneDirectory" = "~/Workspace";
             "git.confirmSync" = false;
             "git.blame.editorDecoration.enabled" = true;
             "git.autofetch" = true; # cSpell:ignore autofetch
+            "telemetry.feedback.enabled" = false;
           };
         }
         {
@@ -118,19 +121,19 @@
           mergeProfiles (commonProfiles ++ [ profiles ]);
     in
     lib.mkIf cfg.enable {
-      # TODO directly ref in configs
-      home.packages = with pkgs; [
-        sops # default -> used for git secret encryption
-        fluxcd # k8s -> vscode-gitops-tools extension
-        grafana-alloy # k8s -> grafana-alloy extension
-      ];
-
       programs = {
         bash.shellAliases.code = "codium";
 
         vscode = {
           enable = true;
-          package = pkgs-unstable.vscodium;
+          package = pkgs-unstable.vscodium.fhsWithPackages (
+            ps: with ps; [
+              sops # default -> used for git secret encryption
+              fluxcd # k8s -> vscode-gitops-tools extension
+              grafana-alloy # k8s -> grafana-alloy extension
+              texliveFull # quarto -> quarto extension
+            ]
+          );
 
           profiles = {
             default = mkProfile {
@@ -146,9 +149,9 @@
 
                 userSettings = {
                   "nix.enableLanguageServer" = true;
-                  "nix.serverPath" = lib.getExe pkgs.nil;
+                  "nix.serverPath" = lib.getExe pkgs-unstable.nil;
                   "nix.serverSettings" = {
-                    nil.formatting.command = [ (lib.getExe pkgs.nixfmt-rfc-style) ];
+                    nil.formatting.command = [ (lib.getExe pkgs-unstable.nixfmt-rfc-style) ];
                     nix.flake = {
                       autoArchive = true;
                       autoEvalInputs = true;
@@ -170,6 +173,18 @@
               }
             ];
 
+            quarto = mkProfile [
+              {
+                extensions = with vscodeExtensions; [
+                  Quarto.quarto
+                ];
+
+                userSettings = {
+                  "quarto.path" = lib.getExe pkgs-unstable.quarto;
+                };
+              }
+            ];
+
             k8s = mkProfile [
               {
                 extensions = with vscodeExtensions; [
@@ -182,8 +197,8 @@
                 userSettings = {
                   "vs-kubernetes" = {
                     "vs-kubernetes.crd-code-completion" = "enabled";
-                    "vs-kubernetes.kubectl-path" = lib.getExe pkgs.kubectl;
-                    "vs-kubernetes.helm-path" = lib.getExe pkgs.kubernetes-helm;
+                    "vs-kubernetes.kubectl-path" = lib.getExe pkgs-unstable.kubectl;
+                    "vs-kubernetes.helm-path" = lib.getExe pkgs-unstable.kubernetes-helm;
                   };
                 };
               }

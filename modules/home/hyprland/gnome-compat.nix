@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.windowManager.hyprland.custom.gnome-compat;
+  cfg = config.windowManager.hyprland.custom.gnomeCompat;
 in
 {
-  options.windowManager.hyprland.custom.gnome-compat = with lib; {
+  options.windowManager.hyprland.custom.gnomeCompat = with lib; {
     inherit (options.gnome-settings.appearance) style accentColor;
     inherit (options.gnome-tweaks.fonts) documentText;
     inherit (options.gtk) theme;

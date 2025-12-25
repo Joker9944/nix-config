@@ -1,18 +1,9 @@
 /**
   Hyprland meta module
 
-  TODO config
-   - waybar
-   - yazi
-   - wofi
-   - hyprlock
-   - hyprpaper
-   - hypridle
-
   TODO Setup
    - Investigate hyprpolkitagent
    - There are a lot of styling utils take a look once theming
-   - hyprsunset with release-25.11
 */
 {
   lib,
@@ -32,7 +23,7 @@
       inherit (lib) mkEnableOption;
     in
     {
-      enable = mkEnableOption "Hyprland desktop environment config";
+      enable = mkEnableOption "Hyprland desktop environment config mixin";
     };
 
   config =
@@ -92,7 +83,7 @@
           };
         };
 
-        gnome-compat = {
+        gnomeCompat = {
           enable = true;
 
           style = "prefer-dark";

@@ -23,13 +23,17 @@
         lato
         roboto
         noto-fonts-color-emoji
+        jetbrains-mono
       ];
 
       fonts.fontconfig = {
         enable = true;
 
         defaultFonts = {
-          monospace = [ "JetBrainsMono Nerd Font Mono" ];
+          monospace = [
+            "JetBrainsMono Nerd Font Mono"
+            "JetBrains Mono"
+          ];
           sansSerif = [
             "Lato"
             "Roboto"
