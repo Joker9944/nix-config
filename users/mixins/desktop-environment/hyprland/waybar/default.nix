@@ -10,6 +10,7 @@ custom.lib.mkHyprlandModule config {
   options.windowManager.hyprland.custom.waybar = with lib; {
     gpu = mkEnableOption "gpu metrics";
     battery = mkEnableOption "battery metrics";
+    stylus = mkEnableOption "stylus metrics";
   };
 
   config = {

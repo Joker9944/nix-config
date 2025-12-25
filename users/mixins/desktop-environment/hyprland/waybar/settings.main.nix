@@ -28,7 +28,8 @@ in
       "group/network-group"
       "group/volume-group"
     ]
-    ++ (lib.optional cfg.waybar.battery "group/battery-group");
+    ++ (lib.optional cfg.waybar.battery "group/battery-group")
+    ++ (lib.optional cfg.waybar.stylus "group/stylus-group");
 
     clock = {
       interval = 1;
@@ -158,7 +159,7 @@ in
       orientation = "horizontal";
       modules = [
         "custom/battery-label"
-        "battery"
+        "upower#bat"
       ];
     };
 
@@ -166,10 +167,25 @@ in
       format = "Chrg"; # cSpell:ignore chrg
     };
 
-    battery = {
-      interval = resourceMonitorInterval;
-      format = "{capacity:>3}%";
-      max-length = 4;
+    "upower#bat" = {
+      native-path = "BAT0";
+    };
+
+    "group/stylus-group" = {
+      orientation = "horizontal";
+      modules = [
+        "custom/stylus-label"
+        "upower#stylus"
+      ];
+    };
+
+    "custom/stylus-label" = {
+      format = "Stylus";
+    };
+
+    "upower#stylus" = {
+      native-path = "wacom_battery_0";
+      hide-if-empty = false;
     };
   };
 }

@@ -30,6 +30,9 @@
       GDK_SCALE = 2;
     };
 
-    waybar.battery = true;
+    waybar = {
+      battery = true;
+      stylus = true;
+    };
   };
 }
