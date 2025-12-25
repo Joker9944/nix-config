@@ -19,8 +19,8 @@
     in
     lib.mkIf cfg.enable {
       home.packages = with pkgs; [
-        jetbrains.idea-ultimate
-        jetbrains.pycharm-professional
+        jetbrains.idea
+        jetbrains.pycharm
         jetbrains.webstorm
         jetbrains.goland
         nodejs
