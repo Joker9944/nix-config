@@ -16,11 +16,9 @@ custom.lib.mkHyprlandModule config {
   config = {
     home.packages = [
       pkgs.nerd-fonts.symbols-only
-      pkgs.audiomenu
     ];
 
     programs.waybar = {
-      enable = true;
       package = pkgs-hyprland.waybar;
 
       systemd.enable = true;
