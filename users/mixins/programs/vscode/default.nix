@@ -27,6 +27,7 @@
             "editor.tabSize" = 2;
             "files.autoSave" = "afterDelay";
             "files.insertFinalNewline" = true;
+            "files.trimFinalNewlines" = true;
             "git.path" = lib.getExe config.programs.git.package;
             "git.enableCommitSigning" = true;
             "git.defaultCloneDirectory" = "~/Workspace";
@@ -51,6 +52,11 @@
         {
           extensions = [
             vscodeExtensions.streetsidesoftware.code-spell-checker
+          ];
+        }
+        {
+          extensions = [
+            vscodeExtensions.editorconfig.editorconfig
           ];
         }
         {
@@ -132,6 +138,14 @@
               fluxcd # k8s -> vscode-gitops-tools extension
               grafana-alloy # k8s -> grafana-alloy extension
               texliveFull # quarto -> quarto extension
+              # WORKAROUND In a FHS files are either owned by the user or nobody since the ssh config
+              # is linked into the user home from the nix store meaning the file is owner by root outside
+              # of the FHS and by nobody in the FHS. This leads openssh to complain about insecure ssh
+              # config ownership which is actually fine. So let's just disable the check.
+              # https://github.com/nix-community/home-manager/issues/322#issuecomment-1454284183
+              (ps.openssh.overrideAttrs (prev: {
+                patches = (prev.patches or [ ]) ++ [ ./openssh-no-checkperm.patch ]; # cSpell:ignore checkperm
+              }))
             ]
           );
 
