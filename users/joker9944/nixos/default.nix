@@ -46,7 +46,10 @@ in
     "goland"
   ];
 
-  nixpkgs.overlays = [ inputs.audiomenu.overlays.default ];
+  nixpkgs.overlays = [
+    inputs.audiomenu.overlays.default
+    inputs.custom-shell.overlays.default
+  ];
 
   # WORKAROUND Setting the profile avatar from home manager using the AccountsService is not documented so this has to suffice
   systemd.tmpfiles.rules = lib.mkIf config.mixins.desktopEnvironment.gnome.enable [

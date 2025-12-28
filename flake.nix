@@ -5,21 +5,43 @@
     # nixpkgs
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    hyprland.url = "github:hyprwm/Hyprland"; # cSpell:ignore hyprwm
     # home manager
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # third party pkgs
+    # third party packages
     nix-assets = {
       url = "github:joker9944/nix-assets/main";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "flake-utils";
-      };
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     audiomenu = {
       url = "github:jalil-salame/audiomenu/main"; # cSpell: ignore jalil-salame
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    custom-shell = {
+      url = ./apps/custom-shell;
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        ags.follows = "ags";
+      };
+    };
+    # modules
+    sops-nix = {
+      url = "github:Mic92/sops-nix/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    ags = {
+      url = "github:aylur/ags";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    disko = {
+      url = "github:nix-community/disko/v1.11.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    plasma-manager = {
+      url = "github:nix-community/plasma-manager/trunk";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # helpers
@@ -27,27 +49,14 @@
       url = "github:cachix/git-hooks.nix/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    sops-nix = {
-      url = "github:Mic92/sops-nix/master";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    disko = {
-      url = "github:nix-community/disko/v1.11.0";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    hyprland.url = "github:hyprwm/Hyprland"; # cSpell:ignore hyprwm
-    plasma-manager = {
-      url = "github:nix-community/plasma-manager/trunk";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    # libs
     flake-utils.url = "github:numtide/flake-utils/main"; # cSpell:ignore numtide
+    nix-jail.url = "sourcehut:~alexdavid/jail.nix"; # cSPell:ignore alexdavid
+    # libs
     nix-math = {
       url = "github:xddxdd/nix-math/master"; # cSpell:ignore xddxdd
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-std.url = "github:chessai/nix-std/master"; # cSpell:ignore chessai
-    nix-jail.url = "sourcehut:~alexdavid/jail.nix"; # cSPell:ignore alexdavid
   };
 
   outputs =
