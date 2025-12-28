@@ -70,6 +70,7 @@
                 "markdown"
                 "json"
                 "yaml"
+                "typescriptreact"
               ]
               [
                 (lib.map (filetype: "[${filetype}]"))
