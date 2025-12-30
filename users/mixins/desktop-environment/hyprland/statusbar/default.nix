@@ -6,7 +6,8 @@
   };
 
   config.programs = {
-    waybar.enable = true;
+    waybar.enable = false;
     ashell.enable = false;
+    yab.enable = true;
   };
 }

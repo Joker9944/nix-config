@@ -1,0 +1,19 @@
+@use "../variables";
+
+.font-mono {
+  font-family: monospace;
+  font-variant-numeric: tabular-nums; // cSpell:words tabular-nums
+}
+
+@each $key, $value in variables.$font-sizes {
+  .font-#{$key} {
+    -gtk-icon-size: $value;
+    font-size: $value;
+  }
+}
+
+@each $key, $value in variables.$font-weights {
+  .font-#{$key} {
+    font-weight: $value;
+  }
+}

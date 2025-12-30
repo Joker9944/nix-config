@@ -1,0 +1,16 @@
+{
+	"dependencies": {
+		"ags": "*",
+		"gnim": "*"
+	},
+	"prettier": {
+		"semi": false,
+		"tabWidth": 2
+	},
+	"scripts": {
+		"run": "nix run .#ags -- run --gtk 4 --directory .",
+		"types": "nix run .#ags -- types --update --ignore Gtk3 --ignore Astal3 --directory .",
+		"inspect": "nix run .#ags -- inspect",
+		"build": "nix build ."
+	}
+}

@@ -69,8 +69,11 @@
               [
                 "markdown"
                 "json"
+                "jsonc"
                 "yaml"
+                "typescript"
                 "typescriptreact"
+                "scss"
               ]
               [
                 (lib.map (filetype: "[${filetype}]"))

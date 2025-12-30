@@ -10,6 +10,7 @@ centerbox
 crypted
 drun
 gdkmonitor
+glibtop
 gnim
 halign
 hexpand

@@ -1,0 +1,7 @@
+@use "../variables";
+
+@each $key, $value in variables.$spacing {
+  .min-height-#{$key} {
+    min-height: $value;
+  }
+}

@@ -9,6 +9,7 @@ ignorePaths:
   - .cspell.yaml
   - '*.patch'
   - .gitignore
+  - '.idea'
 dictionaryDefinitions:
   - name: project
     path: ./.cspell.txt

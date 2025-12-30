@@ -20,8 +20,8 @@
       url = "github:jalil-salame/audiomenu/main"; # cSpell: ignore jalil-salame
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    custom-shell = {
-      url = ./apps/custom-shell;
+    yab = {
+      url = ./apps/yab;
       inputs = {
         nixpkgs.follows = "nixpkgs";
         ags.follows = "ags";

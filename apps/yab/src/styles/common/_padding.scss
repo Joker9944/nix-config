@@ -1,0 +1,27 @@
+@use "../variables";
+
+@each $key, $value in variables.$spacing {
+  .p-#{$key} {
+    padding: $value;
+  }
+  .px-#{$key} {
+    padding-left: $value;
+    padding-right: $value;
+  }
+  .py-#{$key} {
+    padding-top: $value;
+    padding-bottom: $value;
+  }
+  .pt-#{$key} {
+    padding-top: $value;
+  }
+  .pr-#{$key} {
+    padding-right: $value;
+  }
+  .pb-#{$key} {
+    padding-bottom: $value;
+  }
+  .pl-#{$key} {
+    padding-left: $value;
+  }
+}

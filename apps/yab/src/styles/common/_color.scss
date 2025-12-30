@@ -1,0 +1,66 @@
+@use "../variables";
+
+.active {
+  color: variables.$fg-color;
+  border-color: variables.$border-color;
+}
+
+.active .base-background {
+  background: variables.$base-color;
+}
+
+.active.base-background {
+  background: variables.$base-color;
+}
+
+.active .header-background {
+  background: variables.$bg-color;
+}
+
+.active.header-background {
+  background: variables.$bg-color;
+}
+
+.active .selected {
+  color: variables.$selected-fg-color;
+  background: variables.$selected-bg-color;
+}
+
+.active .disabled {
+  color: variables.$insensitive-fg-color;
+  background: variables.$insensitive-base-color;
+}
+
+.active .disabled .background {
+  background: variables.$insensitive-bg-color;
+}
+
+.inactive {
+  color: variables.$unfocused-fg-color;
+  border-color: variables.$unfocused-border-color;
+}
+
+.inactive .base-background {
+  background: variables.$unfocused-base-color;
+}
+
+.inactive .header-background {
+  background: variables.$unfocused-bg-color;
+}
+
+.inactive .selected {
+  color: variables.$unfocused-selected-fg-color;
+  background: variables.$unfocused-selected-bg-color;
+}
+
+.success {
+  background: variables.$success-color;
+}
+
+.warning {
+  background: variables.$warning-color;
+}
+
+.error {
+  background: variables.$error-color;;
+}

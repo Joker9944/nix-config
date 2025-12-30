@@ -30,6 +30,9 @@
         astalPackages = with ags.packages.${system}; [
           io
           astal4
+          network
+          wireplumber
+          hyprland
         ];
 
         extraPackages =
@@ -37,6 +40,7 @@
           ++ (with pkgs; [
             libadwaita
             libsoup_3
+            libgtop
           ]);
 
         agsPackage = ags.packages.${system}.default.override {
@@ -58,11 +62,12 @@
             buildInputs = [ agsPackage ];
           };
         };
-        packages = {
-          default = self.packages.${system}.custom-shell;
 
-          custom-shell = pkgs.stdenv.mkDerivation (finalAttrs: {
-            name = "custom-shell";
+        packages = {
+          default = self.packages.${system}.yab;
+
+          yab = pkgs.stdenv.mkDerivation (finalAttrs: {
+            name = "yab";
 
             src = ./.;
 
@@ -83,16 +88,31 @@
 
               runHook postInstall
             '';
+
+            meta =
+              let
+                inherit (lib) licenses;
+              in
+              {
+                description = "yet another bar";
+                license = licenses.free;
+                mainProgram = finalAttrs.name;
+              };
           });
         };
       }
     )
     // {
+      homeManagerModules = {
+        default = self.homeManagerModules.yab;
+        yab = import ./nix/modules/home self;
+      };
+
       overlays = {
         default = self.overlays.custom-shell;
 
-        custom-shell = _: prev: {
-          inherit (self.packages.${prev.system}) custom-shell;
+        yab = _: prev: {
+          inherit (self.packages.${prev.system}) yab;
         };
       };
     };

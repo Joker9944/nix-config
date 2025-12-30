@@ -1,0 +1,27 @@
+@use "../variables";
+
+@each $key, $value in variables.$spacing {
+  .m-#{$key} {
+    margin: $value;
+  }
+  .mx-#{$key} {
+    margin-left: $value;
+    margin-right: $value;
+  }
+  .my-#{$key} {
+    margin-top: $value;
+    margin-bottom: $value;
+  }
+  .mt-#{$key} {
+    margin-top: $value;
+  }
+  .mr-#{$key} {
+    margin-right: $value;
+  }
+  .mb-#{$key} {
+    margin-bottom: $value;
+  }
+  .ml-#{$key} {
+    margin-left: $value;
+  }
+}

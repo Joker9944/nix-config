@@ -1,0 +1,23 @@
+@use "sass:map";
+@use "../variables";
+@use "../functions" as *;
+
+window#bar {
+  background: transparent;
+
+  popover > contents {
+    background: variables.$bg-color;
+    border-radius: map.get(variables.$border-radii, "2xl");
+  }
+
+  module#workspaces > button {
+    //box-shadow: none;
+  }
+
+  module > menubutton > button {
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    background: inherit;
+  }
+}
