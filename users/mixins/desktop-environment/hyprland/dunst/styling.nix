@@ -7,7 +7,8 @@
 custom.lib.mkHyprlandModule config {
   services.dunst =
     let
-      inherit (config.windowManager.hyprland.custom.style) pallet border icons;
+      cfg = config.windowManager.hyprland.custom.style;
+      inherit (cfg) border icons scheme;
       font = config.windowManager.hyprland.custom.style.fonts.interface;
     in
     {
@@ -30,7 +31,7 @@ custom.lib.mkHyprlandModule config {
           ##############
           ### COLORS ###
           ##############
-          frame_color = pallet.background.light.hex;
+          frame_color = scheme.named.background.light.hex;
           separator_color = "frame";
 
           ###############
@@ -41,19 +42,19 @@ custom.lib.mkHyprlandModule config {
         };
 
         urgency_low = {
-          background = pallet.background.normal.hex;
-          foreground = pallet.foreground.hex;
+          background = scheme.named.background.normal.hex;
+          foreground = scheme.named.foreground.normal.hex;
         };
 
         urgency_normal = {
-          background = pallet.background.normal.hex;
-          foreground = pallet.foreground.hex;
+          background = scheme.named.background.normal.hex;
+          foreground = scheme.named.foreground.normal.hex;
         };
 
         urgency_critical = {
-          background = pallet.red.dull.hex;
-          foreground = pallet.white.dull.hex;
-          frame_color = pallet.red.dull.hex;
+          background = scheme.named.red.dull.hex;
+          foreground = scheme.named.white.dull.hex;
+          frame_color = scheme.named.red.bright.hex;
         };
       };
     };

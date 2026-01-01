@@ -1,13 +1,13 @@
 { cfg, ... }:
 let
-  inherit (cfg.style) pallet opacity;
+  inherit (cfg.style) scheme opacity;
 in
 ''
   #window {
-    background-color: ${pallet.background.normal.rgba opacity.active};
+    background-color: ${scheme.named.background.normal.rgba opacity.active};
   }
 
   #input {
-    background-color: ${pallet.background.dark.rgba opacity.active};
+    background-color: ${scheme.named.background.dark.rgba opacity.active};
   }
 ''

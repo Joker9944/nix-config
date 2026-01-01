@@ -7,7 +7,8 @@
 custom.lib.mkHyprlandModule config {
   programs.hyprlock.settings =
     let
-      inherit (config.windowManager.hyprland.custom.style) pallet border fonts;
+      cfg = config.windowManager.hyprland.custom.style;
+      inherit (cfg) border fonts scheme;
     in
     {
       animations = {
@@ -31,12 +32,12 @@ custom.lib.mkHyprlandModule config {
         size = "20%, 5%";
         outline_thickness = border.size;
 
-        inner_color = pallet.background.normal.rgba 0.93;
-        outer_color = pallet.functional.focus.rgba 0.93;
-        check_color = pallet.functional.info.rgba 0.93;
-        fail_color = pallet.functional.danger.rgba 0.93;
+        inner_color = scheme.named.background.normal.rgba 0.93;
+        outer_color = scheme.custom.accent.rgba 0.93;
+        check_color = scheme.named.info.rgba 0.93;
+        fail_color = scheme.named.error.rgba 0.93;
 
-        font_color = pallet.foreground.rgb;
+        font_color = scheme.named.foreground.normal.rgb;
         font_family = lib.mkIf (fonts.interface != null) fonts.interface.name;
 
         dots_spacing = 0.3;
@@ -57,7 +58,7 @@ custom.lib.mkHyprlandModule config {
               path = "${custom.assets.images.profile.the-seer."512x512"}/share/profile/the-seer.512x512.jpg";
 
               border_size = border.size;
-              border_color = pallet.background.normal.rgba 0.93;
+              border_color = scheme.named.background.normal.rgba 0.93;
 
               size = "150";
               position = "0, 130";

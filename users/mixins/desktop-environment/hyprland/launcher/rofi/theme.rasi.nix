@@ -1,6 +1,6 @@
 { cfg, rasi, ... }:
 let
-  inherit (cfg.style) pallet opacity border;
+  inherit (cfg.style) scheme opacity border;
   inherit (rasi) mkLiteral;
   font = cfg.style.fonts.interface;
 in
@@ -8,15 +8,15 @@ in
   # cSpell:words rasi mainbox inputbar listview
   "*" = {
     font = "${font.name} ${toString font.size}";
-    text-color = mkLiteral pallet.cursor.rgb;
+    text-color = mkLiteral scheme.named.foreground.normal.rgb;
     background-color = mkLiteral "transparent";
   };
 
   window = {
-    background-color = mkLiteral (pallet.background.normal.rgba opacity.active);
+    background-color = mkLiteral (scheme.named.background.normal.rgba opacity.active);
     border = mkLiteral "${toString border.size}px";
     border-radius = mkLiteral "${toString border.corners.rounding}px";
-    border-color = mkLiteral (pallet.functional.focus.rgba 0.93);
+    border-color = mkLiteral (scheme.custom.accent.rgba 0.93);
   };
 
   mainbox = {
@@ -33,13 +33,13 @@ in
 
     font = "${font.name} Bold ${toString font.size}";
 
-    background-color = mkLiteral pallet.background.light.rgb;
+    background-color = mkLiteral scheme.named.background.light.rgb;
 
     padding = mkLiteral "5px";
 
     border = mkLiteral "1px";
     border-radius = mkLiteral "${toString border.corners.rounding}px";
-    border-color = mkLiteral pallet.background.lighter.rgb;
+    border-color = mkLiteral scheme.named.background.lighter.rgb;
   };
 
   prompt = {
@@ -72,15 +72,15 @@ in
   };
 
   "element selected" = {
-    background-color = mkLiteral (pallet.functional.focus.rgba opacity.active);
+    background-color = mkLiteral (scheme.custom.accent.rgba opacity.active);
   };
 
   "element normal.active, element selected.active" = {
-    text-color = mkLiteral pallet.blue.dull.rgb;
+    text-color = mkLiteral scheme.named.info.rgb;
   };
 
   "element normal.urgent, element selected.urgent" = {
-    text-color = mkLiteral pallet.red.dull.rgb;
+    text-color = mkLiteral scheme.named.error.rgb;
   };
 
   element-icon = {

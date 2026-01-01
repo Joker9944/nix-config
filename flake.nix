@@ -22,18 +22,11 @@
     };
     yab = {
       url = ./apps/yab;
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        ags.follows = "ags";
-      };
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     # modules
     sops-nix = {
       url = "github:Mic92/sops-nix/master";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    ags = {
-      url = "github:aylur/ags";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     disko = {
@@ -51,6 +44,10 @@
     };
     flake-utils.url = "github:numtide/flake-utils/main"; # cSpell:ignore numtide
     nix-jail.url = "sourcehut:~alexdavid/jail.nix"; # cSPell:ignore alexdavid
+    nix-schemes = {
+      url = ./apps/nix-schemes;
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # libs
     nix-math = {
       url = "github:xddxdd/nix-math/master"; # cSpell:ignore xddxdd
@@ -60,11 +57,7 @@
   };
 
   outputs =
-    inputs@{
-      self,
-      nixpkgs,
-      ...
-    }:
+    inputs@{ self, nixpkgs, ... }:
     let
       inherit (nixpkgs) lib;
 

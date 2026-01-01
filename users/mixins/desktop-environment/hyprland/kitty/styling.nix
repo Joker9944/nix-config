@@ -1,8 +1,15 @@
-{ config, custom, ... }:
+{
+  lib,
+  config,
+  custom,
+  ...
+}:
 custom.lib.mkHyprlandModule config {
   programs.kitty =
     let
-      inherit (config.windowManager.hyprland.custom.style) pallet fonts opacity;
+      cfg = config.windowManager.hyprland.custom.style;
+      inherit (cfg) fonts opacity scheme;
+      inherit (scheme.translations) ansi;
     in
     {
       font = fonts.terminal;
@@ -14,26 +21,12 @@ custom.lib.mkHyprlandModule config {
       settings = {
         cursor_shape = "beam";
 
-        cursor = pallet.cursor.hex;
-        background = pallet.background.normal.hex;
-        foreground = pallet.foreground.hex;
-
-        color0 = pallet.black.dull.hex;
-        color8 = pallet.black.bright.hex;
-        color1 = pallet.red.dull.hex;
-        color9 = pallet.red.bright.hex;
-        color2 = pallet.green.dull.hex;
-        color10 = pallet.green.bright.hex;
-        color3 = pallet.yellow.dull.hex;
-        color11 = pallet.yellow.bright.hex;
-        color4 = pallet.blue.dull.hex;
-        color12 = pallet.blue.bright.hex;
-        color5 = pallet.magenta.dull.hex;
-        color13 = pallet.magenta.bright.hex;
-        color6 = pallet.cyan.dull.hex;
-        color14 = pallet.cyan.bright.hex;
-        color7 = pallet.white.dull.hex;
-        color15 = pallet.white.bright.hex;
-      };
+        cursor = scheme.named.foreground.normal.hex;
+        background = scheme.named.background.normal.hex;
+        foreground = scheme.named.foreground.normal.hex;
+      }
+      // (lib.concatMapAttrs (name: color: {
+        "color${toString (lib.fromHexString name)}" = color.hex;
+      }) ansi);
     };
 }

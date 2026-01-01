@@ -1,11 +1,11 @@
 { config, ... }:
 # TODO make a nix to css lib
 let
-  inherit (config.windowManager.hyprland.custom.style) pallet opacity;
+  inherit (config.windowManager.hyprland.custom.style) scheme opacity;
 in
 ''
   window#waybar {
-    background-color: ${pallet.background.normal.rgba opacity.active};
+    background-color: ${scheme.named.background.normal.rgba opacity.active};
     font-family: 'Symbols Nerd Font', inherit;
   }
 

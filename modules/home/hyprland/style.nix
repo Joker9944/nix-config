@@ -28,10 +28,10 @@
         };
       };
 
-      pallet = mkOption {
+      scheme = mkOption {
         type = types.nullOr types.attrs;
         description = ''
-          Color pallet that can be reference.
+          Color scheme that can be reference.
         '';
       };
 

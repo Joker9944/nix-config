@@ -6,6 +6,7 @@
    - There are a lot of styling utils take a look once theming
 */
 {
+  inputs,
   lib,
   pkgs,
   config,
@@ -56,7 +57,94 @@
             };
           };
 
-          pallet = custom.assets.palettes.dracula;
+          scheme = (inputs.nix-schemes.schemes.base24.dracula.convert pkgs).override (
+            base: colorLib:
+            let
+              inherit (base) palette;
+              mkColorFromHex = hex: colorLib.mkColor (colorLib.fromHex hex);
+            in
+            {
+              custom.accent = mkColorFromHex "#815CD6";
+
+              named = {
+                background = {
+                  darker = palette.base11;
+                  dark = palette.base10;
+                  normal = palette.base00;
+                  light = palette.base01;
+                  lighter = palette.base02;
+                };
+
+                foreground = {
+                  dark = palette.base04;
+                  normal = palette.base05;
+                  light = palette.base06;
+                  lighter = palette.base07;
+                };
+
+                info = palette.base0D;
+                warning = palette.base09;
+                error = palette.base08;
+
+                black = {
+                  dull = palette.base00;
+                  bright = palette.base02;
+                };
+
+                red = {
+                  dull = palette.base08;
+                  bright = palette.base12;
+                };
+
+                green = {
+                  dull = palette.base0B;
+                  bright = palette.base14;
+                };
+
+                yellow = {
+                  dull = palette.base09;
+                  bright = palette.base13;
+                };
+
+                magenta = {
+                  dull = palette.base0E;
+                  bright = palette.base17;
+                };
+
+                cyan = {
+                  dull = palette.base0C;
+                  bright = palette.base15;
+                };
+
+                white = {
+                  dull = palette.base06;
+                  bright = palette.base07;
+                };
+              };
+
+              # https://github.com/Base24/base24/blob/master/styling.md
+              translations = {
+                ansi = {
+                  "0" = mkColorFromHex "#21222C";
+                  "8" = mkColorFromHex "#6272A4";
+                  "1" = mkColorFromHex "#FF5555";
+                  "9" = mkColorFromHex "#FF6E6E";
+                  "2" = mkColorFromHex "#50FA7B";
+                  "A" = mkColorFromHex "#69FF94";
+                  "3" = mkColorFromHex "#F1FA8C";
+                  "B" = mkColorFromHex "#FFFFA5";
+                  "4" = mkColorFromHex "#BD93F9";
+                  "C" = mkColorFromHex "#D6ACFF";
+                  "5" = mkColorFromHex "#FF79C6";
+                  "D" = mkColorFromHex "#FF92DF";
+                  "6" = mkColorFromHex "#8BE9FD";
+                  "E" = mkColorFromHex "#A4FFFF";
+                  "7" = mkColorFromHex "#F8F8F2";
+                  "F" = mkColorFromHex "#FFFFFF";
+                };
+              };
+            }
+          );
 
           opacity = {
             active = 0.95;
