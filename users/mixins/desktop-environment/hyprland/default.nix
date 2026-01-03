@@ -14,10 +14,12 @@
   ...
 }:
 {
-  imports = custom.lib.ls {
-    dir = ./.;
-    exclude = [ ./default.nix ];
-  };
+  imports =
+    (custom.lib.ls {
+      dir = ./.;
+      exclude = [ ./default.nix ];
+    })
+    ++ [ inputs.nix-schemes.homeManagerModules.gtk ];
 
   options.mixins.desktopEnvironment.hyprland =
     let
@@ -64,9 +66,10 @@
               mkColorFromHex = hex: colorLib.mkColor (colorLib.fromHex hex);
             in
             {
-              custom.accent = mkColorFromHex "#815CD6";
+              custom.accent = config.schemes.gtk.accentColor;
 
               named = {
+                # https://github.com/Base24/base24/blob/master/styling.md
                 background = {
                   darker = palette.base11;
                   dark = palette.base10;
@@ -122,7 +125,6 @@
                 };
               };
 
-              # https://github.com/Base24/base24/blob/master/styling.md
               translations = {
                 ansi = {
                   "0" = mkColorFromHex "#21222C";
@@ -174,9 +176,6 @@
         gnomeCompat = {
           enable = true;
 
-          style = "prefer-dark";
-          accentColor = "purple";
-
           documentText = {
             name = "Lato";
             package = pkgs.lato;
@@ -188,12 +187,15 @@
             package = pkgs.jetbrains-mono;
             size = 10;
           };
-
-          theme = {
-            name = "Dracula";
-            package = pkgs.dracula-theme;
-          };
         };
+      };
+
+      schemes.gtk = {
+        enable = true;
+        theme.package = pkgs.adw-gtk3;
+
+        accent = "purple";
+        inherit (config.windowManager.hyprland.custom.style) scheme;
       };
     };
 }

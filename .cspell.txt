@@ -13,10 +13,12 @@ gdkmonitor
 glibtop
 gnim
 halign
+headerbar
 hexpand
 imapnotify
 linenumbers
 menubutton
+messagedialog
 mountpoint
 noinherit
 PAMFAIL

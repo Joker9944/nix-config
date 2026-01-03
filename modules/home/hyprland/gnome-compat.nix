@@ -2,6 +2,7 @@
   lib,
   config,
   options,
+  pkgs-hyprland,
   ...
 }:
 let
@@ -33,8 +34,11 @@ in
 
   config = lib.mkIf cfg.enable {
     gtk = {
-      inherit (cfg) theme cursorTheme iconTheme;
-      enable = true;
+      enable = lib.mkDefault true;
+
+      theme = lib.mkIf (cfg.theme != null) cfg.theme;
+      cursorTheme = lib.mkIf (cfg.cursorTheme != null) cfg.cursorTheme;
+      iconTheme = lib.mkIf (cfg.iconTheme != null) cfg.iconTheme;
     };
 
     gnome-settings.appearance = {
@@ -45,6 +49,11 @@ in
     gnome-tweaks.fonts = {
       inherit (cfg) interfaceText documentText monospaceText;
       enable = true;
+    };
+
+    xdg.portal = {
+      enable = lib.mkDefault true;
+      extraPortals = [ pkgs-hyprland.xdg-desktop-portal-gtk ];
     };
   };
 }

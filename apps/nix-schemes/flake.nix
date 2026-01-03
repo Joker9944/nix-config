@@ -48,12 +48,16 @@
             (lib.map (schemeSlug: {
               name = schemeSlug;
               value = {
-                convert = pkgs: (self.lib.pkgs.init pkgs).generateScheme base schemeSlug;
+                convert = pkgs: (self.lib.init pkgs).generateScheme base schemeSlug;
               };
             }))
             lib.listToAttrs
           ]
         ))
       ];
+
+      homeManagerModules = {
+        gtk = import ./modules/home/gtk self;
+      };
     };
 }
