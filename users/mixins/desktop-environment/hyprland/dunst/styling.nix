@@ -31,7 +31,7 @@ custom.lib.mkHyprlandModule config {
           ##############
           ### COLORS ###
           ##############
-          frame_color = scheme.named.background.light.hex;
+          frame_color = scheme.background.light.hex;
           separator_color = "frame";
 
           ###############
@@ -42,19 +42,19 @@ custom.lib.mkHyprlandModule config {
         };
 
         urgency_low = {
-          background = scheme.named.background.normal.hex;
-          foreground = scheme.named.foreground.normal.hex;
+          background = scheme.background.normal.hex;
+          foreground = scheme.foreground.normal.hex;
         };
 
         urgency_normal = {
-          background = scheme.named.background.normal.hex;
-          foreground = scheme.named.foreground.normal.hex;
+          background = scheme.background.normal.hex;
+          foreground = scheme.foreground.normal.hex;
         };
 
         urgency_critical = {
-          background = scheme.named.red.dull.hex;
-          foreground = scheme.named.white.dull.hex;
-          frame_color = scheme.named.red.bright.hex;
+          background = scheme.red.dull.hex;
+          foreground = scheme.white.dull.hex;
+          frame_color = scheme.red.bright.hex;
         };
       };
     };

@@ -32,12 +32,12 @@ custom.lib.mkHyprlandModule config {
         size = "20%, 5%";
         outline_thickness = border.size;
 
-        inner_color = scheme.named.background.normal.rgba 0.93;
-        outer_color = scheme.custom.accent.rgba 0.93;
-        check_color = scheme.named.info.rgba 0.93;
-        fail_color = scheme.named.error.rgba 0.93;
+        inner_color = scheme.background.normal.rgba 0.93;
+        outer_color = scheme.accent.rgba 0.93;
+        check_color = scheme.info.rgba 0.93;
+        fail_color = scheme.error.rgba 0.93;
 
-        font_color = scheme.named.foreground.normal.rgb;
+        font_color = scheme.foreground.normal.rgb;
         font_family = lib.mkIf (fonts.interface != null) fonts.interface.name;
 
         dots_spacing = 0.3;
@@ -58,7 +58,7 @@ custom.lib.mkHyprlandModule config {
               path = "${custom.assets.images.profile.the-seer."512x512"}/share/profile/the-seer.512x512.jpg";
 
               border_size = border.size;
-              border_color = scheme.named.background.normal.rgba 0.93;
+              border_color = scheme.background.normal.rgba 0.93;
 
               size = "150";
               position = "0, 130";

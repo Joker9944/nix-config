@@ -8,13 +8,13 @@ custom.lib.mkHyprlandModule config {
     {
       primary = "default";
       secondary = "dim";
-      accent = scheme.named.green.dull.rgb;
+      accent = scheme.green.dull.rgb;
       comment = palette.base03.rgb;
-      error = "italic ${scheme.named.red.dull.rgb}";
+      error = "italic ${scheme.red.dull.rgb}";
       highlight = palette.base02.rgb;
       highlight_primary = "default";
       highlight_secondary = "dim";
-      highlight_accent = "bold ${scheme.named.green.dull.rgb}";
+      highlight_accent = "bold ${scheme.green.dull.rgb}";
       highlight_comment = "bold ${palette.base03.rgb}";
     };
 }

@@ -9,7 +9,7 @@ custom.lib.mkHyprlandModule config {
     let
       cfg = config.windowManager.hyprland.custom.style;
       inherit (cfg) fonts opacity scheme;
-      inherit (scheme.translations) ansi;
+      inherit (scheme) ansi;
     in
     {
       font = fonts.terminal;
@@ -21,9 +21,9 @@ custom.lib.mkHyprlandModule config {
       settings = {
         cursor_shape = "beam";
 
-        cursor = scheme.named.foreground.normal.hex;
-        background = scheme.named.background.normal.hex;
-        foreground = scheme.named.foreground.normal.hex;
+        cursor = scheme.foreground.normal.hex;
+        background = scheme.background.normal.hex;
+        foreground = scheme.foreground.normal.hex;
       }
       // (lib.concatMapAttrs (name: color: {
         "color${toString (lib.fromHexString name)}" = color.hex;

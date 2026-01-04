@@ -24,8 +24,8 @@ custom.lib.mkHyprlandModule config {
         gaps_in = 5;
         gaps_out = 10;
 
-        "col.active_border" = scheme.custom.accent.rgba 0.93;
-        "col.inactive_border" = scheme.named.background.dark.rgba 0.66;
+        "col.active_border" = scheme.accent.rgba 0.93;
+        "col.inactive_border" = scheme.background.dark.rgba 0.66;
 
         layout = "dwindle";
       };
@@ -41,7 +41,7 @@ custom.lib.mkHyprlandModule config {
           enabled = true;
           range = 4;
           render_power = 3;
-          color = scheme.named.background.darker.rgba 0.93;
+          color = scheme.background.darker.rgba 0.93;
         };
 
         blur = {
@@ -106,7 +106,7 @@ custom.lib.mkHyprlandModule config {
 
       misc = {
         disable_hyprland_logo = true;
-        background_color = scheme.named.background.normal.rgb;
+        background_color = scheme.background.normal.rgb;
       };
     };
 }
