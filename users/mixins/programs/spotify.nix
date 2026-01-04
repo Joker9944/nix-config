@@ -31,7 +31,7 @@
           ];
 
           windowrule = [
-            "workspace special:${workspace}, class:Spotify"
+            "match:class Spotify, workspace special:${workspace}"
           ];
         };
     };

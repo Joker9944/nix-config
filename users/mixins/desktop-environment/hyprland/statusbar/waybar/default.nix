@@ -13,7 +13,7 @@ custom.lib.mkHyprlandModule config {
     stylus = mkEnableOption "stylus metrics";
   };
 
-  config = {
+  config = lib.mkIf config.programs.waybar.enable {
     home.packages = [
       pkgs.nerd-fonts.symbols-only
     ];
@@ -27,11 +27,8 @@ custom.lib.mkHyprlandModule config {
       style = import ./style.css.nix args;
     };
 
-    wayland.windowManager.hyprland.settings = {
-      decoration.layerrule = [
-        "blur, waybar"
-        "xray 1, waybar"
-      ];
-    };
+    wayland.windowManager.hyprland.settings.layerrule = [
+      "match:namespace waybar, blur on, xray on"
+    ];
   };
 }

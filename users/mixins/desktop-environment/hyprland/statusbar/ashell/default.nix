@@ -1,6 +1,11 @@
-{ pkgs-hyprland, ... }:
 {
-  programs.ashell = {
+  lib,
+  config,
+  pkgs-hyprland,
+  ...
+}:
+{
+  config.programs.ashell = lib.mkIf config.programs.ashell.enable {
     package = pkgs-hyprland.ashell;
 
     systemd.enable = true;

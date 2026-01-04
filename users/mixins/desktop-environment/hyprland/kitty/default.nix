@@ -39,7 +39,11 @@ custom.lib.mkHyprlandModule config {
         }:
         "${bin.kitty} --override confirm_os_window_close=0 --app-id ${id} ${command}";
 
-      mkWindowRules = { id, ... }: [ "minsize 720 480, class:${id}" ];
+      mkWindowRules =
+        { id, ... }:
+        [
+          "match:class ${id}, min_size 720 480"
+        ];
     };
 
     wayland.windowManager.hyprland.settings = {

@@ -15,7 +15,7 @@ custom.lib.mkHyprlandModule config {
   windowManager.hyprland.custom.system.allowMaximized = regexes;
 
   wayland.windowManager.hyprland.settings = {
-    windowrule = lib.map (regex: "float, decorate 0, content game, class:${regex}") regexes;
+    windowrule = lib.map (regex: "match:class ${regex}, content game, float on, decorate off") regexes;
 
     render = {
       # Enable direct scanout for fullscreen applications marked as game content

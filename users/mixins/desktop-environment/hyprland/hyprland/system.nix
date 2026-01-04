@@ -95,12 +95,12 @@ custom.lib.mkHyprlandModule config {
         in
         [
           # Fix some dragging issues with XWayland
-          "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0"
+          "match:class ^$, match:title ^$, match:xwayland true, match:float true, match:fullscreen false, match:pin false, no_focus on"
         ]
         # Ignore maximize requests from apps. You'll probably like this.
         ++ lib.optional (
           lib.length cfg.allowMaximized > 0
-        ) "suppressevent maximize, class:negative:${maximizeRegex}";
+        ) "match:class negative:${maximizeRegex}, suppress_event maximize";
     };
   };
 }

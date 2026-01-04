@@ -39,7 +39,7 @@
           ];
 
           windowrule = [
-            "workspace special:${workspace}, class:vesktop"
+            "match:class vesktop, workspace special:${workspace}"
           ];
         };
     };

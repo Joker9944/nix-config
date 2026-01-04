@@ -19,9 +19,12 @@ custom.lib.mkHyprlandModule config {
     package = pkgs-hyprland.hyprpaper;
 
     settings = lib.mkDefault {
-      preload = [ wallpaper ];
-
-      wallpaper = [ ", ${wallpaper}" ];
+      wallpaper = [
+        {
+          monitor = "";
+          path = wallpaper;
+        }
+      ];
     };
   };
 }

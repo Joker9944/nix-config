@@ -35,8 +35,8 @@
           ];
 
           windowrule = [
-            "workspace special:${workspace} silent, class:org.telegram.desktop"
-            "float, content photo, class:org.telegram.desktop, title:Media viewer"
+            "match:class org.telegram.desktop, workspace special:${workspace} silent"
+            "match:class org.telegram.desktop, match:title Media viewer, float on, content photo"
           ];
         };
     };
