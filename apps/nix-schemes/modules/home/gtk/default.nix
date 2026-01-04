@@ -1,6 +1,6 @@
 # https://github.com/lassekongo83/adw-gtk3
 # https://github.com/lassekongo83/adw-colors
-_:
+flake:
 {
   lib,
   config,
@@ -28,6 +28,7 @@ in
         mkPackageOption
         mkOption
         types
+        literalExpression
         ;
       customTypes = import ../../types.nix args;
     in
@@ -55,8 +56,9 @@ in
       };
 
       accentOverride = mkOption {
-        type = types.nullOr customTypes.color;
+        type = types.nullOr (types.functionTo customTypes.color);
         default = null;
+        example = literalExpression "colorLib: colorLib.mkColor [ 0 127 255 ]";
         description = ''
           Custom accent color to override accent colors derived from scheme.
         '';
@@ -93,7 +95,7 @@ in
           lib.pipe accentNames [
             (lib.map (name: {
               inherit name;
-              value = cfg.accentOverride;
+              value = cfg.accentOverride (flake.lib.init pkgs);
             }))
             lib.listToAttrs
           ];

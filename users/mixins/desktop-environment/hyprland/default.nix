@@ -152,6 +152,13 @@
         gtk = {
           enable = true;
           accent = "purple";
+          accentOverride =
+            colorLib:
+            colorLib.mkColor [
+              129
+              92
+              214
+            ];
         };
       };
     };
