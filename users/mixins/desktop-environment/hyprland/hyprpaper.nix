@@ -19,6 +19,8 @@ custom.lib.mkHyprlandModule config {
     package = pkgs-hyprland.hyprpaper;
 
     settings = lib.mkDefault {
+      splash = false;
+
       wallpaper = [
         {
           monitor = "";

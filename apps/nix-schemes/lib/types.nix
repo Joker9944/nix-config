@@ -2,7 +2,7 @@
 let
   inherit (lib) mkOption types literalExpression;
 in
-lib.fix (self: {
+lib.fix (customTypes: {
   scheme = types.submodule {
     freeformType = types.attrs;
 
@@ -42,7 +42,7 @@ lib.fix (self: {
       };
 
       palette = mkOption {
-        type = types.attrsOf self.color;
+        type = types.attrsOf customTypes.color;
         description = ''
           The scheme color palette.
         '';
@@ -86,28 +86,28 @@ lib.fix (self: {
       };
 
       mix = mkOption {
-        type = types.functionTo (types.functionTo self.color);
+        type = types.functionTo (types.functionTo customTypes.color);
         description = ''
           Function to mix this with another color with a weight.
         '';
       };
 
       adjust = mkOption {
-        type = types.functionTo self.color;
+        type = types.functionTo customTypes.color;
         description = ''
           Function to scale this by a factor.
         '';
       };
 
       lighten = mkOption {
-        type = types.functionTo self.color;
+        type = types.functionTo customTypes.color;
         description = ''
           Function to mix this with white with a weight.
         '';
       };
 
       darken = mkOption {
-        type = types.functionTo self.color;
+        type = types.functionTo customTypes.color;
         description = ''
           FUnction to mix this with black with a weight.
         '';

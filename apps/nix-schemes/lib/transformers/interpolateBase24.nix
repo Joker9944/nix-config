@@ -6,11 +6,11 @@
 scheme: colorLib:
 let
   inherit (scheme) palette;
-  colorRatios = lib.zipListsWith (a: b: (b.dec - a.dec) / 255);
+  colorRatios = lib.zipListsWith (a: b: (b - a) / 255);
   adjust =
     color: ratios:
     lib.pipe ratios [
-      (lib.zipListsWith (dec: ratio: dec + 255 * ratio) color.dec)
+      (lib.zipListsWith (dec: ratio: dec + 255 * ratio) color)
       (lib.map custom.math.round)
       (lib.map (colorLib.clamp 0 255))
       (dec: colorLib.mkColor dec)
@@ -24,11 +24,13 @@ else
 
     palette =
       let
-        base10 = adjust palette.base00 (-(colorRatios palette.base00 palette.base01));
+        base10 = adjust palette.base00.dec (
+          lib.map (n: -n) (colorRatios palette.base00.dec palette.base01.dec)
+        );
       in
       {
         inherit base10;
-        base11 = adjust base10 (-(colorRatios palette.base01 palette.base02));
+        base11 = adjust base10.dec (lib.map (n: -n) (colorRatios palette.base01.dec palette.base02.dec));
         base12 = palette.base08.lighten lightenWeight;
         base13 = palette.base09.lighten lightenWeight;
         base14 = palette.base0B.lighten lightenWeight;

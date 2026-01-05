@@ -108,13 +108,14 @@
 
       schemes = {
         source.scheme = {
-          system = "base24";
-          slug = "dracula";
+          system = "base16";
+          slug = "uwunicorn"; # cSpell:words uwunicorn
         };
 
         transformers =
           let
-            draculaAnsi =
+            /*
+              draculaAnsi =
               _: colorLib:
               let
                 mkColorFromHex = hex: colorLib.mkColor (colorLib.fromHex hex);
@@ -139,26 +140,29 @@
                   "F" = mkColorFromHex "#FFFFFF";
                 };
               };
+            */
             schemeTransformers = inputs.nix-schemes.lib.transformers;
           in
           [
             (schemeTransformers.interpolateBase24 { })
             schemeTransformers.named
             schemeTransformers.ansi
-            draculaAnsi
+            #draculaAnsi
             config.schemes.gtk.accentTransformer
           ];
 
         gtk = {
           enable = true;
           accent = "purple";
-          accentOverride =
+          /*
+            accentOverride =
             colorLib:
             colorLib.mkColor [
               129
               92
               214
             ];
+          */
         };
       };
     };

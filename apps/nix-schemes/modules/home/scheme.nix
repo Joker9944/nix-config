@@ -4,12 +4,12 @@ flake:
   config,
   pkgs,
   ...
-}@args:
+}:
 {
   options.schemes =
     let
       inherit (lib) mkOption types;
-      customTypes = import ../types.nix args;
+      customTypes = flake.lib.types;
     in
     {
       source = {

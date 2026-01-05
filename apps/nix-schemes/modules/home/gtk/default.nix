@@ -6,7 +6,7 @@ flake:
   config,
   pkgs,
   ...
-}@args:
+}:
 let
   accentNames = [
     "blue"
@@ -30,26 +30,24 @@ in
         types
         literalExpression
         ;
-      customTypes = import ../../types.nix args;
+      customTypes = flake.lib.types;
     in
     {
-      enable = mkEnableOption "GTK tinting based on adw-gtk3 and a scheme";
+      enable = mkEnableOption "GTK theming based on adw-gtk3 and a scheme";
 
-      theme = {
-        package = mkPackageOption pkgs "adw-gtk3" { };
-      };
+      theme.package = mkPackageOption pkgs "adw-gtk3" { };
 
       scheme = mkOption {
         type = customTypes.scheme;
         default = config.schemes.scheme;
         description = ''
-          Color scheme used to tint GTK theme.
+          Color scheme used to theme GTK theme.
         '';
       };
 
       accent = mkOption {
         type = types.enum accentNames;
-        default = "purple";
+        default = "blue";
         description = ''
           The GTK accent color based on the GTK 4 accent system.
         '';
@@ -118,11 +116,11 @@ in
         };
 
         gtk3.extraCss = lib.concatStrings [
-          (import ./css/gtk3-base.css.nix cfg accents)
-          (lib.optionalString (cfg.scheme.variant == "dark") (import ./css/gtk3-dark.css.nix))
+          (import ./templates/gtk3-base.css.nix cfg accents)
+          (lib.optionalString (cfg.scheme.variant == "dark") (import ./templates/gtk3-dark.css.nix))
         ];
 
-        gtk4.extraCss = import ./css/gtk4.css.nix cfg accents;
+        gtk4.extraCss = import ./templates/gtk4.css.nix cfg accents;
       };
 
       dconf.settings."org/gnome/desktop/interface".accent-color = cfg.accent;
