@@ -8,13 +8,13 @@
       atuin.enable = true;
       bash.enable = true;
       discord.enable = true;
-      firefox.enable = true;
       gnome-text-editor.enable = true;
       intelli-shell.enable = true;
       isd.enable = true;
       jetbrains.enable = true;
       jupyter.enable = true;
       kitty.enable = true;
+      librewolf.enable = true;
       loupe.enable = true;
       mpv.enable = true;
       nextcloud-client.enable = true;

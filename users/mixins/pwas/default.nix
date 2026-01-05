@@ -1,4 +1,5 @@
 {
+  lib,
   pkgs,
   config,
   custom,
@@ -10,7 +11,9 @@
     exclude = [ ./default.nix ];
   };
 
-  config.programs.firefoxpwa.package = pkgs.firefoxpwa.overrideAttrs {
-    inherit (config.programs.firefox.package) libs;
-  };
+  config.programs.firefoxpwa.package = lib.mkDefault (
+    pkgs.firefoxpwa.overrideAttrs (prev: {
+      libs = "${config.programs.firefox.finalPackage.libs}:${prev.libs}";
+    })
+  );
 }

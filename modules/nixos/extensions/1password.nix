@@ -25,10 +25,11 @@
     lib.mkIf cfg.enable {
       environment.etc."1password/custom_allowed_browsers" =
         let
-          browsers = cfg.additionalAllowedBrowsers ++ lib.optional config.programs.firefox.enable "firefox";
+          browsers = cfg.additionalAllowedBrowsers;
         in
         lib.mkIf (browsers != [ ]) {
           text = lib.concatLines browsers;
+          mode = "0755";
         };
     };
 }

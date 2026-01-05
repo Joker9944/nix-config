@@ -29,6 +29,16 @@ in
 
     # TODO disabled due to security issues with qtwebengine
     teamspeak.enable = false;
+
+    librewolf.profiles = {
+      "Homework" = {
+        id = 10;
+      };
+
+      "Work" = {
+        id = 20;
+      };
+    };
   };
 
   gnome-settings = lib.mkIf config.mixins.desktopEnvironment.gnome.enable {

@@ -55,6 +55,7 @@
         };
 
         firefox.enableGnomeExtensions = true;
+        librewolf.enableGnomeExtensions = true;
       };
 
       gtk = {

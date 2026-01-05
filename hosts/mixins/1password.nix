@@ -25,6 +25,8 @@
           enable = true;
 
           polkitPolicyOwners = lib.attrNames config.users.users;
+
+          additionalAllowedBrowsers = [ "librewolf" ];
         };
       };
     };
