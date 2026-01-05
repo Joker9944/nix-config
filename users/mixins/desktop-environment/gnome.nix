@@ -53,6 +53,8 @@
             package = pkgs.dracula-theme;
           };
         };
+
+        firefox.enableGnomeExtensions = true;
       };
 
       gtk = {

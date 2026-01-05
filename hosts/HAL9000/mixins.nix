@@ -19,7 +19,6 @@
     programs = {
       _1password.enable = true;
       ffmpeg.enable = true;
-      firefox.enable = true;
       steam.enable = true;
     };
   };

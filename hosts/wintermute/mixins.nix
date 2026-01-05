@@ -14,7 +14,6 @@
 
     programs = {
       _1password.enable = true;
-      firefox.enable = true;
       steam.enable = true;
     };
   };

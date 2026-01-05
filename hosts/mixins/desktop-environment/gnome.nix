@@ -26,17 +26,10 @@
           desktopManager.gnome.enable = true;
         };
 
-        gnome.gnome-browser-connector.enable = config.programs.firefox.enable;
+        gnome.gnome-browser-connector.enable = true;
       };
 
-      programs = {
-        gnupg.agent.pinentryPackage = pkgs.pinentry-gnome3;
-
-        firefox.policies.ExtensionSettings."chrome-gnome-shell@gnome.org" = {
-          install_url = "https://addons.mozilla.org/firefox/downloads/latest/gnome-shell-integration/latest.xpi";
-          installation_mode = "force_installed";
-        };
-      };
+      programs.gnupg.agent.pinentryPackage = pkgs.pinentry-gnome3;
 
       environment.gnome.excludePackages = with pkgs; [
         gnome-tour

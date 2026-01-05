@@ -19,22 +19,31 @@
       };
     };
 
-  config.programs._1password =
+  config =
     let
       cfg = config.mixins.programs._1password;
     in
     lib.mkIf cfg.enable {
-      enable = true;
+      programs = {
+        _1password = {
+          enable = true;
 
-      blocks = [ "*" ];
+          blocks = [ "*" ];
 
-      sshAgentConfig.ssh-keys = [
-        {
-          inherit (cfg) vault;
-          item = "${custom.config.username}@${osConfig.networking.hostName}";
-        }
-      ];
+          sshAgentConfig.ssh-keys = [
+            {
+              inherit (cfg) vault;
+              item = "${custom.config.username}@${osConfig.networking.hostName}";
+            }
+          ];
 
-      autostart.enable = true;
+          autostart.enable = true;
+        };
+
+        firefox.policies.ExtensionSettings."{d634138d-c276-4fc8-924b-40a0ea21d284}" = {
+          install_url = "https://addons.mozilla.org/firefox/downloads/latest/1password-x-password-manager/latest.xpi";
+          installation_mode = "force_installed";
+        };
+      };
     };
 }

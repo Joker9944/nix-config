@@ -1,7 +1,6 @@
 {
   lib,
   config,
-  osConfig,
   ...
 }:
 {
@@ -16,16 +15,21 @@
   config =
     let
       cfg = config.mixins.programs.firefox;
-      inherit (osConfig.programs.firefox) package;
     in
     lib.mkIf cfg.enable {
       programs.firefox = {
         enable = true;
-        inherit package;
+
+        policies = {
+          DisableTelemetry = true;
+          DisableFirefoxStudies = true;
+        };
       };
 
       services.firefox-profile-switcher-connector.enable = true;
 
-      xdg.mimeApps.custom.apps.default = [ "${package}/share/applications/firefox.desktop" ];
+      xdg.mimeApps.custom.apps.default = [
+        "${config.programs.firefox.finalPackage}/share/applications/firefox.desktop"
+      ];
     };
 }
