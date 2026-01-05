@@ -22,6 +22,7 @@
     ++ (with inputs.nix-schemes.homeManagerModules; [
       scheme
       gtk
+      librewolf
     ]);
 
   options.mixins.desktopEnvironment.hyprland =
@@ -163,6 +164,11 @@
               214
             ];
           */
+        };
+
+        librewolf = {
+          enable = true;
+          profiles = [ "joker9944" ];
         };
       };
     };

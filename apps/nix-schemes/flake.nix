@@ -61,6 +61,7 @@
 
         scheme = import ./modules/home/scheme.nix self;
         gtk = import ./modules/home/gtk self;
+        librewolf = import ./modules/home/librewolf self;
       };
     };
 }
