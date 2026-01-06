@@ -168,7 +168,7 @@
 
         librewolf = {
           enable = true;
-          profiles = [ "joker9944" ];
+          profiles = [ custom.config.username ];
         };
       };
     };
