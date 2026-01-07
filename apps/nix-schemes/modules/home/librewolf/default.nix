@@ -8,7 +8,12 @@ flake:
 {
   options.schemes.librewolf =
     let
-      inherit (lib) mkEnableOption mkOption types;
+      inherit (lib)
+        mkEnableOption
+        mkOption
+        types
+        literalExpression
+        ;
       customTypes = flake.lib.types;
     in
     {
@@ -26,7 +31,7 @@ flake:
         type = types.listOf types.str;
         default = [ ];
         description = ''
-          Profiles where the theme should be installed to.
+          librewolf profiles where the theme should be installed to.
         '';
       };
 
@@ -35,6 +40,31 @@ flake:
         default = "nix-schemes-theme@localhost";
         description = ''
           Firefox extension ID for the custom theme.
+        '';
+      };
+
+      accent = mkOption {
+        type = types.nullOr (types.functionTo customTypes.color);
+        default = _: config.schemes.scheme.accent;
+        defaultText = literalExpression ''
+          colorLib: config.schemes.scheme.accent
+        '';
+        example = literalExpression ''
+          colorLib: colorLib.mkColor [ 0 127 255 ]
+        '';
+        description = ''
+          Custom accent color to override accent colors derived from scheme.
+        '';
+      };
+
+      overrides.theme = mkOption {
+        type = types.nullOr (types.attrsOf types.str);
+        default = null;
+        example = literalExpression ''
+
+        '';
+        description = ''
+
         '';
       };
     };

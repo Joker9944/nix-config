@@ -59,6 +59,9 @@ flake:
       scheme = mkOption {
         type = types.nullOr customTypes.scheme;
         readOnly = true;
+        description = ''
+
+        '';
       };
     };
 

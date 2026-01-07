@@ -53,7 +53,7 @@ in
         '';
       };
 
-      accentOverride = mkOption {
+      overrides.accent = mkOption {
         type = types.nullOr (types.functionTo customTypes.color);
         default = null;
         example = literalExpression "colorLib: colorLib.mkColor [ 0 127 255 ]";
@@ -65,6 +65,9 @@ in
       accentTransformer = mkOption {
         type = customTypes.transformer;
         readOnly = true;
+        description = ''
+
+        '';
       };
     };
 
@@ -77,7 +80,7 @@ in
         let
           inherit (scheme) palette;
         in
-        if cfg.accentOverride == null then
+        if cfg.overrides.accent == null then
           {
             blue = palette.base0D;
             teal = palette.base0C;
@@ -93,7 +96,7 @@ in
           lib.pipe accentNames [
             (lib.map (name: {
               inherit name;
-              value = cfg.accentOverride (flake.lib.init pkgs);
+              value = cfg.overrides.accent (flake.lib.init pkgs);
             }))
             lib.listToAttrs
           ];
