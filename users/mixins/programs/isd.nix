@@ -8,11 +8,14 @@
       enable = mkEnableOption "isd config mixin";
     };
 
-  config.programs.isd =
+  config =
     let
       cfg = config.mixins.programs.isd;
     in
     lib.mkIf cfg.enable {
-      enable = true;
+      programs = {
+        isd.enable = true;
+        bash.shellAliases.sc = "isd";
+      };
     };
 }
