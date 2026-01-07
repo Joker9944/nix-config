@@ -37,6 +37,7 @@
 
     services = {
       ollama.enable = true;
+      remmina.enable = true;
     };
   };
 }
