@@ -1,6 +1,7 @@
 {
   mixins = {
     fonts.enable = true;
+    xdg.enable = true;
 
     programs = {
       _1password.enable = true;

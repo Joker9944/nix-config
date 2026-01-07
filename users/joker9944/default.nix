@@ -38,11 +38,6 @@ in
     minio-client
   ];
 
-  xdg = {
-    autostart.enable = true;
-    mimeApps.enable = true;
-  };
-
   programs = {
     freelens.enable = true;
 
