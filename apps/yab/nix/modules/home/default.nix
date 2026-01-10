@@ -5,6 +5,9 @@ flake:
   config,
   ...
 }:
+let
+  jsonFormat = pkgs.formats.json { };
+in
 {
   options.programs.yab =
     let
@@ -42,6 +45,14 @@ flake:
           '';
         };
       };
+
+      config = mkOption {
+        inherit (jsonFormat) type;
+        default = { };
+        description = ''
+          The yab config;
+        '';
+      };
     };
 
   config =
@@ -50,6 +61,10 @@ flake:
     in
     lib.mkIf cfg.enable {
       home.packages = [ cfg.package ];
+
+      xdg.configFile."yab/config.json" = lib.mkIf (cfg.config != { }) {
+        source = jsonFormat.generate "yab-config.json" cfg.config;
+      };
 
       systemd.user.services.yab = lib.mkIf cfg.systemd.enable {
         Unit = {
