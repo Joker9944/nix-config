@@ -9,7 +9,8 @@ import Network from "./modules/Network"
 import Volume from "./modules/Volume"
 import Workspaces from "./modules/Workspaces"
 import { SPACING } from "../helpers/constants"
-import {showGpu} from "../services/config";
+import {showBattery, showGpu} from "../services/config";
+import Battery from "./modules/Battery";
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
 	const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
@@ -51,6 +52,9 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
 					<Memory />
 					<Disk />
 					<Network />
+					{(showBattery) && (
+						<Battery />
+					)}
 					<Volume />
 				</box>
 			</centerbox>

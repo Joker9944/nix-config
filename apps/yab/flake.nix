@@ -33,6 +33,7 @@
           network
           wireplumber
           hyprland
+          battery
         ];
 
         extraPackages =

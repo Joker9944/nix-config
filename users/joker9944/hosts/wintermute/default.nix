@@ -35,4 +35,6 @@
       stylus = true;
     };
   };
+
+  programs.yab.config.battery = true;
 }
