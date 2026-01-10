@@ -20,9 +20,14 @@
       }/share/backgrounds/totoro-minimalist.${custom.config.resolution}.png";
     in
     {
-      preload = [ wallpaper ];
+      splash = false;
 
-      wallpaper = [ ", ${wallpaper}" ];
+      wallpaper = [
+        {
+          monitor = "";
+          path = wallpaper;
+        }
+      ];
     };
 
   windowManager.hyprland.custom = {
