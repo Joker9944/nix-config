@@ -33,6 +33,7 @@ function primaryNetworkDevice(): NM.Device | null {
 		case AstalNetwork.Primary.WIFI:
 			return wifi.get_device()
 		case AstalNetwork.Primary.UNKNOWN:
+		default:
 			return null
 	}
 }
