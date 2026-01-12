@@ -93,14 +93,16 @@ custom.lib.mkHyprlandModule config {
         let
           maximizeRegex = "(${lib.concatStringsSep "|" cfg.allowMaximized})";
         in
-        [
-          # Fix some dragging issues with XWayland
-          "match:class ^$, match:title ^$, match:xwayland true, match:float true, match:fullscreen false, match:pin false, no_focus on"
-        ]
-        # Ignore maximize requests from apps. You'll probably like this.
-        ++ lib.optional (
-          lib.length cfg.allowMaximized > 0
-        ) "match:class negative:${maximizeRegex}, suppress_event maximize";
+        lib.mkBefore (
+          [
+            # Fix some dragging issues with XWayland
+            "match:class ^$, match:title ^$, match:xwayland true, match:float true, match:fullscreen false, match:pin false, no_focus on"
+          ]
+          # Ignore maximize requests from apps. You'll probably like this.
+          ++ lib.optional (
+            lib.length cfg.allowMaximized > 0
+          ) "match:class negative:${maximizeRegex}, suppress_event maximize"
+        );
     };
   };
 }

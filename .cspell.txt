@@ -8,6 +8,7 @@ blueglassblock
 breezedark
 centerbox
 crypted
+Dawt
 drun
 gdkmonitor
 glibtop
@@ -25,6 +26,8 @@ PAMFAIL
 subvolumes
 UWSM
 vfat
+vmoption
+vmoptions
 vsplit
 Weaveworks
 wxmaxima
