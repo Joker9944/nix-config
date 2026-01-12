@@ -8,17 +8,21 @@ import {
 	defaultSpeakerVolumeIconAccessor,
 	speakersAccessor,
 } from "../../services/volume"
-import { For } from "ags"
+import { createComputed, For } from "ags"
 import { formatPercentage } from "../../helpers/formatters"
 import { SPACING } from "../../helpers/constants"
 
 export default function Volume() {
 	return (
-		<Module name="volume">
+		<Module name="volume" spacing={SPACING.NONE}>
 			<menubutton>
-				<box>
+				<box spacing={SPACING.TIGHT}>
 					<image iconName={defaultSpeakerVolumeIconAccessor} />
-					<label cssName="value" cssClasses={["font-mono"]} label={volume} />
+					<label
+						cssName="value"
+						cssClasses={["font-mono", "font-normal"]}
+						label={volume}
+					/>
 				</box>
 				<popover hasArrow={false}>
 					<box spacing={SPACING.NORMAL} orientation={Gtk.Orientation.VERTICAL}>
@@ -66,13 +70,15 @@ export default function Volume() {
 	)
 }
 
-const volume = defaultSpeakerVolumeAccessor.as((volume) =>
-	formatPercentage(volume * 100)
+const volume = createComputed(() =>
+	defaultSpeakerMuteAccessor()
+		? "  -%"
+		: formatPercentage(defaultSpeakerVolumeAccessor() * 100),
 )
 
-const muteButtonIcon = defaultSpeakerMuteAccessor.as((mute) => {
-	return mute ? "audio-volume-off" : "audio-volume-high"
-})
+const muteButtonIcon = defaultSpeakerMuteAccessor.as((mute) =>
+	mute ? "audio-volume-off" : "audio-volume-high",
+)
 
 function speakerLabel(speaker: AstalWp.Endpoint) {
 	return speaker.get_description() ?? speaker.get_id().toString()

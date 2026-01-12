@@ -3,6 +3,9 @@
 		"ags": "*",
 		"gnim": "*"
 	},
+	"devDependencies": {
+		"prettier": "^3.7.4"
+	},
 	"prettier": {
 		"semi": false,
 		"tabWidth": 2
