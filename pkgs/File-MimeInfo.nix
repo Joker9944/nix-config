@@ -1,18 +1,17 @@
 {
   lib,
   perlPackages,
-  fetchFromGitHub,
+  fetchgit,
   ...
 }:
 perlPackages.buildPerlPackage rec {
   pname = "File-MimeInfo";
   version = "0.35";
 
-  src = fetchFromGitHub {
-    owner = "mbeijen"; # cSpell:ignore mbeijen
-    repo = pname;
+  src = fetchgit {
+    url = "https://codeberg.org/michielb/File-MimeInfo.git";
     rev = version;
-    sha256 = "sha256-6xU7S7Wp98rDlXrxi/UXK6h2siS6Fte20S5eTQCWZyw=";
+    hash = "sha256-6xU7S7Wp98rDlXrxi/UXK6h2siS6Fte20S5eTQCWZyw=";
   };
 
   buildInputs = with perlPackages; [
