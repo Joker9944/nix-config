@@ -12,9 +12,6 @@
       tailscale.enable = true;
     };
 
-    programs = {
-      _1password.enable = true;
-      steam.enable = true;
-    };
+    programs._1password.enable = true;
   };
 }
