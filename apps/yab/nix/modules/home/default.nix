@@ -76,8 +76,8 @@ in
           After = [ cfg.systemd.target ];
           ConditionEnvironment = "WAYLAND_DISPLAY";
           X-Reload-Triggers =
-            lib.optional config.gtk.gtk4.enable
-              config.xdg.configFile."gtk-4.0/gtk.css".source;
+            (lib.optional config.gtk.gtk4.enable config.xdg.configFile."gtk-4.0/gtk.css".source)
+            ++ (lib.optional (cfg.config != { }) config.xdg.configFile."yab/config.json".source);
         };
 
         Service = {
