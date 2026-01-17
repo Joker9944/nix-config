@@ -169,7 +169,7 @@
                   "nix.enableLanguageServer" = true;
                   "nix.serverPath" = lib.getExe pkgs-unstable.nil;
                   "nix.serverSettings" = {
-                    nil.formatting.command = [ (lib.getExe pkgs-unstable.nixfmt-rfc-style) ];
+                    nil.formatting.command = [ (lib.getExe pkgs-unstable.nixfmt) ];
                     nix.flake = {
                       autoArchive = true;
                       autoEvalInputs = true;
