@@ -367,6 +367,30 @@
         "type": "github"
       }
     },
+    "hyprXPrimary": {
+      "inputs": {
+        "hyprland": [
+          "hyprland"
+        ],
+        "nixpkgs": [
+          "hyprland",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1766255512,
+        "narHash": "sha256-lkkXkgQhHp7KSuSekdC8ANzsSOycPB1mCzNSJdXqDo0=",
+        "owner": "Libadoxon",
+        "repo": "hyprXPrimary",
+        "rev": "873f38a1df3cbaf1a941c55ecd217abc79eed10b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Libadoxon",
+        "repo": "hyprXPrimary",
+        "type": "github"
+      }
+    },
     "hyprcursor": {
       "inputs": {
         "hyprlang": [
@@ -973,6 +997,7 @@
         "disko": "disko",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
+        "hyprXPrimary": "hyprXPrimary",
         "hyprland": "hyprland",
         "nix-assets": "nix-assets",
         "nix-jail": "nix-jail",

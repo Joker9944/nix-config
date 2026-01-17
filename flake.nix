@@ -17,12 +17,17 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     audiomenu = {
-      url = "github:jalil-salame/audiomenu/main"; # cSpell: ignore jalil-salame
+      url = "github:jalil-salame/audiomenu/main"; # cSpell:ignore jalil-salame
       inputs.nixpkgs.follows = "nixpkgs";
     };
     yab = {
       url = ./apps/yab;
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+    hyprXPrimary = {
+      url = "github:Libadoxon/hyprXPrimary"; # cSpell:ignore Libadoxon
+      inputs.hyprland.follows = "hyprland";
+      inputs.nixpkgs.follows = "hyprland/nixpkgs";
     };
     # modules
     sops-nix = {

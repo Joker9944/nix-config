@@ -32,4 +32,5 @@ vsplit
 Weaveworks
 wxmaxima
 xoffset
+xwaylandprimary
 yoffset
