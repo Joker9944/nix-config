@@ -62,6 +62,11 @@
         udisks2.enable = true;
       };
 
+      # WORKAROUND This is enabled by default by gnome.core-os-services
+      # Wayland does no play nice with the i18n.inputMethod family of NixOS options.
+      # Setup moved to Home Manager
+      i18n.inputMethod.enable = false;
+
       # Allow hyprlock to be installed and used on user level
       security.pam.services.hyprlock.enableGnomeKeyring = true;
     };
