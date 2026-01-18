@@ -1,6 +1,3 @@
-/**
-  * screenshot utility
-*/
 {
   lib,
   config,

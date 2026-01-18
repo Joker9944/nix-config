@@ -1,6 +1,3 @@
-/**
-  * wallpaper management daemon
-*/
 {
   lib,
   config,

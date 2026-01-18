@@ -1,10 +1,3 @@
-/**
-  Hyprland meta module
-
-  TODO Setup
-   - Investigate hyprpolkitagent
-   - There are a lot of styling utils take a look once theming
-*/
 {
   inputs,
   lib,
