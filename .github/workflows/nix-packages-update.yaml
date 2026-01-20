@@ -1,0 +1,65 @@
+name: nix-packages-update
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 3 * * SAT'
+
+jobs:
+
+  nix-packages-update:
+
+    permissions:
+      contents: write
+      id-token: write
+      issues: write
+      pull-requests: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Repository Checkout
+        id: git-checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+        # cSpell:ignore drengskapur gitbot
+      - name: Git Config
+        id: git-config
+        uses: drengskapur/gitbot-config@00aecab0a790b146951f9e0c48f564eaf26a9df6 # v1.1.2
+
+        # cSpell:ignore cachix
+      - name: Install Nix
+        id: nix-install
+        uses: cachix/install-nix-action@4e002c8ec80594ecd40e759629461e26c8abed15 # v31.9.0
+
+      - name: Update Packages
+        id: nix-update
+
+        run: nix run .#update-packages
+
+      - name: Create Pull Request
+        id: git-pr-create
+        uses: peter-evans/create-pull-request@98357b18bf14b5342f975ff684046ec3b2a07725 # v8.0.0
+
+        with:
+          branch: ci/nix-packages-update
+
+          title: Lock file maintenance flake.lock
+          reviewers: Joker9944
+
+          sign-commits: true
+
+        # This is a workaround since no code checks are configured for Github auto merge, if that ever changes switch to:
+        # https://github.com/juliangruber/approve-pull-request-action
+        # cSpell:ignore juliangruber
+      - name: Merge Update flake.lock PR
+        id: git-merge
+        uses: juliangruber/merge-pull-request-action@9234b8714dda9a08f3d1df5b2a6a3abd7b695353 # v1.3.1
+        if: ${{ steps.git-pr-create.outputs.pull-request-number != null }}
+
+        with:
+          number: ${{ steps.git-pr-create.outputs.pull-request-number }}
+          method: squash
+
+          github-token: ${{ secrets.GITHUB_TOKEN }}
