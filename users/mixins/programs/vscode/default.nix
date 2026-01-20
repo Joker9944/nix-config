@@ -1,4 +1,5 @@
 {
+  inputs,
   lib,
   pkgs-unstable,
   config,
@@ -16,7 +17,31 @@
   config =
     let
       cfg = config.mixins.programs.vscode;
-      vscodeExtensions = pkgs-unstable.vscode-extensions;
+
+      vscodePackage = pkgs-unstable.vscodium.fhsWithPackages (
+        ps: with ps; [
+          sops # default -> used for git secret encryption
+          fluxcd # k8s -> vscode-gitops-tools extension
+          grafana-alloy # k8s -> grafana-alloy extension
+          texliveFull # quarto -> quarto extension
+          # WORKAROUND In a FHS files are either owned by the user or nobody since the ssh config
+          # is linked into the user home from the nix store meaning the file is owner by root outside
+          # of the FHS and by nobody in the FHS. This leads openssh to complain about insecure ssh
+          # config ownership which is actually fine. So let's just disable the check.
+          # https://github.com/nix-community/home-manager/issues/322#issuecomment-1454284183
+          (ps.openssh.overrideAttrs (prev: {
+            patches = (prev.patches or [ ]) ++ [ ./openssh-no-checkperm.patch ]; # cSpell:ignore checkperm
+          }))
+        ]
+      );
+
+      nixpkgs-vscode-extensions = pkgs-unstable.vscode-extensions;
+
+      vscodeExtensions =
+        inputs.nix-vscode-extensions.extensions.${pkgs-unstable.stdenv.hostPlatform.system}.forVSCodeVersion
+          vscodePackage.version;
+
+      inherit (vscodeExtensions) open-vsx-release;
 
       commonProfiles = [
         {
@@ -39,29 +64,29 @@
         }
         {
           extensions = [
-            vscodeExtensions.k--kato.intellij-idea-keybindings # cSpell:words k--kato
+            open-vsx-release.k--kato.intellij-idea-keybindings # cSpell:words k--kato
           ];
         }
         {
           extensions = [
-            vscodeExtensions.dracula-theme.theme-dracula
+            open-vsx-release.dracula-theme.theme-dracula
           ];
 
           userSettings."workbench.colorTheme" = "Dracula Theme";
         }
         {
           extensions = [
-            vscodeExtensions.streetsidesoftware.code-spell-checker
+            open-vsx-release.streetsidesoftware.code-spell-checker
           ];
         }
         {
           extensions = [
-            vscodeExtensions.editorconfig.editorconfig
+            open-vsx-release.editorconfig.editorconfig
           ];
         }
         {
           extensions = [
-            vscodeExtensions.esbenp.prettier-vscode # cSpell:words esbenp
+            open-vsx-release.esbenp.prettier-vscode # cSpell:words esbenp
           ];
 
           userSettings =
@@ -88,7 +113,7 @@
         }
         {
           extensions = [
-            vscodeExtensions.blueglassblock.better-json5
+            open-vsx-release.blueglassblock.better-json5
           ];
 
           userSettings = {
@@ -99,12 +124,12 @@
         }
         {
           extensions = [
-            vscodeExtensions.mkhl.shfmt # cSpell:ignore mkhl
+            open-vsx-release.mkhl.shfmt # cSpell:ignore mkhl
           ];
         }
         {
           extensions = [
-            vscodeExtensions.timonwong.shellcheck # cSpell:ignore timonwong
+            open-vsx-release.timonwong.shellcheck # cSpell:ignore timonwong
           ];
         }
       ];
@@ -136,22 +161,7 @@
 
         vscode = {
           enable = true;
-          package = pkgs-unstable.vscodium.fhsWithPackages (
-            ps: with ps; [
-              sops # default -> used for git secret encryption
-              fluxcd # k8s -> vscode-gitops-tools extension
-              grafana-alloy # k8s -> grafana-alloy extension
-              texliveFull # quarto -> quarto extension
-              # WORKAROUND In a FHS files are either owned by the user or nobody since the ssh config
-              # is linked into the user home from the nix store meaning the file is owner by root outside
-              # of the FHS and by nobody in the FHS. This leads openssh to complain about insecure ssh
-              # config ownership which is actually fine. So let's just disable the check.
-              # https://github.com/nix-community/home-manager/issues/322#issuecomment-1454284183
-              (ps.openssh.overrideAttrs (prev: {
-                patches = (prev.patches or [ ]) ++ [ ./openssh-no-checkperm.patch ]; # cSpell:ignore checkperm
-              }))
-            ]
-          );
+          package = vscodePackage;
 
           profiles = {
             default = mkProfile {
@@ -162,7 +172,7 @@
             nix = mkProfile [
               {
                 extensions = [
-                  vscodeExtensions.jnoortheen.nix-ide # cSpell:words jnoortheen
+                  open-vsx-release.jnoortheen.nix-ide # cSpell:words jnoortheen
                 ];
 
                 userSettings = {
@@ -184,17 +194,17 @@
 
             notes = mkProfile [
               {
-                extensions = with vscodeExtensions; [
-                  foam.foam-vscode
-                  yzhang.markdown-all-in-one # cSpell:words yzhang
+                extensions = [
+                  open-vsx-release.foam.foam-vscode
+                  open-vsx-release.yzhang.markdown-all-in-one # cSpell:words yzhang
                 ];
               }
             ];
 
             quarto = mkProfile [
               {
-                extensions = with vscodeExtensions; [
-                  Quarto.quarto
+                extensions = [
+                  open-vsx-release.quarto.quarto
                 ];
 
                 userSettings = {
@@ -205,11 +215,11 @@
 
             k8s = mkProfile [
               {
-                extensions = with vscodeExtensions; [
-                  ms-kubernetes-tools.vscode-kubernetes-tools
-                  ms-vscode-remote.remote-containers
-                  Weaveworks.vscode-gitops-tools
-                  Grafana.grafana-alloy
+                extensions = [
+                  open-vsx-release.ms-kubernetes-tools.vscode-kubernetes-tools
+                  nixpkgs-vscode-extensions.ms-vscode-remote.remote-containers
+                  open-vsx-release.weaveworks.vscode-gitops-tools
+                  open-vsx-release.grafana.grafana-alloy
                 ];
 
                 userSettings = {
@@ -222,7 +232,7 @@
               }
               {
                 extensions = [
-                  vscodeExtensions.redhat.vscode-yaml
+                  open-vsx-release.redhat.vscode-yaml
                 ];
 
                 userSettings = {

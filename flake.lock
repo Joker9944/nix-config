@@ -827,6 +827,26 @@
         "type": "github"
       }
     },
+    "nix-vscode-extensions": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1768875310,
+        "narHash": "sha256-yUtG7GOvsjmxf3xdHN/e5BZp5/ZoihiZgqxYJNwVD9U=",
+        "owner": "nix-community",
+        "repo": "nix-vscode-extensions",
+        "rev": "5ec577201443e3fed2229e8a460d02202dc80be1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nix-vscode-extensions",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1767379071,
@@ -1004,6 +1024,7 @@
         "nix-math": "nix-math",
         "nix-schemes": "nix-schemes",
         "nix-std": "nix-std",
+        "nix-vscode-extensions": "nix-vscode-extensions",
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "plasma-manager": "plasma-manager",

@@ -29,6 +29,10 @@
       inputs.hyprland.follows = "hyprland";
       inputs.nixpkgs.follows = "hyprland/nixpkgs";
     };
+    nix-vscode-extensions = {
+      url = "github:nix-community/nix-vscode-extensions";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # modules
     sops-nix = {
       url = "github:Mic92/sops-nix/master";
@@ -173,44 +177,6 @@
         freelens = _: prev: {
           inherit (self.packages.${prev.stdenv.hostPlatform.system}) freelens;
         };
-
-        "vscode-extensions.streetsidesoftware.code-spell-checker-swiss-german" =
-          _: prev:
-          lib.recursiveUpdate prev {
-            vscode-extensions.streetsidesoftware = {
-              inherit (self.packages.${prev.stdenv.hostPlatform.system}) code-spell-checker-swiss-german;
-            };
-          };
-
-        "vscode-extensions.blueglassblock.better-json5" =
-          _: prev:
-          lib.recursiveUpdate prev {
-            vscode-extensions.blueglassblock = {
-              inherit (self.packages.${prev.stdenv.hostPlatform.system}) better-json5;
-            };
-          };
-
-        "vscode-extensions.Weaveworks.vscode-gitops-tools" =
-          _: prev:
-          lib.recursiveUpdate prev {
-            vscode-extensions.Weaveworks = {
-              inherit (self.packages.${prev.stdenv.hostPlatform.system}) vscode-gitops-tools;
-            };
-          };
-
-        "vscode-extensions.Grafana.grafana-alloy" =
-          _: prev:
-          lib.recursiveUpdate prev {
-            vscode-extensions.Grafana = {
-              inherit (self.packages.${prev.stdenv.hostPlatform.system}) grafana-alloy;
-            };
-          };
-
-        "vscode-extensions.Quarto.quarto" =
-          _: prev:
-          lib.recursiveUpdate prev {
-            vscode-extensions.Quarto = { inherit (self.packages.${prev.stdenv.hostPlatform.system}) quarto; };
-          };
 
         # WORKAROUND electron based application only recognize gnome keyring when XDG_CURRENT_DESKTOP is set to GNOME.
         # remove once resolved https://github.com/electron/electron/issues/47436
