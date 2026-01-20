@@ -114,6 +114,32 @@
             type = "app";
             program = lib.getExe pkgs.home-manager;
           };
+
+          update-packages = {
+            type = "app";
+            program = lib.getExe (
+              pkgs.writeShellApplication {
+                name = "update-packages";
+
+                text =
+                  let
+                    packages = [
+                      "File-MimeInfo"
+                      "firefox-profile-switcher-connector"
+                      "freelens"
+                    ];
+                  in
+                  lib.pipe packages [
+                    (lib.map (
+                      package: "nix-update ${package} --override-filename ./pkgs/${package}.nix --flake --commit"
+                    ))
+                    lib.concatLines
+                  ];
+
+                runtimeInputs = with pkgs; [ nix-update ];
+              }
+            );
+          };
         };
 
         devShells = {
