@@ -23,30 +23,43 @@ jobs:
         id: git-checkout
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
 
-      - name: Install Determinate Nix
-        id: nix-install
-        uses: DeterminateSystems/determinate-nix-action@1d699fc25db3f9e079cd2f168ca007a4183389be # v3.15.1
+        # cSpell:ignore drengskapur gitbot
+      - name: Git Config
+        id: git-config
+        uses: drengskapur/gitbot-config@00aecab0a790b146951f9e0c48f564eaf26a9df6 # v1.1.2
 
-      - name: Update flake.lock
+        # cSpell:ignore cachix
+      - name: Install Nix
+        id: nix-install
+        uses: cachix/install-nix-action@4e002c8ec80594ecd40e759629461e26c8abed15 # v31.9.0
+
+      - name: Update Flakes
         id: nix-update
-        uses: DeterminateSystems/update-flake-lock@c5930b397a673a70ca70be06020e943aeac310a1 # v27
+
+        run: ./.github/scripts/update-flakes.sh
+
+      - name: Create Pull Request
+        id: git-pr-create
+        uses: peter-evans/create-pull-request@98357b18bf14b5342f975ff684046ec3b2a07725 # v8.0.0
 
         with:
-          pr-title: "Lock file maintenance flake.lock"
+          branch: ci/nix-flake-update
+
+          title: Lock file maintenance flake.lock
+          reviewers: Joker9944
 
           sign-commits: true
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
         # This is a workaround since no code checks are configured for Github auto merge, if that ever changes switch to:
         # https://github.com/juliangruber/approve-pull-request-action
+        # cSpell:ignore juliangruber
       - name: Merge Update flake.lock PR
         id: git-merge
-        # cSpell:words juliangruber
         uses: juliangruber/merge-pull-request-action@9234b8714dda9a08f3d1df5b2a6a3abd7b695353 # v1.3.1
-        if: ${{ steps.nix-update.outputs.pull-request-number != null }}
+        if: ${{ steps.git-pr-create.outputs.pull-request-number != null }}
+
         with:
-          number: ${{ steps.nix-update.outputs.pull-request-number }}
+          number: ${{ steps.git-pr-create.outputs.pull-request-number }}
           method: squash
 
           github-token: ${{ secrets.GITHUB_TOKEN }}

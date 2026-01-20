@@ -10,6 +10,7 @@ ignorePaths:
   - '*.patch'
   - .gitignore
   - '.idea'
+  - flake.lock
 dictionaryDefinitions:
   - name: project
     path: ./.cspell.txt
