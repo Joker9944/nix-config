@@ -133,7 +133,10 @@
               };
 
               # General
-              cspell.enable = true;
+              cspell = {
+                enable = true;
+                args = [ "--no-must-find-files" ];
+              };
 
               # Nix
               deadnix.enable = true;
