@@ -46,7 +46,6 @@ jobs:
           branch: ci/nix-packages-update
 
           title: Lock file maintenance flake.lock
-          reviewers: Joker9944
 
           sign-commits: true
 
