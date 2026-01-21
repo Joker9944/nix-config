@@ -2,6 +2,7 @@
   description = "NixOS flake";
 
   inputs = {
+    self.submodules = true;
     # nixpkgs
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -98,21 +99,25 @@
           cspell = {
             type = "app";
             program = lib.getExe pkgs.nodePackages.cspell;
+            inherit (pkgs.nodePackages.cspell) meta;
           };
 
           dconf-editor = {
             type = "app";
             program = lib.getExe pkgs.dconf-editor;
+            inherit (pkgs.dconf-editor) meta;
           };
 
           gnome-tweaks = {
             type = "app";
             program = lib.getExe pkgs.gnome-tweaks;
+            inherit (pkgs.gnome-tweaks) meta;
           };
 
           home-manager = {
             type = "app";
             program = lib.getExe pkgs.home-manager;
+            inherit (pkgs.home-manager) meta;
           };
 
           update-packages = {
@@ -139,6 +144,7 @@
                 runtimeInputs = with pkgs; [ nix-update ];
               }
             );
+            meta.description = "Updates packages from this flake.";
           };
         };
 
@@ -213,23 +219,6 @@
             };
           });
         };
-      };
-
-      nixConfig = {
-        substituters = [
-          "https://nix-community.cachix.org"
-          "https://hyprland.cachix.org"
-        ];
-
-        trusted-substituters = [
-          "https://nix-community.cachix.org"
-          "https://hyprland.cachix.org"
-        ];
-
-        trusted-public-keys = [
-          "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=" # cSpell:disable-line
-          "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" # cSpell:disable-line
-        ];
       };
 
       nixosModules = applyFnToDir ./modules/nixos import;
