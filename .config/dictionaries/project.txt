@@ -13,6 +13,7 @@ drun
 gdkmonitor
 glibtop
 gnim
+gpgsign
 halign
 headerbar
 hexpand
@@ -23,6 +24,7 @@ messagedialog
 mountpoint
 noinherit
 PAMFAIL
+signingkey
 subvolumes
 UWSM
 vfat
