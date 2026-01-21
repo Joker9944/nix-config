@@ -51,7 +51,7 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
           branch: ci/nix-flake-update
-          title: Lock file maintenance flake.lock
+          title: "flakes: update flake.lock"
 
       - name: Enable Automerge
         id: git-pr-automerge
