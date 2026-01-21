@@ -1,0 +1,37 @@
+name: nix-flake-check
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types:
+      - auto_merge_enabled
+    branches:
+      - main
+
+jobs:
+
+  nix-flake-check:
+
+    permissions:
+      contents: read
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Repository Checkout
+        id: git-checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+        with:
+          submodules: true
+
+        # cSpell:ignore cachix
+      - name: Install Nix
+        id: nix-install
+        uses: cachix/install-nix-action@4e002c8ec80594ecd40e759629461e26c8abed15 # v31.9.0
+
+      - name: Run Flake Check
+        id: nix-check
+
+        run: nix flake check .

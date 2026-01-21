@@ -144,7 +144,7 @@
                 runtimeInputs = with pkgs; [ nix-update ];
               }
             );
-            meta.description = "Updates packages from this flake.";
+            meta.description = "Updates packages from this flake";
           };
         };
 

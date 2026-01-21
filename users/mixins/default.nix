@@ -43,6 +43,7 @@
       settings = {
         init.defaultBranch = "main";
         pull.rebase = false;
+        url."git@github.com:".insteadOf = "https://github.com/";
       };
     };
   };
