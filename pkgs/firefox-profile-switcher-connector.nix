@@ -7,14 +7,14 @@
 }:
 # Lifted from https://github.com/null-dev/firefox-profile-switcher-connector/issues/10#issuecomment-1238034441
 # Remove once packaged in nixpkgs https://github.com/NixOS/nixpkgs/issues/332470
-rustPlatform.buildRustPackage rec {
+rustPlatform.buildRustPackage (finalAttrs: {
   pname = "firefox-profile-switcher-connector";
   version = "0.1.1";
 
   src = fetchFromGitHub {
     owner = "null-dev";
-    repo = pname;
-    rev = "v${version}";
+    repo = finalAttrs.pname;
+    rev = "v${finalAttrs.version}";
     sha256 = "sha256-mnPpIJ+EQAjfjhrSSNTrvCqGbW0VMy8GHbLj39rR8r4=";
   };
 
@@ -34,4 +34,4 @@ rustPlatform.buildRustPackage rec {
     homepage = "https://github.com/null-dev/firefox-profile-switcher-connector";
     license = licenses.gpl3;
   };
-}
+})

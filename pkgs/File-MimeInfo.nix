@@ -4,12 +4,15 @@
   fetchgit,
   ...
 }:
-perlPackages.buildPerlPackage rec {
+let
   pname = "File-MimeInfo";
   version = "0.35";
+in
+perlPackages.buildPerlPackage {
+  inherit pname version;
 
   src = fetchgit {
-    url = "https://codeberg.org/michielb/File-MimeInfo.git";
+    url = "https://codeberg.org/michielb/${pname}.git";
     rev = version;
     hash = "sha256-6xU7S7Wp98rDlXrxi/UXK6h2siS6Fte20S5eTQCWZyw=";
   };
