@@ -55,7 +55,7 @@ jobs:
 
       - name: Enable Automerge
         id: git-pr-automerge
-        uses: peter-evans/enable-pull-request-automerge@a660677d5469627102a1c1e11409dd063606628d # v3.00
+        uses: peter-evans/enable-pull-request-automerge@a660677d5469627102a1c1e11409dd063606628d # v3.0.0
 
         with:
           token: ${{ secrets.PAT }}
