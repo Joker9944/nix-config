@@ -32,4 +32,4 @@ jobs:
       - name: Run Flake Check
         id: nix-check
 
-        run: nix flake check .
+        run: nix flake check path:.
