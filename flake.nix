@@ -2,7 +2,6 @@
   description = "NixOS flake";
 
   inputs = {
-    self.submodules = true;
     # nixpkgs
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
