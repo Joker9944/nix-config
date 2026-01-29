@@ -17,19 +17,18 @@ jobs:
 
     steps:
 
-      - name: Repository Checkout
+      - name: Repository checkout
         id: git-checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
         with:
           submodules: true
 
-        # cSpell:ignore cachix
-      - name: Install Nix
+      - name: Setup nix
         id: nix-install
-        uses: cachix/install-nix-action@4e002c8ec80594ecd40e759629461e26c8abed15 # v31.9.0
+        uses: ./.github/composites/nix-setup
 
-      - name: Run Flake Check
+      - name: Run flake check
         id: nix-check
 
         run: nix flake check path:.

@@ -1,0 +1,13 @@
+name: nix-setup
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Install Determinate nix
+      id: nix-install
+      uses: DeterminateSystems/determinate-nix-action@1d699fc25db3f9e079cd2f168ca007a4183389be # v3.15.1
+
+    - name: Setup nix cache
+      id: nix-cache
+      uses: DeterminateSystems/magic-nix-cache-action@565684385bcd71bad329742eefe8d12f2e765b39 # v13
