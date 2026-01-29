@@ -25,7 +25,7 @@ jobs:
           submodules: true
 
       - name: Setup nix
-        id: nix-install
+        id: nix-setup
         uses: ./.github/composites/nix-setup
 
       - name: Run flake check
