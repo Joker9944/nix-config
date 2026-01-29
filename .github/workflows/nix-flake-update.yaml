@@ -56,6 +56,8 @@ jobs:
         id: git-pr-automerge
         uses: peter-evans/enable-pull-request-automerge@a660677d5469627102a1c1e11409dd063606628d # v3.00
 
+        if: ${{ steps.git-pr-create.outputs.pull-request-number }}
+
         with:
           token: ${{ secrets.PAT }}
           pull-request-number: ${{ steps.git-pr-create.outputs.pull-request-number }}
