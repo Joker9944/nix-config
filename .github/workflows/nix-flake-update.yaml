@@ -41,8 +41,15 @@ jobs:
 
       - name: Update Flakes
         id: nix-update
+        shell: bash
 
-        run: ./.github/scripts/update-flakes.sh
+        run: |
+          mapfile -t flake_dirs < <(find . -name "flake.nix" -exec dirname {} + | sort -u)
+
+          for flake_dir in "${flake_dirs[@]}"; do
+            echo "Updating flake in: $flake_dir"
+            nix flake update --flake "$flake_dir" --commit-lock-file --option commit-lock-file-summary "flake: update $flake_dir/flake.lock"
+          done
 
       - name: Create Pull Request
         id: git-pr-create
