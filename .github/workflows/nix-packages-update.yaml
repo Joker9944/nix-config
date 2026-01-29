@@ -4,7 +4,7 @@ on:
   workflow_call:
   workflow_dispatch:
   schedule:
-    - cron: '30 3 * * SAT'
+    - cron: '30 3 * * TUE,SAT'
 
 jobs:
 
