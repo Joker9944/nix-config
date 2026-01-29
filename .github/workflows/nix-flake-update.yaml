@@ -26,7 +26,7 @@ jobs:
 
       - name: Setup nix
         id: nix-setup
-        uses: ./.github/composites/nix-setup
+        uses: Joker9944/nix-config/.github/composites/nix-setup@main
 
         # cSpell:ignore ghaction-import-gpg
       - name: GPG Config
