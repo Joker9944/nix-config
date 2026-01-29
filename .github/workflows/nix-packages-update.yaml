@@ -1,6 +1,7 @@
 name: nix-packages-update
 
 on:
+  workflow_call:
   workflow_dispatch:
   schedule:
     - cron: '30 3 * * SAT'
