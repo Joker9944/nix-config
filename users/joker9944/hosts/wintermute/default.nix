@@ -15,9 +15,7 @@
 
   services.hyprpaper.settings =
     let
-      wallpaper = "${
-        custom.assets.images.backgrounds.totoro-minimalist.${custom.config.resolution}
-      }/share/backgrounds/totoro-minimalist.${custom.config.resolution}.png";
+      wallpaper = "${custom.assets.totoro-minimalist}/share/backgrounds/totoro-minimalist.png";
     in
     {
       splash = false;

@@ -6,9 +6,7 @@
   ...
 }:
 let
-  wallpaper = "${
-    custom.assets.images.backgrounds.dracula-leaves-dark.${custom.config.resolution}
-  }/share/backgrounds/dracula-leaves-dark.${custom.config.resolution}.png";
+  wallpaper = "${custom.assets.dracula-leaves-dark}/share/backgrounds/dracula-leaves-dark.png";
 in
 custom.lib.mkHyprlandModule config {
   services.hyprpaper = {

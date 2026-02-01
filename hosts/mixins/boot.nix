@@ -49,9 +49,7 @@
 
             style = {
               wallpapers = [
-                "${
-                  custom.assets.images.backgrounds.black-sand-dunes.${custom.config.resolution}
-                }/share/backgrounds/black-sand-dunes.${custom.config.resolution}.jpeg"
+                "${custom.assets.black-sand-dunes}/share/backgrounds/black-sand-dunes.jpeg"
               ];
               interface.branding = config.networking.hostName;
             };

@@ -55,7 +55,7 @@ custom.lib.mkHyprlandModule config {
           (
             {
               # User avatar
-              path = "${custom.assets.images.profile.the-seer."512x512"}/share/profile/the-seer.512x512.jpg";
+              path = "${custom.assets.the-seer}/share/profile/the-seer.jpg";
 
               border_size = border.size;
               border_color = scheme.background.normal.rgba 0.93;

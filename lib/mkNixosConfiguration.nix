@@ -30,9 +30,7 @@ lib.nixosSystem {
       lib = self;
       config = args;
 
-      assets = inputs.nix-assets.packages.${system} // {
-        inherit (inputs.nix-assets) palettes;
-      };
+      assets = inputs.nix-assets.packages.${system};
     };
   };
 
