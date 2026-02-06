@@ -29,11 +29,18 @@
             "privacy.clearOnShutdown.downloads" = false;
           };
 
-          profiles = {
-            ${custom.config.username} = {
-              isDefault = true;
+          profiles =
+            let
+              inherit (custom.config) username;
+              usernameLower = lib.toLower username;
+            in
+            {
+              ${usernameLower} = {
+                id = 0;
+                name = lib.mkIf (username != usernameLower) username;
+                isDefault = true;
+              };
             };
-          };
 
           policies = {
             DisableTelemetry = true;
