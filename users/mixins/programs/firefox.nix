@@ -26,8 +26,6 @@
         };
       };
 
-      services.firefox-profile-switcher-connector.enable = true;
-
       xdg.mimeApps.custom.apps.default = [
         "${config.programs.firefox.finalPackage}/share/applications/firefox.desktop"
       ];

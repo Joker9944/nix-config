@@ -129,7 +129,6 @@
                   let
                     packages = [
                       "File-MimeInfo"
-                      "firefox-profile-switcher-connector"
                       "freelens"
                     ];
                   in
@@ -197,10 +196,6 @@
     )
     // {
       overlays = {
-        firefox-profile-switcher-connector = _: prev: {
-          inherit (self.packages.${prev.stdenv.hostPlatform.system}) firefox-profile-switcher-connector;
-        };
-
         File-MimeInfo = _: prev: {
           inherit (self.packages.${prev.stdenv.hostPlatform.system}) File-MimeInfo;
         };
@@ -227,9 +222,7 @@
       lib = import ./lib {
         inherit lib inputs;
 
-        nixosModules = lib.attrValues self.nixosModules;
-        overlays = lib.attrValues self.overlays;
-        homeModules = lib.attrValues self.homeModules;
+        flake = self;
 
         custom = {
           inherit (inputs.nix-math.lib) math;

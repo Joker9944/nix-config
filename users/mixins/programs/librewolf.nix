@@ -35,9 +35,9 @@
               usernameLower = lib.toLower username;
             in
             {
-              ${usernameLower} = {
+              ${username} = {
                 id = 0;
-                name = lib.mkIf (username != usernameLower) username;
+                name = lib.mkIf (username != usernameLower) usernameLower;
                 isDefault = true;
               };
             };
@@ -45,6 +45,13 @@
           policies = {
             DisableTelemetry = true;
             DisableFirefoxStudies = true;
+            Preferences = {
+              "browser.profiles.enabled" = {
+                Value = true;
+                Status = "default";
+                Type = "boolean";
+              };
+            };
           };
         };
 
@@ -55,11 +62,6 @@
             (prev: {
               libs = "${config.programs.librewolf.finalPackage.libs}:${prev.libs}";
             });
-      };
-
-      services.firefox-profile-switcher-connector = {
-        enable = true;
-        browser = "librewolf";
       };
 
       xdg.mimeApps.custom.apps.default = [

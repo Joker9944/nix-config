@@ -27,14 +27,14 @@
     teamspeak.enable = false;
 
     librewolf.profiles = {
-      "work" = {
+      "Work" = {
         id = 1;
-        name = "Work";
+        path = "work";
       };
 
-      "homework" = {
+      "Homework" = {
         id = 2;
-        name = "Homework";
+        path = "homework";
       };
     };
   };

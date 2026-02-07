@@ -1,8 +1,7 @@
 {
+  flake,
   lib,
   inputs,
-  overlays,
-  nixosModules,
   self,
   custom,
   ...
@@ -37,9 +36,9 @@ lib.nixosSystem {
   modules = [
     mixinsModulePath
     hostModulePath
-    (_: { nixpkgs.overlays = overlays; })
+    (_: { nixpkgs.overlays = lib.attrValues flake.overlays; })
   ]
-  ++ nixosModules
+  ++ (lib.attrValues flake.nixosModules)
   ++ userModulePaths
   ++ additionalModules;
 }

@@ -1,6 +1,6 @@
 {
+  flake,
   lib,
-  homeModules,
   ...
 }:
 {
@@ -39,6 +39,6 @@ inputs.home-manager.lib.homeManagerConfiguration {
     commonModulePath
     userModulePath
   ]
-  ++ homeModules
+  ++ (lib.attrValues flake.homeModules)
   ++ additionalModules;
 }
