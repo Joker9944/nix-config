@@ -5,7 +5,7 @@
       inherit (lib) mkEnableOption;
     in
     {
-      enable = mkEnableOption "isd config mixin";
+      enable = mkEnableOption "remmina config mixin";
     };
 
   config =

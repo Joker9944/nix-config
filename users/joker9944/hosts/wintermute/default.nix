@@ -40,4 +40,6 @@
   };
 
   programs.yab.config.battery = true;
+
+  mixins.services.wayvnc.enable = true;
 }
