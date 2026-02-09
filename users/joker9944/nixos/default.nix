@@ -25,6 +25,14 @@ in
         "docker"
         "gamemode"
       ];
+
+      openssh.authorizedKeys.keys =
+        (lib.optional (
+          config.networking.hostName != "wintermute"
+        ) "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFcft6944G+ygfWr5wT50TJUQ5f0dAKAr6H4QKSEAsUV joker9944")
+        ++ (lib.optional (
+          config.networking.hostName != "HAL9000"
+        ) "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP9R2V8FqyXifBoVO3OndfpRrqxdwK1H/3qlm645l7rg joker9944");
     };
 
     groups.${username} = {

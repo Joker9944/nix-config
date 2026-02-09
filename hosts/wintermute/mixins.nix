@@ -9,6 +9,7 @@
 
     services = {
       maintenance.enable = true;
+      openssh.enable = true;
       tailscale.enable = true;
     };
 
