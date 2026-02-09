@@ -18,7 +18,7 @@
 
         yazi.settings.open.prepend_rules = [
           {
-            name = "*.xopp"; # cSpell:ignore xopp
+            url = "*.xopp"; # cSpell:ignore xopp
             use = [
               "open"
               "reveal"

@@ -35,7 +35,7 @@
 
     programs.yazi.settings.open.prepend_rules = [
       {
-        name = "*.ipynb"; # cSpell:ignore ipynb
+        url = "*.ipynb"; # cSpell:ignore ipynb
         use = [
           "open"
           "reveal"

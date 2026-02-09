@@ -18,7 +18,7 @@
 
         yazi.settings.open.prepend_rules = [
           {
-            name = "*.wxmx"; # cSpell:ignore wxmx
+            url = "*.wxmx"; # cSpell:ignore wxmx
             use = [
               "open"
               "reveal"
