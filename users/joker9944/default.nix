@@ -41,6 +41,15 @@ in
   programs = {
     freelens.enable = true;
 
+    scrcpy = {
+      enable = true;
+      args = [
+        "--render-driver=opengl" # cSpell:ignore opengl
+        "--video-codec=h265"
+        "--keyboard=uhid"
+      ];
+    };
+
     git.settings.user = {
       email = "9194199+Joker9944@users.noreply.github.com";
       name = "Joker9944";
