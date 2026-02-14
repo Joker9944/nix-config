@@ -27,6 +27,7 @@
           automatic = lib.mkDefault true;
           persistent = true;
           dates = lib.mkDefault "weekly";
+          options = "--delete-older-than 30d";
         };
 
         # Enable automatic nix store optimization

@@ -33,7 +33,6 @@
           systemd-boot = {
             enable = lib.mkDefault false;
             consoleMode = "max";
-            configurationLimit = 10;
           };
 
           grub = {
@@ -44,7 +43,6 @@
 
           limine = {
             enable = lib.mkDefault true;
-            maxGenerations = 10;
             secureBoot.enable = cfg.secureBoot;
 
             style = {

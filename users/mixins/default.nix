@@ -1,6 +1,5 @@
 {
   inputs,
-  osConfig,
   custom,
   ...
 }:
@@ -16,18 +15,6 @@
   home = {
     inherit (custom.config) username;
     homeDirectory = "/home/${custom.config.username}";
-  };
-
-  # Enable automatic upgrades
-  services.home-manager.autoUpgrade = {
-    inherit (osConfig.system.autoUpgrade)
-      enable
-      persistent
-      dates
-      flake
-      ;
-
-    notify.enable = true;
   };
 
   programs = {
