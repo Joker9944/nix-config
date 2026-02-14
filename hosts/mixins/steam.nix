@@ -55,8 +55,14 @@
 
         gamemode = {
           enable = true;
-          settings.general.renice = 10;
+          settings.general.renice = 20;
         };
+      };
+
+      services.ananicy = {
+        enable = true;
+        package = pkgs.ananicy-cpp;
+        rulesProvider = pkgs.ananicy-rules-cachyos;
       };
 
       environment = with pkgs; {
