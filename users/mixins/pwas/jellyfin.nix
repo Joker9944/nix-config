@@ -7,37 +7,66 @@
 {
   options.mixins.pwas.jellyfin =
     let
-      inherit (lib) mkEnableOption;
+      inherit (lib) mkEnableOption mkOption types;
     in
     {
       enable = mkEnableOption "jellyfin PWA config mixin";
+
+      name = mkOption {
+        type = types.str;
+        default = "Jellyfin";
+      };
+
+      urlBase = mkOption {
+        type = types.str;
+        default = "https://jellyfin.vonarx.online";
+      };
+
+      profileId = mkOption {
+        type = types.str;
+        default = "01KB0KV6DFPC17TBFBHNG8QHYF"; # cSpell:disable-line
+      };
+
+      siteId = mkOption {
+        type = types.str;
+        default = "01KB0KWBEA7G5M4BFEZ2T42ETH"; # cSpell:disable-line
+      };
     };
 
-  config.programs.firefoxpwa =
+  config =
     let
       cfg = config.mixins.pwas.jellyfin;
-      name = "Jellyfin";
-      urlBase = "https://jellyfin.vonarx.online";
-      ulid1 = "01KB0KV6DFPC17TBFBHNG8QHYF"; # cSpell:disable-line
-      ulid2 = "01KB0KWBEA7G5M4BFEZ2T42ETH"; # cSpell:disable-line
     in
     lib.mkIf cfg.enable {
-      enable = lib.mkDefault true;
+      custom.browser-dispatcher = {
+        enable = lib.mkDefault true;
 
-      profiles.${ulid1} = {
-        inherit name;
+        sites = [
+          {
+            path = "${cfg.urlBase}/*";
+            command = "firefoxpwa site launch ${cfg.siteId} --url \"$URL\"";
+          }
+        ];
+      };
 
-        sites.${ulid2} = {
-          inherit name;
-          url = "${urlBase}/";
-          manifestUrl = "${urlBase}/web/manifest.json";
+      programs.firefoxpwa = {
+        enable = lib.mkDefault true;
 
-          desktopEntry = {
-            categories = lib.toList "AudioVideo";
+        profiles.${cfg.profileId} = {
+          inherit (cfg) name;
 
-            icon = pkgs.fetchurl {
-              url = "${urlBase}/web/favicons/touchicon512.png"; # cSpell:ignore favicons touchicon
-              sha256 = "sha256-SsYjD97xOjfxrt03QFEaoxXxAfqqtJ7BAsYosUYWT1U=";
+          sites.${cfg.siteId} = {
+            inherit (cfg) name;
+            url = "${cfg.urlBase}/";
+            manifestUrl = "${cfg.urlBase}/web/manifest.json";
+
+            desktopEntry = {
+              categories = lib.toList "AudioVideo";
+
+              icon = pkgs.fetchurl {
+                url = "${cfg.urlBase}/web/favicons/touchicon512.png"; # cSpell:ignore favicons touchicon
+                sha256 = "sha256-SsYjD97xOjfxrt03QFEaoxXxAfqqtJ7BAsYosUYWT1U=";
+              };
             };
           };
         };

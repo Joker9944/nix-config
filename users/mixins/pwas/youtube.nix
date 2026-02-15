@@ -7,37 +7,66 @@
 {
   options.mixins.pwas.youtube =
     let
-      inherit (lib) mkEnableOption;
+      inherit (lib) mkEnableOption mkOption types;
     in
     {
       enable = mkEnableOption "youtube PWA config mixin";
+
+      name = mkOption {
+        type = types.str;
+        default = "YouTube";
+      };
+
+      urlBase = mkOption {
+        type = types.str;
+        default = "https://www.youtube.com";
+      };
+
+      profileId = mkOption {
+        type = types.str;
+        default = "01KB54CQQK7ANC7TYFXA3FT798"; # cSpell:disable-line
+      };
+
+      siteId = mkOption {
+        type = types.str;
+        default = "01KB54CYBGYG8ANKD8AR4C50Z8"; # cSpell:disable-line
+      };
     };
 
-  config.programs.firefoxpwa =
+  config =
     let
       cfg = config.mixins.pwas.youtube;
-      name = "YouTube";
-      urlBase = "https://www.youtube.com";
-      ulid1 = "01KB54CQQK7ANC7TYFXA3FT798"; # cSpell:disable-line
-      ulid2 = "01KB54CYBGYG8ANKD8AR4C50Z8"; # cSpell:disable-line
     in
     lib.mkIf cfg.enable {
-      enable = lib.mkDefault true;
+      custom.browser-dispatcher = {
+        enable = lib.mkDefault true;
 
-      profiles.${ulid1} = {
-        inherit name;
+        sites = [
+          {
+            path = "https://*.youtube.com/*|https://youtu.be/*";
+            command = "firefoxpwa site launch ${cfg.siteId} --url \"$URL\"";
+          }
+        ];
+      };
 
-        sites.${ulid2} = {
-          inherit name;
-          url = "${urlBase}/";
-          manifestUrl = "${urlBase}/manifest.webmanifest";
+      programs.firefoxpwa = {
+        enable = lib.mkDefault true;
 
-          desktopEntry = {
-            categories = lib.toList "AudioVideo";
+        profiles.${cfg.profileId} = {
+          inherit (cfg) name;
 
-            icon = pkgs.fetchurl {
-              url = "https://www.gstatic.com/youtube/img/web/maskable/logo_512x512.png";
-              sha256 = "sha256-RjFUv8vDu8d7ZKS1glpswUM3fyQixXVoa+FocdOnphU=";
+          sites.${cfg.siteId} = {
+            inherit (cfg) name;
+            url = "${cfg.urlBase}/";
+            manifestUrl = "${cfg.urlBase}/manifest.webmanifest";
+
+            desktopEntry = {
+              categories = lib.toList "AudioVideo";
+
+              icon = pkgs.fetchurl {
+                url = "https://www.gstatic.com/youtube/img/web/maskable/logo_512x512.png";
+                sha256 = "sha256-RjFUv8vDu8d7ZKS1glpswUM3fyQixXVoa+FocdOnphU=";
+              };
             };
           };
         };

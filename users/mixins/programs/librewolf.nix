@@ -64,6 +64,8 @@
             });
       };
 
+      custom.browser-dispatcher.defaultBrowserCommand = "librewolf --name librewolf \"$URL\"";
+
       xdg.mimeApps.custom.apps.default = [
         "${config.programs.librewolf.finalPackage}/share/applications/librewolf.desktop"
       ];
