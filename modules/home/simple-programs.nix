@@ -42,6 +42,9 @@ let
       name = "zoom";
       package = "zoom-us";
     }
+    {
+      name = "saber";
+    }
   ];
 in
 {

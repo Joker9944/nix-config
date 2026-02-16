@@ -40,6 +40,7 @@ in
 
   programs = {
     freelens.enable = true;
+    saber.enable = true;
 
     scrcpy = {
       enable = true;
