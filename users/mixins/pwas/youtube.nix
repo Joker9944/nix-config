@@ -43,7 +43,11 @@
 
         sites = [
           {
-            path = "https://*.youtube.com/*|https://youtu.be/*";
+            patterns = [
+              "https://youtube.com/*"
+              "https://*.youtube.com/*"
+              "https://youtu.be/*"
+            ];
             command = "firefoxpwa site launch ${cfg.siteId} --url \"$URL\"";
           }
         ];

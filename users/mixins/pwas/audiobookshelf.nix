@@ -43,7 +43,7 @@
 
         sites = [
           {
-            path = "${cfg.urlBase}/*";
+            patterns = [ "${cfg.urlBase}/*" ];
             command = "firefoxpwa site launch ${cfg.siteId} --url \"$URL\"";
           }
         ];

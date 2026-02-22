@@ -8,7 +8,12 @@
 {
   options.custom.browser-dispatcher =
     let
-      inherit (lib) mkEnableOption mkOption types;
+      inherit (lib)
+        mkEnableOption
+        mkOption
+        types
+        literalExpression
+        ;
     in
     {
       enable = mkEnableOption "browser dispatcher script";
@@ -22,9 +27,10 @@
         type = types.listOf (
           types.submodule {
             options = {
-              path = mkOption {
-                type = types.str;
-                example = "https://*.youtube.com/*|https://youtu.be/*";
+              patterns = mkOption {
+                type = types.listOf types.str;
+                example = literalExpression "[ \"https://youtube.com/*\" \"https://*.youtube.com/*\" \"https://youtu.be/*\" ]";
+                default = [ ];
               };
 
               command = mkOption {
@@ -55,7 +61,7 @@
             ''
             + (lib.pipe cfg.sites [
               (lib.map (site: ''
-                ${site.path})
+                ${lib.join "|" site.patterns})
                   ${site.command}
                   ;;
               ''))
@@ -82,7 +88,7 @@
     lib.mkIf cfg.enable {
       custom.browser-dispatcher.sites = lib.mkOrder 2000 [
         {
-          path = "*";
+          patterns = [ "*" ];
           command = cfg.defaultBrowserCommand;
         }
       ];
