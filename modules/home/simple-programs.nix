@@ -45,6 +45,9 @@ let
     {
       name = "saber";
     }
+    {
+      name = "zap";
+    }
   ];
 in
 {

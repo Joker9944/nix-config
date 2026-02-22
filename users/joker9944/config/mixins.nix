@@ -26,6 +26,7 @@
       vscode.enable = true;
       wxmaxima.enable = true;
       xournalpp.enable = true;
+      zap.enable = true;
       zoom.enable = true;
     };
 
