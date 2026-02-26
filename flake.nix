@@ -24,11 +24,6 @@
       url = ./apps/yab;
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    hyprXPrimary = {
-      url = "github:Libadoxon/hyprXPrimary"; # cSpell:ignore Libadoxon
-      inputs.hyprland.follows = "hyprland";
-      inputs.nixpkgs.follows = "hyprland/nixpkgs";
-    };
     nix-vscode-extensions = {
       url = "github:nix-community/nix-vscode-extensions";
       inputs.nixpkgs.follows = "nixpkgs";
