@@ -56,11 +56,18 @@
         ))
       ];
 
+      nixosModules = {
+        default = self.nixosModules.scheme;
+
+        scheme = import ./modules/global/scheme.nix self;
+        regreet = import ./modules/nixos/regreet.nix self;
+      };
+
       homeManagerModules = {
         default = self.homeManagerModules.scheme;
 
-        scheme = import ./modules/home/scheme.nix self;
-        gtk = import ./modules/home/gtk self;
+        scheme = import ./modules/global/scheme.nix self;
+        gtk = import ./modules/home/gtk.nix self;
         librewolf = import ./modules/home/librewolf self;
       };
     };

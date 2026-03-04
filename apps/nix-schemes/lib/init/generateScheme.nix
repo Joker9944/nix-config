@@ -1,16 +1,16 @@
 {
   inputs,
   lib,
-  self,
+  libSchemes,
   ...
 }:
 base: slug:
 let
-  scheme = self.fromYaml "${base}-${slug}" "${inputs.schemes}/${base}/${slug}.yaml";
+  scheme = libSchemes.fromYaml "${base}-${slug}" "${inputs.schemes}/${base}/${slug}.yaml";
 
   palette = lib.pipe scheme.palette [
-    (lib.mapAttrs (_: hex: self.fromHex hex))
-    (lib.mapAttrs (_: dec: self.mkColor dec))
+    (lib.mapAttrs (_: hex: libSchemes.fromHex hex))
+    (lib.mapAttrs (_: dec: libSchemes.mkColor dec))
   ];
 
   modifiedScheme = {
@@ -26,7 +26,7 @@ let
   transform =
     prevScheme: transformFunction:
     let
-      currScheme = lib.recursiveUpdate prevScheme (transformFunction prevScheme self);
+      currScheme = lib.recursiveUpdate prevScheme (transformFunction prevScheme libSchemes);
     in
     currScheme
     // {

@@ -8,17 +8,7 @@ flake:
   ...
 }:
 let
-  accentNames = [
-    "blue"
-    "teal"
-    "green"
-    "yellow"
-    "orange"
-    "red"
-    "pink"
-    "purple"
-    "slate"
-  ];
+  libScheme = flake.lib;
 in
 {
   options.schemes.gtk =
@@ -30,7 +20,7 @@ in
         types
         literalExpression
         ;
-      customTypes = flake.lib.types;
+      customTypes = libScheme.types;
     in
     {
       enable = mkEnableOption "GTK theming based on adw-gtk3 and a scheme";
@@ -41,12 +31,22 @@ in
         type = customTypes.scheme;
         default = config.schemes.scheme;
         description = ''
-          Color scheme used to theme GTK theme.
+          Color scheme used to customize adw-gtk3 theme.
         '';
       };
 
       accent = mkOption {
-        type = types.enum accentNames;
+        type = types.enum [
+          "blue"
+          "teal"
+          "green"
+          "yellow"
+          "orange"
+          "red"
+          "pink"
+          "purple"
+          "slate"
+        ];
         default = "blue";
         description = ''
           The GTK accent color based on the GTK 4 accent system.
@@ -77,29 +77,10 @@ in
 
       mkAccents =
         scheme:
-        let
-          inherit (scheme) palette;
-        in
         if cfg.overrides.accent == null then
-          {
-            blue = palette.base0D;
-            teal = palette.base0C;
-            green = palette.base0B;
-            yellow = palette.base09;
-            orange = palette.base08.mix palette.base09 0.5; # red yellow 50% mix
-            red = palette.base08;
-            pink = palette.base08.lighten 0.33; # red white 33% mix
-            purple = palette.base0E;
-            slate = palette.base03;
-          }
+          libScheme.gtk.mkAccentsFromPalette scheme.palette
         else
-          lib.pipe accentNames [
-            (lib.map (name: {
-              inherit name;
-              value = cfg.overrides.accent (flake.lib.init pkgs);
-            }))
-            lib.listToAttrs
-          ];
+          libScheme.gtk.mkAccentsFromColor (cfg.overrides.accent libScheme);
 
       accents = mkAccents cfg.scheme;
     in
@@ -118,12 +99,15 @@ in
           inherit (cfg.theme) package;
         };
 
-        gtk3.extraCss = lib.concatStrings [
-          (import ./templates/gtk3-base.css.nix cfg accents)
-          (lib.optionalString (cfg.scheme.variant == "dark") (import ./templates/gtk3-dark.css.nix))
-        ];
+        gtk3.extraCss = libScheme.gtk.adw-gtk3.mkGtk3ExtraCss {
+          inherit (cfg) scheme accent;
+          inherit accents;
+        };
 
-        gtk4.extraCss = import ./templates/gtk4.css.nix cfg accents;
+        gtk4.extraCss = libScheme.gtk.adw-gtk3.mkGtk4ExtraCss {
+          inherit (cfg) scheme accent;
+          inherit accents;
+        };
       };
 
       dconf.settings."org/gnome/desktop/interface".accent-color = cfg.accent;

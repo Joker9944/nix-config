@@ -1,15 +1,11 @@
-cfg: accents:
-let
-  inherit (cfg.scheme) palette;
-in
-''
+palette: accent: ''
   @define-color window_bg_color ${palette.base00.hex}; /* background */
   @define-color window_fg_color ${palette.base05.hex}; /* foreground */
 
   @define-color view_bg_color ${palette.base00.hex}; /* background */
   @define-color view_fg_color ${palette.base05.hex}; /* foreground */
 
-  @define-color accent_bg_color ${accents.${cfg.accent}.hex};
+  @define-color accent_bg_color ${accent.hex};
   @define-color accent_fg_color ${palette.base05.hex}; /* foreground */
 
   @define-color headerbar_bg_color ${palette.base01.hex}; /* light background */

@@ -23,7 +23,7 @@ flake:
         type = customTypes.scheme;
         default = config.schemes.scheme;
         description = ''
-          Color scheme used to theme librewolf theme.
+          Color scheme used to theme librewolf.
         '';
       };
 

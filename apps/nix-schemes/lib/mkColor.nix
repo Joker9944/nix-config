@@ -1,5 +1,5 @@
-{ self, ... }:
-dec: with self; {
+{ libSchemes, ... }:
+dec: with libSchemes; {
   inherit dec;
   hex = toHex dec;
   rgb = toRgb dec;

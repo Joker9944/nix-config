@@ -1,8 +1,8 @@
-{ lib, self, ... }@args:
+{ lib, libSchemes, ... }@args:
 pkgs:
-(lib.removeAttrs self [ "init" ])
+(lib.removeAttrs libSchemes [ "init" ])
 // (lib.fix (
-  selfPkgs:
+  self:
   lib.pipe ./. [
     builtins.readDir
     lib.attrNames
@@ -13,7 +13,7 @@ pkgs:
         args
         // {
           inherit pkgs;
-          self = lib.recursiveUpdate self selfPkgs;
+          libSchemes = lib.recursiveUpdate libSchemes self;
         }
       );
     }))

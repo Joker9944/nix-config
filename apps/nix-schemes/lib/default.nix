@@ -10,7 +10,7 @@ lib.fix (
       value = import (lib.path.append ./. filename) (
         args
         // {
-          inherit self;
+          libSchemes = self;
         }
       );
     }))

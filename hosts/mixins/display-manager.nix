@@ -1,10 +1,16 @@
 {
+  inputs,
   lib,
   pkgs,
   config,
   ...
 }:
 {
+  imports = with inputs.nix-schemes.nixosModules; [
+    scheme
+    regreet
+  ];
+
   options.mixins.displayManager =
     let
       inherit (lib) mkEnableOption;
@@ -27,11 +33,6 @@
           size = 10;
         };
 
-        theme = {
-          name = "Dracula";
-          package = pkgs.dracula-theme;
-        };
-
         iconTheme = {
           name = "Dracula";
           package = pkgs.dracula-icon-theme;
@@ -42,9 +43,27 @@
           package = pkgs.dracula-theme;
         };
 
-        settings = {
-          application_prefer_dark_theme = true;
+        settings.GTK.application_prefer_dark_theme = true;
+      };
+
+      schemes = {
+        regreet = {
+          enable = true;
+          accent = "purple";
         };
+
+        source.scheme = {
+          system = "base16";
+          slug = "uwunicorn"; # cSpell:words uwunicorn
+        };
+
+        transformers =
+          let
+            schemeTransformers = inputs.nix-schemes.lib.transformers;
+          in
+          [
+            (schemeTransformers.interpolateBase24 { })
+          ];
       };
     };
 }

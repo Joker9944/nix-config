@@ -1,6 +1,6 @@
-{ self, ... }:
+{ libSchemes, ... }:
 a: weight:
-self.mix a [
+libSchemes.mix a [
   0
   0
   0
