@@ -34,12 +34,17 @@
         trusted-public-keys = lib.toList "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="; # cSpell:disable-line
       };
 
-      programs.hyprland = {
-        enable = true;
-        package = pkgs-hyprland.hyprland;
-        portalPackage = pkgs-hyprland.xdg-desktop-portal-hyprland;
+      programs = {
+        hyprland = {
+          enable = true;
+          package = pkgs-hyprland.hyprland;
+          portalPackage = pkgs-hyprland.xdg-desktop-portal-hyprland;
 
-        withUWSM = true;
+          withUWSM = true;
+        };
+
+        # TODO remove once updating to 26.05
+        uwsm.waylandCompositors.hyprland.binPath = lib.mkForce "/run/current-system/sw/bin/start-hyprland";
       };
 
       # WORKAROUND This is a hack to workaround a hack in NixOS
