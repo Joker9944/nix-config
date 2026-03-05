@@ -9,8 +9,8 @@ import Network from "./modules/Network"
 import Volume from "./modules/Volume"
 import Workspaces from "./modules/Workspaces"
 import { SPACING } from "../helpers/constants"
-import {showBattery, showGpu} from "../services/config";
-import Battery from "./modules/Battery";
+import { showBattery, showGpu } from "../services/config"
+import Battery from "./modules/Battery"
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
 	const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
@@ -18,10 +18,11 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
 	return (
 		<window
 			visible
-			name="bar"
+			name="yab"
 			class="Bar"
 			gdkmonitor={gdkmonitor}
 			exclusivity={Astal.Exclusivity.EXCLUSIVE}
+			layer={Astal.Layer.BOTTOM}
 			anchor={TOP | LEFT | RIGHT}
 			application={app}
 		>
@@ -46,15 +47,11 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
 
 				<box $type="end" spacing={SPACING.RELAXED}>
 					<Cpu />
-					{(showGpu) && (
-						<Gpu />
-					)}
+					{showGpu && <Gpu />}
 					<Memory />
 					<Disk />
 					<Network />
-					{(showBattery) && (
-						<Battery />
-					)}
+					{showBattery && <Battery />}
 					<Volume />
 				</box>
 			</centerbox>
