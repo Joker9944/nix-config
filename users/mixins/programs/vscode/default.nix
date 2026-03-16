@@ -243,6 +243,16 @@
                 };
               }
             ];
+
+            pbmn = mkProfile {
+              extensions = [
+                open-vsx-release.redhat.vscode-extension-bpmn-editor
+              ];
+
+              userSettings = {
+                "redhat.telemetry.enabled" = false;
+              };
+            };
           };
         };
       };
