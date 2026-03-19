@@ -6,7 +6,8 @@
     main = {
       name = "nvme0n1";
       size = {
-        main = "-100G";
+        boot = "1G";
+        main = "-228G";
         swap = "20G";
       };
     };
