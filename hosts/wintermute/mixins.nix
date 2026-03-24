@@ -1,6 +1,9 @@
 {
   mixins = {
-    boot.enable = true;
+    boot = {
+      enable = true;
+      windowsSupport.enable = true;
+    };
 
     displayManager.enable = true;
     desktopEnvironment.hyprland.enable = true;
