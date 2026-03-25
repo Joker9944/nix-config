@@ -13,16 +13,18 @@ import { showBattery, showGpu } from "../services/config"
 import Battery from "./modules/Battery"
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
+	const { EXCLUSIVE } = Astal.Exclusivity
+	const {BOTTOM} = Astal.Layer
 	const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
 
 	return (
 		<window
+			layer={BOTTOM} // WORKAROUND Due to a hyprland bug the layer has to be defined at the top: https://github.com/Aylur/astal/issues/332
 			visible
 			name="yab"
 			class="Bar"
 			gdkmonitor={gdkmonitor}
-			exclusivity={Astal.Exclusivity.EXCLUSIVE}
-			layer={Astal.Layer.BOTTOM}
+			exclusivity={EXCLUSIVE}
 			anchor={TOP | LEFT | RIGHT}
 			application={app}
 		>
