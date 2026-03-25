@@ -48,6 +48,9 @@ let
     {
       name = "zap";
     }
+    {
+      name = "systemctl-tui";
+    }
   ];
 in
 {

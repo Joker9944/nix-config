@@ -11,7 +11,6 @@
       discord.enable = true;
       gnome-text-editor.enable = true;
       intelli-shell.enable = true;
-      isd.enable = true;
       jetbrains.enable = true;
       jupyter.enable = true;
       kitty.enable = true;
@@ -21,6 +20,7 @@
       nextcloud-client.enable = true;
       papers.enable = true;
       spotify.enable = true;
+      systemctl-tui.enable = true;
       telegram.enable = true;
       vlc.enable = true;
       vscode.enable = true;
