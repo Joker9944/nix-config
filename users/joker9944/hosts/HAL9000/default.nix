@@ -51,7 +51,9 @@
       "DP-3, 1920x1080@60.00Hz, 4480x0, 1"
     ];
 
-    exec = "${lib.getExe pkgs.xorg.xrandr} --output DP-2 --primary";
+    plugin.xwaylandprimary = {
+      display = "DP-2";
+    };
 
     workspace = [
       "1, monitor:DP-2, default:true"

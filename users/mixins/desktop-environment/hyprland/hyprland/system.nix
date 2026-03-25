@@ -1,5 +1,7 @@
 {
+  inputs,
   lib,
+  pkgs-hyprland,
   config,
   osConfig,
   custom,
@@ -45,6 +47,8 @@ custom.lib.mkHyprlandModule config {
     windowManager.hyprland.custom.system.environment.NIXOS_OZONE = 1;
 
     wayland.windowManager.hyprland = {
+      plugins = [ inputs.hyprXPrimary.packages.${pkgs-hyprland.stdenv.hostPlatform.system}.default ];
+
       settings = {
         monitor = lib.mkDefault [ ",preferred,auto,auto" ];
 
