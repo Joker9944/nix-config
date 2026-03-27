@@ -55,13 +55,15 @@
 
     workspace = [
       "1, monitor:DP-2, default:true"
-      "2, monitor:DP-2, default:true"
-      "3, monitor:DP-2, default:true"
-      "4, monitor:DP-2, default:true"
+      "2, monitor:DP-2, default:false"
+      "3, monitor:DP-2, default:false"
+      "4, monitor:DP-2, default:false"
       "5, monitor:DP-1, default:true"
-      "6, monitor:DP-1, default:true"
-      "7, monitor:DP-3, default:true"
+      "6, monitor:DP-1, default:false"
+      "7, monitor:DP-1, default:false"
       "8, monitor:DP-3, default:true"
+      "9, monitor:DP-3, default:false"
+      "0, monitor:DP-3, default:false"
       "name:gaming, monitor:DP-2"
     ];
 
