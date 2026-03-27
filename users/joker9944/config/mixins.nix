@@ -8,6 +8,7 @@
       aerc.enable = true;
       atuin.enable = true;
       bash.enable = true;
+      claude-code.enable = true;
       discord.enable = true;
       gnome-text-editor.enable = true;
       intelli-shell.enable = true;

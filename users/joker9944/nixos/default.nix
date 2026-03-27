@@ -52,6 +52,7 @@ in
     "teamspeak3"
     "zoom"
     "goland"
+    "claude-code"
   ];
 
   nixpkgs.overlays = [ inputs.audiomenu.overlays.default ];
