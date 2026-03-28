@@ -1,3 +1,14 @@
+/**
+  Add ANSI color mappings (0-F) to the scheme.
+  Maps base16/base24 palette colors to standard ANSI terminal colors.
+
+  # Example
+
+  ```nix
+  scheme.transform transformers.ansi
+  => { ansi = { "0" = <color>; "1" = <color>; ... }; ... }
+  ```
+*/
 _: scheme: _:
 let
   inherit (scheme) palette;

@@ -1,3 +1,23 @@
+/**
+  Adjust a color's brightness by multiplying each channel by a factor.
+  Results are clamped to the 0-255 range.
+
+  # Type
+
+  ```
+  adjust :: (color | [int]) -> number -> color
+  ```
+
+  # Example
+
+  ```nix
+  adjust [ 128 128 128 ] 0.5
+  => { dec = [ 64 64 64 ]; ... }
+
+  adjust [ 128 128 128 ] 2
+  => { dec = [ 255 255 255 ]; ... }
+  ```
+*/
 {
   libSchemes,
   lib,

@@ -1,3 +1,20 @@
+/**
+  Mix two colors together with a specified weight.
+  Weight of 0 returns the first color, weight of 1 returns the second color.
+
+  # Type
+
+  ```
+  mix :: (color | [int]) -> (color | [int]) -> number -> color
+  ```
+
+  # Example
+
+  ```nix
+  mix [ 255 0 0 ] [ 0 0 255 ] 0.5
+  => { dec = [ 128 0 128 ]; ... }
+  ```
+*/
 {
   libSchemes,
   lib,

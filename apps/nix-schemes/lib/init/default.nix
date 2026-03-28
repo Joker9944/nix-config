@@ -1,3 +1,22 @@
+/**
+  Initialize libSchemes with pkgs to enable impure functions.
+  Returns the full libSchemes with additional functions that require pkgs.
+
+  # Type
+
+  ```
+  init :: pkgs -> libSchemes
+  ```
+
+  # Example
+
+  ```nix
+  let
+    libSchemes = inputs.nix-schemes.lib.init pkgs;
+  in
+  libSchemes.generateScheme "base16" "gruvbox-dark-hard"
+  ```
+*/
 { lib, libSchemes, ... }@args:
 pkgs:
 (lib.removeAttrs libSchemes [ "init" ])

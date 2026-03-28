@@ -1,3 +1,19 @@
+/**
+  Interpolate a base16 scheme to base24 by generating additional colors.
+  If the scheme is already base24, returns it unchanged.
+
+  # Arguments
+
+  - `lightenWeight`: Weight for lightening accent colors (default: 0.2)
+  - `paletteOverrides`: Manual overrides for generated palette colors
+
+  # Example
+
+  ```nix
+  scheme.transform (transformers.interpolateBase24 { })
+  => { system = "base24"; palette = { base10 = ...; base11 = ...; ... }; ... }
+  ```
+*/
 { lib, custom, ... }:
 {
   lightenWeight ? 0.2,

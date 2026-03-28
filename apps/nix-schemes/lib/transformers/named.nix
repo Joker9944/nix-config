@@ -1,3 +1,22 @@
+/**
+  Add semantic named color attributes to the scheme.
+  Provides human-readable names like background, foreground, error, etc.
+
+  # Example
+
+  ```nix
+  scheme.transform transformers.named
+  => {
+    background = { normal = <color>; light = <color>; ... };
+    foreground = { dark = <color>; normal = <color>; ... };
+    error = <color>;
+    warning = <color>;
+    info = <color>;
+    red = { dull = <color>; bright = <color>; };
+    ...
+  }
+  ```
+*/
 { lib, ... }:
 scheme: _:
 let

@@ -1,3 +1,7 @@
+/**
+  Collection of scheme transformers.
+  Transformers add or modify scheme attributes and can be chained via `scheme.transform`.
+*/
 { lib, ... }@args:
 lib.pipe ./. [
   builtins.readDir

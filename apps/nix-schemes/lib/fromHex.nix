@@ -1,3 +1,19 @@
+/**
+  Parse a hexadecimal color string into an RGB decimal list.
+
+  # Type
+
+  ```
+  fromHex :: string -> [int]
+  ```
+
+  # Example
+
+  ```nix
+  fromHex "#FF5500"
+  => [ 255 85 0 ]
+  ```
+*/
 { lib, ... }:
 hex:
 let

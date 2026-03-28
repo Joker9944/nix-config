@@ -1,3 +1,20 @@
+/**
+  Parse a YAML file into a Nix attribute set.
+  Requires pkgs (impure).
+
+  # Type
+
+  ```
+  fromYaml :: string -> path -> attrs
+  ```
+
+  # Example
+
+  ```nix
+  fromYaml "my-config" ./config.yaml
+  => { key = "value"; ... }
+  ```
+*/
 { lib, pkgs, ... }:
 name: file:
 let

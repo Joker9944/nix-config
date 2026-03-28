@@ -1,3 +1,7 @@
+/**
+  GTK theming utilities for generating CSS from color schemes.
+  Includes support for adw-gtk3 theme customization.
+*/
 { lib, ... }@args:
 lib.pipe ./. [
   builtins.readDir

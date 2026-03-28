@@ -1,3 +1,19 @@
+/**
+  Convert an RGB decimal list to a hexadecimal color string.
+
+  # Type
+
+  ```
+  toHex :: [int] -> string
+  ```
+
+  # Example
+
+  ```nix
+  toHex [ 255 85 0 ]
+  => "#FF5500"
+  ```
+*/
 { lib, ... }:
 color:
 lib.pipe color [
