@@ -5,7 +5,8 @@
   ...
 }:
 let
-  flakeLib = flake.lib;
+  # Initialize libSchemes with pkgs for impure functions
+  libSchemes = flake.lib.init pkgs;
 
   # Collect all test suites from lib/
   libTests = lib.pipe ./. [
@@ -13,7 +14,7 @@ let
     lib.attrNames
     (lib.map (filename: lib.path.append ./. filename))
     (lib.filter (path: path != ./default.nix))
-    (lib.map (path: import path { inherit lib flakeLib; }))
+    (lib.map (path: import path { inherit lib libSchemes; }))
     lib.mergeAttrsList
   ];
 

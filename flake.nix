@@ -145,7 +145,7 @@
               type = "app";
               program = lib.getExe (
                 pkgs.writeShellScriptBin "test" ''
-                  nix build .#checks.${system}.libTests "$@"
+                  nix build .#checks.${system}.libTests --no-link "$@"
                 ''
               );
               meta.description = "Run lib tests";

@@ -109,7 +109,7 @@ lib.fix (customTypes: {
       darken = mkOption {
         type = types.functionTo customTypes.color;
         description = ''
-          FUnction to mix this with black with a weight.
+          Function to mix this with black with a weight.
         '';
       };
     };
