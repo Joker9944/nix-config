@@ -76,199 +76,206 @@
           lib.listToAttrs
         ];
     in
-    inputs.flake-utils.lib.eachDefaultSystem (
-      system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in
-      {
-        packages = applyFnToDir ./pkgs (
-          path:
-          pkgs.callPackage path {
-            jail = inputs.nix-jail.lib.init pkgs;
-          }
-        );
+    lib.recursiveUpdate
+      (inputs.flake-utils.lib.eachDefaultSystem (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          packages = applyFnToDir ./pkgs (
+            path:
+            pkgs.callPackage path {
+              jail = inputs.nix-jail.lib.init pkgs;
+            }
+          );
 
-        apps = {
-          cspell = {
-            type = "app";
-            program = lib.getExe pkgs.nodePackages.cspell;
-            inherit (pkgs.nodePackages.cspell) meta;
-          };
+          apps = {
+            cspell = {
+              type = "app";
+              program = lib.getExe pkgs.nodePackages.cspell;
+              inherit (pkgs.nodePackages.cspell) meta;
+            };
 
-          dconf-editor = {
-            type = "app";
-            program = lib.getExe pkgs.dconf-editor;
-            inherit (pkgs.dconf-editor) meta;
-          };
+            dconf-editor = {
+              type = "app";
+              program = lib.getExe pkgs.dconf-editor;
+              inherit (pkgs.dconf-editor) meta;
+            };
 
-          gnome-tweaks = {
-            type = "app";
-            program = lib.getExe pkgs.gnome-tweaks;
-            inherit (pkgs.gnome-tweaks) meta;
-          };
+            gnome-tweaks = {
+              type = "app";
+              program = lib.getExe pkgs.gnome-tweaks;
+              inherit (pkgs.gnome-tweaks) meta;
+            };
 
-          home-manager = {
-            type = "app";
-            program = lib.getExe pkgs.home-manager;
-            inherit (pkgs.home-manager) meta;
-          };
+            home-manager = {
+              type = "app";
+              program = lib.getExe pkgs.home-manager;
+              inherit (pkgs.home-manager) meta;
+            };
 
-          update-packages = {
-            type = "app";
-            program = lib.getExe (
-              pkgs.writeShellApplication {
-                name = "update-packages";
+            update-packages = {
+              type = "app";
+              program = lib.getExe (
+                pkgs.writeShellApplication {
+                  name = "update-packages";
 
-                text =
-                  let
-                    packages = [
-                      "File-MimeInfo"
-                      "freelens"
+                  text =
+                    let
+                      packages = [
+                        "File-MimeInfo"
+                        "freelens"
+                      ];
+                    in
+                    lib.pipe packages [
+                      (lib.map (
+                        package: "nix-update ${package} --override-filename ./pkgs/${package}.nix --flake --commit"
+                      ))
+                      lib.concatLines
                     ];
-                  in
-                  lib.pipe packages [
-                    (lib.map (
-                      package: "nix-update ${package} --override-filename ./pkgs/${package}.nix --flake --commit"
-                    ))
-                    lib.concatLines
-                  ];
 
-                runtimeInputs = with pkgs; [ nix-update ];
+                  runtimeInputs = with pkgs; [ nix-update ];
+                }
+              );
+              meta.description = "Updates packages from this flake";
+            };
+
+            test-lib = {
+              type = "app";
+              program = lib.getExe (
+                pkgs.writeShellScriptBin "test" ''
+                  nix build .#checks.${system}.libTests "$@"
+                ''
+              );
+              meta.description = "Run lib tests";
+            };
+          };
+
+          devShells = {
+            preCommitHooks = pkgs.mkShell {
+              inherit (self.checks.${system}.preCommitHooks) shellHook;
+              buildInputs = self.checks.${system}.preCommitHooks.enabledPackages;
+            };
+          };
+
+          checks = {
+            preCommitHooks = inputs.pre-commit-hooks.lib.${system}.run {
+              src = ./.;
+              hooks = {
+                # Files
+                trim-trailing-whitespace.enable = true;
+                end-of-file-fixer.enable = true;
+                fix-byte-order-marker.enable = true;
+                mixed-line-endings = {
+                  enable = true;
+                  args = [ "--fix=lf" ];
+                };
+
+                # General
+                cspell = {
+                  enable = true;
+                  args = [ "--no-must-find-files" ];
+                };
+
+                # Nix
+                deadnix.enable = true;
+                nil.enable = true;
+                nixfmt-rfc-style.enable = true;
+                statix.enable = true;
+
+                # Shell
+                shellcheck.enable = true;
+                shfmt.enable = true;
+              };
+            };
+
+            libTests = pkgs.callPackage ./tests/lib {
+              flake = self;
+            };
+          };
+
+          formatter =
+            let
+              inherit (self.checks.${system}.preCommitHooks.config) package configFile;
+            in
+            pkgs.writeShellScriptBin "pre-commit-run" ''
+              ${package}/bin/pre-commit run --all-files --config ${configFile}
+            '';
+        }
+      ))
+      {
+        overlays = {
+          File-MimeInfo = _: prev: {
+            inherit (self.packages.${prev.stdenv.hostPlatform.system}) File-MimeInfo;
+          };
+
+          freelens = _: prev: {
+            inherit (self.packages.${prev.stdenv.hostPlatform.system}) freelens;
+          };
+        };
+
+        nixosModules = applyFnToDir ./modules/nixos import;
+
+        homeModules = applyFnToDir ./modules/home import;
+
+        lib = import ./lib {
+          inherit lib inputs;
+
+          flake = self;
+
+          custom = {
+            inherit (inputs.nix-math.lib) math;
+            std = inputs.nix-std.lib;
+          };
+        };
+
+        checks = self.lib.mkNixosConfigurationChecks self;
+
+        nixosConfigurations =
+          lib.pipe
+            [
+              {
+                system = "x86_64-linux";
+                hostname = "HAL9000";
+                usernames = [ "joker9944" ];
+                resolution = "2560x1440";
               }
-            );
-            meta.description = "Updates packages from this flake";
-          };
-        };
+              {
+                system = "x86_64-linux";
+                hostname = "wintermute";
+                usernames = [ "joker9944" ];
+                resolution = "3840x2160";
+              }
+            ]
+            [
+              (lib.map (cfg: {
+                name = cfg.hostname;
+                value = self.lib.mkNixosConfiguration cfg;
+              }))
+              lib.listToAttrs
+            ];
 
-        devShells = {
-          gitHooks = pkgs.mkShell {
-            inherit (self.checks.${system}.preCommitHooks) shellHook;
-            buildInputs = self.checks.${system}.preCommitHooks.enabledPackages;
-          };
-        };
-
-        checks = {
-          preCommitHooks = inputs.pre-commit-hooks.lib.${system}.run {
-            src = ./.;
-            hooks = {
-              # Files
-              trim-trailing-whitespace.enable = true;
-              end-of-file-fixer.enable = true;
-              fix-byte-order-marker.enable = true;
-              mixed-line-endings = {
-                enable = true;
-                args = [ "--fix=lf" ];
-              };
-
-              # General
-              cspell = {
-                enable = true;
-                args = [ "--no-must-find-files" ];
-              };
-
-              # Nix
-              deadnix.enable = true;
-              nil.enable = true;
-              nixfmt-rfc-style.enable = true;
-              statix.enable = true;
-
-              # Shell
-              shellcheck.enable = true;
-              shfmt.enable = true;
-            };
-          };
-        };
-
-        formatter =
-          let
-            inherit (self.checks.${system}.preCommitHooks.config) package configFile;
-          in
-          pkgs.writeShellScriptBin "pre-commit-run" ''
-            ${package}/bin/pre-commit run --all-files --config ${configFile}
-          '';
-      }
-    )
-    // {
-      overlays = {
-        File-MimeInfo = _: prev: {
-          inherit (self.packages.${prev.stdenv.hostPlatform.system}) File-MimeInfo;
-        };
-
-        freelens = _: prev: {
-          inherit (self.packages.${prev.stdenv.hostPlatform.system}) freelens;
-        };
-
-        # WORKAROUND electron based application only recognize gnome keyring when XDG_CURRENT_DESKTOP is set to GNOME.
-        # remove once resolved https://github.com/electron/electron/issues/47436
-        element-desktop-gnome-keyring-fix = _: prevPkgs: {
-          element-desktop = prevPkgs.element-desktop.overrideAttrs (prevAttrs: {
-            desktopItems = (lib.elemAt prevAttrs.desktopItems 0).override {
-              exec = "element-desktop --password-store=gnome-libsecret %u"; # cSpell:words libsecret
-            };
-          });
-        };
+        homeConfigurations =
+          lib.pipe
+            [
+              {
+                hostname = "HAL9000";
+                username = "joker9944";
+              }
+              {
+                hostname = "wintermute";
+                username = "joker9944";
+              }
+            ]
+            [
+              (lib.map (cfg: {
+                name = cfg.username + "@" + cfg.hostname;
+                value = self.lib.mkHomeConfiguration {
+                  nixosConfigurations = self.nixosConfigurations.${cfg.hostname};
+                } cfg;
+              }))
+              lib.listToAttrs
+            ];
       };
-
-      nixosModules = applyFnToDir ./modules/nixos import;
-
-      homeModules = applyFnToDir ./modules/home import;
-
-      lib = import ./lib {
-        inherit lib inputs;
-
-        flake = self;
-
-        custom = {
-          inherit (inputs.nix-math.lib) math;
-          std = inputs.nix-std.lib;
-        };
-      };
-
-      nixosConfigurations =
-        lib.pipe
-          [
-            {
-              system = "x86_64-linux";
-              hostname = "HAL9000";
-              usernames = [ "joker9944" ];
-              resolution = "2560x1440";
-            }
-            {
-              system = "x86_64-linux";
-              hostname = "wintermute";
-              usernames = [ "joker9944" ];
-              resolution = "3840x2160";
-            }
-          ]
-          [
-            (lib.map (cfg: {
-              name = cfg.hostname;
-              value = self.lib.mkNixosConfiguration cfg;
-            }))
-            lib.listToAttrs
-          ];
-
-      homeConfigurations =
-        lib.pipe
-          [
-            {
-              hostname = "HAL9000";
-              username = "joker9944";
-            }
-            {
-              hostname = "wintermute";
-              username = "joker9944";
-            }
-          ]
-          [
-            (lib.map (cfg: {
-              name = cfg.username + "@" + cfg.hostname;
-              value = self.lib.mkHomeConfiguration {
-                nixosConfigurations = self.nixosConfigurations.${cfg.hostname};
-              } cfg;
-            }))
-            lib.listToAttrs
-          ];
-    };
 }
