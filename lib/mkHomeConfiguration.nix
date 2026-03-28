@@ -1,3 +1,36 @@
+/**
+  Build a standalone home-manager configuration for a user.
+  Inherits pkgs and specialArgs from the associated NixOS configuration.
+
+  # Type
+
+  ```
+  mkHomeConfiguration :: { nixosConfigurations :: nixosConfiguration } -> {
+    context :: path?,
+    username :: string,
+    additionalModules :: [module]?,
+    ...
+  } -> homeConfiguration
+  ```
+
+  # Arguments
+
+  First argument (partial application):
+  - `nixosConfigurations`: The NixOS configuration to inherit from
+
+  Second argument:
+  - `context`: Base path for user modules (default: flake root)
+  - `username`: User name, used to find modules at `users/<username>`
+  - `additionalModules`: Extra modules to include
+
+  # Example
+
+  ```nix
+  mkHomeConfiguration { nixosConfigurations = self.nixosConfigurations.my-host; } {
+    username = "my-user";
+  }
+  ```
+*/
 {
   flake,
   lib,

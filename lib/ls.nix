@@ -1,3 +1,25 @@
+/**
+  List directory contents with optional filtering by file type and exclusions.
+
+  # Type
+
+  ```
+  ls :: { dir :: path, types :: [string]?, exclude :: [path]? } -> [path]
+  ```
+
+  # Arguments
+
+  - `dir`: Directory path to list
+  - `types`: File types to include (default: ["regular" "directory" "symlink"])
+  - `exclude`: Paths to exclude from results
+
+  # Example
+
+  ```nix
+  ls { dir = ./lib; types = [ "regular" ]; exclude = [ ./lib/default.nix ]; }
+  => [ /path/to/lib/first.nix /path/to/lib/last.nix ... ]
+  ```
+*/
 { lib, ... }:
 {
   dir,
