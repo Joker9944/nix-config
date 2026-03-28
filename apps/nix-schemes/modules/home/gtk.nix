@@ -66,7 +66,9 @@ in
         type = customTypes.transformer;
         readOnly = true;
         description = ''
-
+          A transformer that adds the selected GTK accent color to schemes.
+          Add this to `schemes.transformers` to make the accent color available
+          in `schemes.scheme.accent` for use by other modules.
         '';
       };
     };
