@@ -13,6 +13,16 @@ in
     ];
   };
 
+  # Test that deobfuscate produces expected output
+  testDeobfuscateSimple = {
+    expr = deobfuscate 42 [
+      107 # 107 XOR 42 = 'A' (65)
+      104 # 104 XOR 42 = 'B' (66)
+      105 # 105 XOR 42 = 'C' (67)
+    ];
+    expected = "ABC";
+  };
+
   # Test roundtrip: deobfuscate(obfuscate(x)) == x
   testRoundtripSimple = {
     expr = deobfuscate 42 (obfuscate 42 "hello");

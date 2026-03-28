@@ -39,4 +39,9 @@
       2
     ];
   };
+
+  testFirstEmptyListReturnsNull = {
+    expr = flakeLib.first [ ];
+    expected = null;
+  };
 }

@@ -39,4 +39,9 @@
       4
     ];
   };
+
+  testLastEmptyListReturnsNull = {
+    expr = flakeLib.last [ ];
+    expected = null;
+  };
 }
