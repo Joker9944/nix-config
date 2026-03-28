@@ -1,5 +1,5 @@
 {
-  description = "A very basic flake";
+  description = "Nix color scheme library with base16/base24 support";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable-small";

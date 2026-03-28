@@ -38,7 +38,7 @@ in
 
   testMkColorRgba = {
     expr = red.rgba 0.5;
-    expected = "rgba(255,0,0,0.500000)";
+    expected = "rgba(255,0,0,0.5)";
   };
 
   testMkColorIsColor = {

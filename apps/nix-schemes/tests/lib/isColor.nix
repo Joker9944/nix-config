@@ -45,4 +45,19 @@
     };
     expected = true;
   };
+
+  testIsColorWithWrongLength = {
+    expr = libSchemes.isColor {
+      dec = [
+        0
+        0
+      ];
+    };
+    expected = false;
+  };
+
+  testIsColorWithDecNotList = {
+    expr = libSchemes.isColor { dec = "not a list"; };
+    expected = false;
+  };
 }

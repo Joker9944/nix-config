@@ -7,7 +7,12 @@
 
   testToRgbaHalf = {
     expr = libSchemes.toRgba [ 128 64 32 ] 0.5;
-    expected = "rgba(128,64,32,0.500000)";
+    expected = "rgba(128,64,32,0.5)";
+  };
+
+  testToRgbaQuarter = {
+    expr = libSchemes.toRgba [ 128 64 32 ] 0.25;
+    expected = "rgba(128,64,32,0.25)";
   };
 
   testToRgbaZero = {
