@@ -150,6 +150,29 @@
               );
               meta.description = "Run lib tests";
             };
+
+            obfuscate = {
+              type = "app";
+              program = lib.getExe (
+                pkgs.writeShellApplication {
+                  name = "obfuscate";
+
+                  text = ''
+                    if [ $# -ne 2 ]; then
+                      echo "Usage: obfuscate <mask> <string>" >&2
+                      exit 1
+                    fi
+
+                    mask="$1"
+                    str="$2"
+
+                    nix eval --impure --raw --expr "builtins.toJSON ((builtins.getFlake \"$PWD\").lib.obfuscation.obfuscate $mask \"$str\")"
+                    echo
+                  '';
+                }
+              );
+              meta.description = "Obfuscate a string using XOR with a mask";
+            };
           };
 
           devShells = {
