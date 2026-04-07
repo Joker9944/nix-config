@@ -19,6 +19,7 @@ headerbar
 hexpand
 imapnotify
 linenumbers
+listchars
 menubutton
 messagedialog
 mountpoint

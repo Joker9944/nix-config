@@ -18,6 +18,7 @@
       librewolf.enable = true;
       loupe.enable = true;
       mpv.enable = true;
+      neovim.enable = true;
       nextcloud-client.enable = true;
       papers.enable = true;
       spotify.enable = true;

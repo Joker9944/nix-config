@@ -53,6 +53,8 @@ in
     "zoom"
     "goland"
     "claude-code"
+    "code"
+    "vscode"
   ];
 
   nixpkgs.overlays = [ inputs.audiomenu.overlays.default ];

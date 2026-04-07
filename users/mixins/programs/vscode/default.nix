@@ -18,7 +18,7 @@
     let
       cfg = config.mixins.programs.vscode;
 
-      vscodePackage = pkgs-unstable.vscodium.fhsWithPackages (
+      vscodePackage = pkgs-unstable.vscode.fhsWithPackages (
         ps: with ps; [
           sops # default -> used for git secret encryption
           fluxcd # k8s -> vscode-gitops-tools extension
