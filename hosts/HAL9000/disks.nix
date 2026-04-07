@@ -1,13 +1,11 @@
 {
   # Disk setup
   mixins.hardware.disko = {
-    enable = true;
-
     main = {
       name = "nvme1n1";
       size = {
         boot = "1G";
-        main = "-100G";
+        main = "-100G"; # 100G over provisioning
         # TODO Change to 38G if ever reformatting
         swap = "40G";
       };
@@ -23,7 +21,7 @@
       partitions = {
         # TODO rename to main if ever reformatting
         games = {
-          end = "-100G";
+          end = "-100G"; # 100G over provisioning
           content = {
             type = "filesystem";
             format = "xfs";

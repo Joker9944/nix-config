@@ -13,6 +13,11 @@
       windowsSupport.enable = true;
     };
 
+    hardware = {
+      disko.enable = true;
+      nvidia.enable = true;
+    };
+
     networking = {
       hosts.enable = true;
       networkmanager.enable = true;
@@ -34,6 +39,10 @@
       pipewire.enable = true;
       printing.enable = true;
       tailscale.enable = true;
+    };
+
+    virtualisation = {
+      docker.enable = true;
     };
   };
 }

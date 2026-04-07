@@ -13,6 +13,10 @@
       windowsSupport.enable = true;
     };
 
+    hardware = {
+      disko.enable = true;
+    };
+
     networking = {
       hosts.enable = true;
       networkmanager.enable = true;

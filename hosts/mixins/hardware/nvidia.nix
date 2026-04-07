@@ -1,0 +1,62 @@
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+{
+  options.mixins.hardware.nvidia =
+    let
+      inherit (lib) mkEnableOption;
+    in
+    {
+      enable = mkEnableOption "nvidia config mixin";
+    };
+
+  config =
+    let
+      cfg = config.mixins.hardware.nvidia;
+    in
+    lib.mkIf cfg.enable {
+      custom.nixpkgsCompat = {
+        allowUnfreePackages = [
+          "nvidia-x11"
+          "nvidia-settings"
+        ];
+
+        allowUnfreeLicenses = [
+          "CUDA EULA"
+          "cuDNN EULA"
+        ];
+      };
+
+      nixpkgs.config.cudaSupport = true;
+
+      nix.settings = {
+        substituters = lib.toList "https://cache.nixos-cuda.org";
+        trusted-public-keys = lib.toList "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="; # cSpell:disable-line
+      };
+
+      # TODO investigate if this is properly setup
+
+      # GPU driver
+      hardware.nvidia = {
+        # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
+        # Enable this if you have graphical corruption issues or application crashes after waking
+        # up from sleep. This fixes it by saving the entire VRAM memory to /tmp/ instead
+        # of just the bare essentials.
+        powerManagement.enable = true;
+
+        open = true;
+
+        nvidiaSettings = true;
+
+        package = config.boot.kernelPackages.nvidiaPackages.latest;
+      };
+
+      # Load nvidia driver for Xorg and Wayland
+      services.xserver.videoDrivers = [ "nvidia" ];
+
+      environment.systemPackages = [ pkgs.nvtopPackages.nvidia ];
+    };
+}
