@@ -25,6 +25,7 @@
       telegram.enable = true;
       vlc.enable = true;
       vscode.enable = true;
+      wiremix.enable = true;
       wxmaxima.enable = true;
       xournalpp.enable = true;
       zap.enable = true;
