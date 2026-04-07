@@ -36,7 +36,7 @@
                       wallpaper = [
                         {
                           monitor = "";
-                          path = "${custom.assets.black-sand-dunes}/share/backgrounds/black-sand-dunes.jpeg";
+                          path = "${custom.assets.black-sand-dunes}";
                         }
                       ];
                     };

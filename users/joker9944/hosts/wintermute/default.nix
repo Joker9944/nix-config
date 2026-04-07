@@ -13,21 +13,6 @@
     ];
   };
 
-  services.hyprpaper.settings =
-    let
-      wallpaper = "${custom.assets.totoro-minimalist}/share/backgrounds/totoro-minimalist.png";
-    in
-    {
-      splash = false;
-
-      wallpaper = [
-        {
-          monitor = "";
-          path = wallpaper;
-        }
-      ];
-    };
-
   windowManager.hyprland.custom = {
     system.environment = {
       GDK_SCALE = 2;

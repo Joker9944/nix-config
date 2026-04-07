@@ -53,9 +53,7 @@
             secureBoot.enable = cfg.secureBoot;
 
             style = {
-              wallpapers = [
-                "${custom.assets.black-sand-dunes}/share/backgrounds/black-sand-dunes.jpeg"
-              ];
+              wallpapers = [ "${custom.assets.black-sand-dunes}" ];
               interface.branding = config.networking.hostName;
             };
           };

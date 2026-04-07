@@ -5,9 +5,6 @@
   custom,
   ...
 }:
-let
-  wallpaper = "${custom.assets.dracula-leaves-dark}/share/backgrounds/dracula-leaves-dark.png";
-in
 custom.lib.mkHyprlandModule config {
   services.hyprpaper = {
     enable = true;
@@ -19,7 +16,17 @@ custom.lib.mkHyprlandModule config {
       wallpaper = [
         {
           monitor = "";
-          path = wallpaper;
+          timeout = 60 * 30;
+          path = "${pkgs-hyprland.linkFarm "wallpapers" [
+            {
+              name = "aerial-photo-of-brown-mountains.jpg";
+              path = custom.assets.aerial-photo-of-brown-mountains;
+            }
+            {
+              name = "an-aerial-view-of-a-city-at-night.jpg";
+              path = custom.assets.an-aerial-view-of-a-city-at-night;
+            }
+          ]}";
         }
       ];
     };
