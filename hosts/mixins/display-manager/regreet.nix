@@ -11,17 +11,17 @@
     regreet
   ];
 
-  options.mixins.displayManager =
+  options.mixins.displayManager.regreet =
     let
       inherit (lib) mkEnableOption;
     in
     {
-      enable = mkEnableOption "displayManager config mixin";
+      enable = mkEnableOption "regreet config mixin";
     };
 
   config =
     let
-      cfg = config.mixins.displayManager;
+      cfg = config.mixins.displayManager.regreet;
     in
     lib.mkIf cfg.enable {
       programs.regreet = {

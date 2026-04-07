@@ -2,9 +2,11 @@
 {
   options.mixins.keymap =
     let
-      inherit (lib) mkOption types;
+      inherit (lib) mkEnableOption mkOption types;
     in
     {
+      enable = mkEnableOption "keymap config mixin";
+
       type = mkOption {
         type = types.enum [
           "de-us"
@@ -14,13 +16,17 @@
       };
     };
 
-  config.services.xserver.xkb =
+  config =
     let
       cfg = config.mixins.keymap;
       combined = lib.splitString "-" cfg.type;
     in
-    {
-      layout = lib.elemAt combined 0;
-      variant = lib.mkIf (lib.length combined > 1) (lib.elemAt combined 1);
+    lib.mkIf cfg.enable {
+      services.xserver.xkb = {
+        layout = lib.elemAt combined 0;
+        variant = lib.mkIf (lib.length combined > 1) (lib.elemAt combined 1);
+      };
+
+      console.useXkbConfig = true;
     };
 }

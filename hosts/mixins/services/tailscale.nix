@@ -8,5 +8,5 @@
       enable = mkEnableOption "tailscale config mixin";
     };
 
-  config.services.tailscale.enable = config.mixins.services.tailscale.enable;
+  config.services.tailscale.enable = lib.mkDefault config.mixins.services.tailscale.enable;
 }

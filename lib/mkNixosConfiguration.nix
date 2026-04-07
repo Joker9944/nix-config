@@ -71,7 +71,20 @@ lib.nixosSystem {
   modules = [
     mixinsModulePath
     hostModulePath
-    (_: { nixpkgs.overlays = lib.attrValues flake.overlays; })
+    (_: {
+      # Setup function args
+      nixpkgs = {
+        hostPlatform = lib.mkDefault system;
+        overlays = lib.attrValues flake.overlays;
+      };
+
+      networking.hostName = lib.mkDefault hostname;
+    })
+    (_: {
+      custom.nixpkgsCompat.additionalNixpkgsInstances = {
+        pkgs-unstable = inputs.nixpkgs-unstable;
+      };
+    })
   ]
   ++ (lib.attrValues flake.nixosModules)
   ++ userModulePaths
