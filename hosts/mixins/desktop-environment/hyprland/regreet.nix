@@ -1,6 +1,9 @@
 {
+  inputs,
   lib,
   config,
+  pkgs-hyprland,
+  custom,
   ...
 }:
 {
@@ -12,11 +15,37 @@
       programs.regreet = {
         compositor = "hyprland";
 
+        extraCss = ''
+          window, overlay {
+            background-color: transparent;
+          }
+        '';
+
         hyprland = {
           inherit (config.programs.hyprland) package;
 
           settings = {
-            windowrule = [ "match:initial_class apps\\.regreet, stay_focused on" ];
+            exec-once = [
+              "${lib.getExe pkgs-hyprland.hyprpaper} --config ${
+                pkgs-hyprland.writeTextFile {
+                  name = "greet-hyprpaper.conf";
+                  text = inputs.home-manager.lib.hm.generators.toHyprconf {
+                    attrs = {
+                      splash = false;
+
+                      wallpaper = [
+                        {
+                          monitor = "";
+                          path = "${custom.assets.black-sand-dunes}/share/backgrounds/black-sand-dunes.jpeg";
+                        }
+                      ];
+                    };
+                  };
+                }
+              }"
+            ];
+
+            windowrule = [ "match:initial_class apps\\.regreet, no_blur on, stay_focused on" ];
 
             input =
               let
