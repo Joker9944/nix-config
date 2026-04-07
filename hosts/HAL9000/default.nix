@@ -7,6 +7,10 @@
 
   boot.loader.limine.style.interface.brandingColor = 1; # red
 
+  programs.regreet.hyprland.settings.windowrule = [
+    "match:initial_class apps\\.regreet, monitor DP-2"
+  ];
+
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave

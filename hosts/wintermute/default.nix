@@ -12,6 +12,10 @@
 
   boot.loader.limine.style.interface.brandingColor = 4; # blue
 
+  programs.regreet.hyprland.settings.windowrule = [
+    "match:initial_class apps\\.regreet, monitor eDP-1"
+  ];
+
   services = {
     # Enable finger print reader service
     fprintd.enable = false;

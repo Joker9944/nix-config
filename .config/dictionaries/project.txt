@@ -17,6 +17,7 @@ gpgsign
 halign
 headerbar
 hexpand
+Hyprconf
 imapnotify
 linenumbers
 listchars

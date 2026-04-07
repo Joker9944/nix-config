@@ -10,9 +10,15 @@
   lib,
   config,
   pkgs-hyprland,
+  custom,
   ...
 }:
 {
+  imports = custom.lib.ls {
+    dir = ./.;
+    exclude = [ ./default.nix ];
+  };
+
   options.mixins.desktopEnvironment.hyprland =
     let
       inherit (lib) mkEnableOption;
