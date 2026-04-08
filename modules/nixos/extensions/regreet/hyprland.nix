@@ -37,11 +37,6 @@
           Hyprland configuration written in Nix. Entries with the same key
           should be written as lists. Variables' and colors' names should be
           quoted. See <https://wiki.hypr.land> for more examples.
-
-          ::: {.note}
-          Use the [](#opt-wayland.windowManager.hyprland.plugins) option to
-          declare plugins.
-          :::
         '';
       };
     };
@@ -57,7 +52,7 @@
       ];
 
       services.greetd.settings.default_session.command =
-        "${pkgs.dbus}/bin/dbus-run-session ${getHyprlandExe "start-hyprland"} -- --config ${
+        "${lib.getExe' pkgs.dbus "dbus-run-session"} ${getHyprlandExe "start-hyprland"} -- --config ${
           pkgs.writeTextFile {
             name = "greetd-hyprland.conf";
             text = inputs.home-manager.lib.hm.generators.toHyprconf { attrs = cfg.hyprland.settings; };

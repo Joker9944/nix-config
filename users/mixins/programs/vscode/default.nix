@@ -18,22 +18,30 @@
     let
       cfg = config.mixins.programs.vscode;
 
-      vscodePackage = pkgs-unstable.vscode.fhsWithPackages (
-        ps: with ps; [
-          sops # default -> used for git secret encryption
-          fluxcd # k8s -> vscode-gitops-tools extension
-          grafana-alloy # k8s -> grafana-alloy extension
-          texliveFull # quarto -> quarto extension
-          # WORKAROUND In a FHS files are either owned by the user or nobody since the ssh config
-          # is linked into the user home from the nix store meaning the file is owner by root outside
-          # of the FHS and by nobody in the FHS. This leads openssh to complain about insecure ssh
-          # config ownership which is actually fine. So let's just disable the check.
-          # https://github.com/nix-community/home-manager/issues/322#issuecomment-1454284183
-          (ps.openssh.overrideAttrs (prev: {
-            patches = (prev.patches or [ ]) ++ [ ./openssh-no-checkperm.patch ]; # cSpell:ignore checkperm
-          }))
-        ]
-      );
+      vscodePackage =
+        (pkgs-unstable.vscodium.overrideAttrs (prev: {
+          version = builtins.warn ''
+            HACK(exciting-mayer): "nix-vscode-extensions" breaks when invalid SemVar versions are used, remove once fixed
+            https://github.com/NixOS/nixpkgs/issues/505096
+          '' (lib.substring 0 ((lib.stringLength prev.version) - 4) prev.version);
+          __intentionallyOverridingVersion = true;
+        })).fhsWithPackages
+          (
+            ps: with ps; [
+              sops # default -> used for git secret encryption
+              fluxcd # k8s -> vscode-gitops-tools extension
+              grafana-alloy # k8s -> grafana-alloy extension
+              texliveFull # quarto -> quarto extension
+              # WORKAROUND In a FHS files are either owned by the user or nobody since the ssh config
+              # is linked into the user home from the nix store meaning the file is owner by root outside
+              # of the FHS and by nobody in the FHS. This leads openssh to complain about insecure ssh
+              # config ownership which is actually fine. So let's just disable the check.
+              # https://github.com/nix-community/home-manager/issues/322#issuecomment-1454284183
+              (ps.openssh.overrideAttrs (prev: {
+                patches = (prev.patches or [ ]) ++ [ ./openssh-no-checkperm.patch ]; # cSpell:ignore checkperm
+              }))
+            ]
+          );
 
       nixpkgs-vscode-extensions = pkgs-unstable.vscode-extensions;
 
