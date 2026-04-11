@@ -3,6 +3,8 @@
   lib,
   pkgs-unstable,
   config,
+  osConfig,
+  custom,
   ...
 }:
 {
@@ -185,16 +187,28 @@
 
                 userSettings = {
                   "nix.enableLanguageServer" = true;
-                  "nix.serverPath" = lib.getExe pkgs-unstable.nil;
+                  "nix.serverPath" = lib.getExe inputs.nixd.packages.${pkgs-unstable.stdenv.hostPlatform.system}.nixd;
                   "nix.serverSettings" = {
-                    nil.formatting.command = [ (lib.getExe pkgs-unstable.nixfmt) ];
-                    nix.flake = {
-                      autoArchive = true;
-                      autoEvalInputs = true;
+                    nil = {
+                      formatting.command = [ (lib.getExe pkgs-unstable.nixfmt) ];
+                      nix.flake = {
+                        autoArchive = true;
+                        autoEvalInputs = true;
+                      };
+                    };
+
+                    nixd = {
+                      nixpkgs.expr = "import <nixpkgs> { }";
+                      formatting.command = [ (lib.getExe pkgs-unstable.nixfmt) ];
+                      options = {
+                        nixos.expr = "(builtins.getFlake \"path:${config.home.homeDirectory}/Workspace/nix-config\").nixosConfigurations.${osConfig.networking.hostName}.options";
+                        home-manager.expr = "(builtins.getFlake \"path:${config.home.homeDirectory}/Workspace/nix-config\").homeConfigurations.\"${osConfig.networking.hostName}@${custom.config.username}\".options";
+                      };
                     };
                   };
                   "[nix]" = {
                     "editor.tabSize" = 2;
+                    "editor.defaultFormatter" = "jnoortheen.nix-ide";
                   };
                 };
               }
