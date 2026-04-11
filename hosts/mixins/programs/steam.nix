@@ -32,7 +32,8 @@
           remotePlay.openFirewall = true;
           localNetworkGameTransfers.openFirewall = true;
 
-          extraCompatPackages = [ pkgs-unstable.proton-ge-bin ];
+          extraCompatPackages = with pkgs-unstable; [ proton-ge-bin ];
+          extraPackages = with pkgs; [ libstrangle ];
 
           protontricks.enable = true;
         };
