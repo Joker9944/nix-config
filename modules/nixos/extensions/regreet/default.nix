@@ -1,6 +1,16 @@
+{ flake }:
 { lib, ... }:
 {
-  imports = [ ./hyprland.nix ];
+  imports =
+    lib.pipe
+      {
+        dir = ./.;
+        exclude = [ ./default.nix ];
+      }
+      [
+        flake.lib.ls
+        (lib.map (path: lib.modules.importApply path { inherit flake; }))
+      ];
 
   options.programs.regreet =
     let

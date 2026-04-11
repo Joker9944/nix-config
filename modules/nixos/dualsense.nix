@@ -1,14 +1,11 @@
-{
-  config,
-  lib,
-  ...
-}:
+_:
+{ lib, config, ... }:
 let
   cfg = config.services.udev;
 in
 {
   options.services.udev = with lib; {
-    dualsenseFix = mkEnableOption "DualSense trackpad fix";
+    dualsenseFix = mkEnableOption "DualSense touchpad fix";
   };
 
   config = lib.mkIf cfg.dualsenseFix {

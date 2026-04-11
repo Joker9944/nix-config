@@ -1,8 +1,5 @@
-{
-  lib,
-  config,
-  ...
-}:
+_:
+{ lib, config, ... }:
 {
   options.custom.nixpkgsCompat =
     let

@@ -1,5 +1,5 @@
+{ flake, ... }:
 {
-  inputs,
   lib,
   config,
   pkgs,
@@ -55,7 +55,7 @@
         "${lib.getExe' pkgs.dbus "dbus-run-session"} ${getHyprlandExe "start-hyprland"} -- --config ${
           pkgs.writeTextFile {
             name = "greetd-hyprland.conf";
-            text = inputs.home-manager.lib.hm.generators.toHyprconf { attrs = cfg.hyprland.settings; };
+            text = flake.inputs.home-manager.lib.hm.generators.toHyprconf { attrs = cfg.hyprland.settings; };
           }
         }";
     };

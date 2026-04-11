@@ -1,8 +1,5 @@
-{
-  config,
-  lib,
-  ...
-}:
+_:
+{ lib, config, ... }:
 {
   options.programs._1password-gui =
     let

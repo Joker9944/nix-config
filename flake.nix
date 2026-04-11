@@ -133,9 +133,8 @@
       {
         overlays = import ./overlays.nix { flake = self; };
 
-        nixosModules = import ./modules/nixos {
-          inherit lib;
-          flake = self;
+        nixosModules = {
+          default = lib.modules.importApply ./modules/nixos { flake = self; };
         };
 
         homeModules = import ./modules/home {
