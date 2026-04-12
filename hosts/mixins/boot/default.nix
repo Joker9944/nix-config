@@ -5,12 +5,7 @@
   custom,
   ...
 }:
-{
-  imports = custom.lib.ls {
-    dir = ./.;
-    exclude = [ ./default.nix ];
-  };
-
+custom.lib.mkDefaultModule { dir = ./.; } {
   options.mixins.boot =
     let
       inherit (lib) mkEnableOption;

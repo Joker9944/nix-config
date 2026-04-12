@@ -4,50 +4,49 @@
   custom,
   ...
 }:
-custom.lib.mkHyprlandModule config {
-  imports = custom.lib.ls {
-    dir = ./.;
-    exclude = [
-      ./files
-      ./default.nix
-    ];
-  };
-
-  config.services.dunst =
-    let
-      cfg = config.windowManager.hyprland.custom;
-    in
+custom.lib.mkHyprlandModule config (
+  custom.lib.mkDefaultModule
     {
-      enable = true;
-      package = pkgs-hyprland.dunst;
+      dir = ./.;
+      exclude = [ ./files ];
+    }
+    {
+      config.services.dunst =
+        let
+          cfg = config.windowManager.hyprland.custom;
+        in
+        {
+          enable = true;
+          package = pkgs-hyprland.dunst;
 
-      settings = {
-        global = {
-          ### Display ###
+          settings = {
+            global = {
+              ### Display ###
 
-          follow = "mouse";
-          enable_posix_regex = true;
+              follow = "mouse";
+              enable_posix_regex = true;
 
-          ### Geometry ###
+              ### Geometry ###
 
-          width = 500;
-          height = "(0, 300)";
+              width = 500;
+              height = "(0, 300)";
 
-          origin = "top-center";
-          offset = "(0, 20)";
+              origin = "top-center";
+              offset = "(0, 20)";
 
-          notification_limit = 5;
+              notification_limit = 5;
 
-          ### Misc/Advanced ###
+              ### Misc/Advanced ###
 
-          dmenu = cfg.launcher.mkDmenuCommand { };
+              dmenu = cfg.launcher.mkDmenuCommand { };
 
-          ### Actions ###
+              ### Actions ###
 
-          mouse_left_click = "do_action, close_current";
-          mouse_middle_click = "none";
-          mouse_right_click = "close_all";
+              mouse_left_click = "do_action, close_current";
+              mouse_middle_click = "none";
+              mouse_right_click = "close_all";
+            };
+          };
         };
-      };
-    };
-}
+    }
+)

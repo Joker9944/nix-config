@@ -8,33 +8,30 @@
   custom,
   ...
 }:
-custom.lib.mkHyprlandModule config {
-  imports = custom.lib.ls {
-    dir = ./.;
-    exclude = [ ./default.nix ];
-  };
+custom.lib.mkHyprlandModule config (
+  custom.lib.mkDefaultModule { dir = ./.; } {
+    config.programs.hyprlock = {
+      enable = true;
+      package = pkgs-hyprland.hyprlock;
 
-  config.programs.hyprlock = {
-    enable = true;
-    package = pkgs-hyprland.hyprlock;
+      settings = {
+        general = {
+          hide_cursor = true;
+        };
 
-    settings = {
-      general = {
-        hide_cursor = true;
-      };
+        auth.fingerprint = {
+          enabled = lib.mkDefault false;
+          ready_message = "Scan fingerprint to unlock";
+          present_message = "Scanning...";
+        };
 
-      auth.fingerprint = {
-        enabled = lib.mkDefault false;
-        ready_message = "Scan fingerprint to unlock";
-        present_message = "Scanning...";
-      };
+        input-field = {
+          fade_on_empty = false;
 
-      input-field = {
-        fade_on_empty = false;
-
-        placeholder_text = "Input password...";
-        fail_text = "$PAMFAIL";
+          placeholder_text = "Input password...";
+          fail_text = "$PAMFAIL";
+        };
       };
     };
-  };
-}
+  }
+)

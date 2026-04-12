@@ -3,15 +3,9 @@
   pkgs,
   config,
   osConfig,
-  custom,
   ...
 }:
 {
-  imports = custom.lib.ls {
-    dir = ./.;
-    exclude = [ ./default.nix ];
-  };
-
   xdg.autostart.entries = [ "${osConfig.programs.steam.package}/share/applications/steam.desktop" ];
 
   home.packages = with pkgs; [

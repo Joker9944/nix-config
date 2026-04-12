@@ -4,12 +4,7 @@
   custom,
   ...
 }:
-{
-  imports = custom.lib.ls {
-    dir = ./.;
-    exclude = [ ./default.nix ];
-  };
-
+custom.lib.mkDefaultModule { dir = ./.; } {
   options.mixins.helpers =
     let
       inherit (lib) mkEnableOption;
