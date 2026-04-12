@@ -1,9 +1,5 @@
-{
-  lib,
-  config,
-  custom,
-  ...
-}:
+{ flake }:
+{ lib, config, ... }:
 let
   cfg = config.gnome-settings.appearance;
 
@@ -154,8 +150,8 @@ in
   config = lib.mkIf cfg.enable {
     dconf.settings = {
       "org/gnome/desktop/interface" = {
-        color-scheme = custom.lib.nonNull cfg.style;
-        accent-color = custom.lib.nonNull cfg.accentColor;
+        color-scheme = flake.lib.nonNull cfg.style;
+        accent-color = flake.lib.nonNull cfg.accentColor;
       };
 
       "org/gnome/desktop/background" =
@@ -164,10 +160,10 @@ in
           mkPicturePath = path: "file://${path}";
         in
         {
-          picture-options = custom.lib.nonNull pictureOption;
-          color-shading-type = custom.lib.nonNull colorShadingType;
-          primary-color = custom.lib.nonNull primaryColor;
-          secondary-color = custom.lib.nonNull secondaryColor;
+          picture-options = flake.lib.nonNull pictureOption;
+          color-shading-type = flake.lib.nonNull colorShadingType;
+          primary-color = flake.lib.nonNull primaryColor;
+          secondary-color = flake.lib.nonNull secondaryColor;
           picture-uri = lib.mkIf (picturePath != null) (mkPicturePath picturePath);
           picture-uri-dark = lib.mkIf (picturePath != null || darkStylePicturePath != null) (
             mkPicturePath (if darkStylePicturePath != null then darkStylePicturePath else picturePath)

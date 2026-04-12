@@ -1,19 +1,22 @@
+_:
 {
   lib,
   config,
   options,
-  pkgs-hyprland,
+  pkgs,
   ...
 }:
 {
-  options.windowManager.hyprland.custom.gnomeCompat =
+  options.windowManager.hyprland.custom.gtkCompat =
     let
-      inherit (lib) mkEnableOption;
+      inherit (lib) mkEnableOption mkPackageOption;
     in
     {
       inherit (options.gnome-settings.appearance) style accentColor;
       inherit (options.gnome-tweaks.fonts) documentText;
+      inherit (options.gnome-misc.qtCompat) qt5DecorationsPackage qt6DecorationsPackage;
       inherit (options.gtk) theme;
+
       enable = mkEnableOption "compatibility config for GTK and GNOME apps";
 
       qtCompat = (mkEnableOption "compatibility for gtk to qt") // {
@@ -35,11 +38,13 @@
       iconTheme = options.gtk.iconTheme // {
         default = config.windowManager.hyprland.custom.style.icons;
       };
+
+      xdgDesktopPortalGtkPackage = mkPackageOption pkgs "xdg-desktop-portal-gtk" { };
     };
 
   config =
     let
-      cfg = config.windowManager.hyprland.custom.gnomeCompat;
+      cfg = config.windowManager.hyprland.custom.gtkCompat;
     in
     lib.mkIf cfg.enable {
       gtk = {
@@ -52,25 +57,26 @@
 
       gnome-misc.qtCompat = {
         enable = lib.mkDefault true;
-        qAdwaitaDecorationsPackages = {
-          qt5 = pkgs-hyprland.qadwaitadecorations;
-          qt6 = pkgs-hyprland.qadwaitadecorations-qt6;
-        };
+
+        inherit (cfg) qt5DecorationsPackage qt6DecorationsPackage;
       };
 
       gnome-settings.appearance = {
+        enable = lib.mkDefault true;
+
         inherit (cfg) style accentColor;
-        enable = true;
       };
 
       gnome-tweaks.fonts = {
+        enable = lib.mkDefault true;
+
         inherit (cfg) interfaceText documentText monospaceText;
-        enable = true;
       };
 
       xdg.portal = {
         enable = lib.mkDefault true;
-        extraPortals = [ pkgs-hyprland.xdg-desktop-portal-gtk ];
+
+        extraPortals = [ cfg.xdgDesktopPortalGtkPackage ];
       };
     };
 }

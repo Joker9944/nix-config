@@ -1,3 +1,4 @@
+_:
 {
   lib,
   pkgs,
@@ -12,10 +13,8 @@
     {
       enable = mkEnableOption "qt compatibility for a uniform application look";
 
-      qAdwaitaDecorationsPackages = {
-        qt5 = mkPackageOption pkgs "qadwaitadecorations" { };
-        qt6 = mkPackageOption pkgs "qadwaitadecorations-qt6" { };
-      };
+      qt5DecorationsPackage = mkPackageOption pkgs "qadwaitadecorations" { };
+      qt6DecorationsPackage = mkPackageOption pkgs "qadwaitadecorations-qt6" { };
     };
 
   config =
@@ -24,7 +23,10 @@
     in
     lib.mkIf cfg.enable {
       home = {
-        packages = lib.attrValues cfg.qAdwaitaDecorationsPackages;
+        packages = [
+          cfg.qt5DecorationsPackage
+          cfg.qt6DecorationsPackage
+        ];
 
         sessionVariables = {
           QT_QPA_PLATFORMTHEME = "gtk3";

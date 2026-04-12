@@ -1,8 +1,5 @@
-{
-  lib,
-  config,
-  ...
-}:
+_:
+{ lib, config, ... }:
 let
   cfg = config.gnome-settings.keyboard.shortcuts;
 

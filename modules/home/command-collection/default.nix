@@ -1,8 +1,8 @@
+{ flake }:
 {
   lib,
-  pkgs-unstable,
+  pkgs,
   config,
-  custom,
   ...
 }:
 let
@@ -238,7 +238,7 @@ in
             ''
               @${typer}.callback(${args})
               def ${typer}_callback(${mkParameters callback.switches}):
-              ${custom.lib.indentLines 2 callback.code}
+              ${flake.lib.indentLines 2 callback.code}
             '';
 
           # leaf
@@ -250,10 +250,10 @@ in
             ''
               @${typer}.command(${args})
               def ${typer}_${leafName}(${mkParameters leaf.switches}):
-              ${custom.lib.indentLines 2 leaf.code}
+              ${flake.lib.indentLines 2 leaf.code}
             '';
         in
-        pkgs-unstable.callPackage ./package.nix {
+        pkgs.callPackage ./package.nix {
           pname = cfg.name;
           code = lib.concatLines [
             "#!/usr/bin/env python3"

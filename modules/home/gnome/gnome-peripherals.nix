@@ -1,9 +1,5 @@
-{
-  lib,
-  config,
-  custom,
-  ...
-}:
+{ flake }:
+{ lib, config, ... }:
 let
   cfg = config.gnome-settings.peripherals;
 in
@@ -141,7 +137,7 @@ in
     dconf.settings = {
       "org/gnome/desktop/peripherals/mouse" = {
         left-handed = lib.mkIf (cfg.primaryButton != null) (cfg.primaryButton == "left");
-        speed = custom.lib.nonNull cfg.mouse.pointerSpeed;
+        speed = flake.lib.nonNull cfg.mouse.pointerSpeed;
         accel-profile = lib.mkIf (cfg.mouse.mouseAcceleration != null) (
           if cfg.mouse.mouseAcceleration then "default" else "flat"
         );
@@ -154,12 +150,12 @@ in
         send-events = lib.mkIf (cfg.touchpad.enable != null) (
           if cfg.touchpad.enable then "enabled" else "disabled"
         );
-        disable-while-typing = custom.lib.nonNull cfg.touchpad.disableTouchpadWhileTyping;
-        speed = custom.lib.nonNull cfg.touchpad.pointerSpeed;
+        disable-while-typing = flake.lib.nonNull cfg.touchpad.disableTouchpadWhileTyping;
+        speed = flake.lib.nonNull cfg.touchpad.pointerSpeed;
         click-method = lib.mkIf (cfg.touchpad.secondaryClick != null) (
           if cfg.touchpad.secondaryClick == "two-finger-push" then "fingers" else "areas"
         );
-        tap-to-click = custom.lib.nonNull cfg.touchpad.tapToClick;
+        tap-to-click = flake.lib.nonNull cfg.touchpad.tapToClick;
         two-finger-scrolling-enabled = lib.mkIf (cfg.touchpad.scrollMethod != null) (
           cfg.touchpad.scrollMethod == "two-fingers"
         );

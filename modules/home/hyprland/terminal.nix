@@ -1,3 +1,4 @@
+_:
 { lib, pkgs, ... }:
 {
   options.windowManager.hyprland.custom.terminal =

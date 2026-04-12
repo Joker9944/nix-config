@@ -1,3 +1,4 @@
+_:
 { lib, ... }:
 {
   options.windowManager.hyprland.custom.binds = with lib; {

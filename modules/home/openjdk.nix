@@ -1,7 +1,8 @@
+_:
 {
   config,
   lib,
-  pkgs-unstable,
+  pkgs,
   ...
 }:
 let
@@ -25,7 +26,7 @@ in
     lib.map (jdkVersion: {
       name = ".jdks/${jdkVersion}"; # cSpell:words jdks
       value = {
-        source = "${pkgs-unstable.${jdkVersion}}/lib/openjdk";
+        source = "${pkgs.${jdkVersion}}/lib/openjdk";
       };
     }) (jdkVersions cfg.versions)
   );

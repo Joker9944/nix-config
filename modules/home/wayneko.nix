@@ -1,3 +1,4 @@
+_:
 {
   lib,
   pkgs,
@@ -40,7 +41,9 @@
         extraArgs = mkOption {
           type = types.listOf types.str;
           default = [ ];
-          example = "--background-colour 0xFFFFFF";
+          example = literalExpression ''
+            [ "--background-colour 0xFFFFFF" ]
+          '';
         };
       };
     };

@@ -1,8 +1,8 @@
+{ flake }:
 {
   config,
   lib,
   pkgs,
-  custom,
   ...
 }:
 # Lifted and adapted from https://github.com/NixOS/nixpkgs/blob/1807c2b91223227ad5599d7067a61665c52d1295/nixos/modules/tasks/auto-upgrade.nix
@@ -147,7 +147,7 @@ in
 
           ExecStart =
             let
-              homeManagerCommand = custom.lib.mkCommand [
+              homeManagerCommand = flake.lib.mkCommand [
                 "home-manager"
                 "switch"
                 cfg.flags

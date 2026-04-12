@@ -137,9 +137,8 @@
           default = lib.modules.importApply ./modules/nixos { flake = self; };
         };
 
-        homeModules = import ./modules/home {
-          inherit lib;
-          flake = self;
+        homeModules = {
+          default = lib.modules.importApply ./modules/home { flake = self; };
         };
 
         lib = import ./lib {

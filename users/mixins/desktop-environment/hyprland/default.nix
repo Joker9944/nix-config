@@ -1,7 +1,7 @@
 {
   inputs,
   lib,
-  pkgs,
+  pkgs-hyprland,
   config,
   custom,
   ...
@@ -45,13 +45,13 @@
           fonts = {
             interface = {
               name = "Inter";
-              package = pkgs.inter;
+              package = pkgs-hyprland.inter;
               size = 10;
             };
 
             terminal = {
               name = "JetBrainsMono Nerd Font Mono";
-              package = pkgs.nerd-fonts.jetbrains-mono;
+              package = pkgs-hyprland.nerd-fonts.jetbrains-mono;
               size = 10;
             };
           };
@@ -74,29 +74,33 @@
 
           xCursor = {
             name = "Dracula-cursors";
-            package = pkgs.dracula-theme;
+            package = pkgs-hyprland.dracula-theme;
           };
 
           icons = {
             name = "Dracula";
-            package = pkgs.dracula-icon-theme;
+            package = pkgs-hyprland.dracula-icon-theme;
           };
         };
 
-        gnomeCompat = {
+        gtkCompat = {
           enable = true;
 
           documentText = {
             name = "Lato";
-            package = pkgs.lato;
+            package = pkgs-hyprland.lato;
             size = 12;
           };
 
           monospaceText = {
             name = "JetBrains Mono";
-            package = pkgs.jetbrains-mono;
+            package = pkgs-hyprland.jetbrains-mono;
             size = 10;
           };
+
+          xdgDesktopPortalGtkPackage = pkgs-hyprland.xdg-desktop-portal-gtk;
+          qt5DecorationsPackage = pkgs-hyprland.qadwaitadecorations;
+          qt6DecorationsPackage = pkgs-hyprland.qadwaitadecorations-qt6;
         };
       };
 

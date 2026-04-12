@@ -1,7 +1,14 @@
-{ custom, ... }:
+{ flake }:
+{ lib, ... }:
 {
-  imports = custom.lib.ls {
-    dir = ./.;
-    exclude = [ ./default.nix ];
-  };
+  imports =
+    lib.pipe
+      {
+        dir = ./.;
+        exclude = [ ./default.nix ];
+      }
+      [
+        flake.lib.ls
+        (lib.map (path: lib.modules.importApply path { inherit flake; }))
+      ];
 }
