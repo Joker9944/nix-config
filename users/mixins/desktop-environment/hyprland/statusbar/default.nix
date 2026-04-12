@@ -1,10 +1,5 @@
 { custom, ... }:
-{
-  imports = custom.lib.ls {
-    dir = ./.;
-    exclude = [ ./default.nix ];
-  };
-
+custom.lib.mkDefaultModule { dir = ./.; } {
   config.programs = {
     waybar.enable = false;
     ashell.enable = false;

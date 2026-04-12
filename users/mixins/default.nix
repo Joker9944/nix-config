@@ -3,13 +3,8 @@
   custom,
   ...
 }:
-{
-  imports =
-    (custom.lib.ls {
-      dir = ./.;
-      exclude = [ ./default.nix ];
-    })
-    ++ [ inputs.sops-nix.homeManagerModules.sops ];
+custom.lib.mkDefaultModule { dir = ./.; } {
+  imports = [ inputs.sops-nix.homeManagerModules.sops ];
 
   # Set args inherited from mkHomeConfiguration
   home = {

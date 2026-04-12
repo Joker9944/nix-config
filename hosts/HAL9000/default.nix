@@ -1,10 +1,5 @@
 { custom, ... }:
-{
-  imports = custom.lib.ls {
-    dir = ./.;
-    exclude = [ ./default.nix ];
-  };
-
+custom.lib.mkDefaultModule { dir = ./.; } {
   boot.loader.limine.style.interface.brandingColor = 1; # red
 
   programs.regreet.hyprland.settings.windowrule = [

@@ -1,10 +1,5 @@
 { lib, custom, ... }:
-{
-  imports = custom.lib.ls {
-    dir = ./.;
-    exclude = [ ./default.nix ];
-  };
-
+custom.lib.mkDefaultModule { dir = ./.; } {
   options.windowManager.hyprland.custom =
     let
       inherit (lib) mkEnableOption;
