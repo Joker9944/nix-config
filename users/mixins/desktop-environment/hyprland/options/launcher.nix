@@ -1,4 +1,3 @@
-_:
 { lib, ... }:
 {
   options.windowManager.hyprland.custom.launcher =
