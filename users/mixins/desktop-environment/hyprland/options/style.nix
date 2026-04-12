@@ -1,8 +1,8 @@
-_:
 {
   lib,
   config,
   options,
+  pkgs-hyprland,
   ...
 }:
 {
@@ -95,18 +95,36 @@ _:
       };
     };
 
-  config.home.packages =
+  config =
     let
       cfg = config.windowManager.hyprland.custom.style;
     in
-    lib.flatten [
-      (lib.optional (
-        cfg.fonts.interface != null && cfg.fonts.interface.package != null
-      ) cfg.fonts.interface.package)
-      (lib.optional (
-        cfg.fonts.terminal != null && cfg.fonts.terminal.package != null
-      ) cfg.fonts.terminal.package)
-      (lib.optional (cfg.xCursor != null && cfg.xCursor.package != null) cfg.xCursor.package)
-      (lib.optional (cfg.icons != null && cfg.icons.package != null) cfg.icons.package)
-    ];
+    {
+      home.packages = lib.flatten [
+        (lib.optional (
+          cfg.fonts.interface != null && cfg.fonts.interface.package != null
+        ) cfg.fonts.interface.package)
+        (lib.optional (
+          cfg.fonts.terminal != null && cfg.fonts.terminal.package != null
+        ) cfg.fonts.terminal.package)
+        (lib.optional (cfg.xCursor != null && cfg.xCursor.package != null) cfg.xCursor.package)
+        (lib.optional (cfg.icons != null && cfg.icons.package != null) cfg.icons.package)
+      ];
+
+      custom.easyGtk = {
+        enable = lib.mkDefault true;
+
+        interfaceText = lib.mkDefault config.windowManager.hyprland.custom.style.fonts.interface;
+        monospaceText = lib.mkDefault config.windowManager.hyprland.custom.style.fonts.terminal;
+        cursorTheme = lib.mkDefault config.windowManager.hyprland.custom.style.xCursor;
+        iconTheme = lib.mkDefault config.windowManager.hyprland.custom.style.icons;
+
+        qtCompat = {
+          qt5DecorationsPackage = pkgs-hyprland.qadwaitadecorations;
+          qt6DecorationsPackage = pkgs-hyprland.qadwaitadecorations-qt6;
+        };
+
+        xdgDesktopPortalGtkPackage = pkgs-hyprland.xdg-desktop-portal-gtk;
+      };
+    };
 }

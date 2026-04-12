@@ -82,25 +82,19 @@
             package = pkgs-hyprland.dracula-icon-theme;
           };
         };
+      };
 
-        gtkCompat = {
-          enable = true;
+      custom.easyGtk = {
+        documentText = {
+          name = "Lato";
+          package = pkgs-hyprland.lato;
+          size = 12;
+        };
 
-          documentText = {
-            name = "Lato";
-            package = pkgs-hyprland.lato;
-            size = 12;
-          };
-
-          monospaceText = {
-            name = "JetBrains Mono";
-            package = pkgs-hyprland.jetbrains-mono;
-            size = 10;
-          };
-
-          xdgDesktopPortalGtkPackage = pkgs-hyprland.xdg-desktop-portal-gtk;
-          qt5DecorationsPackage = pkgs-hyprland.qadwaitadecorations;
-          qt6DecorationsPackage = pkgs-hyprland.qadwaitadecorations-qt6;
+        monospaceText = {
+          name = "JetBrains Mono";
+          package = pkgs-hyprland.jetbrains-mono;
+          size = 10;
         };
       };
 
