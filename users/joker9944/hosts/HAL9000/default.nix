@@ -67,7 +67,7 @@
     };
   };
 
-  windowManager.hyprland.custom.waybar.gpu = true;
+  mixins.desktopEnvironment.hyprland.waybar.gpu = true;
   programs.yab.config.gpu = true;
 
   programs.hyprlock.settings.input-field.monitor = "DP-2";

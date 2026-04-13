@@ -17,7 +17,7 @@
 
       wayland.windowManager.hyprland.settings =
         let
-          inherit (config.windowManager.hyprland.custom.binds) mods;
+          inherit (config.mixins.desktopEnvironment.hyprland.binds) mods;
           inherit (config.programs.spotify) package;
           workspace = "spotify";
         in

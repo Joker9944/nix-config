@@ -1,0 +1,131 @@
+{ mkHyprlandModule, ... }:
+{
+  lib,
+  config,
+  options,
+  pkgs-hyprland,
+  ...
+}:
+mkHyprlandModule {
+  options.mixins.desktopEnvironment.hyprland.style =
+    let
+      inherit (lib) mkOption types;
+    in
+    {
+      fonts = {
+        interface = mkOption {
+          type = types.nullOr lib.hm.types.fontType;
+          default = null;
+          description = ''
+            Preferred interface text font for reference.
+          '';
+        };
+
+        terminal = mkOption {
+          type = types.nullOr lib.hm.types.fontType;
+          default = null;
+          description = ''
+            Preferred terminal text font for reference.
+          '';
+        };
+      };
+
+      scheme = mkOption {
+        type = types.nullOr types.attrs;
+        description = ''
+          Color scheme that can be reference.
+        '';
+      };
+
+      opacity = {
+        active = mkOption {
+          type = types.float;
+          default = 1.0;
+          description = ''
+            Opacity for active widgets.
+          '';
+        };
+
+        inactive = mkOption {
+          type = types.float;
+          default = 1.0;
+          description = ''
+            Opacity for inactive widgets.
+          '';
+        };
+      };
+
+      border = {
+        size = mkOption {
+          type = types.int;
+          default = 2;
+          description = ''
+            Border size in pixels.
+          '';
+        };
+
+        corners = {
+          rounding = mkOption {
+            type = types.int;
+            default = 10;
+            description = ''
+              Corner rounding size in pixels.
+            '';
+          };
+
+          power = mkOption {
+            type = types.float;
+            default = 2.0;
+            description = ''
+              Rounding power for corner rounding.
+            '';
+          };
+        };
+      };
+
+      xCursor = options.gtk.cursorTheme // {
+        description = ''
+          xCursor for reference.
+        '';
+      };
+
+      icons = options.gtk.iconTheme // {
+        description = ''
+          Icon pack for reference.
+        '';
+      };
+    };
+
+  config =
+    let
+      cfg = config.mixins.desktopEnvironment.hyprland.style;
+    in
+    {
+      home.packages = lib.flatten [
+        (lib.optional (
+          cfg.fonts.interface != null && cfg.fonts.interface.package != null
+        ) cfg.fonts.interface.package)
+        (lib.optional (
+          cfg.fonts.terminal != null && cfg.fonts.terminal.package != null
+        ) cfg.fonts.terminal.package)
+        (lib.optional (cfg.xCursor != null && cfg.xCursor.package != null) cfg.xCursor.package)
+        (lib.optional (cfg.icons != null && cfg.icons.package != null) cfg.icons.package)
+      ];
+
+      custom.easyGtk = {
+        enable = lib.mkDefault true;
+
+        interfaceText = lib.mkDefault config.mixins.desktopEnvironment.hyprland.style.fonts.interface;
+        monospaceText = lib.mkDefault config.mixins.desktopEnvironment.hyprland.style.fonts.terminal;
+        cursorTheme = lib.mkDefault config.mixins.desktopEnvironment.hyprland.style.xCursor;
+        iconTheme = lib.mkDefault config.mixins.desktopEnvironment.hyprland.style.icons;
+
+        qtCompat = {
+          qt5DecorationsPackage = pkgs-hyprland.qadwaitadecorations;
+          qt6DecorationsPackage = pkgs-hyprland.qadwaitadecorations-qt6;
+        };
+
+        xdgDesktopPortalGtkPackage = pkgs-hyprland.xdg-desktop-portal-gtk;
+      };
+    };
+}

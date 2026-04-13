@@ -7,7 +7,7 @@
     ];
   };
 
-  windowManager.hyprland.custom = {
+  mixins.desktopEnvironment.hyprland = {
     system.environment = {
       GDK_SCALE = 2;
     };

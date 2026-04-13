@@ -1,0 +1,26 @@
+{ mkHyprlandModule, ... }:
+{ lib, ... }:
+let
+  regexes = [
+    "steam_app_\\\\d+"
+    "gamescope"
+    "DetectiveGrimoire"
+  ];
+in
+mkHyprlandModule {
+  mixins.desktopEnvironment.hyprland.system.allowMaximized = regexes;
+
+  wayland.windowManager.hyprland.settings = {
+    windowrule = lib.map (regex: "match:class ${regex}, content game, float on, decorate off") regexes;
+
+    render = {
+      # Enable direct scanout for fullscreen applications marked as game content
+      direct_scanout = 2;
+    };
+
+    misc = {
+      # Enable variable refresh rate for fullscreen applications marked as game content
+      vrr = 3;
+    };
+  };
+}
