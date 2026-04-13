@@ -5,7 +5,7 @@
   ...
 }:
 let
-  functions = lib.fix (self: {
+  args = lib.fix (self: {
     mkHyprlandModule = custom.lib.mkConditionalModule (
       lib.mkIf config.mixins.desktopEnvironment.hyprland.enable
     );
@@ -17,7 +17,7 @@ let
       );
   });
 in
-functions.mkDefaultHyprlandModule { dir = ./.; } {
+args.mkDefaultHyprlandModule { dir = ./.; } {
   options.mixins.desktopEnvironment.hyprland =
     let
       inherit (lib) mkEnableOption;

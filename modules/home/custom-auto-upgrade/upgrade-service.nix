@@ -1,4 +1,4 @@
-{ flake }:
+{ flake, ... }:
 {
   config,
   lib,

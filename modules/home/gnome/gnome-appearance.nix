@@ -1,4 +1,4 @@
-{ flake }:
+{ flake, ... }:
 { lib, config, ... }:
 let
   cfg = config.gnome-settings.appearance;
