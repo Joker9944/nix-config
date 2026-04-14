@@ -84,6 +84,12 @@ mkDefaultHyprlandModule { dir = ./.; } {
       slug = "uwunicorn"; # cSpell:words uwunicorn
     };
 
+    /*
+      source.picture = {
+        image = custom.assets.an-aerial-view-of-a-city-at-night;
+      };
+    */
+
     transformers =
       let
         /*

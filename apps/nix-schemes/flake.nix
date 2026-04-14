@@ -12,6 +12,10 @@
       url = "github:xddxdd/nix-math/master"; # cSpell:ignore xddxdd
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    base24-gen = {
+      url = "github:psyclyx/base24-gen"; # cSpell:ignore psyclyx
+      flake = false;
+    };
   };
 
   outputs =
@@ -26,6 +30,10 @@
           pkgs = nixpkgs.legacyPackages.${system};
         in
         {
+          packages = {
+            base24-gen = pkgs.callPackage "${inputs.base24-gen}/package.nix" { };
+          };
+
           apps = {
             test-lib = {
               type = "app";
@@ -35,6 +43,12 @@
                 ''
               );
               meta.description = "Run lib tests";
+            };
+
+            base24-gen = {
+              type = "app";
+              program = lib.getExe self.packages.${system}.base24-gen;
+              inherit (self.packages.${system}.base24-gen) meta;
             };
           };
 
@@ -48,6 +62,8 @@
       {
         lib = import ./lib {
           inherit inputs lib;
+
+          flake = self;
 
           custom = {
             inherit (inputs.nix-math.lib) math;

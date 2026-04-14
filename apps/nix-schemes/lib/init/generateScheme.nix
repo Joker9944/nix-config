@@ -35,7 +35,7 @@
 }:
 base: slug:
 let
-  scheme = libSchemes.fromYaml "${base}-${slug}" "${inputs.schemes}/${base}/${slug}.yaml";
+  scheme = libSchemes.fromYaml "${inputs.schemes}/${base}/${slug}.yaml";
 
   palette = lib.pipe scheme.palette [
     (lib.mapAttrs (_: hex: libSchemes.fromHex hex))

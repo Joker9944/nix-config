@@ -16,19 +16,17 @@
   ```
 */
 { lib, pkgs, ... }:
-name: file:
+file:
 let
   json = pkgs.callPackage (
     { runCommand, remarshal, ... }:
-    runCommand "${name}.json"
+    runCommand "${baseNameOf file}.json"
       {
         nativeBuildInputs = [ remarshal ];
-        value = lib.readFile file;
-        passAsFile = [ "value" ];
         preferLocalBuild = true;
       }
       ''
-        yaml2json "$valuePath" "$out"
+        yaml2json "${file}" "$out"
       ''
   ) { };
 in

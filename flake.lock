@@ -98,6 +98,22 @@
         "type": "github"
       }
     },
+    "base24-gen": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1773637257,
+        "narHash": "sha256-228VQRSw4xHTkLkbU93Lkx/MWjV08Fpgx4JWbw5vRYw=",
+        "owner": "psyclyx",
+        "repo": "base24-gen",
+        "rev": "5cee094a372b188ea2bbd81db85ae5d911e3e04d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "psyclyx",
+        "repo": "base24-gen",
+        "type": "github"
+      }
+    },
     "disko": {
       "inputs": {
         "nixpkgs": [
@@ -823,6 +839,7 @@
     },
     "nix-schemes": {
       "inputs": {
+        "base24-gen": "base24-gen",
         "flake-utils": "flake-utils_3",
         "nix-math": "nix-math_2",
         "nixpkgs": [
@@ -1115,11 +1132,11 @@
     "schemes": {
       "flake": false,
       "locked": {
-        "lastModified": 1775957018,
-        "narHash": "sha256-G34G4hri8H2XNwF0e15MFj3sjO8fTOphNk0WjBwnVew=",
+        "lastModified": 1776068622,
+        "narHash": "sha256-KIeHXjhlEh1wsyT6rITze7Hvc1L6fhgk30nPpcmrSrc=",
         "owner": "tinted-theming",
         "repo": "schemes",
-        "rev": "3e228732e93c107e8b65b8be30c36e5b3c507d95",
+        "rev": "3fa37f7b72d332b406fdc254008ed6d6b50efb4c",
         "type": "github"
       },
       "original": {

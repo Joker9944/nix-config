@@ -12,46 +12,94 @@ flake:
       customTypes = flake.lib.types;
     in
     {
-      source = {
-        scheme = mkOption {
-          type = types.nullOr (
-            types.submodule {
-              options = {
-                system = mkOption {
-                  type = types.enum [
-                    "base16"
-                    "base24"
-                  ];
-                  description = ''
-                    The color scheme system.
-                  '';
-                };
+      source = mkOption {
+        type = types.nullOr (
+          types.attrTag {
+            scheme = mkOption {
+              type = types.submodule {
+                options = {
+                  system = mkOption {
+                    type = types.enum [
+                      "base16"
+                      "base24"
+                    ];
+                    description = ''
+                      The color scheme system.
+                    '';
+                  };
 
-                slug = mkOption {
-                  type = types.str;
-                  example = "dracula";
-                  description = ''
-                    The color scheme slug from tinted-theming/schemes.
-                  '';
+                  slug = mkOption {
+                    type = types.str;
+                    example = "dracula";
+                    description = ''
+                      The color scheme slug from tinted-theming/schemes.
+                    '';
+                  };
                 };
               };
-            }
-          );
-          default = null;
-          description = ''
-            Selects a color scheme from the tinted-theming/schemes repository.
-            Specify the system (base16 or base24) and the scheme slug to use.
-          '';
-        };
+              description = ''
+                Selects a color scheme from the tinted-theming/schemes repository.
+                Specify the system (base16 or base24) and the scheme slug to use.
+              '';
+            };
 
-        override = mkOption {
-          type = types.nullOr customTypes.scheme;
-          default = null;
-          description = ''
-            Provides a custom scheme instead of using one from tinted-theming/schemes.
-            When set, this scheme is used directly and `schemes.source.scheme` is ignored.
-          '';
-        };
+            picture = mkOption {
+              type = types.submodule {
+                options = {
+                  image = mkOption {
+                    type = types.path;
+                    description = ''
+                      The image the scheme should be based on.
+                    '';
+                  };
+
+                  name = mkOption {
+                    type = types.nullOr types.str;
+                    default = null;
+                    description = ''
+                      The name set for the generated scheme.
+                    '';
+                  };
+
+                  author = mkOption {
+                    type = types.nullOr types.str;
+                    default = null;
+                    description = ''
+                      The author set for the generated scheme.
+                    '';
+                  };
+
+                  variant = mkOption {
+                    type = types.nullOr (
+                      types.enum [
+                        "light"
+                        "dark"
+                      ]
+                    );
+                    default = null;
+                    description = ''
+                      Forces light or dark mode for `base24-gen`. Will be auto detected if set to null.
+                    '';
+                  };
+                };
+              };
+              description = ''
+                Generates a base24 color scheme based on an image using `base24-gen`.
+              '';
+            };
+
+            override = mkOption {
+              type = customTypes.scheme;
+              description = ''
+                Provides a custom scheme directly, bypassing all sources.
+              '';
+            };
+          }
+        );
+        default = null;
+        description = ''
+          The source for the color scheme. Exactly one tag must be set.
+        '';
       };
 
       transformers = mkOption {
@@ -83,13 +131,20 @@ flake:
         flake.schemes.${cfg.source.scheme.system}.${cfg.source.scheme.slug}.convert
           pkgs;
 
+      imageScheme = (flake.lib.init pkgs).generateSchemeFromImage {
+        inherit (cfg.source.picture) image name author;
+        mode = cfg.source.picture.variant;
+      };
+
       scheme =
-        if cfg.source.override != null then
-          cfg.source.override
-        else if cfg.source.scheme != null then
+        if cfg.source == null then
+          null
+        else if cfg.source ? scheme then
           tintedThemingScheme
+        else if cfg.source ? picture then
+          imageScheme
         else
-          null;
+          cfg.source.override;
 
       transformedScheme = lib.foldl (
         scheme: transformer: scheme.transform transformer

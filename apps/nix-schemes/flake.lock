@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "base24-gen": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1773637257,
+        "narHash": "sha256-228VQRSw4xHTkLkbU93Lkx/MWjV08Fpgx4JWbw5vRYw=",
+        "owner": "psyclyx",
+        "repo": "base24-gen",
+        "rev": "5cee094a372b188ea2bbd81db85ae5d911e3e04d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "psyclyx",
+        "repo": "base24-gen",
+        "type": "github"
+      }
+    },
     "flake-parts": {
       "inputs": {
         "nixpkgs-lib": "nixpkgs-lib"
@@ -89,6 +105,7 @@
     },
     "root": {
       "inputs": {
+        "base24-gen": "base24-gen",
         "flake-utils": "flake-utils",
         "nix-math": "nix-math",
         "nixpkgs": "nixpkgs",
