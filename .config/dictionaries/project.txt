@@ -29,6 +29,7 @@ PAMFAIL
 signingkey
 subvolumes
 UWSM
+uwunicorn
 vfat
 vmoption
 vmoptions
