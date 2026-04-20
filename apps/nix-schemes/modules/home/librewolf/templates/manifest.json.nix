@@ -10,21 +10,21 @@ builtins.toJSON {
   inherit (scheme) name author;
   browser_specific_settings.gecko.id = cfg.addonId;
   theme =
-    if cfg.overrides.theme != null then
+    if cfg.overrides.theme == null then
       {
         colors = {
-          frame = palette.base01.hex; # active frame background
-          frame_inactive = palette.base00.hex; # inactive frame background
-          tab_line = palette.base01.hex; # tab border
-          tab_background_text = palette.base05.hex; # general tab text
-          toolbar = palette.base00.hex; # navigation bar background
-          toolbar_text = palette.base05.hex; # navigation bar text
-          toolbar_field = palette.base01.hex; # navigation fields background -> URL bar
-          toolbar_field_text = palette.base05.hex; # navigation bar fields text
-          toolbar_field_border_focus = cfg.accent.hex; # focused element
-          popup = palette.base00.hex; # menu background
-          popup_border = palette.base01.hex; # menu border
-          popup_text = palette.base05.hex;
+          frame = palette.base01.rgb; # active frame background
+          frame_inactive = palette.base00.rgb; # inactive frame background
+          tab_line = palette.base01.rgb; # tab border
+          tab_background_text = palette.base05.rgb; # general tab text
+          toolbar = palette.base00.rgb; # navigation bar background
+          toolbar_text = palette.base05.rgb; # navigation bar text
+          toolbar_field = palette.base01.rgb; # navigation fields background -> URL bar
+          toolbar_field_text = palette.base05.rgb; # navigation bar fields text
+          toolbar_field_border_focus = scheme.accent.rgb; # focused element
+          popup = palette.base00.rgb; # menu background
+          popup_border = palette.base01.rgb; # menu border
+          popup_text = palette.base05.rgb;
         };
       }
     else
