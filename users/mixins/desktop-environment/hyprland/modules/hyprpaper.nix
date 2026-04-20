@@ -19,12 +19,12 @@ mkHyprlandModule {
           timeout = 60 * 30;
           path = "${pkgs-hyprland.linkFarm "wallpapers" [
             {
-              name = "aerial-photo-of-brown-mountains.jpg";
-              path = custom.assets.aerial-photo-of-brown-mountains;
+              name = "utopia-2.jpg";
+              path = custom.assets.utopia-2;
             }
             {
-              name = "an-aerial-view-of-a-city-at-night.jpg";
-              path = custom.assets.an-aerial-view-of-a-city-at-night;
+              name = "utopia-4.jpg";
+              path = custom.assets.utopia-4;
             }
           ]}";
         }

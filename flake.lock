@@ -763,11 +763,11 @@
         "pre-commit-hooks": "pre-commit-hooks_2"
       },
       "locked": {
-        "lastModified": 1775605331,
-        "narHash": "sha256-cVJP4nms31xop7Z1nU+XOloIj/2sX1677mduexuc5+A=",
+        "lastModified": 1776721249,
+        "narHash": "sha256-RvuRP4riF1AqpEzmdswH6HPHIRuspTDFR/o2qvTakVQ=",
         "owner": "joker9944",
         "repo": "nix-assets",
-        "rev": "7e780579be6d31bb8fdfe656cbb324056c6dc264",
+        "rev": "3af5320eba287e03cb0e89a5e4d6163d48a29a64",
         "type": "github"
       },
       "original": {
