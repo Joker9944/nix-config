@@ -8,11 +8,13 @@
   ...
 }:
 mkDefaultHyprlandModule { dir = ./.; } {
-  imports = with inputs.nix-schemes.homeManagerModules; [
-    scheme
-    gtk
-    librewolf
-  ];
+  imports =
+    (with inputs.nix-schemes.homeManagerModules; [
+      scheme
+      gtk
+      librewolf
+    ])
+    ++ [ inputs.nix-wallust.homeManagerModules.default ];
 
   options.mixins.desktopEnvironment.hyprland.style =
     let
@@ -32,6 +34,16 @@ mkDefaultHyprlandModule { dir = ./.; } {
     };
 
   config = {
+    programs.wallust = {
+      enable = true;
+
+      settings = {
+        backend = "full";
+        color_space = "lchmixed"; # cSpell:ignore lchmixed
+        palette = "darkcomp16"; # cSpell:ignore darkcomp16
+      };
+    };
+
     mixins.desktopEnvironment.hyprland.style = {
       fonts = {
         interface = {

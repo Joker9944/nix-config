@@ -15,13 +15,6 @@ mkDefaultHyprlandModule { dir = ./.; } {
         ready_message = "Scan fingerprint to unlock";
         present_message = "Scanning...";
       };
-
-      input-field = {
-        fade_on_empty = false;
-
-        placeholder_text = "Input password...";
-        fail_text = "$PAMFAIL";
-      };
     };
   };
 }

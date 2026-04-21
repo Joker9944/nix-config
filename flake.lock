@@ -893,6 +893,22 @@
         "type": "github"
       }
     },
+    "nix-wallust": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "path": "apps/nix-wallust",
+        "type": "path"
+      },
+      "original": {
+        "path": "apps/nix-wallust",
+        "type": "path"
+      },
+      "parent": []
+    },
     "nixd": {
       "inputs": {
         "flake-parts": "flake-parts_3",
@@ -1120,6 +1136,7 @@
         "nix-schemes": "nix-schemes",
         "nix-std": "nix-std",
         "nix-vscode-extensions": "nix-vscode-extensions",
+        "nix-wallust": "nix-wallust",
         "nixd": "nixd",
         "nixpkgs": "nixpkgs_3",
         "nixpkgs-unstable": "nixpkgs-unstable",

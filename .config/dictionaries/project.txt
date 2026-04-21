@@ -26,6 +26,7 @@ messagedialog
 mountpoint
 noinherit
 PAMFAIL
+Rasi
 signingkey
 subvolumes
 UWSM

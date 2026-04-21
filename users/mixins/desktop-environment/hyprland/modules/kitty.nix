@@ -1,4 +1,4 @@
-{ mkDefaultHyprlandModule, ... }:
+{ mkHyprlandModule, ... }:
 {
   lib,
   config,
@@ -13,10 +13,14 @@ let
     kitten = lib.getExe' config.programs.kitty.package "kitten";
   };
 in
-mkDefaultHyprlandModule { dir = ./.; } {
-  programs.kitty = {
-    enable = true;
-    package = pkgs-hyprland.kitty;
+mkHyprlandModule {
+  programs = {
+    kitty = {
+      enable = true;
+      package = pkgs-hyprland.kitty;
+    };
+
+    wallust.templates.kitty.enable = true;
   };
 
   mixins.desktopEnvironment.hyprland.terminal = {

@@ -1,4 +1,4 @@
-{ mkHyprlandModule, ... }:
+{ mkDefaultHyprlandModule, ... }:
 {
   lib,
   config,
@@ -9,7 +9,7 @@
 let
   bin.rofi = lib.getExe config.programs.rofi.package;
 in
-mkHyprlandModule {
+mkDefaultHyprlandModule { dir = ./.; } {
   config =
     let
       cfg = config.mixins.desktopEnvironment.hyprland;
@@ -33,12 +33,6 @@ mkHyprlandModule {
         plugins = [ pkgs-hyprland.rofi-calc ];
 
         terminal = lib.getExe cfg.terminal.package;
-
-        # cSpell:words rasi
-        theme = import ./theme.rasi.nix {
-          inherit cfg;
-          inherit (config.lib.formats) rasi;
-        };
       };
 
       mixins.desktopEnvironment.hyprland.launcher = {

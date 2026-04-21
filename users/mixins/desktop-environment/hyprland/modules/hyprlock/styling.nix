@@ -5,13 +5,15 @@
   custom,
   ...
 }:
+let
+  cfg = config.mixins.desktopEnvironment.hyprland.style;
+  inherit (cfg) border fonts;
+in
 mkHyprlandModule {
-  programs.hyprlock.settings =
-    let
-      cfg = config.mixins.desktopEnvironment.hyprland.style;
-      inherit (cfg) border fonts scheme;
-    in
-    {
+  programs.wallust.templates.hyprlock = {
+    enable = true;
+
+    template = {
       animations = {
         enabled = true;
         bezier = "linear, 1, 1, 0, 0";
@@ -28,17 +30,22 @@ mkHyprlandModule {
       };
 
       input-field = {
+        fade_on_empty = false;
+
+        placeholder_text = "Input password...";
+        fail_text = "$PAMFAIL";
+
         inherit (border.corners) rounding;
 
         size = "20%, 5%";
         outline_thickness = border.size;
 
-        inner_color = scheme.background.normal.rgba 0.93;
-        outer_color = scheme.accent.rgba 0.93;
-        check_color = scheme.info.rgba 0.93;
-        fail_color = scheme.error.rgba 0.93;
+        inner_color = "rgba({{background | rgb}},0.93)";
+        outer_color = "rgb({{color1 | saturate(0.6) | strip}}) rgb({{color2 | saturate(0.6) | strip}}) rgb({{color3 | saturate(0.6) | strip}}) rgb({{color4 | saturate(0.6) | strip}}) rgb({{color5 | saturate(0.6) | strip}}) rgb({{color6 | saturate(0.6) | strip}})";
+        check_color = "rgba({{color11 | rgb}},0.93)";
+        fail_color = "rgba({{color8 | rgb}},0.93)";
 
-        font_color = scheme.foreground.normal.rgb;
+        font_color = "rgb({{cursor | rgb}})";
         font_family = lib.mkIf (fonts.interface != null) fonts.interface.name;
 
         dots_spacing = 0.3;
@@ -50,7 +57,7 @@ mkHyprlandModule {
 
       image =
         let
-          inputFieldCfg = config.programs.hyprlock.settings.input-field;
+          inputFieldCfg = config.programs.wallust.templates.hyprlock.template.input-field;
         in
         [
           (
@@ -59,7 +66,7 @@ mkHyprlandModule {
               path = "${custom.assets.the-seer}";
 
               border_size = border.size;
-              border_color = scheme.background.normal.rgba 0.93;
+              border_color = "rgba({{background | rgb}},0.93)";
 
               size = "150";
               position = "0, 130";
@@ -91,4 +98,5 @@ mkHyprlandModule {
         }
       ];
     };
+  };
 }

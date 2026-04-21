@@ -53,6 +53,10 @@
       url = ./apps/nix-schemes;
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-wallust = {
+      url = ./apps/nix-wallust;
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # libs
     nix-math = {
       url = "github:xddxdd/nix-math/master"; # cSpell:ignore xddxdd

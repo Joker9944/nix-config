@@ -70,5 +70,5 @@
   mixins.desktopEnvironment.hyprland.waybar.gpu = true;
   programs.yab.config.gpu = true;
 
-  programs.hyprlock.settings.input-field.monitor = "DP-2";
+  programs.wallust.templates.hyprlock.template.input-field.monitor = "DP-2";
 }

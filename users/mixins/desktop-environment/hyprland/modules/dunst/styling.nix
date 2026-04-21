@@ -2,10 +2,37 @@
 { lib, config, ... }:
 let
   cfg = config.mixins.desktopEnvironment.hyprland.style;
-  inherit (cfg) border icons scheme;
+  inherit (cfg) border icons;
   font = config.mixins.desktopEnvironment.hyprland.style.fonts.interface;
 in
 mkHyprlandModule {
+  programs.wallust.templates.dunst = {
+    enable = true;
+
+    template = {
+      global = {
+        frame_color = "{{color0}}";
+        separator_color = "frame";
+      };
+
+      urgency_low = {
+        background = "{{background}}";
+        foreground = "{{foreground}}";
+      };
+
+      urgency_normal = {
+        background = "{{background}}";
+        foreground = "{{foreground}}";
+      };
+
+      urgency_critical = {
+        background = "{{color1}}";
+        foreground = "{{color7}}";
+        frame_color = "{{color1 | lighten(0.2)}}";
+      };
+    };
+  };
+
   services.dunst = {
     iconTheme = icons;
 
@@ -23,33 +50,11 @@ mkHyprlandModule {
         max_icon_size = 128;
         enable_recursive_icon_lookup = true;
 
-        ##############
-        ### COLORS ###
-        ##############
-        frame_color = scheme.background.light.hex;
-        separator_color = "frame";
-
         ###############
         ### BORDERS ###
         ###############
         frame_width = border.size;
         corner_radius = border.corners.rounding;
-      };
-
-      urgency_low = {
-        background = scheme.background.normal.hex;
-        foreground = scheme.foreground.normal.hex;
-      };
-
-      urgency_normal = {
-        background = scheme.background.normal.hex;
-        foreground = scheme.foreground.normal.hex;
-      };
-
-      urgency_critical = {
-        background = scheme.red.dull.hex;
-        foreground = scheme.white.dull.hex;
-        frame_color = scheme.red.bright.hex;
       };
     };
   };
