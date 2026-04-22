@@ -1,22 +1,22 @@
 /**
-  Convert an RGB decimal list to a hexadecimal color string.
+  Convert an RGB decimal list to a xrgb color string.
 
   # Type
 
   ```
-  toHex :: [int] -> string
+  toXrgb :: [int] -> string
   ```
 
   # Example
 
   ```nix
-  toHex [ 255 85 0 ]
-  => "FF5500"
+  toXrgb [ 255 85 0 ]
+  => "FF/55/00"
   ```
 */
 { lib, ... }:
 color:
 lib.pipe color [
   (lib.map (dec: "${lib.optionalString (dec < 16) "0"}${lib.toHexString dec}"))
-  lib.concatStrings
+  (lib.concatStringsSep "/")
 ]

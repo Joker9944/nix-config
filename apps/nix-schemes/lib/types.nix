@@ -64,7 +64,7 @@ lib.fix (customTypes: {
 
       hex = mkOption {
         type = types.str;
-        example = "#007FFF";
+        example = "007FFF";
         description = ''
           This formatted in hexadecimal color representation.
         '';
@@ -72,7 +72,7 @@ lib.fix (customTypes: {
 
       rgb = mkOption {
         type = types.str;
-        example = "rgb(0,127,255)";
+        example = "0,127,255";
         description = ''
           This formatted in decimal color representation.
         '';
@@ -82,6 +82,14 @@ lib.fix (customTypes: {
         type = types.functionTo types.str;
         description = ''
           Function to format this in decimal color representation with an alpha channel.
+        '';
+      };
+
+      xrgb = mkOption {
+        type = types.str;
+        example = "00/7F/FF";
+        description = ''
+          This formatted in xrgb representation.
         '';
       };
 
@@ -110,6 +118,30 @@ lib.fix (customTypes: {
         type = types.functionTo customTypes.color;
         description = ''
           Function to mix this with black with a weight.
+        '';
+      };
+
+      red = mkOption {
+        type = types.int;
+        example = literalExpression "0";
+        description = ''
+          This red channel in decimal color representation.
+        '';
+      };
+
+      green = mkOption {
+        type = types.int;
+        example = literalExpression "127";
+        description = ''
+          This green channel in decimal color representation.
+        '';
+      };
+
+      blue = mkOption {
+        type = types.int;
+        example = literalExpression "255";
+        description = ''
+          This blue channel in decimal color representation.
         '';
       };
     };

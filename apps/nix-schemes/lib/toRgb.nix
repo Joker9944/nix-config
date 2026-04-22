@@ -11,7 +11,7 @@
 
   ```nix
   toRgb [ 255 85 0 ]
-  => "rgb(255,85,0)"
+  => "255,85,0"
   ```
 */
 { lib, ... }:
@@ -19,5 +19,5 @@ color:
 lib.pipe color [
   (lib.map toString)
   (lib.concatStringsSep ",")
-  (rgb: "rgb(${rgb})")
+  (rgb: "${rgb}")
 ]

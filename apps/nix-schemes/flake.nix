@@ -106,7 +106,7 @@
           regreet = import ./modules/nixos/regreet.nix self;
         };
 
-        homeManagerModules = {
+        homeModules = {
           default = self.homeManagerModules.scheme;
 
           scheme = import ./modules/global/scheme.nix self;

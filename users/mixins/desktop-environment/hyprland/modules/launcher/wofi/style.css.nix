@@ -4,10 +4,10 @@ let
 in
 ''
   #window {
-    background-color: ${scheme.named.background.normal.rgba opacity.active};
+    background-color: rgba(${scheme.named.background.normal.rgba opacity.active});
   }
 
   #input {
-    background-color: ${scheme.named.background.dark.rgba opacity.active};
+    background-color: rgba(${scheme.named.background.dark.rgba opacity.active});
   }
 ''

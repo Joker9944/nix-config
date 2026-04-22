@@ -26,7 +26,7 @@ mkHyprlandModule {
         ##############
         ### COLORS ###
         ##############
-        frame_color = scheme.background.light.hex;
+        frame_color = "#${scheme.background.light.hex}";
         separator_color = "frame";
 
         ###############
@@ -37,19 +37,19 @@ mkHyprlandModule {
       };
 
       urgency_low = {
-        background = scheme.background.normal.hex;
-        foreground = scheme.foreground.normal.hex;
+        background = "#${scheme.background.normal.hex}";
+        foreground = "#${scheme.foreground.normal.hex}";
       };
 
       urgency_normal = {
-        background = scheme.background.normal.hex;
-        foreground = scheme.foreground.normal.hex;
+        background = "#${scheme.background.normal.hex}";
+        foreground = "#${scheme.foreground.normal.hex}";
       };
 
       urgency_critical = {
-        background = scheme.red.dull.hex;
-        foreground = scheme.white.dull.hex;
-        frame_color = scheme.red.bright.hex;
+        background = "#${scheme.red.dull.hex}";
+        foreground = "#${scheme.white.dull.hex}";
+        frame_color = "#${scheme.red.bright.hex}";
       };
     };
   };

@@ -28,17 +28,17 @@ in
 
   testMkColorHex = {
     expr = red.hex;
-    expected = "#FF0000";
+    expected = "FF0000";
   };
 
   testMkColorRgb = {
     expr = red.rgb;
-    expected = "rgb(255,0,0)";
+    expected = "255,0,0";
   };
 
   testMkColorRgba = {
     expr = red.rgba 0.5;
-    expected = "rgba(255,0,0,0.5)";
+    expected = "255,0,0,0.5";
   };
 
   testMkColorIsColor = {
@@ -48,11 +48,11 @@ in
 
   testMkColorWhiteHex = {
     expr = white.hex;
-    expected = "#FFFFFF";
+    expected = "FFFFFF";
   };
 
   testMkColorBlackHex = {
     expr = black.hex;
-    expected = "#000000";
+    expected = "000000";
   };
 }

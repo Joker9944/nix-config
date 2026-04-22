@@ -20,8 +20,8 @@ mkHyprlandModule {
         gaps_in = 5;
         gaps_out = 10;
 
-        "col.active_border" = scheme.accent.rgba 0.93;
-        "col.inactive_border" = scheme.background.dark.rgba 0.66;
+        "col.active_border" = "rgba(${scheme.accent.rgba 0.93})";
+        "col.inactive_border" = "rgba(${scheme.background.dark.rgba 0.66})";
 
         layout = "dwindle";
       };
@@ -37,7 +37,7 @@ mkHyprlandModule {
           enabled = true;
           range = 4;
           render_power = 3;
-          color = scheme.background.darker.rgba 0.93;
+          color = "rgba(${scheme.background.darker.rgba 0.93})";
         };
 
         blur = {
@@ -102,7 +102,7 @@ mkHyprlandModule {
 
       misc = {
         disable_hyprland_logo = true;
-        background_color = scheme.background.normal.rgb;
+        background_color = "rgb(${scheme.background.normal.rgb})";
         size_limits_tiled = true; # Respect min_size and max_size rules also for tiled windows
       };
     };

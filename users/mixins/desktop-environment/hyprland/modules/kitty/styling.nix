@@ -16,12 +16,12 @@ mkHyprlandModule {
     settings = {
       cursor_shape = "beam";
 
-      cursor = scheme.foreground.normal.hex;
-      background = scheme.background.normal.hex;
-      foreground = scheme.foreground.normal.hex;
+      cursor = "#${scheme.foreground.normal.hex}";
+      background = "#${scheme.background.normal.hex}";
+      foreground = "#${scheme.foreground.normal.hex}";
     }
     // (lib.concatMapAttrs (name: color: {
-      "color${toString (lib.fromHexString name)}" = color.hex;
+      "color${toString (lib.fromHexString name)}" = "#${color.hex}";
     }) ansi);
   };
 }

@@ -16,8 +16,8 @@
   ```
 */
 { libSchemes, ... }:
-a: weight:
-libSchemes.mix a [
+color: weight:
+libSchemes.mix color [
   255
   255
   255

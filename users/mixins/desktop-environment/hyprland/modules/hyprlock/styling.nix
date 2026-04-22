@@ -33,10 +33,10 @@ mkHyprlandModule {
         size = "20%, 5%";
         outline_thickness = border.size;
 
-        inner_color = scheme.background.normal.rgba 0.93;
-        outer_color = scheme.accent.rgba 0.93;
-        check_color = scheme.info.rgba 0.93;
-        fail_color = scheme.error.rgba 0.93;
+        inner_color = "rgba(${scheme.background.normal.rgba 0.93})";
+        outer_color = "rgba(${scheme.accent.rgba 0.93})";
+        check_color = "rgba(${scheme.info.rgba 0.93})";
+        fail_color = "rgba(${scheme.error.rgba 0.93})";
 
         font_color = scheme.foreground.normal.rgb;
         font_family = lib.mkIf (fonts.interface != null) fonts.interface.name;
@@ -59,7 +59,7 @@ mkHyprlandModule {
               path = "${custom.assets.the-seer}";
 
               border_size = border.size;
-              border_color = scheme.background.normal.rgba 0.93;
+              border_color = "rgba(${scheme.background.normal.rgba 0.93})";
 
               size = "150";
               position = "0, 130";

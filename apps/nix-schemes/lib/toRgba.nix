@@ -11,25 +11,12 @@
 
   ```nix
   toRgba [ 255 85 0 ] 0.5
-  => "rgba(255,85,0,0.5)"
+  => "255,85,0,0.5"
   ```
 */
-{ lib, ... }:
+{ lib, libSchemes, ... }:
 color: alpha:
-let
-  # Format alpha by removing trailing zeros after decimal point
-  formatAlpha =
-    a:
-    let
-      str = toString a;
-      hasDecimal = lib.hasInfix "." str;
-      stripZeros = s: lib.foldl' (acc: _: lib.strings.removeSuffix "0" acc) s (lib.range 0 9);
-      stripped = if hasDecimal then stripZeros str else str;
-    in
-    lib.strings.removeSuffix "." stripped;
-in
 lib.pipe color [
-  (lib.map toString)
-  (lib.concatStringsSep ",")
-  (rgb: "rgba(${rgb},${formatAlpha alpha})")
+  libSchemes.toRgb
+  (rgb: "${rgb},${libSchemes.util.toStringFloat alpha}")
 ]

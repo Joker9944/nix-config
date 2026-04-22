@@ -9,13 +9,13 @@ mkHyprlandModule {
     {
       primary = "default";
       secondary = "dim";
-      accent = scheme.green.dull.rgb;
-      comment = palette.base03.rgb;
-      error = "italic ${scheme.red.dull.rgb}";
-      highlight = palette.base02.rgb;
+      accent = "#${scheme.green.dull.hex}";
+      comment = "#${palette.base03.hex}";
+      error = "italic #${scheme.red.dull.hex}";
+      highlight = "#${palette.base02.hex}";
       highlight_primary = "default";
       highlight_secondary = "dim";
-      highlight_accent = "bold ${scheme.green.dull.rgb}";
-      highlight_comment = "bold ${palette.base03.rgb}";
+      highlight_accent = "bold #${scheme.green.dull.hex}";
+      highlight_comment = "bold #${palette.base03.hex}";
     };
 }

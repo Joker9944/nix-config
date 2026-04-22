@@ -6,7 +6,7 @@
       0
       0
     ];
-    expected = "#000000";
+    expected = "000000";
   };
 
   testToHexWhite = {
@@ -15,7 +15,7 @@
       255
       255
     ];
-    expected = "#FFFFFF";
+    expected = "FFFFFF";
   };
 
   testToHexRed = {
@@ -24,7 +24,7 @@
       0
       0
     ];
-    expected = "#FF0000";
+    expected = "FF0000";
   };
 
   testToHexGreen = {
@@ -33,7 +33,7 @@
       255
       0
     ];
-    expected = "#00FF00";
+    expected = "00FF00";
   };
 
   testToHexBlue = {
@@ -42,7 +42,7 @@
       0
       255
     ];
-    expected = "#0000FF";
+    expected = "0000FF";
   };
 
   testToHexMixed = {
@@ -51,7 +51,7 @@
       43
       60
     ];
-    expected = "#1A2B3C";
+    expected = "1A2B3C";
   };
 
   testToHexSingleDigit = {
@@ -60,6 +60,6 @@
       2
       3
     ];
-    expected = "#010203";
+    expected = "010203";
   };
 }

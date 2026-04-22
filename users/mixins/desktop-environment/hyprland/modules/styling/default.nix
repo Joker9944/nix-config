@@ -8,7 +8,7 @@
   ...
 }:
 mkDefaultHyprlandModule { dir = ./.; } {
-  imports = with inputs.nix-schemes.homeManagerModules; [
+  imports = with inputs.nix-schemes.homeModules; [
     scheme
     gtk
     librewolf

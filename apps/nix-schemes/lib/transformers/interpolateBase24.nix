@@ -28,7 +28,7 @@ let
     lib.pipe ratios [
       (lib.zipListsWith (dec: ratio: dec + 255 * ratio) color)
       (lib.map custom.math.round)
-      (lib.map (colorLib.clamp 0 255))
+      (lib.map (colorLib.util.clamp 0 255))
       (dec: colorLib.mkColor dec)
     ];
 in

@@ -76,30 +76,16 @@ let
   ) { inherit (flake.packages.${pkgs.stdenv.hostPlatform.system}) base24-gen; };
 
   scheme = libSchemes.fromYaml yaml;
+in
+libSchemes.mkScheme {
+  system = "base24";
+  name = scheme.scheme;
+  inherit (scheme) author;
+  variant = scheme.mode;
 
   palette = lib.pipe scheme [
     (lib.filterAttrs (name: _: lib.hasPrefix "base" name))
     (lib.mapAttrs (_: hex: libSchemes.fromHex hex))
     (lib.mapAttrs (_: dec: libSchemes.mkColor dec))
   ];
-
-  modifiedScheme = {
-    system = "base24";
-    name = scheme.scheme;
-    inherit (scheme) author;
-    variant = scheme.mode;
-
-    inherit palette;
-  };
-
-  transform =
-    prevScheme: transformFunction:
-    let
-      currScheme = lib.recursiveUpdate prevScheme (transformFunction prevScheme libSchemes);
-    in
-    currScheme
-    // {
-      transform = transform currScheme;
-    };
-in
-transform modifiedScheme (_: _: { })
+}

@@ -6,7 +6,7 @@
       0
       0
     ];
-    expected = "rgb(0,0,0)";
+    expected = "0,0,0";
   };
 
   testToRgbWhite = {
@@ -15,7 +15,7 @@
       255
       255
     ];
-    expected = "rgb(255,255,255)";
+    expected = "255,255,255";
   };
 
   testToRgbMixed = {
@@ -24,6 +24,6 @@
       64
       32
     ];
-    expected = "rgb(128,64,32)";
+    expected = "128,64,32";
   };
 }

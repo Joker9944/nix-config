@@ -1,5 +1,5 @@
 { mkHyprlandModule, ... }:
-{ lib, config, ... }:
+{ config, ... }:
 mkHyprlandModule {
   programs.wayneko =
     let
@@ -14,9 +14,9 @@ mkHyprlandModule {
           "--layer"
           "overlay"
           "--background-colour"
-          (lib.replaceString "#" "0x" scheme.accent.hex)
+          "0x${scheme.accent.hex}"
           "--outline-colour"
-          (lib.replaceString "#" "0x" scheme.background.normal.hex)
+          "0x${scheme.background.normal.hex}"
         ];
       };
     };
