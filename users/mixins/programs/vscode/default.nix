@@ -187,7 +187,8 @@
 
                 userSettings = {
                   "nix.enableLanguageServer" = true;
-                  "nix.serverPath" = lib.getExe inputs.nixd.packages.${pkgs-unstable.stdenv.hostPlatform.system}.nixd;
+                  "nix.formatterPath" = lib.getExe pkgs-unstable.nixfmt;
+                  "nix.serverPath" = lib.getExe pkgs-unstable.nil;
                   "nix.serverSettings" = {
                     nil = {
                       formatting.command = [ (lib.getExe pkgs-unstable.nixfmt) ];

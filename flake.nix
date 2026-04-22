@@ -26,9 +26,8 @@
     };
     nix-vscode-extensions = {
       url = "github:nix-community/nix-vscode-extensions";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
-    nixd.url = "github:nix-community/nixd/2.9.0";
     # modules
     sops-nix = {
       url = "github:Mic92/sops-nix/master";

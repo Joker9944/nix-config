@@ -38,7 +38,7 @@ mkHyprlandModule {
         check_color = "rgba(${scheme.info.rgba 0.93})";
         fail_color = "rgba(${scheme.error.rgba 0.93})";
 
-        font_color = scheme.foreground.normal.rgb;
+        font_color = "rgb(${scheme.foreground.normal.rgb})";
         font_family = lib.mkIf (fonts.interface != null) fonts.interface.name;
 
         dots_spacing = 0.3;

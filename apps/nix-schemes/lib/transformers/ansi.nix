@@ -18,7 +18,7 @@ in
   ansi = {
     # https://github.com/Base24/base24/blob/master/styling.md
     "0" = palette.base01;
-    "8" = if isBase24 then palette.base02 else palette.base01;
+    "8" = palette.base02;
     "1" = palette.base08;
     "9" = if isBase24 then palette.base12 else palette.base08;
     "2" = palette.base0B;
@@ -32,6 +32,6 @@ in
     "6" = palette.base0C;
     "E" = if isBase24 then palette.base15 else palette.base0C;
     "7" = palette.base06;
-    "F" = if isBase24 then palette.base07 else palette.base06;
+    "F" = palette.base07;
   };
 }
