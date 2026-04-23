@@ -3,7 +3,7 @@ import {batteryIconAccessor, percentageAccessor} from "../../services/battery";
 import {formatPercentage} from "../../helpers/formatters";
 
 
-export default function Battery() {
+export default function Battery(): JSX.Element {
 	return (
 		<Module name="battery">
 			<image iconName={batteryIconAccessor} />

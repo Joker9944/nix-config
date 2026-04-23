@@ -2,7 +2,7 @@ import { StatModule } from "./Module"
 import { utilizationAccessor } from "../../services/memory"
 import { formatPercentage } from "../../helpers/formatters"
 
-export default function Memory({ label = "Mem" }) {
+export default function Memory({ label = "Mem" }): JSX.Element {
 	return <StatModule name="memory" label={label} value={memoryUtilization} />
 }
 

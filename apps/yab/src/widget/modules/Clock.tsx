@@ -3,7 +3,7 @@ import { Module } from "./Module"
 import { nowAccessor } from "../../services/clock"
 import { formatDateTime } from "../../helpers/formatters"
 
-export default function Clock({ format = "%d. %b %H:%M" }) {
+export default function Clock({ format = "%d. %b %H:%M" }): JSX.Element {
 	return (
 		<Module name="clock">
 			<label cssClasses={["font-bold"]} label={now(format)} />

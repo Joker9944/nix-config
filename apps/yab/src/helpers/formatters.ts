@@ -8,6 +8,6 @@ export function formatDateTime(
 }
 
 export function formatPercentage(utilization: number): string {
-	if (utilization < 0) return "   -%"
+	if (utilization < 0) return "  -%"
 	return `${Math.round(utilization)}%`.padStart(4, " ")
 }

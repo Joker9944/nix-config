@@ -1,5 +1,5 @@
 import app from "ags/gtk4/app"
-import { Gdk } from "ags/gtk4"
+import {Astal, Gdk } from "ags/gtk4"
 import style from "./src/styles.scss"
 import Bar from "./src/widget/Bar"
 
@@ -13,7 +13,7 @@ function addBar(monitor: Gdk.Monitor) {
 function destroyBar(monitor: Gdk.Monitor) {
 	const bar = bars.get(monitor)
 	if (bar) {
-		bar.destroy()
+		(bar as Astal.Window).destroy()
 		bars.delete(monitor)
 	}
 }

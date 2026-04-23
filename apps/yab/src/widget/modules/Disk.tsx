@@ -3,7 +3,7 @@ import accessorFromPath from "../../services/disk"
 import { Accessor } from "ags"
 import { formatPercentage } from "../../helpers/formatters"
 
-export default function Disk({ label = "Disk", path = "/" }) {
+export default function Disk({ label = "Disk", path = "/" }): JSX.Element {
 	return <StatModule name="disk" label={label} value={diskUsage(path)} />
 }
 

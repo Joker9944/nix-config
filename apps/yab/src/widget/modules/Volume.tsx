@@ -13,7 +13,7 @@ import { Accessor, createComputed, For } from "ags"
 import { formatPercentage } from "../../helpers/formatters"
 import { SPACING } from "../../helpers/constants"
 
-export default function Volume() {
+export default function Volume(): JSX.Element {
 	return (
 		<Module name="volume" spacing={SPACING.NONE}>
 			<menubutton>

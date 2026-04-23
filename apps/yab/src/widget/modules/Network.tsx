@@ -2,7 +2,7 @@ import { speedAccessor } from "../../services/network"
 import { Module } from "./Module"
 import Gtk from "gi://Gtk"
 
-export default function Network({ label = "Net" }) {
+export default function Network({ label = "Net" }): JSX.Element {
 	return (
 		<Module name={"network"}>
 			<label cssClasses={["font-bold"]} label={label} />

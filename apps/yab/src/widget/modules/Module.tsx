@@ -13,7 +13,7 @@ export function Module({
 	cssClasses = [],
 	spacing = SPACING.TIGHT,
 	children,
-}: ModuleProps) {
+}: ModuleProps): JSX.Element {
 	return (
 		<box cssName="module" name={name} cssClasses={cssClasses} spacing={spacing}>
 			{children}
@@ -35,7 +35,7 @@ export function StatModule({
 	spacing,
 	label,
 	value,
-}: StatModuleProps) {
+}: StatModuleProps): JSX.Element {
 	return (
 		<Module name={name} cssClasses={cssClasses} spacing={spacing}>
 			<label cssClasses={["font-bold"]} label={label} />

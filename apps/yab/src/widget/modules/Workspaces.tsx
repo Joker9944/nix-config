@@ -14,7 +14,7 @@ type WorkspacesProps = {
 	connector: string
 }
 
-export default function Workspaces({ connector }: WorkspacesProps) {
+export default function Workspaces({ connector }: WorkspacesProps): JSX.Element {
 	return (
 		<Module name="workspaces" spacing={SPACING.TIGHT}>
 			<For each={filterWorkspaces(connector)}>
