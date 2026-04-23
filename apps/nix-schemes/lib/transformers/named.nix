@@ -36,6 +36,7 @@ in
   };
 
   foreground = {
+    darker = palette.base03;
     dark = palette.base04;
     normal = palette.base05;
     light = palette.base06;
@@ -48,8 +49,6 @@ in
 
   black = {
     dull = palette.base00;
-  }
-  // lib.optionalAttrs isBase24 {
     bright = palette.base02;
   };
 
@@ -74,6 +73,13 @@ in
     bright = palette.base13;
   };
 
+  blue = {
+    dull = palette.base0D;
+  }
+  // lib.optionalAttrs isBase24 {
+    bright = palette.base12;
+  };
+
   magenta = {
     dull = palette.base0E;
   }
@@ -90,8 +96,6 @@ in
 
   white = {
     dull = palette.base06;
-  }
-  // lib.optionalAttrs isBase24 {
     bright = palette.base07;
   };
 }

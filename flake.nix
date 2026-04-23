@@ -6,11 +6,13 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     hyprland.url = "github:hyprwm/Hyprland"; # cSpell:ignore hyprwm
+
     # home manager
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     # third party packages
     nix-assets = {
       url = "github:joker9944/nix-assets/main";
@@ -28,6 +30,7 @@
       url = "github:nix-community/nix-vscode-extensions";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+
     # modules
     sops-nix = {
       url = "github:Mic92/sops-nix/master";
@@ -41,6 +44,7 @@
       url = "github:nix-community/plasma-manager/trunk";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     # helpers
     pre-commit-hooks = {
       url = "github:cachix/git-hooks.nix/master";
@@ -52,12 +56,12 @@
       url = ./apps/nix-schemes;
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     # libs
     nix-math = {
       url = "github:xddxdd/nix-math/master"; # cSpell:ignore xddxdd
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-std.url = "github:chessai/nix-std/master"; # cSpell:ignore chessai
   };
 
   outputs =
@@ -147,7 +151,6 @@
 
           custom = {
             inherit (inputs.nix-math.lib) math;
-            std = inputs.nix-std.lib;
           };
         };
 

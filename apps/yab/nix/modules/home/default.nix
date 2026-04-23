@@ -1,4 +1,4 @@
-flake:
+{ flake, ... }:
 {
   lib,
   pkgs,
@@ -37,7 +37,7 @@ in
           defaultText = literalExpression "config.wayland.systemd.target";
           example = "sway-session.target";
           description = ''
-            The systemd target that will automatically start the Waybar service.
+            The systemd target that will automatically start the yab service.
 
             When setting this value to `"sway-session.target"`,
             make sure to also enable {option}`wayland.windowManager.sway.systemd.enable`,

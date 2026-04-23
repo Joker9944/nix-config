@@ -104,9 +104,9 @@
       }
     )
     // {
-      homeManagerModules = {
-        default = self.homeManagerModules.yab;
-        yab = import ./nix/modules/home self;
+      homeModules = {
+        default = self.homeModules.yab;
+        yab = lib.modules.importApply ./nix/modules/home { flake = self; };
       };
 
       overlays = {
