@@ -9,4 +9,4 @@ function utilization(): Promise<string> {
 	]).then((out) => out.trim())
 }
 
-export const accessor = createPoll("-1", 1000, () => utilization())
+export const utilizationAccessor = createPoll("-", 1000, () => utilization())

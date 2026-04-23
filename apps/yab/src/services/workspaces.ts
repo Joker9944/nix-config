@@ -3,8 +3,8 @@ import { createBinding } from "ags"
 
 const hyprland = AstalHyprland.get_default()
 
-export const workspaces = createBinding(hyprland, "workspaces")
-export const focusedWorkspace = createBinding(hyprland, "focused_workspace")
+export const workspacesAccessor = createBinding(hyprland, "workspaces")
+export const focusedWorkspaceAccessor = createBinding(hyprland, "focused_workspace")
 
 export function focusWorkspace(workspace: AstalHyprland.Workspace): void {
 	if (hyprland.get_focused_workspace().get_id() === workspace.get_id()) {

@@ -3,12 +3,13 @@ import AstalWp from "gi://AstalWp"
 import { Module } from "./Module"
 import {
 	defaultSpeaker,
+	defaultSpeakerAccessor,
 	defaultSpeakerMuteAccessor,
 	defaultSpeakerVolumeAccessor,
 	defaultSpeakerVolumeIconAccessor,
 	speakersAccessor,
 } from "../../services/volume"
-import { createComputed, For } from "ags"
+import { Accessor, createComputed, For } from "ags"
 import { formatPercentage } from "../../helpers/formatters"
 import { SPACING } from "../../helpers/constants"
 
@@ -84,6 +85,8 @@ function speakerLabel(speaker: AstalWp.Endpoint) {
 	return speaker.get_description() ?? speaker.get_id().toString()
 }
 
-function speakerButtonCssClasses(speaker: AstalWp.Endpoint) {
-	return defaultSpeaker.get_id() === speaker.get_id() ? [] : ["inactive"]
+function speakerButtonCssClasses(speaker: AstalWp.Endpoint): Accessor<string[]> {
+	return defaultSpeakerAccessor.as((defaultSpeaker) =>
+		defaultSpeaker.get_id() === speaker.get_id() ? [] : ["inactive"]
+	)
 }

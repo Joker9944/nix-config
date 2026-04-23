@@ -14,3 +14,4 @@ export const defaultSpeakerVolumeAccessor = createBinding(
 )
 export const defaultSpeakerMuteAccessor = createBinding(defaultSpeaker, "mute")
 export const speakersAccessor = createBinding(audio, "speakers")
+export const defaultSpeakerAccessor = createBinding(audio, "defaultSpeaker")

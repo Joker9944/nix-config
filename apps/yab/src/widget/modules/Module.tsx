@@ -5,7 +5,7 @@ type ModuleProps = {
 	name: string
 	cssClasses?: string[]
 	spacing?: number
-	children: any
+	children: JSX.Element | JSX.Element[]
 }
 
 export function Module({

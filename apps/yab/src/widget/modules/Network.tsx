@@ -15,7 +15,7 @@ export default function Network({ label = "Net" }) {
 				<label
 					cssName="value"
 					cssClasses={["font-mono", "font-xs"]}
-					label={downSPeed}
+					label={downSpeed}
 				/>
 			</box>
 		</Module>
@@ -23,7 +23,7 @@ export default function Network({ label = "Net" }) {
 }
 
 const upSpeed = speedAccessor.as((speed) => formatSpeed(speed.up))
-const downSPeed = speedAccessor.as((speed) => formatSpeed(speed.down))
+const downSpeed = speedAccessor.as((speed) => formatSpeed(speed.down))
 
 const DECIMAL_PLACES = 1
 const MAX_PADDING_LENGTH = 12
@@ -33,6 +33,7 @@ const BIT_TO_MEBIBITS = 1048576
 const BIT_TO_GIBIBITS = 1073741824
 
 function formatSpeed(speed: number): string {
+	if (speed < 0) return "-".padStart(MAX_PADDING_LENGTH, " ")
 	if (speed < BIT_TO_KIBIBITS) {
 		return `${speed.toFixed(DECIMAL_PLACES)}   b/s`.padStart(
 			MAX_PADDING_LENGTH,

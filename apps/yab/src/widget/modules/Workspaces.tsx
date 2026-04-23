@@ -1,10 +1,10 @@
 import { Module } from "./Module"
 import {
-	focusedWorkspace,
+	focusedWorkspaceAccessor,
 	focusWorkspace,
 	isSpecial,
 	specialWorkspaceName,
-	workspaces,
+	workspacesAccessor,
 } from "../../services/workspaces"
 import { Accessor, For } from "ags"
 import AstalHyprland from "gi://AstalHyprland"
@@ -45,7 +45,7 @@ export default function Workspaces({ connector }: WorkspacesProps) {
 function filterWorkspaces(
 	connector: string,
 ): Accessor<AstalHyprland.Workspace[]> {
-	return workspaces.as((workspaces) => {
+	return workspacesAccessor.as((workspaces) => {
 		return workspaces
 			.filter((workspace) => {
 				return (
@@ -60,7 +60,7 @@ function filterWorkspaces(
 function workspaceButtonCssClasses(
 	workspace: AstalHyprland.Workspace,
 ): Accessor<string[]> {
-	return focusedWorkspace.as((focusedWorkspace) => {
+	return focusedWorkspaceAccessor.as((focusedWorkspace) => {
 		const focusClasses =
 			focusedWorkspace != null && // even when focusedWorkspace should never be null it can be during waking from sleep
 			focusedWorkspace.get_id() === workspace.get_id()

@@ -1,11 +1,11 @@
 import { StatModule } from "./Module"
-import { accessor } from "../../services/gpu"
+import { utilizationAccessor } from "../../services/gpu"
 
 export default function Gpu({ label = "GPU" }) {
 	return <StatModule name="gpu" label={label} value={gpuUtilization} />
 }
 
-const gpuUtilization = accessor.as((utilization) =>
+const gpuUtilization = utilizationAccessor.as((utilization) =>
 	formatUtilization(utilization)
 )
 
