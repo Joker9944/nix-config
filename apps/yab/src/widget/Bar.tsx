@@ -12,11 +12,12 @@ import { SPACING } from "../helpers/constants"
 import { showBattery, showGpu } from "../services/config"
 import Battery from "./modules/Battery"
 
-export default function Bar(gdkmonitor: Gdk.Monitor) {
+export default function Bar(gdkmonitor: Gdk.Monitor): Astal.Window {
 	const { EXCLUSIVE } = Astal.Exclusivity
-	const {BOTTOM} = Astal.Layer
+	const { BOTTOM } = Astal.Layer
 	const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
 
+	// @ts-ignore
 	return (
 		<window
 			layer={BOTTOM} // WORKAROUND Due to a hyprland bug the layer has to be defined at the top: https://github.com/Aylur/astal/issues/332
