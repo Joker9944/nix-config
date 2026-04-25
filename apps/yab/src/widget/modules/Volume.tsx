@@ -43,7 +43,7 @@ export default function Volume(): JSX.Element {
 								<image iconName={muteButtonIcon} />
 							</button>
 							<slider
-								widthRequest={260}
+								hexpand={true}
 								onChangeValue={({ value }) => defaultSpeaker.set_volume(value)}
 								value={defaultSpeakerVolumeAccessor}
 							/>

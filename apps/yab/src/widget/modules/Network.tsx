@@ -6,7 +6,7 @@ export default function Network({ label = "Net" }): JSX.Element {
 	return (
 		<Module name={"network"}>
 			<label cssClasses={["font-bold"]} label={label} />
-			<box orientation={Gtk.Orientation.VERTICAL}>
+			<box orientation={Gtk.Orientation.VERTICAL} valign={Gtk.Align.CENTER}>
 				<label
 					cssName="value"
 					cssClasses={["font-mono", "font-xs"]}
