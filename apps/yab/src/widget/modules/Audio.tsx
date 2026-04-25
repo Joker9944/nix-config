@@ -8,12 +8,12 @@ import {
 	defaultSpeakerVolumeAccessor,
 	defaultSpeakerVolumeIconAccessor,
 	speakersAccessor,
-} from "../../services/volume"
+} from "../../services/audio"
 import { Accessor, createComputed, For } from "ags"
 import { formatPercentage } from "../../helpers/formatters"
 import { SPACING } from "../../helpers/constants"
 
-export default function Volume(): JSX.Element {
+export default function Audio(): JSX.Element {
 	return (
 		<Module name="volume" spacing={SPACING.NONE}>
 			<menubutton>

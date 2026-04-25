@@ -6,7 +6,7 @@ import Gpu from "./modules/Gpu"
 import Memory from "./modules/Memory"
 import Disk from "./modules/Disk"
 import Network from "./modules/Network"
-import Volume from "./modules/Volume"
+import Audio from "./modules/Audio"
 import Workspaces from "./modules/Workspaces"
 import { SPACING } from "../helpers/constants"
 import { showBattery, showGpu } from "../services/config"
@@ -55,7 +55,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor): Astal.Window {
 					<Disk />
 					<Network />
 					{showBattery && <Battery />}
-					<Volume />
+					<Audio />
 				</box>
 			</centerbox>
 		</window>
