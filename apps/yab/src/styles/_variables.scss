@@ -52,7 +52,8 @@ $border-radii: (
 );
 
 // --- colors ---
-// https://gitlab.gnome.org/GNOME/gtk/-/blob/gtk-3-24/gtk/theme/Adwaita/_colors-public.scss
+// https://gitlab.gnome.org/GNOME/libadwaita/-/blob/973e5eff712ad3af13e5f054e5e42bb95fb79c1b/src/stylesheet/_colors.scss
+// https://gitlab.gnome.org/GNOME/libadwaita/-/blob/973e5eff712ad3af13e5f054e5e42bb95fb79c1b/src/stylesheet/_compat-colors.scss
 
 // --- active base ---
 $base-color: #{"@theme_base_color"};
@@ -83,5 +84,5 @@ $unfocused-selected-bg-color: #{"@theme_unfocused_selected_bg_color"};
 
 // --- functional ---
 $success-color: #{"@success_color"};
-$warning-color: #{"@error_color"};
-$error-color: #{"@warning_color"};
+$warning-color: #{"@warning_color"};
+$error-color: #{"@error_color"};
