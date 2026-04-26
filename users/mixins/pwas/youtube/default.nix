@@ -1,9 +1,4 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}:
+{ lib, config, ... }:
 {
   options.mixins.pwas.youtube =
     let
@@ -66,11 +61,7 @@
 
             desktopEntry = {
               categories = lib.toList "AudioVideo";
-
-              icon = pkgs.fetchurl {
-                url = "https://www.gstatic.com/youtube/img/web/maskable/logo_512x512.png";
-                sha256 = "sha256-RjFUv8vDu8d7ZKS1glpswUM3fyQixXVoa+FocdOnphU=";
-              };
+              icon = ./icon.png;
             };
           };
         };

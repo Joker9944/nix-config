@@ -1,9 +1,4 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}:
+{ lib, config, ... }:
 {
   options.mixins.pwas.audiobookshelf =
     let
@@ -62,11 +57,7 @@
 
             desktopEntry = {
               categories = lib.toList "AudioVideo";
-
-              icon = pkgs.fetchurl {
-                url = "${cfg.urlBase}/audiobookshelf/icon192.png";
-                sha256 = "sha256-+E8xQ09ODEtFJyKVdPDJR6RDQx2UQDzXTOQXtWa2pvM=";
-              };
+              icon = ./icon.png;
             };
           };
         };

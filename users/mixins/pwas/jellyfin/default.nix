@@ -1,9 +1,4 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}:
+{ lib, config, ... }:
 {
   options.mixins.pwas.jellyfin =
     let
@@ -62,11 +57,7 @@
 
             desktopEntry = {
               categories = lib.toList "AudioVideo";
-
-              icon = pkgs.fetchurl {
-                url = "${cfg.urlBase}/web/favicons/touchicon512.png"; # cSpell:ignore favicons touchicon
-                sha256 = "sha256-SsYjD97xOjfxrt03QFEaoxXxAfqqtJ7BAsYosUYWT1U=";
-              };
+              icon = ./icon.png;
             };
           };
         };
