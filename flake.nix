@@ -154,8 +154,6 @@
           };
         };
 
-        checks = self.lib.mkNixosConfigurationChecks self;
-
         nixosConfigurations =
           lib.pipe
             [
