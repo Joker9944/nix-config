@@ -118,6 +118,10 @@
                 # Shell
                 shellcheck.enable = true;
                 shfmt.enable = true;
+
+                # Python
+                ruff.enable = true;
+                ruff-format.enable = true;
               };
             };
 

@@ -20,41 +20,37 @@
     let
       cfg = config.mixins.programs.vscode;
 
-      vscodePackage =
-        (pkgs-unstable.vscodium.overrideAttrs (prev: {
-          version = builtins.warn ''
-            HACK(exciting-mayer): "nix-vscode-extensions" breaks when invalid SemVar versions are used, remove once fixed
-            https://github.com/NixOS/nixpkgs/issues/505096
-          '' (lib.substring 0 ((lib.stringLength prev.version) - 4) prev.version);
-          __intentionallyOverridingVersion = true;
-        })).fhsWithPackages
-          (
-            ps: with ps; [
-              sops # default -> used for git secret encryption
-              fluxcd # k8s -> vscode-gitops-tools extension
-              grafana-alloy # k8s -> grafana-alloy extension
-              texliveFull # quarto -> quarto extension
-              # WORKAROUND In a FHS files are either owned by the user or nobody since the ssh config
-              # is linked into the user home from the nix store meaning the file is owner by root outside
-              # of the FHS and by nobody in the FHS. This leads openssh to complain about insecure ssh
-              # config ownership which is actually fine. So let's just disable the check.
-              # https://github.com/nix-community/home-manager/issues/322#issuecomment-1454284183
-              (ps.openssh.overrideAttrs (prev: {
-                patches = (prev.patches or [ ]) ++ [ ./openssh-no-checkperm.patch ]; # cSpell:ignore checkperm
-              }))
-            ]
-          );
-
-      nixpkgs-vscode-extensions = pkgs-unstable.vscode-extensions;
+      vscodePackage = pkgs-unstable.vscodium.fhsWithPackages (
+        ps: with ps; [
+          sops # default -> used for git secret encryption
+          fluxcd # k8s -> vscode-gitops-tools extension
+          grafana-alloy # k8s -> grafana-alloy extension
+          texliveFull # quarto -> quarto extension
+          # WORKAROUND In a FHS files are either owned by the user or nobody since the ssh config
+          # is linked into the user home from the nix store meaning the file is owner by root outside
+          # of the FHS and by nobody in the FHS. This leads openssh to complain about insecure ssh
+          # config ownership which is actually fine. So let's just disable the check.
+          # https://github.com/nix-community/home-manager/issues/322#issuecomment-1454284183
+          (ps.openssh.overrideAttrs (prev: {
+            patches = (prev.patches or [ ]) ++ [ ./openssh-no-checkperm.patch ]; # cSpell:ignore checkperm
+          }))
+        ]
+      );
 
       vscodeExtensions =
         inputs.nix-vscode-extensions.extensions.${pkgs-unstable.stdenv.hostPlatform.system}.forVSCodeVersion
-          vscodePackage.version;
+          (
+            builtins.warn ''
+              HACK(exciting-mayer): "nix-vscode-extensions" breaks when invalid SemVar versions are used, remove once fixed
+              https://github.com/NixOS/nixpkgs/issues/505096
+            '' (lib.substring 0 ((lib.stringLength vscodePackage.version) - 4) vscodePackage.version)
+          );
 
       inherit (vscodeExtensions) open-vsx-release;
 
       commonProfiles = [
         {
+          # user preferences
           userSettings = {
             "diffEditor.ignoreTrimWhitespace" = false;
             "editor.fontFamily" = "monospace, emoji";
@@ -71,13 +67,14 @@
             "git.autofetch" = true; # cSpell:ignore autofetch
             "telemetry.feedback.enabled" = false;
           };
-        }
-        {
+
           extensions = [
             open-vsx-release.k--kato.intellij-idea-keybindings # cSpell:words k--kato
+            open-vsx-release.editorconfig.editorconfig
           ];
         }
         {
+          # styling
           extensions = [
             open-vsx-release.dracula-theme.theme-dracula
           ];
@@ -85,16 +82,13 @@
           userSettings."workbench.colorTheme" = "Dracula Theme";
         }
         {
+          # spell checking
           extensions = [
             open-vsx-release.streetsidesoftware.code-spell-checker
           ];
         }
         {
-          extensions = [
-            open-vsx-release.editorconfig.editorconfig
-          ];
-        }
-        {
+          # lang javascript
           extensions = [
             open-vsx-release.esbenp.prettier-vscode # cSpell:words esbenp
           ];
@@ -122,6 +116,7 @@
               ];
         }
         {
+          # lang json5
           extensions = [
             open-vsx-release.blueglassblock.better-json5
           ];
@@ -133,14 +128,24 @@
           };
         }
         {
+          # lang shell
           extensions = [
             open-vsx-release.mkhl.shfmt # cSpell:ignore mkhl
+            open-vsx-release.timonwong.shellcheck # cSpell:ignore timonwong
           ];
         }
         {
+          # lang python
           extensions = [
-            open-vsx-release.timonwong.shellcheck # cSpell:ignore timonwong
+            open-vsx-release.ms-python.python
+            open-vsx-release.charliermarsh.ruff # cSpell:ignore charliermarsh
           ];
+
+          userSettings = {
+            "[python]" = {
+              "editor.defaultFormatter" = "charliermarsh.ruff";
+            };
+          };
         }
       ];
 
@@ -240,7 +245,6 @@
               {
                 extensions = [
                   open-vsx-release.ms-kubernetes-tools.vscode-kubernetes-tools
-                  nixpkgs-vscode-extensions.ms-vscode-remote.remote-containers
                   open-vsx-release.weaveworks.vscode-gitops-tools
                   open-vsx-release.grafana.grafana-alloy
                 ];
