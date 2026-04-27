@@ -6,6 +6,7 @@
     programs = {
       _1password.enable = true;
       aerc.enable = true;
+      anki.enable = true;
       atuin.enable = true;
       bash.enable = true;
       claude-code.enable = true;

@@ -4,20 +4,20 @@
   ...
 }:
 {
-  options.mixins.programs.claude-code =
+  options.mixins.programs.anki =
     let
       inherit (lib) mkEnableOption;
     in
     {
-      enable = mkEnableOption "claude-code config mixin";
+      enable = mkEnableOption "anki config mixin";
     };
 
   config =
     let
-      cfg = config.mixins.programs.claude-code;
+      cfg = config.mixins.programs.anki;
     in
     lib.mkIf cfg.enable {
-      programs.claude-code = {
+      programs.anki = {
         enable = true;
       };
     };
