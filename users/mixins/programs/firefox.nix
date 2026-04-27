@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  pkgs,
   ...
 }:
 {
@@ -17,13 +18,21 @@
       cfg = config.mixins.programs.firefox;
     in
     lib.mkIf cfg.enable {
-      programs.firefox = {
-        enable = true;
+      programs = {
+        firefox = {
+          enable = true;
 
-        policies = {
-          DisableTelemetry = true;
-          DisableFirefoxStudies = true;
+          policies = {
+            DisableTelemetry = true;
+            DisableFirefoxStudies = true;
+          };
         };
+
+        firefoxpwa.package = lib.mkDefault (
+          pkgs.firefoxpwa.overrideAttrs (prev: {
+            libs = "${config.programs.firefox.finalPackage.libs}:${prev.libs}";
+          })
+        );
       };
 
       xdg.mimeApps.custom.apps.default = [
