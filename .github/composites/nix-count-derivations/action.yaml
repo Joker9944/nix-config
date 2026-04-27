@@ -1,0 +1,15 @@
+name: nix-count-derivations
+
+outputs:
+  build_count:
+    description: Total number of derivations that would need to be built
+    value: ${{ steps.count.outputs.build_count }}
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Count derivations to build with dry-run builds
+      id: count
+      shell: bash
+      run: python3 ${{ github.action_path }}/count-derivations.py
