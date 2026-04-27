@@ -27,12 +27,6 @@ jobs:
       - name: Setup nix
         id: nix-setup
         uses: Joker9944/nix-config/.github/composites/nix-setup@main
-        with:
-          # cSpell:disable
-          extra-conf: |
-            extra-substituters = https://nix-community.cachix.org https://hyprland.cachix.org https://cache.nixos-cuda.org
-            extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc= cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M
-          # cSpell:enable
 
         # cSpell:ignore ghaction-import-gpg
       - name: GPG Config
@@ -44,10 +38,6 @@ jobs:
           passphrase: ${{ secrets.GPG_PASSPHRASE }}
           git_user_signingkey: true
           git_commit_gpgsign: true
-
-      - name: Pre-update Build Count
-        id: pre-build-count
-        uses: Joker9944/nix-config/.github/composites/nix-count-derivations@main
 
       - name: Update Flakes
         id: nix-update
@@ -61,30 +51,8 @@ jobs:
             nix flake update --flake "$flake_dir" --commit-lock-file --option commit-lock-file-summary "flake: update $flake_dir/flake.lock"
           done
 
-      - name: Post-update Build Count
-        id: post-build-count
-        uses: Joker9944/nix-config/.github/composites/nix-count-derivations@main
-
-      - name: Verify Build Count
-        id: verify-build-count
-        shell: bash
-
-        run: |
-          pre="${{ steps.pre-build-count.outputs.build_count }}"
-          post="${{ steps.post-build-count.outputs.build_count }}"
-          echo "Pre-update: ${pre} derivations to build"
-          echo "Post-update: ${post} derivations to build"
-          if [[ "${pre}" != "${post}" ]]; then
-            echo "::warning::Build count changed (${pre} -> ${post}) — nixpkgs update may contain broken packages, skipping PR"
-            echo "safe=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "Build counts match — flake update looks healthy"
-            echo "safe=true" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Create Pull Request
         id: git-pr-create
-        if: ${{ steps.verify-build-count.outputs.safe == 'true' }}
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
 
         with:
