@@ -8,10 +8,9 @@ import {
 	defaultSpeakerVolumeAccessor,
 	defaultSpeakerVolumeIconAccessor,
 	speakersAccessor,
-} from "../../services/audio"
-import { Accessor, createComputed, For } from "ags"
-import { formatPercentage } from "../../helpers/formatters"
-import { SPACING } from "../../helpers/constants"
+} from "../../../services/audio"
+import { formatPercentage, SPACING } from "../../../helpers";
+import { Accessor, createComputed, For } from "ags";
 
 export default function Audio(): JSX.Element {
 	return (

@@ -1,5 +1,5 @@
-import { Accessor } from "ags"
-import { SPACING } from "../../helpers/constants"
+import { Accessor } from "ags";
+import { SPACING } from "../../../helpers"
 
 type ModuleProps = {
 	name: string

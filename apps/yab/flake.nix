@@ -90,7 +90,7 @@
 
               mkdir -p $out/bin $out/share
               cp -r * $out/share
-              ags bundle app.tsx $out/bin/${finalAttrs.name} -d "SRC='$out/share'"
+              ags bundle src/app.tsx $out/bin/${finalAttrs.name} -d "SRC='$out/share'"
 
               runHook postInstall
             '';

@@ -5,10 +5,10 @@ import {
 	isSpecial,
 	specialWorkspaceName,
 	workspacesAccessor,
-} from "../../services/workspaces"
-import { Accessor, For } from "ags"
+} from "../../../services/workspaces"
+import { Accessor, For } from "ags";
 import AstalHyprland from "gi://AstalHyprland"
-import { SPACING } from "../../helpers/constants"
+import { SPACING } from "../../../helpers"
 
 type WorkspacesProps = {
 	connector: string

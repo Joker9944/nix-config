@@ -1,26 +1,25 @@
-import app from "ags/gtk4/app"
-import { Astal, Gdk } from "ags/gtk4"
-import Clock from "./modules/Clock"
-import Cpu from "./modules/Cpu"
-import Gpu from "./modules/Gpu"
-import Memory from "./modules/Memory"
-import Disk from "./modules/Disk"
-import Network from "./modules/Network"
-import Audio from "./modules/Audio"
-import Workspaces from "./modules/Workspaces"
-import { SPACING } from "../helpers/constants"
-import { showBattery, showGpu } from "../services/config"
-import Battery from "./modules/Battery"
-
+import app from "ags/gtk4/app";
+import { Astal, Gdk } from "ags/gtk4";
+import Cpu from "./modules/Cpu";
+import Gpu from "./modules/Gpu";
+import Memory from "./modules/Memory";
+import Disk from "./modules/Disk";
+import Network from "./modules/Network";
+import Audio from "./modules/Audio";
+import Workspaces from "./modules/Workspaces";
+import { SPACING } from "../../helpers";
+import { showBattery, showGpu } from "../../services/config";
+import Battery from "./modules/Battery";
+import Clock from "./modules/Clock";
 
 type BarProps = {
-	gdkmonitor: Gdk.Monitor
-}
+	gdkmonitor: Gdk.Monitor;
+};
 
-export default function Bar({gdkmonitor}: BarProps): JSX.Element {
-	const { EXCLUSIVE } = Astal.Exclusivity
-	const { BOTTOM } = Astal.Layer
-	const { TOP, LEFT, RIGHT } = Astal.WindowAnchor
+export default function Bar({ gdkmonitor }: BarProps): JSX.Element {
+	const { EXCLUSIVE } = Astal.Exclusivity;
+	const { BOTTOM } = Astal.Layer;
+	const { TOP, LEFT, RIGHT } = Astal.WindowAnchor;
 
 	return (
 		<window
@@ -63,5 +62,5 @@ export default function Bar({gdkmonitor}: BarProps): JSX.Element {
 				</box>
 			</centerbox>
 		</window>
-	)
+	);
 }

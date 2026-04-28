@@ -2,7 +2,7 @@ import GTop from "gi://GTop"
 import AstalNetwork from "gi://AstalNetwork"
 import NM from "gi://NM?version=1.0"
 import { createPoll } from "ags/time"
-import { movingAverage } from "../helpers/smoothing"
+import { movingAverage } from "../helpers"
 
 type Snapshot = {
 	rx: number

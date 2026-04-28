@@ -1,7 +1,7 @@
-import { Accessor } from "ags"
+import { Accessor } from "ags";
 import { Module } from "./Module"
-import { nowAccessor } from "../../services/clock"
-import { formatDateTime } from "../../helpers/formatters"
+import { nowAccessor } from "../../../services/clock"
+import { formatDateTime } from "../../../helpers"
 
 export default function Clock({ format = "%d. %b %H:%M" }): JSX.Element {
 	return (

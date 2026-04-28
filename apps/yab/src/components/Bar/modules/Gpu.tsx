@@ -1,5 +1,5 @@
 import { StatModule } from "./Module"
-import { utilizationAccessor } from "../../services/gpu"
+import { utilizationAccessor } from "../../../services/gpu"
 
 export default function Gpu({ label = "GPU" }): JSX.Element {
 	return <StatModule name="gpu" label={label} value={gpuUtilization} />
