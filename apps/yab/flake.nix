@@ -54,6 +54,11 @@
             type = "app";
             program = lib.getExe agsPackage;
           };
+
+          yab = {
+            type = "app";
+            program = lib.getExe self.packages.${system}.yab;
+          };
         };
 
         devShells = {
@@ -106,14 +111,15 @@
     // {
       homeModules = {
         default = self.homeModules.yab;
+
         yab = lib.modules.importApply ./nix/modules/home { flake = self; };
       };
 
       overlays = {
-        default = self.overlays.custom-shell;
+        default = self.overlays.yab;
 
         yab = _: prev: {
-          inherit (self.packages.${prev.system}) yab;
+          inherit (self.packages.${prev.stdenv.hostPlatform.system}) yab;
         };
       };
     };
