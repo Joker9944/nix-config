@@ -28,6 +28,7 @@ noinherit
 PAMFAIL
 signingkey
 subvolumes
+trivago
 UWSM
 uwunicorn
 vfat

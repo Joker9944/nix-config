@@ -1,23 +1,16 @@
-import { Module } from "./Module";
-import {
-	batteryIconAccessor,
-	percentageAccessor,
-} from "../../../services/battery";
-import { formatPercentage } from "../../../helpers";
+import { Module } from "./Module"
+import { batteryIconAccessor, percentageAccessor } from "../../../services/battery"
+import { formatPercentage, lazyAccessor } from "../../../helpers"
 
 export default function Battery(): JSX.Element {
 	return (
 		<Module name="battery">
 			<image iconName={batteryIconAccessor} />
-			<label
-				cssName="value"
-				cssClasses={["font-mono"]}
-				label={batteryPercentage}
-			/>
+			<label cssName="value" cssClasses={["font-mono"]} label={batteryPercentage} />
 		</Module>
-	);
+	)
 }
 
-const batteryPercentage = percentageAccessor.as((percentage) =>
-	formatPercentage(percentage * 100),
-);
+const batteryPercentage = lazyAccessor(() => {
+	return percentageAccessor.as((percentage) => formatPercentage(percentage * 100))
+})

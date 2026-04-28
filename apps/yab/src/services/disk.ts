@@ -1,10 +1,8 @@
 import Gio from "gi://Gio"
-import { Accessor } from "ags"
 import { createPoll } from "ags/time"
+import { memoize } from "../helpers"
 
 const DISK_USAGE_QUERY = `${Gio.FILE_ATTRIBUTE_FILESYSTEM_SIZE},${Gio.FILE_ATTRIBUTE_FILESYSTEM_USED}`
-
-const disks = new Map<string, Accessor<number>>()
 
 class Disk {
 	readonly file: Gio.File
@@ -23,12 +21,7 @@ class Disk {
 	}
 }
 
-export default function accessorFromPath(path: string): Accessor<number> {
-	let accessor = disks.get(path)
-	if (!accessor) {
-		const disc = new Disk(path)
-		accessor = createPoll(-1, 10000, () => disc.usage())
-		disks.set(path, accessor)
-	}
-	return accessor
-}
+export const utilizationAccessor = memoize((path: string) => {
+	const disk = new Disk(path)
+	return createPoll(-1, 10000, () => disk.usage())
+})

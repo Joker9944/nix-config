@@ -2,7 +2,7 @@ import GTop from "gi://GTop"
 import AstalNetwork from "gi://AstalNetwork"
 import NM from "gi://NM?version=1.0"
 import { createPoll } from "ags/time"
-import { movingAverage } from "../helpers"
+import { exponentialMovingAverage, lazyAccessor } from "../helpers"
 
 type Snapshot = {
 	rx: number
@@ -16,11 +16,7 @@ export type Speed = {
 }
 
 const netload = new GTop.glibtop_netload()
-const {
-	primary: primaryDevice,
-	wired: wired,
-	wifi: wifi,
-} = AstalNetwork.get_default()
+const { primary: primaryDevice, wired: wired, wifi: wifi } = AstalNetwork.get_default()
 
 function primaryNetworkInterface(): string | null {
 	return primaryNetworkDevice()?.get_iface() ?? null
@@ -49,20 +45,17 @@ function snapshot(networkInterface: string): Snapshot {
 
 function primarySnapshot(): Snapshot {
 	const networkInterface = primaryNetworkInterface()
-	return networkInterface
-		? snapshot(networkInterface)
-		: { rx: 0, tx: 0, timestamp: Date.now() }
+	return networkInterface ? snapshot(networkInterface) : { rx: 0, tx: 0, timestamp: Date.now() }
 }
 
-let previousSnapshot = { rx: 0, tx: 0, timestamp: Date.now() }
+let previousSnapshot: Snapshot
 
-const smoothingDown = movingAverage(3)
-const smoothingUp = movingAverage(3)
+const smoothingDown = exponentialMovingAverage()
+const smoothingUp = exponentialMovingAverage()
 
 function speed(): Speed {
 	const currentSnapshot = primarySnapshot()
-	const deltaTime =
-		(currentSnapshot.timestamp - previousSnapshot.timestamp) / 1000
+	const deltaTime = (currentSnapshot.timestamp - previousSnapshot.timestamp) / 1000
 
 	const speed = {
 		down: smoothingDown((currentSnapshot.rx - previousSnapshot.rx) / deltaTime),
@@ -74,6 +67,7 @@ function speed(): Speed {
 	return speed
 }
 
-export const speedAccessor = createPoll<Speed>({ down: -1, up: -1 }, 1000, () =>
-	speed()
-)
+export const speedAccessor = lazyAccessor(() => {
+	previousSnapshot = primarySnapshot()
+	return createPoll<Speed>({ down: -1, up: -1 }, 1000, () => speed())
+})

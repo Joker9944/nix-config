@@ -1,12 +1,11 @@
 import { StatModule } from "./Module"
-import accessorFromPath from "../../../services/disk"
-import { Accessor } from "ags";
-import { formatPercentage } from "../../../helpers"
+import { formatPercentage, memoize } from "../../../helpers"
+import { utilizationAccessor } from "../../../services/disk"
 
 export default function Disk({ label = "Disk", path = "/" }): JSX.Element {
-	return <StatModule name="disk" label={label} value={diskUsage(path)} />
+	return <StatModule name="disk" label={label} value={formattedUtilizationAccessors(path)} />
 }
 
-function diskUsage(path: string): Accessor<string> {
-	return accessorFromPath(path).as((usage) => formatPercentage(usage))
-}
+const formattedUtilizationAccessors = memoize((path: string) => {
+	return utilizationAccessor(path).as((usage) => formatPercentage(usage))
+})

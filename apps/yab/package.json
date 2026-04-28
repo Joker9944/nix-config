@@ -4,7 +4,12 @@
 		"gnim": "*"
 	},
 	"devDependencies": {
-		"prettier": "^3.7.4"
+		"prettier": "^3.7.4",
+		"@trivago/prettier-plugin-sort-imports": "^6.0.2"
+	},
+	"prettier": {
+		"semi": false,
+		"tabWidth": 2
 	},
 	"scripts": {
 		"run": "nix run .#ags -- run --gtk 4 --directory src",

@@ -1,10 +1,15 @@
 import AstalHyprland from "gi://AstalHyprland"
 import { createBinding } from "ags"
+import { lazyAccessor } from "../helpers"
 
 const hyprland = AstalHyprland.get_default()
 
-export const workspacesAccessor = createBinding(hyprland, "workspaces")
-export const focusedWorkspaceAccessor = createBinding(hyprland, "focused_workspace")
+export const workspacesAccessor = lazyAccessor(() => {
+	return createBinding(hyprland, "workspaces")
+})
+export const focusedWorkspaceAccessor = lazyAccessor(() => {
+	return createBinding(hyprland, "focused_workspace")
+})
 
 export function focusWorkspace(workspace: AstalHyprland.Workspace): void {
 	if (hyprland.get_focused_workspace().get_id() === workspace.get_id()) {

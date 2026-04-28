@@ -1,5 +1,6 @@
 import GTop from "gi://GTop"
 import { createPoll } from "ags/time"
+import { lazyAccessor } from "../helpers"
 
 const cpu = new GTop.glibtop_cpu()
 GTop.glibtop_get_cpu(cpu)
@@ -22,6 +23,6 @@ function utilization(): number {
 	return (1 - deltaIdle / deltaTotal) * 100
 }
 
-export const utilizationAccessor = createPoll<number>(-1, 1000, () =>
-	utilization()
-)
+export const utilizationAccessor = lazyAccessor(() => {
+	return createPoll<number>(-1, 1000, () => utilization())
+})

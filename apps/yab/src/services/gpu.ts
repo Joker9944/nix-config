@@ -1,5 +1,6 @@
 import { execAsync } from "ags/process"
 import { createPoll } from "ags/time"
+import { lazyAccessor } from "../helpers"
 
 function utilization(): Promise<string> {
 	return execAsync([
@@ -9,4 +10,6 @@ function utilization(): Promise<string> {
 	]).then((out) => out.trim())
 }
 
-export const utilizationAccessor = createPoll("-", 1000, () => utilization())
+export const utilizationAccessor = lazyAccessor(() => {
+	return createPoll("-", 1000, () => utilization())
+})
