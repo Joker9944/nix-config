@@ -21,6 +21,7 @@
       mpv.enable = true;
       neovim.enable = true;
       nextcloud-client.enable = true;
+      pandoc.enable = true;
       papers.enable = true;
       spotify.enable = true;
       systemctl-tui.enable = true;

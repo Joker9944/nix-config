@@ -8,6 +8,10 @@
     inherit (flake.packages.${prev.stdenv.hostPlatform.system}) freelens;
   };
 
+  eisvogel = _: prev: {
+    inherit (flake.packages.${prev.stdenv.hostPlatform.system}) eisvogel;
+  };
+
   openldap-fix = _: prev: {
     openldap =
       builtins.warn
