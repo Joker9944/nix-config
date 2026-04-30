@@ -22,8 +22,8 @@
       url = "github:jalil-salame/audiomenu/main"; # cSpell:ignore jalil-salame
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    yab = {
-      url = ./apps/yab;
+    yas = {
+      url = ./apps/yas;
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-vscode-extensions = {

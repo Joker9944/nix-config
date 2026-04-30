@@ -4,7 +4,7 @@
       "inputs": {
         "astal": "astal",
         "nixpkgs": [
-          "yab",
+          "yas",
           "nixpkgs"
         ]
       },
@@ -58,7 +58,7 @@
     "astal": {
       "inputs": {
         "nixpkgs": [
-          "yab",
+          "yas",
           "ags",
           "nixpkgs"
         ]
@@ -1025,7 +1025,7 @@
         "plasma-manager": "plasma-manager",
         "pre-commit-hooks": "pre-commit-hooks_3",
         "sops-nix": "sops-nix",
-        "yab": "yab"
+        "yas": "yas"
       }
     },
     "schemes": {
@@ -1182,7 +1182,7 @@
         "type": "github"
       }
     },
-    "yab": {
+    "yas": {
       "inputs": {
         "ags": "ags",
         "flake-utils": "flake-utils_4",
@@ -1191,11 +1191,11 @@
         ]
       },
       "locked": {
-        "path": "apps/yab",
+        "path": "apps/yas",
         "type": "path"
       },
       "original": {
-        "path": "apps/yab",
+        "path": "apps/yas",
         "type": "path"
       },
       "parent": []

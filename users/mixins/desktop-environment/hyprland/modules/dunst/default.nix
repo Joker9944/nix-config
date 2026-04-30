@@ -11,7 +11,7 @@ mkDefaultHyprlandModule
         cfg = config.mixins.desktopEnvironment.hyprland;
       in
       {
-        enable = true;
+        enable = false;
         package = pkgs-hyprland.dunst;
 
         settings = {

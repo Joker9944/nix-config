@@ -37,7 +37,9 @@ vmoptions
 vsplit
 Weaveworks
 wxmaxima
+xalign
 xoffset
 xrgb
 xwaylandprimary
+yand
 yoffset

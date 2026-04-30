@@ -1,0 +1,26 @@
+@use "sass:map";
+@use "../variables";
+@use "../functions" as *;
+
+window > bar {
+  padding: 0.25rem;
+  font-size: 1rem;
+  font-weight: normal;
+
+  workspaces image.app-icon {
+    font-size: 1.5rem;
+    -gtk-icon-size: 1.5rem;
+  }
+
+  network value {
+    font-size: 0.75rem;
+    -gtk-icon-size: 0.75rem;
+  }
+
+  volume > menubutton > button {
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    background: inherit;
+  }
+}
