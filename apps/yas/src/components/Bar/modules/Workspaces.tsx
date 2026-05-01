@@ -1,4 +1,4 @@
-import { Accessor, For, createComputed } from "ags"
+import { Accessor, For } from "ags"
 
 import AstalHyprland from "gi://AstalHyprland"
 

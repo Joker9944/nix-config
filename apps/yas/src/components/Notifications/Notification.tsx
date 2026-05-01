@@ -1,11 +1,14 @@
 import { Gdk } from "ags/gtk4"
 
 import AstalNotifd from "gi://AstalNotifd"
+import GdkPixbuf from "gi://GdkPixbuf"
 import Gtk from "gi://Gtk?version=4.0"
 import Pango from "gi://Pango"
 
 import { SPACING, formatUnixTime } from "../../helpers"
 import { fileExists } from "../../helpers/files"
+
+const IMAGE_SIZE_MAX = 128
 
 export default function Notification({
 	notification,
@@ -51,7 +54,11 @@ export default function Notification({
 			{showHeader && <Gtk.Separator orientation={Gtk.Orientation.HORIZONTAL} cssClasses={["spacer"]} />}
 			<box cssName="content" spacing={SPACING.NORMAL}>
 				{notification.image && fileExists(notification.image) && (
-					<image valign={Gtk.Align.START} class="image" file={notification.image} pixelSize={128} />
+					<Gtk.Picture
+						valign={Gtk.Align.CENTER}
+						contentFit={Gtk.ContentFit.SCALE_DOWN}
+						$={(self) => self.set_pixbuf(scaleImage(notification.image))}
+					/>
 				)}
 				{notification.image && isIcon(notification.image) && (
 					<box valign={Gtk.Align.START} class="icon-image">
@@ -111,5 +118,19 @@ function urgency(notification: AstalNotifd.Notification) {
 		case NORMAL:
 		default:
 			return "normal"
+	}
+}
+
+function scaleImage(path: string): GdkPixbuf.Pixbuf {
+	const pixbuf = GdkPixbuf.Pixbuf.new_from_file(path)
+	if (pixbuf.get_width() > IMAGE_SIZE_MAX || pixbuf.get_height() > IMAGE_SIZE_MAX) {
+		const scale = IMAGE_SIZE_MAX / Math.max(pixbuf.get_width(), pixbuf.get_height())
+		return pixbuf.scale_simple(
+			Math.round(pixbuf.get_width() * scale),
+			Math.round(pixbuf.get_height() * scale),
+			GdkPixbuf.InterpType.BILINEAR, // cSpell:ignore Interp
+		)!
+	} else {
+		return pixbuf
 	}
 }

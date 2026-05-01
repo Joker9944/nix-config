@@ -19,7 +19,7 @@ export const defaultSpeakerMuteAccessor = lazyAccessor(() => {
 })
 
 export const speakersAccessor = lazyAccessor(() => {
-	return createBinding(audio, "speakers")
+	return createBinding(audio, "speakers").as((speakers) => (speakers !== null ? speakers : []))
 })
 
 export const defaultSpeakerAccessor = lazyAccessor(() => {

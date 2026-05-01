@@ -27,9 +27,9 @@ function primaryNetworkInterface(): string | null {
 function primaryNetworkDevice(): NM.Device | null {
 	switch (primaryDevice) {
 		case AstalNetwork.Primary.WIRED:
-			return wired.get_device()
+			return wired!.get_device()
 		case AstalNetwork.Primary.WIFI:
-			return wifi.get_device()
+			return wifi!.get_device()
 		case AstalNetwork.Primary.UNKNOWN:
 		default:
 			return null

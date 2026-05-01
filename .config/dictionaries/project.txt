@@ -26,6 +26,7 @@ messagedialog
 mountpoint
 noinherit
 PAMFAIL
+pixbuf
 signingkey
 subvolumes
 trivago

@@ -7,10 +7,10 @@ window.Notifications {
   notification {
     padding: 0.75rem;
     border-radius: map.get(variables.$border-radii, "2xl");
-  }
 
-  .image {
-    min-width: 32px;
-    min-height: 32px;
+    .picture {
+      min-width: 32px;
+      min-height: 32px;
+    }
   }
 }

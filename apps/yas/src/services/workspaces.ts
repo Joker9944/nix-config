@@ -30,7 +30,7 @@ export function focusWorkspace(workspace: AstalHyprland.Workspace): void {
 }
 
 export function isSpecial(workspace: AstalHyprland.Workspace): boolean {
-	return workspace.get_name().startsWith("special")
+	return workspace.get_name().startsWith("special:")
 }
 
 export function specialWorkspaceName(workspace: AstalHyprland.Workspace): string | null {
