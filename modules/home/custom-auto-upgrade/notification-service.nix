@@ -31,7 +31,7 @@ in
 
       icon = mkOption {
         type = types.str;
-        default = "${pkgs.nixos-icons}/share/icons/hicolor/24x24/apps/nix-snowflake.png";
+        default = "${pkgs.nixos-icons}/share/icons/hicolor/128x128/apps/nix-snowflake.png";
         description = ''
           Icon filepath passed to `notify-send`.
         '';

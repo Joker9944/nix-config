@@ -1,12 +1,120 @@
-import { Gdk } from "ags/gtk4"
+import { Gdk } from "ags/gtk4";
 
-import AstalNotifd from "gi://AstalNotifd"
-import GdkPixbuf from "gi://GdkPixbuf"
-import Gtk from "gi://Gtk?version=4.0"
-import Pango from "gi://Pango"
 
-import { SPACING, formatUnixTime } from "../../helpers"
-import { fileExists } from "../../helpers/files"
+
+import AstalNotifd from "gi://AstalNotifd";
+import GdkPixbuf from "gi://GdkPixbuf";
+import Gtk from "gi://Gtk?version=4.0";
+import Pango from "gi://Pango";
+
+
+
+import { SPACING, formatUnixTime } from "../../helpers";
+import { fileExists } from "../../helpers/files";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const IMAGE_SIZE_MAX = 128
 
@@ -55,17 +163,55 @@ export default function Notification({
 			<box cssName="content" spacing={SPACING.NORMAL}>
 				{notification.image && fileExists(notification.image) && (
 					<Gtk.Picture
+						class="app-picture"
 						valign={Gtk.Align.CENTER}
 						contentFit={Gtk.ContentFit.SCALE_DOWN}
 						$={(self) => self.set_pixbuf(scaleImage(notification.image))}
 					/>
 				)}
 				{notification.image && isIcon(notification.image) && (
-					<box valign={Gtk.Align.START} class="icon-image">
-						<image iconName={notification.image} halign={Gtk.Align.CENTER} valign={Gtk.Align.CENTER} />
+					<box valign={Gtk.Align.CENTER} halign={Gtk.Align.START} class="app-icon">
+						<image
+							iconName={notification.image}
+							iconSize={Gtk.IconSize.LARGE}
+							halign={Gtk.Align.CENTER}
+							valign={Gtk.Align.CENTER}
+						/>
 					</box>
 				)}
-				{notification.image && <Gtk.Separator orientation={Gtk.Orientation.VERTICAL} cssClasses={["spacer"]} />}
+				{!notification.image && notification.appIcon && isIcon(notification.appIcon) && (
+					<box valign={Gtk.Align.CENTER} halign={Gtk.Align.START} class="app-icon">
+						<image
+							iconName={notification.appIcon}
+							iconSize={Gtk.IconSize.LARGE}
+							halign={Gtk.Align.CENTER}
+							valign={Gtk.Align.CENTER}
+						/>
+					</box>
+				)}
+				{!notification.image && notification.appIcon && fileExists(notification.appIcon) && (
+					<Gtk.Picture
+						class="app-picture"
+						valign={Gtk.Align.CENTER}
+						contentFit={Gtk.ContentFit.SCALE_DOWN}
+						$={(self) => self.set_pixbuf(scaleImage(notification.appIcon))}
+					/>
+				)}
+				{!notification.image && notification.desktopEntry && isIcon(notification.desktopEntry) && (
+					<box valign={Gtk.Align.CENTER} halign={Gtk.Align.START} class="app-icon">
+						<image
+							iconName={notification.desktopEntry}
+							iconSize={Gtk.IconSize.LARGE}
+							halign={Gtk.Align.START}
+							valign={Gtk.Align.CENTER}
+						/>
+					</box>
+				)}
+				{((notification.image && (fileExists(notification.image) || isIcon(notification.appIcon))) ||
+					(notification.appIcon && (fileExists(notification.appIcon) || isIcon(notification.appIcon))) ||
+					(notification.desktopEntry && isIcon(notification.desktopEntry))) && (
+					<Gtk.Separator orientation={Gtk.Orientation.VERTICAL} cssClasses={["spacer"]} />
+				)}
 				<box orientation={Gtk.Orientation.VERTICAL} valign={Gtk.Align.CENTER}>
 					<label
 						cssClasses={["summary", "heading"]}
