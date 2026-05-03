@@ -19,7 +19,7 @@ mkHyprlandModule {
         };
 
         icons = {
-          name = "Colloid";
+          name = "Colloid-Dark";
           package = pkgs.colloid-icon-theme;
         };
       };

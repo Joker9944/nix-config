@@ -27,9 +27,9 @@ _:
 
       icon = mkOption {
         type = types.str;
-        default = "${pkgs.nixos-icons}/share/icons/hicolor/128x128/apps/nix-snowflake.png";
+        default = "nix-snowflake";
         description = ''
-          Icon filepath passed to `notify-send`.
+          Icon passed to `notify-send`.
         '';
       };
 
@@ -61,9 +61,7 @@ _:
 
       body = mkOption {
         type = types.lines;
-        default = ''
-          Check the logs with \"journalctl -u nixos-upgrade.service\".
-        '';
+        default = "Check the logs with \\\"journalctl -u nixos-upgrade.service\\\".";
         description = ''
           Body passed to `notify-send`.
         '';
@@ -75,7 +73,7 @@ _:
       cfg = config.system.autoUpgrade.notify;
     in
     lib.mkIf cfg.enable {
-      environment.systemPackages = [ pkgs.libnotify ];
+      environment.systemPackages = with pkgs; [ nixos-icons ];
 
       systemd.services = {
         # NixOS internal upgrade service
@@ -94,28 +92,30 @@ _:
           scriptArgs = "%i";
           script =
             let
-              getCoreUtil = lib.getExe' pkgs.coreutils;
-              bin = {
-                who = getCoreUtil "who";
-                cut = getCoreUtil "cut";
-                sort = getCoreUtil "sort";
-                id = getCoreUtil "id";
-                sudo = lib.getExe pkgs.sudo;
-                notify-send = lib.getExe pkgs.libnotify;
+              script = pkgs.writeShellApplication {
+                name = "nixos-upgrade-notify_-start";
+
+                text = ''
+                  instance=$1
+                  for username in $(who | cut -f1 -d" " | sort -u); do
+                    bus_route="/run/user/$(id -u "$username")/bus"
+                    if [[ -e "$bus_route" ]]; then
+                      sudo -u "$username" \
+                        DBUS_SESSION_BUS_ADDRESS="unix:path=$bus_route" \
+                        -- \
+                        notify-send --app-name="${cfg.name}" --urgency="${cfg.urgency}" --icon="${cfg.icon}" "${cfg.summary}" "${cfg.body}"
+                    fi
+                  done
+                '';
+
+                runtimeInputs = with pkgs; [
+                  coreutils
+                  sudo
+                  libnotify
+                ];
               };
             in
-            ''
-              instance=$1
-              for username in $(${bin.who} | ${bin.cut} -f1 -d" " | ${bin.sort} -u); do
-                bus_route="/run/user/$(${bin.id} -u "$username")/bus"
-                if [[ -e "$bus_route" ]]; then
-                  ${bin.sudo} -u "$username" \
-                    DBUS_SESSION_BUS_ADDRESS="unix:path=$bus_route" \
-                    -- \
-                    ${bin.notify-send} --app-name="${cfg.name}" --urgency=${cfg.urgency} --icon="${cfg.icon}" "${cfg.summary}" "${cfg.body}"
-                fi
-              done
-            '';
+            lib.getExe script;
         };
       };
     };

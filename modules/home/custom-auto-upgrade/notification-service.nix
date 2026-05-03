@@ -31,9 +31,9 @@ in
 
       icon = mkOption {
         type = types.str;
-        default = "${pkgs.nixos-icons}/share/icons/hicolor/128x128/apps/nix-snowflake.png";
+        default = "nix-snowflake";
         description = ''
-          Icon filepath passed to `notify-send`.
+          Icon passed to `notify-send`.
         '';
       };
 
@@ -61,9 +61,7 @@ in
 
       body = mkOption {
         type = types.lines;
-        default = ''
-          Check the logs with \"journalctl --user-unit ${upgradeServiceName}.service\".
-        '';
+        default = "Check the logs with \\\"journalctl --user-unit ${upgradeServiceName}.service\\\".";
         description = ''
           Body passed to `notify-send`.
         '';
@@ -75,7 +73,7 @@ in
       cfg = config.services.home-manager.autoUpgrade.notify;
     in
     lib.mkIf cfg.enable {
-      home.packages = [ pkgs.libnotify ];
+      home.packages = with pkgs; [ nixos-icons ];
 
       systemd.user.services = {
         ${upgradeServiceName}.Unit.OnFailure = "${notifyServiceName}@%n.service";
@@ -96,12 +94,18 @@ in
 
             ExecStart =
               let
-                scriptPath = pkgs.writeShellScript "${notifyServiceName}_-start" ''
-                  instance=$1
-                  notify-send --app-name="${cfg.name}" --urgency=${cfg.urgency} --icon="${cfg.icon}" "${cfg.summary}" "${cfg.body}"
-                '';
+                script = pkgs.writeShellApplication {
+                  name = "${notifyServiceName}_-start";
+
+                  text = ''
+                    instance=$1
+                    notify-send --app-name="${cfg.name}" --urgency="${cfg.urgency}" --icon="${cfg.icon}" "${cfg.summary}" "${cfg.body}"
+                  '';
+
+                  runtimeInputs = with pkgs; [ libnotify ];
+                };
               in
-              "${scriptPath} %i";
+              "${lib.getExe script} %i";
           };
         };
       };
