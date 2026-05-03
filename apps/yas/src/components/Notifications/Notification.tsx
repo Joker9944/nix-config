@@ -10,7 +10,7 @@ import Pango from "gi://Pango"
 import { SPACING, formatUnixTime } from "../../helpers"
 import { fileExists } from "../../helpers/files"
 
-const IMAGE_SIZE_MAX = 128
+const NOTIFICATION_SIZE=600
 
 export default function Notification({
 	notification,
@@ -22,11 +22,11 @@ export default function Notification({
 	showActions?: boolean
 }): JSX.Element {
 	return (
-		<Adw.Clamp maximumSize={400}>
+		<Adw.Clamp maximumSize={NOTIFICATION_SIZE}>
 			<box
 				cssName="notification"
 				cssClasses={["frame", "background", urgency(notification)]}
-				widthRequest={400}
+				widthRequest={NOTIFICATION_SIZE}
 				orientation={Gtk.Orientation.VERTICAL}
 				$={(self) => {
 					const gesture = new Gtk.GestureClick()
