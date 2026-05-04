@@ -40,7 +40,7 @@ mkDefaultHyprlandModule { dir = ./.; } {
   wayland.windowManager.hyprland.settings = {
     bind = [
       "${mods.main}, T, exec, ${bin.kitty}"
-      "${mods.main}, SPACE, exec, SKIP_FASTFETCH=true ${bin.kitten} quick-access-terminal"
+      "${mods.main}, SPACE, exec, ${bin.kitten} quick-access-terminal"
     ];
 
     windowrule = cfg.terminal.mkWindowRules {

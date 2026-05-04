@@ -11,6 +11,7 @@
       bash.enable = true;
       claude-code.enable = true;
       discord.enable = true;
+      fish.enable = true;
       gnome-text-editor.enable = true;
       intelli-shell.enable = true;
       jetbrains.enable = true;

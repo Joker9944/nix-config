@@ -29,16 +29,6 @@
 
         enableCompletion = true;
 
-        initExtra = ''
-          nix-search() {
-            nix-instantiate --eval-only --expr "(import <nixpkgs> {}).$1.outPath" | cut -d '"' -f 2
-          }
-
-          if [[ -z ''${SKIP_FASTFETCH+x} ]]; then
-            ${lib.getExe pkgs.fastfetch}
-          fi
-        '';
-
         shellAliases = {
           ls = "ls --color=auto --human-readable";
           ll = "ls --color=auto --human-readable -l --group-directories-first";
