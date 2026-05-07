@@ -59,13 +59,6 @@
               body = "tar -xvf $argv";
             };
 
-            dotdot = {
-              # cSpell:ignore dotdot
-              description = "alias ..=cd ..";
-              wraps = "cd";
-              body = "cd .. $argv";
-            };
-
             prompt_login = {
               description = "vendored and adjusted from embedded";
               body = ''
