@@ -13,9 +13,8 @@
       cfg = config.mixins.programs.systemctl-tui;
     in
     lib.mkIf cfg.enable {
-      programs = {
-        systemctl-tui.enable = true;
-        bash.shellAliases.st = "systemctl-tui";
-      };
+      home.shellAliases.st = "systemctl-tui";
+
+      programs.systemctl-tui.enable = true;
     };
 }

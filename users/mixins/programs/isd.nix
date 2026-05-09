@@ -13,9 +13,8 @@
       cfg = config.mixins.programs.isd;
     in
     lib.mkIf cfg.enable {
-      programs = {
-        isd.enable = true;
-        bash.shellAliases.sc = "isd";
-      };
+      home.shellAliases.sc = "isd";
+
+      programs.isd.enable = true;
     };
 }

@@ -10,15 +10,13 @@ let
   bin.hyprshot = lib.getExe config.programs.hyprshot.package;
 in
 mkHyprlandModule {
-  programs = {
-    hyprshot = {
-      enable = true;
-      package = pkgs-hyprland.hyprshot;
+  home.shellAliases.screenshot = "hyprshot";
 
-      saveLocation = "$HOME/Pictures/Screenshots";
-    };
+  programs.hyprshot = {
+    enable = true;
+    package = pkgs-hyprland.hyprshot;
 
-    bash.shellAliases.screenshot = "hyprshot";
+    saveLocation = "$HOME/Pictures/Screenshots";
   };
 
   wayland.windowManager.hyprland.settings.bind = [

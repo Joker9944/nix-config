@@ -27,38 +27,6 @@
           enable = true;
 
           functions = {
-            cls = {
-              description = "alias cls=clear";
-              wraps = "clear";
-              body = "clear $argv";
-            };
-
-            open = {
-              description = "alias open=xdg-open";
-              wraps = "xdg-open";
-              body = "xdg-open $argv";
-            };
-
-            less = {
-              description = "alias less=moor";
-              wraps = "moor";
-              body = "moor $argv";
-            };
-
-            mktar = {
-              # cSpell:words mktar cSpell:ignore czvf
-              description = "alias mktar=tar -czvf";
-              wraps = "tar";
-              body = "tar -czvf $argv";
-            };
-
-            untar = {
-              # cSpell:words untar
-              description = "alias untar=tar -xvf";
-              wraps = "tar";
-              body = "tar -xvf $argv";
-            };
-
             prompt_login = {
               description = "vendored and adjusted from embedded";
               body = ''

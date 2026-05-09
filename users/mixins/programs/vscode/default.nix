@@ -171,114 +171,112 @@
           mergeProfiles (commonProfiles ++ [ profiles ]);
     in
     lib.mkIf cfg.enable {
-      programs = {
-        bash.shellAliases.code = "codium";
+      home.shellAliases.code = "codium";
 
-        vscode = {
-          enable = true;
-          package = vscodePackage;
+      programs.vscode = {
+        enable = true;
+        package = vscodePackage;
 
-          profiles = {
-            default = mkProfile {
-              enableUpdateCheck = false;
-              enableExtensionUpdateCheck = false;
-            };
+        profiles = {
+          default = mkProfile {
+            enableUpdateCheck = false;
+            enableExtensionUpdateCheck = false;
+          };
 
-            nix = mkProfile [
-              {
-                extensions = [
-                  open-vsx-release.jnoortheen.nix-ide # cSpell:words jnoortheen
-                ];
-
-                userSettings = {
-                  "nix.enableLanguageServer" = true;
-                  "nix.formatterPath" = lib.getExe pkgs-unstable.nixfmt;
-                  "nix.serverPath" = lib.getExe pkgs-unstable.nil;
-                  "nix.serverSettings" = {
-                    nil = {
-                      formatting.command = [ (lib.getExe pkgs-unstable.nixfmt) ];
-                      nix.flake = {
-                        autoArchive = true;
-                        autoEvalInputs = true;
-                      };
-                    };
-
-                    nixd = {
-                      nixpkgs.expr = "import <nixpkgs> { }";
-                      formatting.command = [ (lib.getExe pkgs-unstable.nixfmt) ];
-                      options = {
-                        nixos.expr = "(builtins.getFlake \"path:${config.home.homeDirectory}/Workspace/nix-config\").nixosConfigurations.${osConfig.networking.hostName}.options";
-                        home-manager.expr = "(builtins.getFlake \"path:${config.home.homeDirectory}/Workspace/nix-config\").homeConfigurations.\"${osConfig.networking.hostName}@${custom.config.username}\".options";
-                      };
-                    };
-                  };
-                  "[nix]" = {
-                    "editor.tabSize" = 2;
-                    "editor.defaultFormatter" = "jnoortheen.nix-ide";
-                  };
-                };
-              }
-            ];
-
-            notes = mkProfile [
-              {
-                extensions = [
-                  open-vsx-release.foam.foam-vscode
-                  open-vsx-release.yzhang.markdown-all-in-one # cSpell:words yzhang
-                ];
-              }
-            ];
-
-            quarto = mkProfile [
-              {
-                extensions = [
-                  open-vsx-release.quarto.quarto
-                ];
-
-                userSettings = {
-                  "quarto.path" = lib.getExe pkgs-unstable.quarto;
-                };
-              }
-            ];
-
-            k8s = mkProfile [
-              {
-                extensions = [
-                  open-vsx-release.ms-kubernetes-tools.vscode-kubernetes-tools
-                  open-vsx-release.weaveworks.vscode-gitops-tools
-                  open-vsx-release.grafana.grafana-alloy
-                ];
-
-                userSettings = {
-                  "vs-kubernetes" = {
-                    "vs-kubernetes.crd-code-completion" = "enabled";
-                    "vs-kubernetes.kubectl-path" = lib.getExe pkgs-unstable.kubectl;
-                    "vs-kubernetes.helm-path" = lib.getExe pkgs-unstable.kubernetes-helm;
-                  };
-                };
-              }
-              {
-                extensions = [
-                  open-vsx-release.redhat.vscode-yaml
-                ];
-
-                userSettings = {
-                  "redhat.telemetry.enabled" = false;
-                  "[yaml]" = {
-                    "editor.defaultFormatter" = "redhat.vscode-yaml";
-                  };
-                };
-              }
-            ];
-
-            pbmn = mkProfile {
+          nix = mkProfile [
+            {
               extensions = [
-                open-vsx-release.redhat.vscode-extension-bpmn-editor
+                open-vsx-release.jnoortheen.nix-ide # cSpell:words jnoortheen
+              ];
+
+              userSettings = {
+                "nix.enableLanguageServer" = true;
+                "nix.formatterPath" = lib.getExe pkgs-unstable.nixfmt;
+                "nix.serverPath" = lib.getExe pkgs-unstable.nil;
+                "nix.serverSettings" = {
+                  nil = {
+                    formatting.command = [ (lib.getExe pkgs-unstable.nixfmt) ];
+                    nix.flake = {
+                      autoArchive = true;
+                      autoEvalInputs = true;
+                    };
+                  };
+
+                  nixd = {
+                    nixpkgs.expr = "import <nixpkgs> { }";
+                    formatting.command = [ (lib.getExe pkgs-unstable.nixfmt) ];
+                    options = {
+                      nixos.expr = "(builtins.getFlake \"path:${config.home.homeDirectory}/Workspace/nix-config\").nixosConfigurations.${osConfig.networking.hostName}.options";
+                      home-manager.expr = "(builtins.getFlake \"path:${config.home.homeDirectory}/Workspace/nix-config\").homeConfigurations.\"${osConfig.networking.hostName}@${custom.config.username}\".options";
+                    };
+                  };
+                };
+                "[nix]" = {
+                  "editor.tabSize" = 2;
+                  "editor.defaultFormatter" = "jnoortheen.nix-ide";
+                };
+              };
+            }
+          ];
+
+          notes = mkProfile [
+            {
+              extensions = [
+                open-vsx-release.foam.foam-vscode
+                open-vsx-release.yzhang.markdown-all-in-one # cSpell:words yzhang
+              ];
+            }
+          ];
+
+          quarto = mkProfile [
+            {
+              extensions = [
+                open-vsx-release.quarto.quarto
+              ];
+
+              userSettings = {
+                "quarto.path" = lib.getExe pkgs-unstable.quarto;
+              };
+            }
+          ];
+
+          k8s = mkProfile [
+            {
+              extensions = [
+                open-vsx-release.ms-kubernetes-tools.vscode-kubernetes-tools
+                open-vsx-release.weaveworks.vscode-gitops-tools
+                open-vsx-release.grafana.grafana-alloy
+              ];
+
+              userSettings = {
+                "vs-kubernetes" = {
+                  "vs-kubernetes.crd-code-completion" = "enabled";
+                  "vs-kubernetes.kubectl-path" = lib.getExe pkgs-unstable.kubectl;
+                  "vs-kubernetes.helm-path" = lib.getExe pkgs-unstable.kubernetes-helm;
+                };
+              };
+            }
+            {
+              extensions = [
+                open-vsx-release.redhat.vscode-yaml
               ];
 
               userSettings = {
                 "redhat.telemetry.enabled" = false;
+                "[yaml]" = {
+                  "editor.defaultFormatter" = "redhat.vscode-yaml";
+                };
               };
+            }
+          ];
+
+          pbmn = mkProfile {
+            extensions = [
+              open-vsx-release.redhat.vscode-extension-bpmn-editor
+            ];
+
+            userSettings = {
+              "redhat.telemetry.enabled" = false;
             };
           };
         };

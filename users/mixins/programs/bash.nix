@@ -1,9 +1,4 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}:
+{ lib, config, ... }:
 {
   options.mixins.programs.bash =
     let
@@ -18,16 +13,8 @@
       cfg = config.mixins.programs.bash;
     in
     lib.mkIf cfg.enable {
-      home = {
-        packages = [ pkgs.moor ];
-
-        sessionVariables.PAGER = "moor";
-      };
-
       programs.bash = {
         enable = true;
-
-        enableCompletion = true;
 
         shellAliases = {
           ls = "ls --color=auto --human-readable";
@@ -36,11 +23,6 @@
           grep = "grep --color=auto";
           ".." = "cd ..";
           "..." = "cd ../..";
-          cls = "clear";
-          mktar = "tar -czvf"; # cSpell:words mktar cSpell:ignore czvf
-          untar = "tar -xvf"; # cSpell:words untar
-          open = "xdg-open";
-          less = "moor";
         };
       };
     };
