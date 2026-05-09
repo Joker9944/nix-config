@@ -11,6 +11,7 @@
       untar = "tar -xvf"; # cSpell:words untar
       open = "xdg-open";
       less = "moor";
+      caffeine = "systemd-inhibit --no-ask-password --what=idle --who=user --why=caffeine sleep infinity";
     };
   };
 }
