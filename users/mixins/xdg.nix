@@ -16,6 +16,15 @@
       xdg = {
         autostart.enable = true;
         mimeApps.enable = true;
+
+        userDirs = {
+          enable = true;
+
+          extraConfig = {
+            XDG_PROJECTS_DIR = "${config.home.homeDirectory}/Workspace";
+            XDG_SCREENSHOT_DIR = "${config.xdg.userDirs.pictures}/Screenshots";
+          };
+        };
       };
     };
 }
