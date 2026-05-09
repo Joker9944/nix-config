@@ -52,6 +52,9 @@ let
     {
       name = "systemctl-tui";
     }
+    {
+      name = "grimblast";
+    }
   ];
 in
 {

@@ -22,7 +22,7 @@
 
           extraConfig = {
             XDG_PROJECTS_DIR = "${config.home.homeDirectory}/Workspace";
-            XDG_SCREENSHOT_DIR = "${config.xdg.userDirs.pictures}/Screenshots";
+            XDG_SCREENSHOTS_DIR = "${config.xdg.userDirs.pictures}/Screenshots";
           };
         };
       };
