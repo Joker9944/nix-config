@@ -1,6 +1,6 @@
 import GLib from "gi://GLib"
 
-const CONFIG_PATH = `${GLib.get_user_config_dir()}/yab/config.json`
+const CONFIG_PATH = `${GLib.get_user_config_dir()}/yas/config.json`
 
 type Config = {
 	gpu?: boolean
