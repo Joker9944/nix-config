@@ -11,7 +11,6 @@
   config =
     let
       cfg = config.mixins.programs.nextcloud-client;
-      mkCloudDir = dir: "${config.home.homeDirectory}/.local/state/cloud/${dir}";
     in
     lib.mkIf cfg.enable {
       programs.nextcloud-client.enable = true;
@@ -23,52 +22,42 @@
 
       xdg.userDirs = {
         enable = true;
-        createDirectories = lib.mkForce false;
 
         extraConfig.XDG_NOTES_DIR = "${config.home.homeDirectory}/Notes";
       };
 
-      home = {
-        file =
-          lib.pipe
-            [
-              config.xdg.userDirs.documents
-              config.xdg.userDirs.templates
-              config.xdg.userDirs.music
-              config.xdg.userDirs.pictures
-              config.xdg.userDirs.videos
-              config.xdg.userDirs.extraConfig.XDG_NOTES_DIR
-            ]
-            [
-              (lib.map (lib.removePrefix "${config.home.homeDirectory}/"))
-              (lib.map (dir: {
-                name = dir;
-                value = {
-                  source = config.lib.file.mkOutOfStoreSymlink (mkCloudDir dir);
-                  force = true;
-                };
-              }))
-              lib.listToAttrs
-            ];
+      home =
+        let
+          cloudDir = "${config.home.homeDirectory}/.local/state/cloud";
+          mkCloudDir = dir: "${cloudDir}/${dir}";
+          cloudDirStubs = lib.map (lib.removePrefix "${config.home.homeDirectory}/") [
+            config.xdg.userDirs.documents
+            config.xdg.userDirs.templates
+            config.xdg.userDirs.music
+            config.xdg.userDirs.pictures
+            config.xdg.userDirs.videos
+            config.xdg.userDirs.extraConfig.XDG_NOTES_DIR
+          ];
+        in
+        {
+          file = lib.pipe cloudDirStubs [
+            (lib.map (dir: {
+              name = dir;
+              value = {
+                source = config.lib.file.mkOutOfStoreSymlink (mkCloudDir dir);
+                force = true;
+              };
+            }))
+            lib.listToAttrs
+          ];
 
-        activation.createXdgUserDirectories = lib.hm.dag.entryAfter [ "linkGeneration" ] (
-          lib.pipe
-            (
-              [
-                config.xdg.userDirs.desktop
-                config.xdg.userDirs.download
-                config.xdg.userDirs.publicShare
-              ]
-              ++ lib.pipe config.xdg.userDirs.extraConfig [
-                (lib.filterAttrs (name: _: name != "XDG_NOTES_DIR"))
-                lib.attrValues
-              ]
-            )
-            [
-              (lib.map (dir: "[[ -d \"${dir}\" ]] || run mkdir -p $VERBOSE_ARG \"${dir}\""))
+          activation.createCloudDirectory = lib.hm.dag.entryBefore [ "createXdgUserDirectories" ] (
+            lib.pipe cloudDirStubs [
+              (lib.map mkCloudDir)
+              (lib.map (dir: ''[[ -d "${dir}" ]] || run mkdir -p $VERBOSE_ARG "${dir}"''))
               lib.concatLines
             ]
-        );
-      };
+          );
+        };
     };
 }
