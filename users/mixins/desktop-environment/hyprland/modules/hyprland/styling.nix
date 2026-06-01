@@ -92,7 +92,7 @@ mkHyprlandModule {
       # windowrule = rounding 0, floating:0, onworkspace:f[1]
 
       dwindle = {
-        pseudotile = true;
+        #pseudotile = true;
         preserve_split = true;
       };
 

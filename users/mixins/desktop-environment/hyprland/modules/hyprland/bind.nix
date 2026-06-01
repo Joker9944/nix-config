@@ -26,7 +26,7 @@ mkHyprlandModule {
       "${mods.main}, M, exit,"
       "${mods.main}, V, togglefloating,"
       "${mods.main}, P, pseudo," # dwindle
-      "${mods.main}, J, togglesplit," # dwindle
+      #"${mods.main}, J, togglesplit," # dwindle
 
       # move focus
       "${mods.main}, left, movefocus, l"
