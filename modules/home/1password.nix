@@ -73,7 +73,7 @@ in
         signer = "${lib.getExe' pkgs._1password-gui "op-ssh-sign"}";
       };
 
-      ssh.matchBlocks = lib.pipe cfg.blocks [
+      ssh.settings = lib.pipe cfg.blocks [
         (lib.map (name: {
           inherit name;
           value = {

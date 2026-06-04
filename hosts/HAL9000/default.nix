@@ -1,6 +1,6 @@
 { custom, ... }:
 custom.lib.mkDefaultModule { dir = ./.; } {
-  boot.loader.limine.style.interface.brandingColor = 1; # red
+  boot.loader.limine.style.interface.brandingColor = "#FF0000";
 
   programs.regreet.hyprland.settings.windowrule = [
     "match:initial_class apps\\.regreet, monitor DP-2"

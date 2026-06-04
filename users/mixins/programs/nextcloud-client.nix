@@ -23,7 +23,7 @@
       xdg.userDirs = {
         enable = true;
 
-        extraConfig.XDG_NOTES_DIR = "${config.home.homeDirectory}/Notes";
+        extraConfig.NOTES = "${config.home.homeDirectory}/Notes";
       };
 
       home =
@@ -36,7 +36,7 @@
             config.xdg.userDirs.music
             config.xdg.userDirs.pictures
             config.xdg.userDirs.videos
-            config.xdg.userDirs.extraConfig.XDG_NOTES_DIR
+            config.xdg.userDirs.extraConfig.NOTES
           ];
         in
         {

@@ -55,13 +55,9 @@
           };
         };
 
-        firefoxpwa.package =
-          (pkgs.firefoxpwa.override {
-            firefoxRuntime = pkgs.librewolf-unwrapped;
-          }).overrideAttrs
-            (prev: {
-              libs = "${config.programs.librewolf.finalPackage.libs}:${prev.libs}";
-            });
+        firefoxpwa.package = pkgs.firefoxpwa-unwrapped.override {
+          firefoxRuntime = pkgs.librewolf-unwrapped;
+        };
       };
 
       custom.browser-dispatcher.defaultBrowserCommand = "librewolf --name librewolf \"$URL\"";

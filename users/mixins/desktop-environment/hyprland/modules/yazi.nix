@@ -20,6 +20,9 @@ mkHyprlandModule {
     enable = true;
     package = pkgs-hyprland.yazi;
 
+    # WORKAROUND Has to be set since `home.stateVersion` is less than "26.05"
+    shellWrapperName = "y";
+
     settings.opener.open = [
       {
         desc = "Open";

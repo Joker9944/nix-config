@@ -19,7 +19,7 @@
       librewolf.enable = true;
       loupe.enable = true;
       mpv.enable = true;
-      neovim.enable = true;
+      neovim.enable = false;
       nextcloud-client.enable = true;
       pandoc.enable = true;
       papers.enable = true;
@@ -27,7 +27,7 @@
       systemctl-tui.enable = true;
       telegram.enable = true;
       vlc.enable = true;
-      vscode.enable = true;
+      vscodium.enable = true;
       wiremix.enable = true;
       wxmaxima.enable = true;
       xournalpp.enable = true;

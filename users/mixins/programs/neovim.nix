@@ -27,7 +27,12 @@
         vimAlias = true;
         vimdiffAlias = true;
 
-        extraLuaConfig = ''
+        # WORKAROUND Has to be set since `home.stateVersion` is less than "26.05"
+        withRuby = false;
+        # WORKAROUND Has to be set since `home.stateVersion` is less than "26.05"
+        withPython3 = false;
+
+        initLua = ''
           vim.o.list = true;
           vim.o.listchars = 'tab:» ,lead:•,trail:•'
         '';

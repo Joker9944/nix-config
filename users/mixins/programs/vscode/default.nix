@@ -8,19 +8,19 @@
   ...
 }:
 {
-  options.mixins.programs.vscode =
+  options.mixins.programs.vscodium =
     let
       inherit (lib) mkEnableOption;
     in
     {
-      enable = mkEnableOption "vscode config mixin";
+      enable = mkEnableOption "vscodium config mixin";
     };
 
   config =
     let
-      cfg = config.mixins.programs.vscode;
+      cfg = config.mixins.programs.vscodium;
 
-      vscodePackage = pkgs-unstable.vscodium.fhsWithPackages (
+      vscodiumPackage = pkgs-unstable.vscodium.fhsWithPackages (
         ps: with ps; [
           sops # default -> used for git secret encryption
           fluxcd # k8s -> vscode-gitops-tools extension
@@ -43,7 +43,7 @@
             builtins.warn ''
               HACK(exciting-mayer): "nix-vscode-extensions" breaks when invalid SemVar versions are used, remove once fixed
               https://github.com/NixOS/nixpkgs/issues/505096
-            '' (lib.substring 0 ((lib.stringLength vscodePackage.version) - 4) vscodePackage.version)
+            '' (lib.substring 0 ((lib.stringLength vscodiumPackage.version) - 4) vscodiumPackage.version)
           );
 
       inherit (vscodeExtensions) open-vsx-release;
@@ -173,9 +173,9 @@
     lib.mkIf cfg.enable {
       home.shellAliases.code = "codium";
 
-      programs.vscode = {
+      programs.vscodium = {
         enable = true;
-        package = vscodePackage;
+        package = vscodiumPackage;
 
         profiles = {
           default = mkProfile {

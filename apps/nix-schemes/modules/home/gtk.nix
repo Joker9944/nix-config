@@ -87,6 +87,8 @@ in
       accents = mkAccents cfg.scheme;
     in
     lib.mkIf cfg.enable {
+      # TODO Rebuild this without a theme
+
       schemes.gtk.accentTransformer = scheme: _: {
         accent = (mkAccents scheme).${cfg.accent};
       };
@@ -106,9 +108,14 @@ in
           inherit accents;
         };
 
-        gtk4.extraCss = libScheme.gtk.adw-gtk3.mkGtk4ExtraCss {
-          inherit (cfg) scheme accent;
-          inherit accents;
+        gtk4 = {
+          # WORKAROUND Has to be set since `home.stateVersion` is less than "26.05"
+          theme = config.gtk.theme;
+
+          extraCss = libScheme.gtk.adw-gtk3.mkGtk4ExtraCss {
+            inherit (cfg) scheme accent;
+            inherit accents;
+          };
         };
       };
 

@@ -20,10 +20,11 @@
         userDirs = {
           enable = true;
           createDirectories = true;
+          setSessionVariables = true;
 
           extraConfig = {
-            XDG_PROJECTS_DIR = "${config.home.homeDirectory}/Workspace";
-            XDG_SCREENSHOTS_DIR = "${config.xdg.userDirs.pictures}/Screenshots";
+            PROJECTS = "${config.home.homeDirectory}/Workspace";
+            SCREENSHOTS = "${config.xdg.userDirs.pictures}/Screenshots";
           };
         };
       };
