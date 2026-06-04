@@ -25,7 +25,7 @@ mkHyprlandModule {
       };
 
       mkWindowRules = mkOption {
-        type = types.functionTo (types.listOf types.str);
+        type = types.functionTo (types.listOf types.attrs);
         default =
           {
             id,

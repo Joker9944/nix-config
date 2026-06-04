@@ -6,7 +6,6 @@
   ...
 }:
 let
-  inherit (cfg.binds) mods;
   cfg = config.mixins.desktopEnvironment.hyprland;
   bin.yazi = lib.getExe config.programs.yazi.package;
 in
@@ -41,14 +40,23 @@ mkHyprlandModule {
   wayland.windowManager.hyprland.settings = {
     bind =
       let
+        inherit (cfg.binds) mods;
+        inherit (lib.generators) mkLuaInline;
         command = cfg.terminal.mkRunCommand {
           id = "yazi";
           command = bin.yazi;
         };
       in
-      [ "${mods.main}, E, exec, ${command}" ];
+      [
+        {
+          _args = [
+            "${mods.main} + E"
+            (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
+          ];
+        }
+      ];
 
-    windowrule = cfg.terminal.mkWindowRules {
+    window_rule = cfg.terminal.mkWindowRules {
       id = "yazi";
     };
   };

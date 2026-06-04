@@ -40,28 +40,85 @@
   # Hyprland
   wayland.windowManager.hyprland.settings = {
     monitor = [
-      "DP-1, 1920x1080@60.00Hz, 0x0, 1"
-      "DP-2, 2560x1440@143.97Hz, 1920x0, 1"
-      "DP-3, 1920x1080@60.00Hz, 4480x0, 1"
+      {
+        output = "DP-1";
+        mode = "1920x1080@60.00Hz";
+        position = "0x0";
+      }
+      {
+        output = "DP-2";
+        mode = "2560x1440@143.97Hz";
+        position = "1920x0";
+      }
+      {
+        output = "DP-3";
+        mode = "1920x1080@60.00Hz";
+        position = "4480x0";
+      }
     ];
 
-    exec = "${lib.getExe pkgs.xrandr} --output DP-2 --primary";
+    on = {
+      _args = [
+        "hyprland.start"
+        (lib.generators.mkLuaInline ''
+          function()
+            hl.exec_cmd("${lib.getExe pkgs.xrandr} --output DP-2 --primary")
+          end
+        '')
+      ];
+    };
 
-    workspace = [
-      "1, monitor:DP-2, default:true"
-      "2, monitor:DP-2, default:false"
-      "3, monitor:DP-2, default:false"
-      "4, monitor:DP-2, default:false"
-      "5, monitor:DP-1, default:true"
-      "6, monitor:DP-1, default:false"
-      "7, monitor:DP-1, default:false"
-      "8, monitor:DP-3, default:true"
-      "9, monitor:DP-3, default:false"
-      "0, monitor:DP-3, default:false"
-      "name:gaming, monitor:DP-2"
+    workspace_rule = [
+      {
+        workspace = "1";
+        monitor = "DP-2";
+        default = true;
+      }
+      {
+        workspace = "2";
+        monitor = "DP-2";
+      }
+      {
+        workspace = "3";
+        monitor = "DP-2";
+      }
+      {
+        workspace = "4";
+        monitor = "DP-2";
+      }
+      {
+        workspace = "5";
+        monitor = "DP-1";
+        default = true;
+      }
+      {
+        workspace = "6";
+        monitor = "DP-1";
+      }
+      {
+        workspace = "7";
+        monitor = "DP-1";
+      }
+      {
+        workspace = "8";
+        monitor = "DP-3";
+        default = true;
+      }
+      {
+        workspace = "9";
+        monitor = "DP-3";
+      }
+      {
+        workspace = "0";
+        monitor = "DP-3";
+      }
+      {
+        workspace = "name:gaming";
+        monitor = "DP-2";
+      }
     ];
 
-    input = {
+    config.input = {
       sensitivity = 0.5;
       accel_profile = "flat";
     };

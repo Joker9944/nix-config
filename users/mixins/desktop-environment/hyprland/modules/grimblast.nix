@@ -1,8 +1,10 @@
 { mkHyprlandModule, ... }:
-{ config, pkgs-hyprland, ... }:
-let
-  inherit (config.mixins.desktopEnvironment.hyprland.binds) mods;
-in
+{
+  lib,
+  config,
+  pkgs-hyprland,
+  ...
+}:
 mkHyprlandModule {
   home.shellAliases.screenshot = "grimblast";
 
@@ -11,9 +13,29 @@ mkHyprlandModule {
     package = pkgs-hyprland.grimblast;
   };
 
-  wayland.windowManager.hyprland.settings.bind = [
-    ", PRINT, exec, grimblast --notify --freeze copysave area" # cSpell:ignore copysave
-    "${mods.main}, PRINT, exec, grimblast --notify --freeze copysave active"
-    "${mods.utility}, PRINT, exec, grimblast --notify --freeze copysave output"
-  ];
+  wayland.windowManager.hyprland.settings.bind =
+    let
+      inherit (config.mixins.desktopEnvironment.hyprland.binds) mods;
+      inherit (lib.generators) mkLuaInline;
+    in
+    [
+      {
+        _args = [
+          "PRINT"
+          (mkLuaInline "hl.dsp.exec_cmd(\"grimblast --notify --freeze copysave area\")") # cSpell:ignore copysave
+        ];
+      }
+      {
+        _args = [
+          "${mods.main} + PRINT"
+          (mkLuaInline "hl.dsp.exec_cmd(\"grimblast --notify --freeze copysave active\")")
+        ];
+      }
+      {
+        _args = [
+          "${mods.utility} + PRINT"
+          (mkLuaInline "hl.dsp.exec_cmd(\"grimblast --notify --freeze copysave output\")")
+        ];
+      }
+    ];
 }

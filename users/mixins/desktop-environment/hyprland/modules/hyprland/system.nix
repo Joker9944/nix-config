@@ -10,26 +10,6 @@ let
 in
 mkHyprlandModule {
   options.mixins.desktopEnvironment.hyprland.system = with lib; {
-    environment = mkOption {
-      type = types.attrsOf (
-        types.oneOf [
-          types.str
-          types.int
-          types.bool
-        ]
-      );
-      default = { };
-      example = literalExpression ''
-        {
-          GDK_SCALE = 2;
-          NIXOS_OZONE_WL = 1;
-        }
-      '';
-      description = ''
-        Environment variables templated into Hyprland `env`.
-      '';
-    };
-
     allowMaximized = mkOption {
       type = types.listOf types.str;
       default = [ ];
@@ -41,36 +21,13 @@ mkHyprlandModule {
   };
 
   config = {
+    home.sessionVariables.NIXOS_OZONE = 1;
 
-    mixins.desktopEnvironment.hyprland.system.environment.NIXOS_OZONE = 1;
-
-    wayland.windowManager.hyprland = {
-      settings = {
-        monitor = lib.mkDefault [ ",preferred,auto,auto" ];
-
-        env = lib.attrsets.mapAttrsToList (name: value: "${name}, ${toString value}") cfg.environment;
-
+    wayland.windowManager.hyprland.settings = {
+      config = {
         # WORKAROUND Fix scaling for xwayland apps
-        xwayland = {
-          force_zero_scaling = true;
-        };
+        xwayland.force_zero_scaling = true;
 
-        # Permissions
-        # TODO set this up
-
-        # See https://wiki.hyprland.org/Configuring/Permissions/
-        # Please note permission changes here require a Hyprland restart and are not applied on-the-fly
-        # for security reasons
-
-        # ecosystem {
-        #   enforce_permissions = 1
-        # }
-
-        # permission = /usr/(bin|local/bin)/grim, screencopy, allow
-        # permission = /usr/(lib|libexec|lib64)/xdg-desktop-portal-hyprland, screencopy, allow
-        # permission = /usr/(bin|local/bin)/hyprpm, plugin, allow
-
-        # https://wiki.hyprland.org/Configuring/Variables/#input
         input =
           let
             osConfigXkb = osConfig.services.xserver.xkb;
@@ -88,23 +45,42 @@ mkHyprlandModule {
               natural_scroll = false;
             };
           };
-
-        # Windows and workspaces
-        windowrule =
-          let
-            maximizeRegex = "(${lib.concatStringsSep "|" cfg.allowMaximized})";
-          in
-          lib.mkBefore (
-            [
-              # Fix some dragging issues with XWayland
-              "match:class ^$, match:title ^$, match:xwayland true, match:float true, match:fullscreen false, match:pin false, no_focus on"
-            ]
-            # Ignore maximize requests from apps. You'll probably like this.
-            ++ lib.optional (
-              lib.length cfg.allowMaximized > 0
-            ) "match:class negative:${maximizeRegex}, suppress_event maximize"
-          );
       };
+
+      window_rule = [
+        {
+          name = "fix-xwayland-drags";
+          match = {
+            class = "^$";
+            title = "^$";
+            xwayland = true;
+            float = true;
+            fullscreen = false;
+            pin = false;
+          };
+          no_focus = true;
+        }
+        {
+          name = "suppress-maximize-events";
+          match.class = "negative:(${lib.concatStringsSep "|" cfg.allowMaximized})";
+          suppress_event = "maximize";
+        }
+      ];
+
+      # Permissions
+      # TODO set this up
+
+      # See https://wiki.hyprland.org/Configuring/Permissions/
+      # Please note permission changes here require a Hyprland restart and are not applied on-the-fly
+      # for security reasons
+
+      # ecosystem {
+      #   enforce_permissions = 1
+      # }
+
+      # permission = /usr/(bin|local/bin)/grim, screencopy, allow
+      # permission = /usr/(lib|libexec|lib64)/xdg-desktop-portal-hyprland, screencopy, allow
+      # permission = /usr/(bin|local/bin)/hyprpm, plugin, allow
     };
   };
 }

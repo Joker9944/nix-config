@@ -27,13 +27,24 @@ mkHyprlandModule {
           id = "btop";
           command = bin.btop;
         };
+        inherit (lib.generators) mkLuaInline;
       in
       [
-        "CTRL ALT, DELETE, exec, ${command}"
-        "CTRL SHIFT, ESCAPE, exec, ${command}"
+        {
+          _args = [
+            "CTRL + ALT + DELETE"
+            (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
+          ];
+        }
+        {
+          _args = [
+            "CTRL + ALT + ESCAPE"
+            (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
+          ];
+        }
       ];
 
-    windowrule = cfg.terminal.mkWindowRules {
+    window_rule = cfg.terminal.mkWindowRules {
       id = "btop";
     };
   };

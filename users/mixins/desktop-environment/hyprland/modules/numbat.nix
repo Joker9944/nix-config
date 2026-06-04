@@ -1,7 +1,6 @@
 { mkHyprlandModule, ... }:
 { lib, config, ... }:
 let
-  inherit (cfg.binds) mods;
   cfg = config.mixins.desktopEnvironment.hyprland;
   bin.numbat = lib.getExe config.programs.numbat.package;
 in
@@ -17,14 +16,23 @@ mkHyprlandModule {
   wayland.windowManager.hyprland.settings = {
     bind =
       let
+        inherit (cfg.binds) mods;
+        inherit (lib.generators) mkLuaInline;
         command = cfg.terminal.mkRunCommand {
           id = "numbat";
           command = bin.numbat;
         };
       in
-      [ "${mods.app}, C, exec, ${command}" ];
+      [
+        {
+          _args = [
+            "${mods.app} + C"
+            (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
+          ];
+        }
+      ];
 
-    windowrule = cfg.terminal.mkWindowRules {
+    window_rule = cfg.terminal.mkWindowRules {
       id = "numbat";
     };
   };

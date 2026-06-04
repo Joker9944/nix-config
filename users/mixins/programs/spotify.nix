@@ -17,21 +17,38 @@
 
       wayland.windowManager.hyprland.settings =
         let
-          inherit (config.mixins.desktopEnvironment.hyprland.binds) mods;
+
           inherit (config.programs.spotify) package;
           workspace = "spotify";
         in
         {
-          bind = [
-            "${mods.app}, S, togglespecialworkspace, ${workspace}"
+          bind =
+            let
+              inherit (config.mixins.desktopEnvironment.hyprland.binds) mods;
+              inherit (lib.generators) mkLuaInline;
+            in
+            [
+              {
+                _args = [
+                  "${mods.app} + S"
+                  (mkLuaInline "hl.dsp.workspace.toggle_special(\"${workspace}\")")
+                ];
+              }
+            ];
+
+          workspace_rule = [
+            {
+              workspace = "special:${workspace}";
+              on_created_empty = "${lib.getExe package}";
+            }
           ];
 
-          workspace = [
-            "special:${workspace}, on-created-empty:${lib.getExe package}"
-          ];
-
-          windowrule = [
-            "match:class Spotify, workspace special:${workspace}"
+          window_rule = [
+            {
+              name = "spotify";
+              match.class = "Spotify";
+              workspace = "special:${workspace} silent";
+            }
           ];
         };
     };

@@ -22,21 +22,45 @@
 
       wayland.windowManager.hyprland.settings =
         let
-          inherit (config.mixins.desktopEnvironment.hyprland.binds) mods;
           workspace = "telegram";
         in
         {
-          bind = [
-            "${mods.app}, T, togglespecialworkspace, ${workspace}"
+          bind =
+            let
+              inherit (config.mixins.desktopEnvironment.hyprland.binds) mods;
+              inherit (lib.generators) mkLuaInline;
+            in
+            [
+              {
+                _args = [
+                  "${mods.app} + T"
+                  (mkLuaInline "hl.dsp.workspace.toggle_special(\"${workspace}\")")
+                ];
+              }
+            ];
+
+          workspace_rule = [
+            {
+              workspace = "special:${workspace}";
+              on_created_empty = "${lib.getExe package}";
+            }
           ];
 
-          workspace = [
-            "special:${workspace}, on-created-empty:${lib.getExe package}"
-          ];
-
-          windowrule = [
-            "match:class org.telegram.desktop, workspace special:${workspace} silent"
-            "match:class org.telegram.desktop, match:title Media viewer, float on, content photo"
+          window_rule = [
+            {
+              name = "telegram";
+              match.class = "org.telegram.desktop";
+              workspace = "special:${workspace} silent";
+            }
+            {
+              name = "telegram-media";
+              match = {
+                class = "org.telegram.desktop";
+                title = "Media viewer";
+              };
+              content = "photo";
+              float = true;
+            }
           ];
         };
     };

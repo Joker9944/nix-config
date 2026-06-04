@@ -54,8 +54,15 @@
         ];
       };
 
-      wayland.windowManager.hyprland.settings.windowrule = [
-        "match:class ^jetbrains-.+$, match:initial_title ^$, no_initial_focus on"
+      wayland.windowManager.hyprland.settings.window_rule = [
+        {
+          name = "jetbrains";
+          match = {
+            class = "^jetbrains-.+$";
+            initial_title = "^$";
+          };
+          no_initial_focus = true;
+        }
       ];
     };
 }

@@ -8,7 +8,6 @@
   ...
 }:
 let
-  inherit (config.mixins.desktopEnvironment.hyprland.binds) mods;
   bin = {
     pkill = lib.getExe' pkgs.procps "pkill";
     hyprlock = lib.getExe config.programs.hyprlock.package;
@@ -47,8 +46,23 @@ mkHyprlandModule {
     };
   };
 
-  wayland.windowManager.hyprland.settings.bind = [
-    "${mods.main}, ESCAPE, exec, ${bin.loginctl} lock-session"
-    "${mods.main}, L, exec, ${bin.loginctl} lock-session"
-  ];
+  wayland.windowManager.hyprland.settings.bind =
+    let
+      inherit (config.mixins.desktopEnvironment.hyprland.binds) mods;
+      inherit (lib.generators) mkLuaInline;
+    in
+    [
+      {
+        _args = [
+          "${mods.main} + ESCAPE"
+          (mkLuaInline "hl.dsp.exec_cmd(\"${bin.loginctl} lock-session\")")
+        ];
+      }
+      {
+        _args = [
+          "${mods.main} + L"
+          (mkLuaInline "hl.dsp.exec_cmd(\"${bin.loginctl} lock-session\")")
+        ];
+      }
+    ];
 }

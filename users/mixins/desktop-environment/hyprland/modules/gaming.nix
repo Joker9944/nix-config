@@ -11,16 +11,20 @@ mkHyprlandModule {
   mixins.desktopEnvironment.hyprland.system.allowMaximized = regexes;
 
   wayland.windowManager.hyprland.settings = {
-    windowrule = lib.map (regex: "match:class ${regex}, content game, float on, decorate off") regexes;
+    window_rule = lib.map (regex: {
+      name = "gaming-${regex}";
+      match.class = regex;
+      content = "game";
+      float = true;
+      decorate = false;
+    }) regexes;
 
-    render = {
+    config = {
       # Enable direct scanout for fullscreen applications marked as game content
-      direct_scanout = 2;
-    };
+      render.direct_scanout = 2;
 
-    misc = {
       # Enable variable refresh rate for fullscreen applications marked as game content
-      vrr = 3;
+      misc.vrr = 3;
     };
   };
 }
