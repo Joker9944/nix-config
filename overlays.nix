@@ -11,18 +11,4 @@
   eisvogel = _: prev: {
     inherit (flake.packages.${prev.stdenv.hostPlatform.system}) eisvogel;
   };
-
-  openldap-fix = _: prev: {
-    openldap =
-      builtins.warn
-        ''
-          HACK(serene-franklin): openldap test runs are broken on nixpkgs
-          https://github.com/NixOS/nixpkgs/issues/513245
-        ''
-        (
-          prev.openldap.overrideAttrs (_: {
-            doCheck = !prev.stdenv.hostPlatform.isi686;
-          })
-        );
-  };
 }
