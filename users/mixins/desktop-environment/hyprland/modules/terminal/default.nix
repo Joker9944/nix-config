@@ -1,6 +1,6 @@
-{ mkHyprlandModule, ... }:
+{ mkDefaultHyprlandModule, ... }:
 { lib, pkgs, ... }:
-mkHyprlandModule {
+mkDefaultHyprlandModule { dir = ./.; } {
   options.mixins.desktopEnvironment.hyprland.terminal =
     let
       inherit (lib) mkPackageOption mkOption types;
@@ -27,10 +27,7 @@ mkHyprlandModule {
       mkWindowRules = mkOption {
         type = types.functionTo (types.listOf types.attrs);
         default =
-          {
-            id,
-            ...
-          }:
+          { id, ... }:
           [ "minsize 720 480, class:${id}" ];
         description = ''
           Function to generate Hyprland window rules for terminal windows.

@@ -1,6 +1,6 @@
-{ mkHyprlandModule, ... }:
+{ mkDefaultHyprlandModule, ... }:
 { lib, ... }:
-mkHyprlandModule {
+mkDefaultHyprlandModule { dir = ./.; } {
   options.mixins.desktopEnvironment.hyprland.binds =
     let
       inherit (lib) mkOption types;
@@ -23,4 +23,13 @@ mkHyprlandModule {
         '';
       };
     };
+
+  config = {
+    mixins.desktopEnvironment.hyprland.binds.mods = {
+      main = "SUPER";
+      workspace = "SUPER + SHIFT";
+      utility = "SUPER + CTRL";
+      app = "SUPER + ALT";
+    };
+  };
 }

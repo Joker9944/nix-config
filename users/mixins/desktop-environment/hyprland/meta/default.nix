@@ -1,1 +1,0 @@
-{ mkDefaultHyprlandModule, ... }: mkDefaultHyprlandModule { dir = ./.; } { }
