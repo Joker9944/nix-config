@@ -22,6 +22,8 @@ mkDefaultHyprlandModule { dir = ./.; } {
       enable = true;
 
       systemd.enable = !osConfig.programs.hyprland.withUWSM;
+
+      configType = "lua";
     };
   };
 }
