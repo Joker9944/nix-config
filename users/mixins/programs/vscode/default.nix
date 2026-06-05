@@ -147,6 +147,12 @@
             };
           };
         }
+        {
+          # lang lua
+          extensions = [
+            open-vsx-release.sumneko.lua # cSpell:ignore sumneko
+          ];
+        }
       ];
 
       mergeProfiles =
