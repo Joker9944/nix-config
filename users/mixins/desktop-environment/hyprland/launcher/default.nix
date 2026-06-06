@@ -1,5 +1,10 @@
 { mkDefaultHyprlandModule, ... }:
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  custom,
+  ...
+}:
 let
   cfg = config.mixins.desktopEnvironment.hyprland;
 in
@@ -75,30 +80,25 @@ mkDefaultHyprlandModule { dir = ./.; } {
     wayland.windowManager.hyprland.settings =
       let
         inherit (cfg.binds) mods;
+        inherit (custom.lib) mkLuaCall;
         inherit (lib.generators) mkLuaInline;
 
         trimmedProcessName = lib.substring 0 15 cfg.launcher.processName; # maximum process name length is 15 characters
-        drunCommand = cfg.launcher.mkDrunCommand {
-          icons = true;
-        };
+        drunCommand = cfg.launcher.mkDrunCommand { icons = true; };
 
         command = "pkill --exact \\\"${trimmedProcessName}\\\" || ${drunCommand}";
       in
       {
         bind = [
-          {
-            _args = [
-              "${mods.main} + R"
-              (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
-            ];
-          }
-          {
-            _args = [
-              "${mods.main} + ${mods.main}_L"
-              (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
-              { release = true; }
-            ];
-          }
+          (mkLuaCall [
+            "${mods.main} + R"
+            (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
+          ])
+          (mkLuaCall [
+            "${mods.main} + ${mods.main}_L"
+            (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
+            { release = true; }
+          ])
         ];
       };
   };

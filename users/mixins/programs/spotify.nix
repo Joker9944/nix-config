@@ -1,4 +1,9 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  custom,
+  ...
+}:
 {
   options.mixins.programs.spotify =
     let
@@ -11,45 +16,39 @@
   config =
     let
       cfg = config.mixins.programs.spotify;
+      workspace = "spotify";
     in
     lib.mkIf cfg.enable {
       programs.spotify.enable = true;
 
-      wayland.windowManager.hyprland.settings =
-        let
-
-          inherit (config.programs.spotify) package;
-          workspace = "spotify";
-        in
-        {
-          bind =
-            let
-              inherit (config.mixins.desktopEnvironment.hyprland.binds) mods;
-              inherit (lib.generators) mkLuaInline;
-            in
-            [
-              {
-                _args = [
-                  "${mods.app} + S"
-                  (mkLuaInline "hl.dsp.workspace.toggle_special(\"${workspace}\")")
-                ];
-              }
-            ];
-
-          workspace_rule = [
-            {
-              workspace = "special:${workspace}";
-              on_created_empty = "${lib.getExe package}";
-            }
+      wayland.windowManager.hyprland.settings = {
+        bind =
+          let
+            inherit (config.mixins.desktopEnvironment.hyprland.binds) mods;
+            inherit (custom.lib) mkLuaCall;
+            inherit (lib.generators) mkLuaInline;
+          in
+          [
+            (mkLuaCall [
+              "${mods.app} + S"
+              (mkLuaInline "hl.dsp.workspace.toggle_special(\"${workspace}\")")
+            ])
           ];
 
-          window_rule = [
-            {
-              name = "spotify";
-              match.class = "Spotify";
-              workspace = "special:${workspace} silent";
-            }
-          ];
-        };
+        workspace_rule = [
+          {
+            workspace = "special:${workspace}";
+            on_created_empty = "spotify";
+          }
+        ];
+
+        window_rule = [
+          {
+            name = "spotify";
+            match.class = "Spotify";
+            workspace = "special:${workspace} silent";
+          }
+        ];
+      };
     };
 }

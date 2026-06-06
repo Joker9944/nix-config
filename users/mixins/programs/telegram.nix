@@ -1,4 +1,9 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  custom,
+  ...
+}:
 {
   options.mixins.programs.telegram =
     let
@@ -12,6 +17,7 @@
     let
       cfg = config.mixins.programs.telegram;
       inherit (config.programs.telegram) package;
+      workspace = "telegram";
     in
     lib.mkIf cfg.enable {
       programs.telegram.enable = true;
@@ -20,48 +26,43 @@
         "${package}/share/applications/org.telegram.desktop.desktop"
       ];
 
-      wayland.windowManager.hyprland.settings =
-        let
-          workspace = "telegram";
-        in
-        {
-          bind =
-            let
-              inherit (config.mixins.desktopEnvironment.hyprland.binds) mods;
-              inherit (lib.generators) mkLuaInline;
-            in
-            [
-              {
-                _args = [
-                  "${mods.app} + T"
-                  (mkLuaInline "hl.dsp.workspace.toggle_special(\"${workspace}\")")
-                ];
-              }
-            ];
-
-          workspace_rule = [
-            {
-              workspace = "special:${workspace}";
-              on_created_empty = "${lib.getExe package}";
-            }
+      wayland.windowManager.hyprland.settings = {
+        bind =
+          let
+            inherit (config.mixins.desktopEnvironment.hyprland.binds) mods;
+            inherit (custom.lib) mkLuaCall;
+            inherit (lib.generators) mkLuaInline;
+          in
+          [
+            (mkLuaCall [
+              "${mods.app} + T"
+              (mkLuaInline "hl.dsp.workspace.toggle_special(\"${workspace}\")")
+            ])
           ];
 
-          window_rule = [
-            {
-              name = "telegram";
-              match.class = "org.telegram.desktop";
-              workspace = "special:${workspace} silent";
-            }
-            {
-              name = "telegram-media";
-              match = {
-                class = "org.telegram.desktop";
-                title = "Media viewer";
-              };
-              content = "photo";
-              float = true;
-            }
-          ];
-        };
+        workspace_rule = [
+          {
+            workspace = "special:${workspace}";
+            on_created_empty = "Telegram";
+          }
+        ];
+
+        window_rule = [
+          {
+            name = "telegram";
+            match.class = "org.telegram.desktop";
+            workspace = "special:${workspace} silent";
+          }
+          {
+            name = "telegram-media";
+            match = {
+              class = "org.telegram.desktop";
+              title = "Media viewer";
+            };
+            content = "photo";
+            float = true;
+          }
+        ];
+      };
     };
 }

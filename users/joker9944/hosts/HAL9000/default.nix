@@ -3,6 +3,7 @@
   pkgs,
   config,
   osConfig,
+  custom,
   ...
 }:
 {
@@ -57,16 +58,14 @@
       }
     ];
 
-    on = {
-      _args = [
-        "hyprland.start"
-        (lib.generators.mkLuaInline ''
-          function()
-            hl.exec_cmd("${lib.getExe pkgs.xrandr} --output DP-2 --primary")
-          end
-        '')
-      ];
-    };
+    on = custom.lib.mkLuaCall [
+      "hyprland.start"
+      (lib.generators.mkLuaInline ''
+        function()
+          hl.exec_cmd("${lib.getExe pkgs.xrandr} --output DP-2 --primary")
+        end
+      '')
+    ];
 
     workspace_rule = [
       {

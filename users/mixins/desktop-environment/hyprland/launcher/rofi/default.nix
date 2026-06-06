@@ -6,9 +6,6 @@
   custom,
   ...
 }:
-let
-  bin.rofi = lib.getExe config.programs.rofi.package;
-in
 mkHyprlandModule {
   config =
     let
@@ -32,7 +29,7 @@ mkHyprlandModule {
 
         plugins = [ pkgs-hyprland.rofi-calc ];
 
-        terminal = lib.getExe cfg.terminal.package;
+        terminal = cfg.terminal.package.meta.mainProgram;
 
         # cSpell:words rasi
         theme = import ./theme.rasi.nix {
@@ -50,7 +47,7 @@ mkHyprlandModule {
             ...
           }:
           custom.lib.mkCommand [
-            bin.rofi
+            "rofi"
             "-show drun"
             (lib.optional icons "-show-icons")
           ];
@@ -117,7 +114,7 @@ mkHyprlandModule {
                 ];
           in
           custom.lib.mkCommand [
-            bin.rofi
+            "rofi"
             "-dmenu"
             (lib.optional (themeString != "") "-theme-str \"${themeString}\"")
             extraArgs

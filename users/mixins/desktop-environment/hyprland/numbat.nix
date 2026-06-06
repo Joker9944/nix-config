@@ -1,8 +1,13 @@
 { mkHyprlandModule, ... }:
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  custom,
+  ...
+}:
 let
   cfg = config.mixins.desktopEnvironment.hyprland;
-  bin.numbat = lib.getExe config.programs.numbat.package;
+  id = "numbat";
 in
 mkHyprlandModule {
   programs.numbat = {
@@ -17,23 +22,20 @@ mkHyprlandModule {
     bind =
       let
         inherit (cfg.binds) mods;
+        inherit (custom.lib) mkLuaCall;
         inherit (lib.generators) mkLuaInline;
         command = cfg.terminal.mkRunCommand {
-          id = "numbat";
-          command = bin.numbat;
+          inherit id;
+          command = "numbat";
         };
       in
       [
-        {
-          _args = [
-            "${mods.app} + C"
-            (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
-          ];
-        }
+        (mkLuaCall [
+          "${mods.app} + C"
+          (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
+        ])
       ];
 
-    window_rule = cfg.terminal.mkWindowRules {
-      id = "numbat";
-    };
+    window_rule = cfg.terminal.mkWindowRules { inherit id; };
   };
 }

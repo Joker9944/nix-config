@@ -2,20 +2,10 @@
 {
   lib,
   config,
-  osConfig,
-  pkgs,
   pkgs-hyprland,
+  custom,
   ...
 }:
-let
-  bin = {
-    pkill = lib.getExe' pkgs.procps "pkill";
-    hyprlock = lib.getExe config.programs.hyprlock.package;
-    hyprctl = lib.getExe' osConfig.programs.hyprland.package "hyprctl";
-    loginctl = lib.getExe' pkgs.systemd "loginctl";
-    systemctl = lib.getExe' pkgs.systemd "systemctl";
-  };
-in
 mkHyprlandModule {
   services.hypridle = {
     enable = true;
@@ -23,24 +13,24 @@ mkHyprlandModule {
 
     settings = {
       general = {
-        lock_cmd = bin.hyprlock;
-        unlock_cmd = "${bin.pkill} --exact hyprlock";
-        after_sleep_cmd = "${bin.hyprctl} dispatch dpms on";
+        lock_cmd = "hyprlock";
+        unlock_cmd = "pkill --exact hyprlock";
+        after_sleep_cmd = "hyprctl dispatch dpms on";
       };
 
       listener = [
         {
           timeout = 10 * 60;
-          on-timeout = "${bin.loginctl} lock-session";
+          on-timeout = "loginctl lock-session";
         }
         {
           timeout = 15 * 60;
-          on-timeout = "${bin.hyprctl} dispatch dpms off";
-          on-resume = "${bin.hyprctl} dispatch dpms on";
+          on-timeout = "hyprctl dispatch dpms off";
+          on-resume = "hyprctl dispatch dpms on";
         }
         {
           timeout = 30 * 60;
-          on-timeout = "${bin.systemctl} suspend";
+          on-timeout = "systemctl suspend";
         }
       ];
     };
@@ -49,20 +39,17 @@ mkHyprlandModule {
   wayland.windowManager.hyprland.settings.bind =
     let
       inherit (config.mixins.desktopEnvironment.hyprland.binds) mods;
+      inherit (custom.lib) mkLuaCall;
       inherit (lib.generators) mkLuaInline;
     in
     [
-      {
-        _args = [
-          "${mods.main} + ESCAPE"
-          (mkLuaInline "hl.dsp.exec_cmd(\"${bin.loginctl} lock-session\")")
-        ];
-      }
-      {
-        _args = [
-          "${mods.main} + L"
-          (mkLuaInline "hl.dsp.exec_cmd(\"${bin.loginctl} lock-session\")")
-        ];
-      }
+      (mkLuaCall [
+        "${mods.main} + ESCAPE"
+        (mkLuaInline "hl.dsp.exec_cmd(\"loginctl lock-session\")")
+      ])
+      (mkLuaCall [
+        "${mods.main} + L"
+        (mkLuaInline "hl.dsp.exec_cmd(\"loginctl lock-session\")")
+      ])
     ];
 }

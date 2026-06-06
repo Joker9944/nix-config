@@ -3,11 +3,12 @@
   lib,
   config,
   pkgs-hyprland,
+  custom,
   ...
 }:
 let
   cfg = config.mixins.desktopEnvironment.hyprland;
-  bin.yazi = lib.getExe config.programs.yazi.package;
+  id = "yazi";
 in
 mkHyprlandModule {
   home.packages = with pkgs-hyprland; [
@@ -41,23 +42,20 @@ mkHyprlandModule {
     bind =
       let
         inherit (cfg.binds) mods;
+        inherit (custom.lib) mkLuaCall;
         inherit (lib.generators) mkLuaInline;
         command = cfg.terminal.mkRunCommand {
-          id = "yazi";
-          command = bin.yazi;
+          inherit id;
+          command = "yazi";
         };
       in
       [
-        {
-          _args = [
-            "${mods.main} + E"
-            (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
-          ];
-        }
+        (mkLuaCall [
+          "${mods.main} + E"
+          (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
+        ])
       ];
 
-    window_rule = cfg.terminal.mkWindowRules {
-      id = "yazi";
-    };
+    window_rule = cfg.terminal.mkWindowRules { inherit id; };
   };
 }

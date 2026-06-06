@@ -4,11 +4,12 @@
   config,
   osConfig,
   pkgs-hyprland,
+  custom,
   ...
 }:
 let
   cfg = config.mixins.desktopEnvironment.hyprland;
-  bin.btop = lib.getExe config.programs.btop.package;
+  id = "btop";
 in
 mkHyprlandModule {
   programs.btop = {
@@ -24,28 +25,23 @@ mkHyprlandModule {
     bind =
       let
         command = cfg.terminal.mkRunCommand {
-          id = "btop";
-          command = bin.btop;
+          inherit id;
+          command = "btop";
         };
+        inherit (custom.lib) mkLuaCall;
         inherit (lib.generators) mkLuaInline;
       in
       [
-        {
-          _args = [
-            "CTRL + ALT + DELETE"
-            (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
-          ];
-        }
-        {
-          _args = [
-            "CTRL + ALT + ESCAPE"
-            (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
-          ];
-        }
+        (mkLuaCall [
+          "CTRL + ALT + DELETE"
+          (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
+        ])
+        (mkLuaCall [
+          "CTRL + ALT + ESCAPE"
+          (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
+        ])
       ];
 
-    window_rule = cfg.terminal.mkWindowRules {
-      id = "btop";
-    };
+    window_rule = cfg.terminal.mkWindowRules { inherit id; };
   };
 }

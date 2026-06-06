@@ -3,6 +3,7 @@
   lib,
   config,
   pkgs-hyprland,
+  custom,
   ...
 }:
 let
@@ -18,20 +19,12 @@ mkHyprlandModule {
 
   wayland.windowManager.hyprland.settings.bind =
     let
-      inherit (cfg.binds) mods;
-      inherit (lib.generators) mkLuaInline;
-      bin = {
-        wl-copy = lib.getExe' pkgs-hyprland.wl-clipboard "wl-copy";
-        cliphist = lib.getExe pkgs-hyprland.cliphist;
-      };
       dmenuCommand = cfg.launcher.mkDmenuCommand { };
     in
     [
-      {
-        _args = [
-          "${mods.utility} + V"
-          (mkLuaInline "hl.dsp.exec_cmd(\"${bin.cliphist} list | ${dmenuCommand} | ${bin.cliphist} decode | ${bin.wl-copy}\")")
-        ];
-      }
+      (custom.lib.mkLuaCall [
+        "${cfg.binds.mods.utility} + V"
+        (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"cliphist list | ${dmenuCommand} | cliphist decode | wl-copy\")")
+      ])
     ];
 }
