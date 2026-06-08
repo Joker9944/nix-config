@@ -13,7 +13,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     base24-gen = {
-      url = "github:psyclyx/base24-gen"; # cSpell:ignore psyclyx
+      url = "github:psyclyx/base24-gen/main"; # cSpell:ignore psyclyx
       flake = false;
     };
   };
