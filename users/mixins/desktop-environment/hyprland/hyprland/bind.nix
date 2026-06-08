@@ -155,13 +155,15 @@ mkHyprlandModule {
         }
       ])
     ]
+
     # workspaces
-    ++ (lib.lists.flatten (
-      lib.lists.genList (
-        index:
+    ++ (lib.pipe 10 [
+      (lib.genList (i: i + 1))
+      (lib.map (
+        i:
         let
-          key = toString (custom.math.mod (index + 1) 10);
-          workspace = toString (index + 1);
+          key = toString (custom.math.mod i 10);
+          workspace = toString i;
         in
         [
           # switch workspace
@@ -177,8 +179,10 @@ mkHyprlandModule {
             { description = "move active window to workspace ${workspace}"; }
           ])
         ]
-      ) 10
-    ))
+      ))
+      lib.flatten
+    ])
+
     # move focus
     ++ (lib.map
       (

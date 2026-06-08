@@ -4,12 +4,9 @@ let
   regexes = [
     "steam_app_\\\\d+"
     "gamescope"
-    "DetectiveGrimoire"
   ];
 in
 mkHyprlandModule {
-  mixins.desktopEnvironment.hyprland.system.allowMaximized = regexes;
-
   wayland.windowManager.hyprland.settings = {
     window_rule = lib.map (regex: {
       name = "gaming-${regex}";
@@ -17,6 +14,9 @@ mkHyprlandModule {
       content = "game";
       float = true;
       decorate = false;
+      no_blur = true;
+      immediate = true;
+      suppress_event = "";
     }) regexes;
 
     config = {
