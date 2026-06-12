@@ -64,6 +64,10 @@
         enable = true;
         package = pkgs.ananicy-cpp;
         rulesProvider = pkgs.ananicy-rules-cachyos;
+
+        # WORKAROUND moves realtime tasks to the root cgroup to move them to the ananicy-cpp controlled cgroups.
+        # This messes with polkit, for examples takes hyprland out of the session slice cgroup which breaks various things.
+        settings.cgroup_realtime_workaround = lib.mkForce false;
       };
 
       environment = with pkgs; {

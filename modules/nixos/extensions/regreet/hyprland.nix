@@ -52,11 +52,12 @@
       ];
 
       services.greetd.settings.default_session.command =
-        "${lib.getExe' pkgs.dbus "dbus-run-session"} ${getHyprlandExe "start-hyprland"} -- --config ${
-          pkgs.writeTextFile {
+        let
+          hyprlandConfig = pkgs.writeTextFile {
             name = "greetd-hyprland.conf";
             text = flake.inputs.home-manager.lib.hm.generators.toHyprconf { attrs = cfg.hyprland.settings; };
-          }
-        }";
+          };
+        in
+        "${lib.getExe' pkgs.dbus "dbus-run-session"} ${getHyprlandExe "start-hyprland"} -- --config ${hyprlandConfig}";
     };
 }
