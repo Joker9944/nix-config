@@ -55,6 +55,10 @@ let
     {
       name = "grimblast";
     }
+    {
+      name = "signal";
+      package = "signal-desktop";
+    }
   ];
 in
 {

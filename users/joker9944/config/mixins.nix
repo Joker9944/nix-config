@@ -23,6 +23,7 @@
       nextcloud-client.enable = true;
       pandoc.enable = true;
       papers.enable = true;
+      signal.enable = true;
       spotify.enable = true;
       systemctl-tui.enable = true;
       telegram.enable = true;

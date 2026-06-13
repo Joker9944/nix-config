@@ -5,21 +5,21 @@
   ...
 }:
 {
-  options.mixins.programs.spotify =
+  options.mixins.programs.signal =
     let
       inherit (lib) mkEnableOption;
     in
     {
-      enable = mkEnableOption "spotify config mixin";
+      enable = mkEnableOption "signal config mixin";
     };
 
   config =
     let
-      cfg = config.mixins.programs.spotify;
-      workspace = "spotify";
+      cfg = config.mixins.programs.signal;
+      workspace = "signal";
     in
     lib.mkIf cfg.enable {
-      programs.spotify.enable = true;
+      programs.signal.enable = true;
 
       wayland.windowManager.hyprland.settings = {
         bind =
@@ -30,7 +30,7 @@
           in
           [
             (mkLuaCall [
-              "${mods.app} + S"
+              "${mods.app} + G"
               (mkLuaInline "hl.dsp.workspace.toggle_special(\"${workspace}\")")
             ])
           ];
@@ -38,14 +38,14 @@
         workspace_rule = [
           {
             workspace = "special:${workspace}";
-            on_created_empty = "spotify";
+            on_created_empty = "signal-desktop";
           }
         ];
 
         window_rule = [
           {
-            name = "spotify";
-            match.class = "Spotify";
+            name = "signal";
+            match.class = "signal";
             workspace = "special:${workspace}";
           }
         ];
