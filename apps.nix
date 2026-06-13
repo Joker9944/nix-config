@@ -7,8 +7,8 @@
 {
   cspell = {
     type = "app";
-    program = lib.getExe pkgs.nodePackages.cspell;
-    inherit (pkgs.nodePackages.cspell) meta;
+    program = lib.getExe pkgs.cspell;
+    inherit (pkgs.cspell) meta;
   };
 
   dconf-editor = {
