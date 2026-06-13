@@ -46,7 +46,7 @@
           {
             name = "discord";
             match.class = "vesktop";
-            workspace = "special:${workspace} silent";
+            workspace = "special:${workspace}";
           }
         ];
       };

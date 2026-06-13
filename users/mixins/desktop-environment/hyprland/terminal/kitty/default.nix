@@ -41,17 +41,21 @@ mkDefaultHyprlandModule { dir = ./.; } {
   wayland.windowManager.hyprland.settings = {
     bind =
       let
-        inherit (config.mixins.desktopEnvironment.hyprland.binds) mods;
+        inherit (cfg.binds) mods;
         inherit (custom.lib) mkLuaCall;
+        inherit (cfg.system) mkLuaRunPart;
       in
       [
         (mkLuaCall [
           "${mods.main} + T"
-          (mkLuaInline "hl.dsp.exec_cmd(\"kitty\")")
+          (mkLuaRunPart { command = "kitty"; })
         ])
         (mkLuaCall [
           "${mods.main} + SPACE"
-          (mkLuaInline "hl.dsp.exec_cmd(\"kitten quick-access-terminal\")")
+          (mkLuaRunPart {
+            command = "kitten";
+            args = [ "quick-access-terminal" ];
+          })
         ])
       ];
 

@@ -1,24 +1,13 @@
 { mkDefaultHyprlandModule, ... }:
-{ lib, pkgs, ... }:
+{ lib, ... }:
 mkDefaultHyprlandModule { dir = ./.; } {
   options.mixins.desktopEnvironment.hyprland.terminal =
     let
-      inherit (lib) mkPackageOption mkOption types;
+      inherit (lib) mkOption types;
     in
     {
-      package = mkPackageOption pkgs "terminal" {
-        default = null;
-      };
-
       mkRunCommand = mkOption {
         type = types.functionTo types.str;
-        default =
-          {
-            id,
-            command,
-            ...
-          }:
-          "kitty --override confirm_os_window_close=0 --app-id ${id} ${command}";
         description = ''
           Function to generate a command to run a command in terminal.
         '';
@@ -26,9 +15,6 @@ mkDefaultHyprlandModule { dir = ./.; } {
 
       mkWindowRules = mkOption {
         type = types.functionTo (types.listOf types.attrs);
-        default =
-          { id, ... }:
-          [ "minsize 720 480, class:${id}" ];
         description = ''
           Function to generate Hyprland window rules for terminal windows.
         '';

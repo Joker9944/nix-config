@@ -1,6 +1,5 @@
 { mkHyprlandModule, ... }:
 {
-  lib,
   config,
   pkgs-hyprland,
   custom,
@@ -20,11 +19,14 @@ mkHyprlandModule {
   wayland.windowManager.hyprland.settings.bind =
     let
       dmenuCommand = cfg.launcher.mkDmenuCommand { };
+      callPart = cfg.system.mkLuaRunPart {
+        command = "cliphist list | ${dmenuCommand} | cliphist decode | wl-copy";
+      };
     in
     [
       (custom.lib.mkLuaCall [
         "${cfg.binds.mods.utility} + V"
-        (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"cliphist list | ${dmenuCommand} | cliphist decode | wl-copy\")")
+        callPart
       ])
     ];
 }

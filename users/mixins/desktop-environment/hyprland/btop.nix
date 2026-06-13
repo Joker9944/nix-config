@@ -24,21 +24,21 @@ mkHyprlandModule {
   wayland.windowManager.hyprland.settings = {
     bind =
       let
-        command = cfg.terminal.mkRunCommand {
+        inherit (custom.lib) mkLuaCall;
+        terminalCommand = cfg.terminal.mkRunCommand {
           inherit id;
           command = "btop";
         };
-        inherit (custom.lib) mkLuaCall;
-        inherit (lib.generators) mkLuaInline;
+        callPart = cfg.system.mkLuaRunPart { command = terminalCommand; };
       in
       [
         (mkLuaCall [
           "CTRL + ALT + DELETE"
-          (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
+          callPart
         ])
         (mkLuaCall [
           "CTRL + ALT + ESCAPE"
-          (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
+          callPart
         ])
       ];
 
