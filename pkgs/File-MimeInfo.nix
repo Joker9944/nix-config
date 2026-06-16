@@ -6,7 +6,7 @@
 }:
 let
   pname = "File-MimeInfo";
-  version = "0.36";
+  version = "0.37";
 in
 perlPackages.buildPerlPackage {
   inherit pname version;
@@ -14,7 +14,7 @@ perlPackages.buildPerlPackage {
   src = fetchgit {
     url = "https://codeberg.org/michielb/${pname}.git";
     rev = version;
-    hash = "sha256-/2fnxe0j36C8JQqbP2BvroVCVYtym9QWhC3UOEmkv3Q=";
+    hash = "sha256-0zZDoB0anyIa9QjblFhikfqQlKW98RkOW4ubNP+0+zs=";
   };
 
   buildInputs = with perlPackages; [
