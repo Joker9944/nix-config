@@ -202,9 +202,12 @@
                 "nix.serverSettings" = {
                   nil = {
                     formatting.command = [ (lib.getExe pkgs-unstable.nixfmt) ];
-                    nix.flake = {
-                      autoArchive = true;
-                      autoEvalInputs = true;
+                    nix = {
+                      maxMemoryMB = 8192;
+                      flake = {
+                        autoArchive = true;
+                        autoEvalInputs = true;
+                      };
                     };
                   };
 
