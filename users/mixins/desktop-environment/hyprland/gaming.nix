@@ -2,7 +2,7 @@
 { lib, ... }:
 let
   regexes = [
-    "steam_app_\\\\d+"
+    "steam_app_\\d+"
     "gamescope"
   ];
 in
