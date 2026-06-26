@@ -1,3 +1,9 @@
 /result*
 /.cspellcache
 /.pre-commit-config.yaml
+
+.nx/installation
+.nx/cache
+.nx/workspace-data
+.nx/self-healing
+.nx/migrate-runs

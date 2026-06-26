@@ -88,6 +88,16 @@
               inherit (self.checks.${system}.preCommitHooks) shellHook;
               buildInputs = self.checks.${system}.preCommitHooks.enabledPackages;
             };
+            nx =
+              (pkgs.buildFHSEnv {
+                name = "nx-dev";
+                targetPkgs =
+                  pkgs: with pkgs; [
+                    bash
+                    git
+                    nodejs
+                  ];
+              }).env;
           };
 
           checks = {
@@ -107,6 +117,7 @@
                 cspell = {
                   enable = true;
                   args = [ "--no-must-find-files" ];
+                  excludes = [ "^nx(\\..+)?$" ];
                 };
 
                 # Nix
@@ -116,7 +127,10 @@
                 statix.enable = true;
 
                 # Shell
-                shellcheck.enable = true;
+                shellcheck = {
+                  enable = true;
+                  excludes = [ "^nx(\\..+)?$" ];
+                };
                 shfmt.enable = true;
 
                 # Python
