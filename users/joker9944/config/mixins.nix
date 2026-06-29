@@ -10,6 +10,7 @@
       atuin.enable = true;
       bash.enable = true;
       claude-code.enable = true;
+      direnv.enable = true;
       discord.enable = true;
       fish.enable = true;
       gnome-text-editor.enable = true;
