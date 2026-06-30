@@ -3,8 +3,6 @@
   lib,
   pkgs-unstable,
   config,
-  osConfig,
-  custom,
   ...
 }:
 {
@@ -199,30 +197,24 @@
                 "nix.enableLanguageServer" = true;
                 "nix.formatterPath" = lib.getExe pkgs-unstable.nixfmt;
                 "nix.serverPath" = lib.getExe pkgs-unstable.nil;
-                "nix.serverSettings" = {
-                  nil = {
-                    formatting.command = [ (lib.getExe pkgs-unstable.nixfmt) ];
-                    nix = {
-                      maxMemoryMB = 8192;
-                      flake = {
-                        autoArchive = true;
-                        autoEvalInputs = true;
-                      };
-                    };
-                  };
-
-                  nixd = {
-                    nixpkgs.expr = "import <nixpkgs> { }";
-                    formatting.command = [ (lib.getExe pkgs-unstable.nixfmt) ];
-                    options = {
-                      nixos.expr = "(builtins.getFlake \"path:${config.home.homeDirectory}/Workspace/nix-config\").nixosConfigurations.${osConfig.networking.hostName}.options";
-                      home-manager.expr = "(builtins.getFlake \"path:${config.home.homeDirectory}/Workspace/nix-config\").homeConfigurations.\"${osConfig.networking.hostName}@${custom.config.username}\".options";
+                "nix.serverSettings".nil = {
+                  formatting.command = [ (lib.getExe pkgs-unstable.nixfmt) ];
+                  nix = {
+                    maxMemoryMB = 8192;
+                    flake = {
+                      autoArchive = true;
+                      autoEvalInputs = true;
                     };
                   };
                 };
                 "[nix]" = {
                   "editor.tabSize" = 2;
                   "editor.defaultFormatter" = "jnoortheen.nix-ide";
+                  "editor.formatOnSave" = true;
+                  "editor.formatOnType" = true;
+                  "editor.selectionHighlight" = false;
+                  "editor.tabCompletion" = "onlySnippets";
+                  "editor.wordBasedSuggestions" = "off";
                 };
               };
             }
