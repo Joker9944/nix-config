@@ -288,6 +288,26 @@
               "redhat.telemetry.enabled" = false;
             };
           };
+
+          flutter = mkProfile {
+            extensions = with open-vsx-release; [
+              dart-code.flutter
+              dart-code.dart-code
+            ];
+
+            userSettings = {
+              "debug.internalConsoleOptions" = "openOnSessionStart";
+
+              "[dart]" = {
+                "editor.formatOnSave" = true;
+                "editor.formatOnType" = true;
+                "editor.rulers" = [ 80 ];
+                "editor.selectionHighlight" = false;
+                "editor.tabCompletion" = "onlySnippets";
+                "editor.wordBasedSuggestions" = "off";
+              };
+            };
+          };
         };
       };
     };
