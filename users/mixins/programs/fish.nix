@@ -56,7 +56,11 @@
                 end
 
                 if test -n "$IN_NIX_SHELL"
-                  echo -n -s (set_color $color_host) "<nix-shell>" (set_color normal)
+                  if test -n "$name"
+                    echo -n -s (set_color $color_host) "<$name>" (set_color normal)
+                  else
+                    echo -n -s (set_color $color_host) "<nix-shell>" (set_color normal)
+                  end
                 else
                   echo -n -s (set_color $fish_color_user) "$USER" (set_color normal) @ (set_color $color_host) (prompt_hostname) (set_color normal)
                 end
