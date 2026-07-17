@@ -1,4 +1,9 @@
-{ lib, config, ... }:
+{
+  inputs,
+  lib,
+  config,
+  ...
+}:
 {
   options.mixins.programs.claude-code =
     let
@@ -15,6 +20,10 @@
     lib.mkIf cfg.enable {
       programs.claude-code = {
         enable = true;
+
+        plugins = [
+          "${inputs.claude-plugins-official}/plugins/skill-creator"
+        ];
       };
     };
 }

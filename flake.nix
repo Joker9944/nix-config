@@ -30,6 +30,10 @@
       url = "github:nix-community/nix-vscode-extensions";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+    claude-plugins-official = {
+      url = "github:anthropics/claude-plugins-official"; # cSpell:ignore anthropics
+      flake = false;
+    };
 
     # modules
     sops-nix = {
@@ -76,10 +80,14 @@
           pkgs = nixpkgs.legacyPackages.${system};
         in
         {
-          packages = import ./pkgs {
-            inherit lib pkgs;
-            flake = self;
-          };
+          packages =
+            import ./pkgs {
+              inherit lib pkgs;
+              flake = self;
+            }
+            // {
+              home-manager-docs-json = inputs.home-manager.packages.${system}.docs-json;
+            };
 
           apps = import ./apps.nix { inherit lib pkgs system; };
 
