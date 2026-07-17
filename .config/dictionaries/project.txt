@@ -1,6 +1,8 @@
+abbrs
 appname
 asciidoctor
 Astal
+attrset
 audiomenu
 aylur
 backtab
@@ -10,10 +12,13 @@ centerbox
 crypted
 Dawt
 drun
+esac
+evals
 gdkmonitor
 glibtop
 gnim
 gpgsign
+gsub
 halign
 headerbar
 hexpand
@@ -26,8 +31,11 @@ messagedialog
 mountpoint
 noinherit
 PAMFAIL
+pipefail
 pixbuf
+pkgs
 signingkey
+startswith
 subvolumes
 trivago
 UWSM
@@ -35,6 +43,7 @@ uwunicorn
 vfat
 vmoption
 vmoptions
+vscodevim
 vsplit
 Weaveworks
 wxmaxima

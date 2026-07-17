@@ -1,0 +1,26 @@
+{
+  "skill_name": "home-manager-options",
+  "evals": [
+    {
+      "id": 1,
+      "name": "eval-vscode-profiles",
+      "prompt": "Add a home-manager mixin at users/mixins/programs/vscode.nix that enables vscode, installs two extensions — vscodevim.vim and rust-lang.rust-analyzer — via nix, sets user settings including editor.fontLigatures = true and editor.formatOnSave = true, and makes the extensions marketplace directory mutable so extensions can also be installed from the UI. Follow the existing mixin style in this repo (options.mixins.programs.vscode.enable = mkEnableOption; config = lib.mkIf cfg.enable {...};).",
+      "expected_output": "A .nix mixin that (a) uses the CORRECT 26.05 API where extensions/userSettings live under programs.vscode.profiles.<name>, NOT the removed top-level programs.vscode.extensions/userSettings, (b) sets programs.vscode.mutableExtensionsDir = true, (c) references pkgs.vscode-extensions.vscodevim.vim and pkgs.vscode-extensions.rust-lang.rust-analyzer, (d) follows the mixin pattern.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "eval-direnv-nix",
+      "prompt": "Add a home-manager mixin at users/mixins/programs/direnv.nix that enables programs.direnv with nix-direnv integration, fish shell integration, and silent mode (no logging on every prompt). Follow the existing mixin style (options.mixins.programs.direnv.enable = mkEnableOption; config = lib.mkIf cfg.enable {...};).",
+      "expected_output": "A .nix mixin that uses (a) programs.direnv.nix-direnv.enable = true — NOT the old programs.direnv.enableNixDirenv, (b) programs.direnv.enableFishIntegration = true, (c) programs.direnv.silent = true, (d) follows the mixin pattern.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "eval-hyprland-monitor",
+      "prompt": "Add a home-manager mixin at users/mixins/desktop-environment/hyprland/monitor.nix that configures the hyprland module: enable the module itself, set up a single monitor DP-1 at 2560x1440@144Hz at position 0,0 with scale 1, and enable systemd integration so hyprland launches through systemd user services. Follow the existing mixin style (options.mixins.desktop-environment.hyprland.monitor.enable = mkEnableOption; config = lib.mkIf cfg.enable {...};).",
+      "expected_output": "A .nix mixin that (a) enables wayland.windowManager.hyprland.enable = true, (b) enables wayland.windowManager.hyprland.systemd.enable = true, (c) puts the monitor config under wayland.windowManager.hyprland.settings.monitor (the freeform settings attrset), with the value being a string \"DP-1,2560x1440@144,0x0,1\" or the equivalent list form, (d) does NOT use fabricated options like wayland.windowManager.hyprland.monitors or wayland.windowManager.hyprland.settings.monitors (plural).",
+      "files": []
+    }
+  ]
+}
