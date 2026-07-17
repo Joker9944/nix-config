@@ -115,6 +115,22 @@
         "type": "github"
       }
     },
+    "claude-okf-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1783332243,
+        "narHash": "sha256-70r6AYt8D+3wgBSCsuzncaqNoMrCBN+wry037+mWlN0=",
+        "owner": "scaccogatto",
+        "repo": "okf-skills",
+        "rev": "5ef6a94724aad7bc271c7dcd68923de025d67ca5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "scaccogatto",
+        "repo": "okf-skills",
+        "type": "github"
+      }
+    },
     "claude-plugins-official": {
       "flake": false,
       "locked": {
@@ -1028,6 +1044,7 @@
     "root": {
       "inputs": {
         "audiomenu": "audiomenu",
+        "claude-okf-skills": "claude-okf-skills",
         "claude-plugins-official": "claude-plugins-official",
         "disko": "disko",
         "flake-utils": "flake-utils",

@@ -34,6 +34,10 @@
       url = "github:anthropics/claude-plugins-official"; # cSpell:ignore anthropics
       flake = false;
     };
+    claude-okf-skills = {
+      url = "github:scaccogatto/okf-skills"; # cSpell:ignore scaccogatto
+      flake = false;
+    };
 
     # modules
     sops-nix = {

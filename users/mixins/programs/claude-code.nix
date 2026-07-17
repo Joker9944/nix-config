@@ -23,6 +23,7 @@
 
         plugins = [
           "${inputs.claude-plugins-official}/plugins/skill-creator"
+          "${inputs.claude-okf-skills}"
         ];
       };
     };
