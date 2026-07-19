@@ -9,6 +9,7 @@ backtab
 blueglassblock
 breezedark
 centerbox
+checkperm
 crypted
 Dawt
 drun

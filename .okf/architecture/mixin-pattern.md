@@ -39,7 +39,9 @@ Only the `enable` flag is exposed. Everything else lives inside the `config` blo
 | NixOS mixins | `hosts/mixins/{boot,desktop-environment,display-manager,hardware,networking,programs,services,virtualisation,…}/*.nix` | `hosts/<hostname>/mixins.nix` |
 | Home-manager mixins | `users/mixins/{programs,services,desktop-environment,helpers,pwas}/*.nix` | `users/<username>/config/mixins.nix` |
 
-Canonical minimal example: `users/mixins/programs/claude-code.nix`. Real-world opt-in files: `hosts/HAL9000/mixins.nix` (NixOS side) and `users/joker9944/config/mixins.nix` (home-manager side).
+Canonical minimal example: `users/mixins/programs/claude-code/default.nix`. Real-world opt-in files: `hosts/HAL9000/mixins.nix` (NixOS side) and `users/joker9944/config/mixins.nix` (home-manager side).
+
+For the on-disk shape once a mixin grows beyond a single `.nix` file, see [module-layout](module-layout.md) — the folder + `files/` conventions apply to every module in the repo, not just mixins.
 
 # Where per-host config lives
 
@@ -51,6 +53,7 @@ Config that isn't reusable — per-host quirks, monitor layouts, keyboard layout
 
 # Related
 
+* [module-layout](module-layout.md) — folder/`files/` conventions for multi-file modules (applies repo-wide, not just to mixins).
 * [auto-discovery](auto-discovery.md) — how mixin files register themselves.
 * [entry-points](entry-points.md) — where the trees get evaluated.
 * [decisions/enable-flag-mixins](/decisions/enable-flag-mixins.md) — why only `enable` is exposed.

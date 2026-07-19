@@ -22,6 +22,8 @@
       programs.claude-code = {
         enable = true;
 
+        context = ./files/CLAUDE.md;
+
         plugins = [
           "${inputs.claude-plugins-official}/plugins/skill-creator"
           "${inputs.claude-okf-skills}"

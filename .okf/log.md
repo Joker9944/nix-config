@@ -1,5 +1,10 @@
 # Update Log
 
+## 2026-07-19
+
+* **Creation**: New concept [architecture/module-layout](/architecture/module-layout.md) — captures the folder + `files/` conventions for any nix module in the repo (not just mixins: home-manager mixins, NixOS mixins, and flake-level `modules/nixos/` and `modules/home/` all follow the same rule). Cross-linked from [mixin-pattern](/architecture/mixin-pattern.md), [workflows/add-mixin](/workflows/add-mixin.md), and the [architecture index](/architecture/index.md). Initial draft lived inside `mixin-pattern.md`; extracted to its own concept after the user pointed out the scope was broader than mixins.
+* **Note**: `users/mixins/programs/vscode/openssh-no-checkperm.patch` predates the `files/` rule and sits at the module root — a pre-existing inconsistency, flagged here for future cleanup.
+
 ## 2026-07-17
 
 * **Creation**: New decision [release-policy](/decisions/release-policy.md) — captures the "stable nixos, matching home-manager, hyprland from upstream" choice with its trade-offs. Extracted from the release-policy paragraph that was previously in [overview](/overview.md), which is a decision, not a definitional fact about the repo.

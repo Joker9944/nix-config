@@ -23,7 +23,9 @@ If uncertain, look at analogues in the existing tree.
 
 ## 2. Drop the file
 
-Create `<tree>/<category>/<name>.nix` following the template in [architecture/mixin-pattern#shape](/architecture/mixin-pattern.md#shape). The canonical minimal example is `users/mixins/programs/claude-code.nix`.
+Create `<tree>/<category>/<name>.nix` following the template in [architecture/mixin-pattern#shape](/architecture/mixin-pattern.md#shape). The canonical minimal example is `users/mixins/programs/claude-code/default.nix`.
+
+If your mixin needs more than one nix file, or any non-nix files (patches, markdown, static config), expand it into a folder rather than a single `.nix` — see [architecture/module-layout](/architecture/module-layout.md).
 
 Look up any home-manager option you assign here with [lookup-hm-option](lookup-hm-option.md) — that's the highest-leverage step for avoiding rebuild failures.
 
