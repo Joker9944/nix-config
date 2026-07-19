@@ -1,14 +1,14 @@
 { mkHyprlandModule, ... }:
 {
   lib,
-  pkgs-hyprland,
+  pkgs-unstable,
   custom,
   ...
 }:
 mkHyprlandModule {
   services.hyprpaper = {
     enable = true;
-    package = pkgs-hyprland.hyprpaper;
+    package = pkgs-unstable.hyprpaper;
 
     settings = lib.mkDefault {
       splash = false;
@@ -17,7 +17,7 @@ mkHyprlandModule {
         {
           monitor = "";
           timeout = 60 * 30;
-          path = "${pkgs-hyprland.linkFarm "wallpapers" [
+          path = "${pkgs-unstable.linkFarm "wallpapers" [
             {
               name = "utopia-2.jpg";
               path = custom.assets.utopia-2;

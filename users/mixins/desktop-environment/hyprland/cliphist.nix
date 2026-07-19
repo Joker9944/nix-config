@@ -2,7 +2,7 @@
 {
   lib,
   config,
-  pkgs-hyprland,
+  pkgs-unstable,
   custom,
   ...
 }:
@@ -10,11 +10,11 @@ let
   cfg = config.mixins.desktopEnvironment.hyprland;
 in
 mkHyprlandModule {
-  home.packages = [ pkgs-hyprland.wl-clipboard ]; # Wayland clipboard utilities
+  home.packages = [ pkgs-unstable.wl-clipboard ]; # Wayland clipboard utilities
 
   services.cliphist = {
     enable = true;
-    package = pkgs-hyprland.cliphist;
+    package = pkgs-unstable.cliphist;
   };
 
   wayland.windowManager.hyprland.settings.bind =

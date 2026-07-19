@@ -2,7 +2,7 @@
 {
   lib,
   config,
-  pkgs-hyprland,
+  pkgs-unstable,
   custom,
   ...
 }:
@@ -11,14 +11,14 @@ let
   id = "yazi";
 in
 mkHyprlandModule {
-  home.packages = with pkgs-hyprland; [
+  home.packages = with pkgs-unstable; [
     exiftool
     mediainfo
   ];
 
   programs.yazi = {
     enable = true;
-    package = pkgs-hyprland.yazi;
+    package = pkgs-unstable.yazi;
 
     # WORKAROUND Has to be set since `home.stateVersion` is less than "26.05"
     shellWrapperName = "y";
@@ -31,7 +31,7 @@ mkHyprlandModule {
       }
       {
         desc = "Open with";
-        run = "clear; ${lib.getExe pkgs-hyprland.File-MimeInfo} --ask \"$1\"";
+        run = "clear; ${lib.getExe pkgs-unstable.File-MimeInfo} --ask \"$1\"";
         block = true;
         for = "linux";
       }

@@ -3,7 +3,7 @@
   lib,
   config,
   pkgs,
-  pkgs-hyprland,
+  pkgs-unstable,
   ...
 }@args:
 mkHyprlandModule {
@@ -19,7 +19,7 @@ mkHyprlandModule {
     ];
 
     programs.waybar = {
-      package = pkgs-hyprland.waybar;
+      package = pkgs-unstable.waybar;
 
       systemd.enable = true;
 

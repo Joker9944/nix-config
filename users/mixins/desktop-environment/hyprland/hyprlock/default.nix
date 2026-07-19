@@ -1,9 +1,9 @@
 { mkDefaultHyprlandModule, ... }:
-{ lib, pkgs-hyprland, ... }:
+{ lib, pkgs-unstable, ... }:
 mkDefaultHyprlandModule { dir = ./.; } {
   config.programs.hyprlock = {
     enable = true;
-    package = pkgs-hyprland.hyprlock;
+    package = pkgs-unstable.hyprlock;
 
     settings = {
       general = {

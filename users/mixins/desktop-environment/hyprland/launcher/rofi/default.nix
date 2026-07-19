@@ -2,7 +2,7 @@
 {
   lib,
   config,
-  pkgs-hyprland,
+  pkgs-unstable,
   custom,
   ...
 }:
@@ -14,7 +14,7 @@ mkHyprlandModule {
     lib.mkIf (cfg.launcher.type == "rofi") {
       programs.rofi = {
         enable = true;
-        package = pkgs-hyprland.rofi;
+        package = pkgs-unstable.rofi;
 
         extraConfig = {
           display-drun = "launch";
@@ -27,7 +27,7 @@ mkHyprlandModule {
           "window"
         ];
 
-        plugins = [ pkgs-hyprland.rofi-calc ];
+        plugins = [ pkgs-unstable.rofi-calc ];
 
         terminal = cfg.terminal.package.meta.mainProgram;
 

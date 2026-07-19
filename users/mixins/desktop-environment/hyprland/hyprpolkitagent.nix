@@ -1,8 +1,8 @@
 { mkHyprlandModule, ... }:
-{ pkgs-hyprland, ... }:
+{ pkgs-unstable, ... }:
 mkHyprlandModule {
   services.hyprpolkitagent = {
     enable = true;
-    package = pkgs-hyprland.hyprpolkitagent;
+    package = pkgs-unstable.hyprpolkitagent;
   };
 }

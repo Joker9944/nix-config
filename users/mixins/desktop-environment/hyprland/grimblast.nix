@@ -2,7 +2,7 @@
 {
   lib,
   config,
-  pkgs-hyprland,
+  pkgs-unstable,
   custom,
   ...
 }:
@@ -11,7 +11,7 @@ mkHyprlandModule {
 
   programs.grimblast = {
     enable = true;
-    package = pkgs-hyprland.grimblast;
+    package = pkgs-unstable.grimblast;
   };
 
   wayland.windowManager.hyprland.settings.bind =

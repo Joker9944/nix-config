@@ -1,9 +1,9 @@
 { mkHyprlandModule, ... }:
-{ pkgs-hyprland, ... }:
+{ pkgs-unstable, ... }:
 mkHyprlandModule {
   config.services.hyprsunset = {
     enable = true;
-    package = pkgs-hyprland.hyprsunset;
+    package = pkgs-unstable.hyprsunset;
 
     settings = {
       profile = [

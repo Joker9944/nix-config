@@ -5,7 +5,7 @@
   config,
   options,
   pkgs,
-  pkgs-hyprland,
+  pkgs-unstable,
   custom,
   ...
 }:
@@ -184,11 +184,11 @@ mkDefaultHyprlandModule { dir = ./.; } {
         iconTheme = lib.mkDefault cfg.icons;
 
         qtCompat = {
-          qt5DecorationsPackage = pkgs-hyprland.qadwaitadecorations;
-          qt6DecorationsPackage = pkgs-hyprland.qadwaitadecorations-qt6;
+          qt5DecorationsPackage = pkgs-unstable.qadwaitadecorations;
+          qt6DecorationsPackage = pkgs-unstable.qadwaitadecorations-qt6;
         };
 
-        xdgDesktopPortalGtkPackage = pkgs-hyprland.xdg-desktop-portal-gtk;
+        xdgDesktopPortalGtkPackage = pkgs-unstable.xdg-desktop-portal-gtk;
       };
 
       schemes = {

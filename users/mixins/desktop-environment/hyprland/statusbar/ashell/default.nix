@@ -2,13 +2,13 @@
 {
   lib,
   config,
-  pkgs-hyprland,
+  pkgs-unstable,
   ...
 }:
 mkHyprlandModule {
   config = lib.mkIf config.programs.ashell.enable {
     programs.ashell = {
-      package = pkgs-hyprland.ashell;
+      package = pkgs-unstable.ashell;
 
       systemd.enable = true;
 

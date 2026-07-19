@@ -9,7 +9,7 @@
   inputs,
   lib,
   config,
-  pkgs-hyprland,
+  pkgs-unstable,
   custom,
   ...
 }:
@@ -32,8 +32,14 @@
       cfg = config.mixins.desktopEnvironment.hyprland;
     in
     lib.mkIf cfg.enable {
-
-      custom.pkgs.pkgs-hyprland.input = inputs.hyprland.inputs.nixpkgs;
+      custom.pkgs.pkgs-unstable.overlays = [
+        (_: prev: {
+          inherit (inputs.hyprland.packages.${prev.stdenv.hostPlatform.system})
+            hyprland
+            xdg-desktop-portal-hyprland
+            ;
+        })
+      ];
 
       nix.settings = {
         substituters = lib.toList "https://hyprland.cachix.org";
@@ -42,8 +48,8 @@
 
       programs.hyprland = {
         enable = true;
-        package = pkgs-hyprland.hyprland;
-        portalPackage = pkgs-hyprland.xdg-desktop-portal-hyprland;
+        package = pkgs-unstable.hyprland;
+        portalPackage = pkgs-unstable.xdg-desktop-portal-hyprland;
 
         withUWSM = true;
       };
@@ -53,12 +59,12 @@
       # Remove when https://github.com/NixOS/nixpkgs/blob/fafef5049e2a7bcc36802e1ce72cd2f51d386388/nixos/modules/services/x11/display-managers/default.nix#L28-L50 ever gets fixed
       systemd.services.display-manager.environment.XDG_CURRENT_DESKTOP = "X-NIXOS-SYSTEMD-AWARE";
 
-      environment.systemPackages = with pkgs-hyprland; [ kitty ];
+      environment.systemPackages = with pkgs-unstable; [ kitty ];
 
       # Override graphics drivers with the ones from Hyprland
       hardware.graphics = {
-        package = pkgs-hyprland.mesa;
-        package32 = pkgs-hyprland.pkgsi686Linux.mesa;
+        package = pkgs-unstable.mesa;
+        package32 = pkgs-unstable.pkgsi686Linux.mesa;
       };
 
       services = {

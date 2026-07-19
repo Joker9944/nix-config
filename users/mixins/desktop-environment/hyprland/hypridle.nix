@@ -2,14 +2,14 @@
 {
   lib,
   config,
-  pkgs-hyprland,
+  pkgs-unstable,
   custom,
   ...
 }:
 mkHyprlandModule {
   services.hypridle = {
     enable = true;
-    package = pkgs-hyprland.hypridle;
+    package = pkgs-unstable.hypridle;
 
     settings = {
       general = {

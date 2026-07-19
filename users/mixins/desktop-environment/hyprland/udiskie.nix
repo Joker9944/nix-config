@@ -1,12 +1,12 @@
 { mkHyprlandModule, ... }:
-{ pkgs-hyprland, ... }:
+{ pkgs-unstable, ... }:
 mkHyprlandModule {
-  home.packages = [ pkgs-hyprland.udiskie ];
+  home.packages = [ pkgs-unstable.udiskie ];
 
   services = {
     udiskie = {
       enable = true;
-      package = pkgs-hyprland.udiskie;
+      package = pkgs-unstable.udiskie;
 
       tray = "never";
     };

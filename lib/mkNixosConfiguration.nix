@@ -80,9 +80,12 @@ lib.nixosSystem {
 
       networking.hostName = lib.mkDefault hostname;
     }
-    {
-      custom.pkgs.pkgs-unstable.input = inputs.nixpkgs-unstable;
-    }
+    ({ config, ... }: {
+      custom.pkgs.pkgs-unstable = {
+        input = inputs.nixpkgs-unstable;
+        inherit (config.nixpkgs) config overlays;
+      };
+    })
   ]
   ++ (lib.attrValues flake.nixosModules)
   ++ userModulePaths

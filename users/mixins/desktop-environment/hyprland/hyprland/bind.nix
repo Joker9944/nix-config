@@ -2,12 +2,12 @@
 {
   lib,
   config,
-  pkgs-hyprland,
+  pkgs-unstable,
   custom,
   ...
 }:
 mkHyprlandModule {
-  home.packages = with pkgs-hyprland; [
+  home.packages = with pkgs-unstable; [
     brightnessctl
     playerctl
     hyprshutdown

@@ -2,7 +2,7 @@
   inputs,
   lib,
   config,
-  pkgs-hyprland,
+  pkgs-unstable,
   custom,
   ...
 }:
@@ -26,8 +26,8 @@
 
           settings = {
             exec-once = [
-              "${lib.getExe pkgs-hyprland.hyprpaper} --config ${
-                pkgs-hyprland.writeTextFile {
+              "${lib.getExe pkgs-unstable.hyprpaper} --config ${
+                pkgs-unstable.writeTextFile {
                   name = "greet-hyprpaper.conf";
                   text = inputs.home-manager.lib.hm.generators.toHyprconf {
                     attrs = {

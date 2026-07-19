@@ -2,7 +2,7 @@
 {
   lib,
   config,
-  pkgs-hyprland,
+  pkgs-unstable,
   custom,
   ...
 }:
@@ -13,7 +13,7 @@ in
 mkDefaultHyprlandModule { dir = ./.; } {
   programs.kitty = {
     enable = true;
-    package = pkgs-hyprland.kitty;
+    package = pkgs-unstable.kitty;
   };
 
   mixins.desktopEnvironment.hyprland.terminal = {

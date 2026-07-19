@@ -3,7 +3,7 @@
   lib,
   config,
   osConfig,
-  pkgs-hyprland,
+  pkgs-unstable,
   custom,
   ...
 }:
@@ -16,9 +16,9 @@ mkHyprlandModule {
     enable = true;
     package =
       if lib.lists.elem "nvidia" osConfig.services.xserver.videoDrivers then
-        pkgs-hyprland.btop-cuda
+        pkgs-unstable.btop-cuda
       else
-        pkgs-hyprland.btop;
+        pkgs-unstable.btop;
   };
 
   wayland.windowManager.hyprland.settings = {
