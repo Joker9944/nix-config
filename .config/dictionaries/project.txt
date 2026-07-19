@@ -14,6 +14,7 @@ Dawt
 drun
 esac
 evals
+frontmatter
 gdkmonitor
 glibtop
 gnim
@@ -23,6 +24,7 @@ halign
 headerbar
 hexpand
 Hyprconf
+hyprwm
 imapnotify
 linenumbers
 listchars
@@ -37,6 +39,7 @@ pkgs
 signingkey
 startswith
 subvolumes
+thinkpad
 trivago
 UWSM
 uwunicorn
