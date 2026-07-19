@@ -1,6 +1,7 @@
 {
   inputs,
   lib,
+  pkgs,
   config,
   ...
 }:
@@ -25,6 +26,11 @@
           "${inputs.claude-plugins-official}/plugins/skill-creator"
           "${inputs.claude-okf-skills}"
         ];
+
+        lspServers.nix = {
+          command = lib.getExe pkgs.nil;
+          extensionToLanguage.".nix" = "nix";
+        };
       };
     };
 }
