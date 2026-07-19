@@ -71,7 +71,7 @@ lib.nixosSystem {
   modules = [
     mixinsModulePath
     hostModulePath
-    (_: {
+    {
       # Setup function args
       nixpkgs = {
         hostPlatform = lib.mkDefault system;
@@ -79,12 +79,10 @@ lib.nixosSystem {
       };
 
       networking.hostName = lib.mkDefault hostname;
-    })
-    (_: {
-      custom.nixpkgsCompat.additionalNixpkgsInstances = {
-        pkgs-unstable = inputs.nixpkgs-unstable;
-      };
-    })
+    }
+    {
+      custom.pkgs.pkgs-unstable.input = inputs.nixpkgs-unstable;
+    }
   ]
   ++ (lib.attrValues flake.nixosModules)
   ++ userModulePaths

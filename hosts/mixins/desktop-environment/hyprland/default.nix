@@ -33,7 +33,7 @@
     in
     lib.mkIf cfg.enable {
 
-      custom.nixpkgsCompat.additionalNixpkgsInstances.pkgs-hyprland = inputs.hyprland.inputs.nixpkgs;
+      custom.pkgs.pkgs-hyprland.input = inputs.hyprland.inputs.nixpkgs;
 
       nix.settings = {
         substituters = lib.toList "https://hyprland.cachix.org";

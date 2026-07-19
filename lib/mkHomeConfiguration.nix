@@ -64,9 +64,7 @@ inputs.home-manager.lib.homeManagerConfiguration {
       config = args;
     };
   }
-  // (lib.mapAttrs (
-    name: _: nixosConfigurations._module.args.${name}
-  ) osConfig.custom.nixpkgsCompat.additionalNixpkgsInstances);
+  // (lib.mapAttrs (name: _: nixosConfigurations._module.args.${name}) osConfig.custom.pkgs);
 
   modules = [
     commonModulePath

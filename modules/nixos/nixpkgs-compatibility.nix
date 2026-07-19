@@ -43,19 +43,6 @@ _:
         '';
       };
 
-      additionalNixpkgsInstances = mkOption {
-        type = types.attrsOf types.attrs;
-        default = { };
-        example = literalExpression ''
-          {
-            pkgs-unstable = inputs.nixpkgs-unstable;
-            pkgs-hyprland = inputs.hyprland.inputs.nixpkgs;
-          }
-        '';
-        description = ''
-          Additional nixpkgs instances that should be made available as module args with the same config as base `pkgs`.
-        '';
-      };
     };
 
   config =
@@ -82,13 +69,5 @@ _:
 
       nixpkgs.config.allowUnfreePredicate =
         pkg: lib.any (predicate: predicate pkg) cfg.allowUnfreePredicates;
-
-      _module.args = lib.mapAttrs (
-        _: nixpkgsInstance:
-        import nixpkgsInstance {
-          inherit (config.nixpkgs) config overlays;
-          localSystem = config.nixpkgs.hostPlatform;
-        }
-      ) cfg.additionalNixpkgsInstances;
     };
 }
