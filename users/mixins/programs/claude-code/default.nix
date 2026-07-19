@@ -26,6 +26,7 @@
 
         plugins = [
           "${inputs.claude-plugins-official}/plugins/skill-creator"
+          "${inputs.claude-plugins-official}/plugins/code-review"
           "${inputs.claude-okf-skills}"
         ];
 
