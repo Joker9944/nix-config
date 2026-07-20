@@ -26,6 +26,7 @@
       papers.enable = true;
       signal.enable = true;
       spotify.enable = true;
+      starship.enable = true;
       systemctl-tui.enable = true;
       telegram.enable = true;
       vlc.enable = true;
