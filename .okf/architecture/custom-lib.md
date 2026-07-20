@@ -22,6 +22,8 @@ Notable helpers with non-obvious use:
 | `mkHomeConfiguration.nix` | Assembles a standalone home-manager config. See [entry-points](entry-points.md). |
 | `mkDefaultModule.nix` | Auto-imports sibling files. See [auto-discovery](auto-discovery.md). |
 | `mkConditionalModule.nix` | Conditional module composition. |
+| `mkMixinsModule.nix` | Aggregator: reads `config` once, threads `mkMixinModule` to a dir of mixin leaves via `mkDefaultModule`'s `args`. See [mixin-pattern](mixin-pattern.md). |
+| `mkMixinModule.nix` | Per-mixin builder: declares `mixins.<prefix>.<name>.enable` + gates the body. Threaded to leaves, not called directly from the lib. |
 | `mkLuaCall.nix` | Builds hyprland-style multi-arg lua callbacks. Used in `users/joker9944/hosts/HAL9000/default.nix` for hyprland `on = …`. |
 | `lookupDesktopFiles.nix` | Finds `.desktop` files in a package. |
 | `hyprland/` | Hyprland-specific config helpers. |

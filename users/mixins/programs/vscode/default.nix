@@ -1,3 +1,4 @@
+{ mkMixinModule, ... }:
 {
   inputs,
   lib,
@@ -5,19 +6,9 @@
   config,
   ...
 }:
-{
-  options.mixins.programs.vscodium =
-    let
-      inherit (lib) mkEnableOption;
-    in
-    {
-      enable = mkEnableOption "vscodium config mixin";
-    };
-
+mkMixinModule "vscodium" {
   config =
     let
-      cfg = config.mixins.programs.vscodium;
-
       vscodiumPackage = pkgs-unstable.vscodium.fhsWithPackages (
         ps: with ps; [
           sops # default -> used for git secret encryption
@@ -174,7 +165,7 @@
         else
           mergeProfiles (commonProfiles ++ [ profiles ]);
     in
-    lib.mkIf cfg.enable {
+    {
       home.shellAliases.code = "codium";
 
       programs.vscodium = {

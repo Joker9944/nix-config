@@ -1,24 +1,16 @@
+{ mkMixinModule, ... }:
 {
   lib,
   config,
   custom,
   ...
 }:
-{
-  options.mixins.programs.signal =
-    let
-      inherit (lib) mkEnableOption;
-    in
-    {
-      enable = mkEnableOption "signal config mixin";
-    };
-
+mkMixinModule "signal" {
   config =
     let
-      cfg = config.mixins.programs.signal;
       workspace = "signal";
     in
-    lib.mkIf cfg.enable {
+    {
       programs.signal.enable = true;
 
       wayland.windowManager.hyprland.settings = {

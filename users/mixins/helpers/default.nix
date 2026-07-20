@@ -1,26 +1,20 @@
-{
-  lib,
-  config,
-  custom,
-  ...
-}:
-custom.lib.mkDefaultModule { dir = ./.; } {
-  options.mixins.helpers =
-    let
-      inherit (lib) mkEnableOption;
-    in
-    {
-      enable = mkEnableOption "helper base mixin";
-    };
+{ mkDefaultMixinModule, ... }:
+{ lib, config, ... }:
+let
+  cfg = config.mixins.helpers;
+in
+mkDefaultMixinModule
+  {
+    dir = ./.;
+    prefix = [ "helpers" ];
+  }
+  {
+    options.mixins.helpers.enable = lib.mkEnableOption "helper base mixin";
 
-  config.custom.command-collection =
-    let
-      cfg = config.mixins.helpers;
-    in
-    lib.mkIf cfg.enable {
+    config.custom.command-collection = lib.mkIf cfg.enable {
       enable = true;
 
       name = "cc";
       help = "cli with a collection of common commands";
     };
-}
+  }

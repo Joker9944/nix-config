@@ -1,25 +1,17 @@
+{ mkMixinModule, ... }:
 {
   lib,
   config,
   custom,
   ...
 }:
-{
-  options.mixins.programs.telegram =
-    let
-      inherit (lib) mkEnableOption;
-    in
-    {
-      enable = mkEnableOption "telegram config mixin";
-    };
-
+mkMixinModule "telegram" {
   config =
     let
-      cfg = config.mixins.programs.telegram;
       inherit (config.programs.telegram) package;
       workspace = "telegram";
     in
-    lib.mkIf cfg.enable {
+    {
       programs.telegram.enable = true;
 
       xdg.autostart.entries = [

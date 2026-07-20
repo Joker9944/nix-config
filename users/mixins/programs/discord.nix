@@ -1,24 +1,16 @@
+{ mkMixinModule, ... }:
 {
   lib,
   config,
   custom,
   ...
 }:
-{
-  options.mixins.programs.discord =
-    let
-      inherit (lib) mkEnableOption;
-    in
-    {
-      enable = mkEnableOption "discord config mixin";
-    };
-
+mkMixinModule "discord" {
   config =
     let
-      cfg = config.mixins.programs.discord;
       workspace = "discord";
     in
-    lib.mkIf cfg.enable {
+    {
       programs.vesktop.enable = true;
 
       wayland.windowManager.hyprland.settings = {

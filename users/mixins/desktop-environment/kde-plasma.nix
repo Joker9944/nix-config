@@ -1,24 +1,15 @@
+{ mkMixinModule, ... }:
 {
   inputs,
   lib,
-  config,
   pkgs,
   ...
 }:
-{
+mkMixinModule "kde-plasma" {
   imports = [ inputs.plasma-manager.homeModules.plasma-manager ];
-
-  options.mixins.desktopEnvironment.kde-plasma =
-    let
-      inherit (lib) mkEnableOption;
-    in
-    {
-      enable = mkEnableOption "KDE Plasma desktop environment config mixin";
-    };
 
   config =
     let
-      cfg = config.mixins.desktopEnvironment.kde-plasma;
 
       colors = {
         # Japanese violet - https://encycolorpedia.com/5b3256
@@ -38,7 +29,7 @@
       workspaceInternalName = name: "Desktop_" + (builtins.toString (workspaceIndex name));
       calcDesktopLength = n: n * 8;
     in
-    lib.mkIf cfg.enable {
+    {
       home.packages = with pkgs.kdePackages; [
         kmail
         kmail-account-wizard

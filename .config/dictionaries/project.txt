@@ -42,6 +42,7 @@ startswith
 subvolumes
 thinkpad
 trivago
+ungated
 UWSM
 uwunicorn
 vfat

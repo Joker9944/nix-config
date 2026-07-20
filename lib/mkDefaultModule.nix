@@ -33,6 +33,7 @@
   dir,
   exclude ? [ ],
   args ? null,
+  ...
 }:
 module:
 let

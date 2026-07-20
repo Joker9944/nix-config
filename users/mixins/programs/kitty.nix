@@ -1,22 +1,11 @@
-{ lib, config, ... }:
-{
-  options.mixins.programs.kitty =
-    let
-      inherit (lib) mkEnableOption;
-    in
-    {
-      enable = mkEnableOption "kitty config mixin";
-    };
+{ mkMixinModule, ... }:
+_:
+mkMixinModule "kitty" {
+  programs.kitty = {
+    enable = true;
 
-  config.programs.kitty =
-    let
-      cfg = config.mixins.programs.kitty;
-    in
-    lib.mkIf cfg.enable {
-      enable = true;
+    enableGitIntegration = true;
 
-      enableGitIntegration = true;
-
-      keybindings."ctrl+shift+t" = "new_tab_with_cwd";
-    };
+    keybindings."ctrl+shift+t" = "new_tab_with_cwd";
+  };
 }

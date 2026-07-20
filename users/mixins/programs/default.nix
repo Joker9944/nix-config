@@ -1,1 +1,7 @@
-{ custom, ... }: custom.lib.mkDefaultModule { dir = ./.; } { }
+_:
+{ config, custom, ... }:
+custom.lib.mkMixinsModule {
+  inherit config;
+  dir = ./.;
+  prefix = [ "programs" ];
+} { }

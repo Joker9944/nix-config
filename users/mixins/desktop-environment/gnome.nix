@@ -1,21 +1,8 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}:
-{
-  options.mixins.desktopEnvironment.gnome =
-    let
-      inherit (lib) mkEnableOption;
-    in
-    {
-      enable = mkEnableOption "GNOME desktop environment config mixin";
-    };
-
+{ mkMixinModule, ... }:
+{ lib, pkgs, ... }:
+mkMixinModule "gnome" {
   config =
     let
-      cfg = config.mixins.desktopEnvironment.gnome;
 
       mkAutoMoveWindowsApplicationList =
         attrs: lib.attrValues (lib.mapAttrs (app: index: app + ":" + toString index) attrs);
@@ -29,7 +16,7 @@
         package = pkg;
       });
     in
-    lib.mkIf cfg.enable {
+    {
       programs = {
         gnome-shell = {
           enable = true;

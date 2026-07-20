@@ -3,34 +3,42 @@ type: Architecture Pattern
 title: Mixin pattern
 description: Every reusable module declares one `enable` flag under `options.mixins.<category>.<name>`; hosts and users opt in from central `mixins.nix` files.
 tags: [architecture, modules, convention]
-timestamp: 2026-07-17T00:00:00Z
+timestamp: 2026-07-20T00:00:00Z
 ---
 
 # Shape
 
-Every leaf module follows the same shape:
+Only the `enable` flag is exposed; everything else is gated behind it. See [decisions/enable-flag-mixins](/decisions/enable-flag-mixins.md) for the reasoning. There are two ways this is spelled, depending on the tree:
+
+## `mkMixinModule` sugar (home-manager, `users/mixins/`)
+
+Each category `default.nix` reads `config` once and threads a `mkMixinModule` helper to its leaves via `mkMixinsModule` (see [custom-lib](custom-lib.md)). Leaves are two-layer: the outer arg receives the threaded helper (via `importApply`), the inner arg is the normal module arg-set:
 
 ```nix
-{
-  options.mixins.<category>.<name> =
-    let
-      inherit (lib) mkEnableOption;
-    in
-    {
-      enable = mkEnableOption "<name> config mixin";
-    };
-
-  config =
-    let
-      cfg = config.mixins.<category>.<name>;
-    in
-    lib.mkIf cfg.enable {
-      # real config here
-    };
+{ mkMixinModule, ... }:
+{ pkgs, ... }:
+mkMixinModule "atuin" {
+  # real config here — no option decl, no lib.mkIf
 }
 ```
 
-Only the `enable` flag is exposed. Everything else lives inside the `config` block, gated by `lib.mkIf cfg.enable`. See [decisions/enable-flag-mixins](/decisions/enable-flag-mixins.md) for the reasoning.
+`mkMixinModule "<name>"` declares `mixins.<prefix>.<name>.enable` and wraps the body in `lib.mkIf`. `<name>` is the option segment, **not necessarily the filename** (`nix-helper.nix` → `"nix"`, `vscode/` → `"vscodium"`, `1password.nix` → `"_1password"`). The prefix comes from the aggregator (`programs/` → `[ "programs" ]`, `desktop-environment/` → `[ "desktopEnvironment" ]` — camelCase, so it can't be derived from the dir name).
+
+Exceptions keep the manual shape (below) plus an outer `{ ... }:` absorb layer, because the sugar only declares `enable`: mixins with **extra options** (`pwas/*`, `1password` with `vault`), a **custom enable default** (`steam`), **partial gating** (`jupyter` leaves `programs.yazi` ungated), or their **own internal fan-out** (`hyprland`).
+
+## Manual shape (NixOS, `hosts/mixins/` — not yet converted)
+
+```nix
+{
+  options.mixins.<category>.<name>.enable = lib.mkEnableOption "<name> config mixin";
+
+  config = lib.mkIf config.mixins.<category>.<name>.enable {
+    # real config here
+  };
+}
+```
+
+Atomicity: once an aggregator threads `args`, **every** child in that dir must be two-layer (`importApply` feeds the args to all of them) — convert an aggregator and its leaves together.
 
 # Directory layout
 

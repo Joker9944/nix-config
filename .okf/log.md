@@ -1,5 +1,9 @@
 # Update Log
 
+## 2026-07-20
+
+* **Feature + docs**: Added `lib/mkMixinModule.nix` + `lib/mkMixinsModule.nix` — a `mkMixinModule` sugar that removes the per-leaf `mkEnableOption` + `lib.mkIf cfg.enable` boilerplate. Aggregator `default.nix` files call `mkMixinsModule { config; dir; prefix }` which threads a config-bound `mkMixinModule "<name>" { … }` to leaves via `mkDefaultModule`'s `args`/`importApply` (generalizes the hyprland `mkDefaultHyprlandModule` pattern). Converted all of `users/mixins/`; `hosts/mixins/` (NixOS) still uses the manual shape. Updated [mixin-pattern](/architecture/mixin-pattern.md) (two spellings, exceptions, per-dir atomicity) and [custom-lib](/architecture/custom-lib.md) (helper table). Key gotchas recorded: option segment ≠ filename in several leaves; `desktopEnvironment` prefix is camelCase (not derivable from the `desktop-environment` dir); threading `args` is atomic per directory; leaves with extra options / custom enable default / partial gating keep the manual shape behind an absorb layer.
+
 ## 2026-07-19
 
 * **Creation**: New concept [architecture/module-layout](/architecture/module-layout.md) — captures the folder + `files/` conventions for any nix module in the repo (not just mixins: home-manager mixins, NixOS mixins, and flake-level `modules/nixos/` and `modules/home/` all follow the same rule). Cross-linked from [mixin-pattern](/architecture/mixin-pattern.md), [workflows/add-mixin](/workflows/add-mixin.md), and the [architecture index](/architecture/index.md). Initial draft lived inside `mixin-pattern.md`; extracted to its own concept after the user pointed out the scope was broader than mixins.

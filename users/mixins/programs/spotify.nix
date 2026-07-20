@@ -1,24 +1,16 @@
+{ mkMixinModule, ... }:
 {
   lib,
   config,
   custom,
   ...
 }:
-{
-  options.mixins.programs.spotify =
-    let
-      inherit (lib) mkEnableOption;
-    in
-    {
-      enable = mkEnableOption "spotify config mixin";
-    };
-
+mkMixinModule "spotify" {
   config =
     let
-      cfg = config.mixins.programs.spotify;
       workspace = "spotify";
     in
-    lib.mkIf cfg.enable {
+    {
       programs.spotify.enable = true;
 
       wayland.windowManager.hyprland.settings = {

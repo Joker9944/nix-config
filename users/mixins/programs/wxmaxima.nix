@@ -1,30 +1,16 @@
-{ lib, config, ... }:
-{
-  options.mixins.programs.wxmaxima =
-    let
-      inherit (lib) mkEnableOption;
-    in
-    {
-      enable = mkEnableOption "wxmaxima config mixin";
-    };
+{ mkMixinModule, ... }:
+mkMixinModule "wxmaxima" {
+  programs = {
+    wxmaxima.enable = true;
 
-  config =
-    let
-      cfg = config.mixins.programs.wxmaxima;
-    in
-    lib.mkIf cfg.enable {
-      programs = {
-        wxmaxima.enable = true;
-
-        yazi.settings.open.prepend_rules = [
-          {
-            url = "*.wxmx"; # cSpell:ignore wxmx
-            use = [
-              "open"
-              "reveal"
-            ];
-          }
+    yazi.settings.open.prepend_rules = [
+      {
+        url = "*.wxmx"; # cSpell:ignore wxmx
+        use = [
+          "open"
+          "reveal"
         ];
-      };
-    };
+      }
+    ];
+  };
 }

@@ -1,47 +1,29 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}:
-{
-  options.mixins.fonts =
-    let
-      inherit (lib) mkEnableOption;
-    in
-    {
-      enable = mkEnableOption "fonts config mixin";
-    };
+{ mkMixinModule, ... }:
+{ pkgs, ... }:
+mkMixinModule "fonts" {
+  home.packages = with pkgs; [
+    nerd-fonts.jetbrains-mono
+    lato
+    roboto
+    noto-fonts-color-emoji
+    jetbrains-mono
+  ];
 
-  config =
-    let
-      cfg = config.mixins.fonts;
-    in
-    lib.mkIf cfg.enable {
-      home.packages = with pkgs; [
-        nerd-fonts.jetbrains-mono
-        lato
-        roboto
-        noto-fonts-color-emoji
-        jetbrains-mono
+  fonts.fontconfig = {
+    enable = true;
+
+    defaultFonts = {
+      monospace = [
+        "JetBrainsMono Nerd Font Mono"
+        "JetBrains Mono"
       ];
-
-      fonts.fontconfig = {
-        enable = true;
-
-        defaultFonts = {
-          monospace = [
-            "JetBrainsMono Nerd Font Mono"
-            "JetBrains Mono"
-          ];
-          sansSerif = [
-            "Lato"
-            "Roboto"
-          ];
-          emoji = [
-            "Noto Color Emoji"
-          ];
-        };
-      };
+      sansSerif = [
+        "Lato"
+        "Roboto"
+      ];
+      emoji = [
+        "Noto Color Emoji"
+      ];
     };
+  };
 }

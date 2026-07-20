@@ -1,22 +1,10 @@
-{ lib, config, ... }:
-{
-  options.mixins.programs.intelli-shell =
-    let
-      inherit (lib) mkEnableOption;
-    in
-    {
-      enable = mkEnableOption "intelli-shell config mixin";
-    };
+{ mkMixinModule, ... }:
+mkMixinModule "intelli-shell" {
+  programs.intelli-shell = {
+    enable = true;
 
-  config.programs.intelli-shell =
-    let
-      cfg = config.mixins.programs.intelli-shell;
-    in
-    lib.mkIf cfg.enable {
-      enable = true;
-
-      settings = {
-        check_updates = false;
-      };
+    settings = {
+      check_updates = false;
     };
+  };
 }

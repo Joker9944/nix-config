@@ -1,24 +1,12 @@
-{ lib, config, ... }:
-{
-  options.mixins.programs.atuin =
-    let
-      inherit (lib) mkEnableOption;
-    in
-    {
-      enable = mkEnableOption "atuin config mixin";
+{ mkMixinModule, ... }:
+mkMixinModule "atuin" {
+  programs.atuin = {
+    enable = true;
+
+    daemon.enable = true;
+
+    settings = {
+      filter_mode_shell_up_key_binding = "session";
     };
-
-  config.programs.atuin =
-    let
-      cfg = config.mixins.programs.atuin;
-    in
-    lib.mkIf cfg.enable {
-      enable = true;
-
-      daemon.enable = true;
-
-      settings = {
-        filter_mode_shell_up_key_binding = "session";
-      };
-    };
+  };
 }

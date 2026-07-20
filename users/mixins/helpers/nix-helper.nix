@@ -1,20 +1,12 @@
-{ lib, config, ... }:
-{
-  options.mixins.helpers.nix =
+{ mkMixinModule, ... }:
+{ config, ... }:
+mkMixinModule "nix" {
+  custom.command-collection =
     let
-      inherit (lib) mkEnableOption;
-    in
-    {
-      enable = mkEnableOption "nix helper mixin";
-    };
-
-  config.custom.command-collection =
-    let
-      cfg = config.mixins.helpers.nix;
       flakeLocal = "${config.home.homeDirectory}/Workspace/nix-config";
       flakeGit = config.services.home-manager.autoUpgrade.flake;
     in
-    lib.mkIf cfg.enable {
+    {
 
       branches = {
         update =
