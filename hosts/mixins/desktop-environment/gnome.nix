@@ -1,40 +1,21 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}:
+{ mkMixinModule, ... }:
+{ pkgs, ... }:
+mkMixinModule "gnome" {
+  services = {
+    xserver = {
+      enable = true;
 
-{
-  options.mixins.desktopEnvironment.gnome =
-    let
-      inherit (lib) mkEnableOption;
-    in
-    {
-      enable = mkEnableOption "GNOME desktop environment config mixin";
+      desktopManager.gnome.enable = true;
     };
 
-  config =
-    let
-      cfg = config.mixins.desktopEnvironment.gnome;
-    in
-    lib.mkIf cfg.enable {
-      services = {
-        xserver = {
-          enable = true;
+    gnome.gnome-browser-connector.enable = true;
+  };
 
-          desktopManager.gnome.enable = true;
-        };
+  programs.gnupg.agent.pinentryPackage = pkgs.pinentry-gnome3;
 
-        gnome.gnome-browser-connector.enable = true;
-      };
-
-      programs.gnupg.agent.pinentryPackage = pkgs.pinentry-gnome3;
-
-      environment.gnome.excludePackages = with pkgs; [
-        gnome-tour
-        gnome-connections
-        epiphany # web browser
-      ];
-    };
+  environment.gnome.excludePackages = with pkgs; [
+    gnome-tour
+    gnome-connections
+    epiphany # web browser
+  ];
 }

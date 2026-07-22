@@ -5,6 +5,7 @@
    - https://wiki.hypr.land/Nix/Hyprland-on-Home-Manager/
    - https://wiki.hypr.land/Nvidia/
 */
+_:
 {
   inputs,
   lib,

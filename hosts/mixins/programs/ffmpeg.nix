@@ -1,30 +1,12 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}:
-{
-  options.mixins.programs.ffmpeg =
-    let
-      inherit (lib) mkEnableOption;
-    in
-    {
-      enable = mkEnableOption "ffmpeg config mixin";
-    };
+{ mkMixinModule, ... }:
+{ pkgs, ... }:
+mkMixinModule "ffmpeg" {
+  custom.nixpkgsCompat.allowUnfreePackages = [ "ffmpeg" ];
 
-  config =
-    let
-      cfg = config.mixins.programs.ffmpeg;
-    in
-    lib.mkIf cfg.enable {
-      custom.nixpkgsCompat.allowUnfreePackages = [ "ffmpeg" ];
-
-      environment.systemPackages = [
-        (pkgs.ffmpeg.override {
-          withUnfree = true;
-          withFdkAac = true;
-        })
-      ];
-    };
+  environment.systemPackages = [
+    (pkgs.ffmpeg.override {
+      withUnfree = true;
+      withFdkAac = true;
+    })
+  ];
 }

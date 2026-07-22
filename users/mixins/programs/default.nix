@@ -1,7 +1,5 @@
-_:
-{ config, custom, ... }:
-custom.lib.mkMixinsModule {
-  inherit config;
+{ mkDefaultMixinModule, ... }:
+mkDefaultMixinModule {
   dir = ./.;
   prefix = [ "programs" ];
 } { }

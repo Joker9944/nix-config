@@ -3,16 +3,16 @@ type: Architecture Pattern
 title: Mixin pattern
 description: Every reusable module declares one `enable` flag under `options.mixins.<category>.<name>`; hosts and users opt in from central `mixins.nix` files.
 tags: [architecture, modules, convention]
-timestamp: 2026-07-20T00:00:00Z
+timestamp: 2026-07-22T00:00:00Z
 ---
 
 # Shape
 
-Only the `enable` flag is exposed; everything else is gated behind it. See [decisions/enable-flag-mixins](/decisions/enable-flag-mixins.md) for the reasoning. There are two ways this is spelled, depending on the tree:
+Only the `enable` flag is exposed; everything else is gated behind it. See [decisions/enable-flag-mixins](/decisions/enable-flag-mixins.md) for the reasoning. Both trees (`users/mixins/` and `hosts/mixins/`) now use the `mkMixinModule` sugar; the manual shape survives only in the exceptions listed below.
 
-## `mkMixinModule` sugar (home-manager, `users/mixins/`)
+## `mkMixinModule` sugar
 
-Each category `default.nix` reads `config` once and threads a `mkMixinModule` helper to its leaves via `mkMixinsModule` (see [custom-lib](custom-lib.md)). Leaves are two-layer: the outer arg receives the threaded helper (via `importApply`), the inner arg is the normal module arg-set:
+Each category `default.nix` reads `config` once and threads a `mkMixinModule` helper to its leaves via `importApply` (see [custom-lib](custom-lib.md)). Leaves are two-layer: the outer arg receives the threaded helper, the inner arg is the normal module arg-set (drop the inner layer entirely when the body needs no module args):
 
 ```nix
 { mkMixinModule, ... }:
@@ -22,13 +22,17 @@ mkMixinModule "atuin" {
 }
 ```
 
-`mkMixinModule "<name>"` declares `mixins.<prefix>.<name>.enable` and wraps the body in `lib.mkIf`. `<name>` is the option segment, **not necessarily the filename** (`nix-helper.nix` → `"nix"`, `vscode/` → `"vscodium"`, `1password.nix` → `"_1password"`). The prefix comes from the aggregator (`programs/` → `[ "programs" ]`, `desktop-environment/` → `[ "desktopEnvironment" ]` — camelCase, so it can't be derived from the dir name).
+`mkMixinModule "<name>"` declares `mixins.<prefix>.<name>.enable` and wraps the body in `lib.mkIf`. `<name>` is the option segment, **not necessarily the filename** (hm: `nix-helper.nix` → `"nix"`, `vscode/` → `"vscodium"`, `1password.nix` → `"_1password"`; NixOS: `dualboot-windows.nix` → `"windowsSupport"`, `1password.nix` → `"_1password"`). The prefix comes from the aggregator (`programs/` → `[ "programs" ]`, `desktop-environment/` → `[ "desktopEnvironment" ]`, `display-manager/` → `[ "displayManager" ]` — camelCase, so it can't be derived from the dir name).
 
-Exceptions keep the manual shape (below) plus an outer `{ ... }:` absorb layer, because the sugar only declares `enable`: mixins with **extra options** (`pwas/*`, `1password` with `vault`), a **custom enable default** (`steam`), **partial gating** (`jupyter` leaves `programs.yazi` ungated), or their **own internal fan-out** (`hyprland`).
+**Aggregator wiring.** The top-level `default.nix` of each tree (`users/mixins/default.nix`, `hosts/mixins/default.nix`) reads `config` once and builds a `lib.fix`ed `mkDefaultMixinModule` helper that it threads to every child. Category aggregators call `mkDefaultMixinModule { dir = ./.; prefix = [ … ]; } { }`; this re-threads `mkDefaultMixinModule` (for nested aggregators) plus a prefix-bound `mkMixinModule` (for leaves).
 
-## Manual shape (NixOS, `hosts/mixins/` — not yet converted)
+Exceptions keep the manual shape (below) plus an outer `_:` absorb layer, because the sugar only declares `enable`: mixins with **extra options** (hm `pwas/*`, `1password` with `vault`; NixOS `keymap` with `type`, `services/maintenance` with `flake`, `hardware/disko`), a **custom enable default** (hm `steam`; NixOS `boot`, whose `default.nix` is also the category aggregator + carries `secureBoot`), **partial gating**, or their **own internal fan-out** (`hyprland` on both trees).
+
+## Manual shape (exceptions only)
 
 ```nix
+_:
+{ lib, config, ... }:
 {
   options.mixins.<category>.<name>.enable = lib.mkEnableOption "<name> config mixin";
 

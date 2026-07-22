@@ -3,8 +3,9 @@
   `mixins.<prefix>.<name>` and gate `module` behind it, without repeating the
   option + `lib.mkIf` boilerplate.
 
-  Partially applied with `{ config, prefix }` by `mkMixinsModule` and threaded to
-  each child, so leaves call `mkMixinModule "<name>" { … }` directly.
+  Partially applied with `{ config, prefix }` by the `mkDefaultMixinModule`
+  aggregator helper (defined in each tree's top-level mixins `default.nix`) and
+  threaded to each child, so leaves call `mkMixinModule "<name>" { … }` directly.
 
   # Type
 

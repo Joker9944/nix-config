@@ -1,1 +1,5 @@
-{ custom, ... }: custom.lib.mkDefaultModule { dir = ./.; } { }
+{ mkDefaultMixinModule, ... }:
+mkDefaultMixinModule {
+  dir = ./.;
+  prefix = [ "services" ];
+} { }

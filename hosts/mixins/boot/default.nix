@@ -1,3 +1,4 @@
+{ mkDefaultMixinModule, ... }:
 {
   lib,
   config,
@@ -5,54 +6,59 @@
   custom,
   ...
 }:
-custom.lib.mkDefaultModule { dir = ./.; } {
-  options.mixins.boot =
-    let
-      inherit (lib) mkEnableOption;
-    in
-    {
-      enable = mkEnableOption "boot config mixin";
-      secureBoot = mkEnableOption "secure boot" // {
-        default = true;
+mkDefaultMixinModule
+  {
+    dir = ./.;
+    prefix = [ "boot" ];
+  }
+  {
+    options.mixins.boot =
+      let
+        inherit (lib) mkEnableOption;
+      in
+      {
+        enable = mkEnableOption "boot config mixin";
+        secureBoot = mkEnableOption "secure boot" // {
+          default = true;
+        };
       };
-    };
 
-  config =
-    let
-      cfg = config.mixins.boot;
-    in
-    lib.mkIf cfg.enable {
-      environment.systemPackages = [ pkgs.sbctl ];
+    config =
+      let
+        cfg = config.mixins.boot;
+      in
+      lib.mkIf cfg.enable {
+        environment.systemPackages = [ pkgs.sbctl ];
 
-      boot = {
-        initrd.systemd.enable = true;
+        boot = {
+          initrd.systemd.enable = true;
 
-        loader = {
-          efi.canTouchEfiVariables = true;
+          loader = {
+            efi.canTouchEfiVariables = true;
 
-          systemd-boot = {
-            enable = lib.mkDefault false;
-            consoleMode = "max";
-            configurationLimit = 10;
-          };
+            systemd-boot = {
+              enable = lib.mkDefault false;
+              consoleMode = "max";
+              configurationLimit = 10;
+            };
 
-          grub = {
-            enable = lib.mkDefault false;
-            efiSupport = true;
-            devices = [ "nodev" ];
-          };
+            grub = {
+              enable = lib.mkDefault false;
+              efiSupport = true;
+              devices = [ "nodev" ];
+            };
 
-          limine = {
-            enable = lib.mkDefault true;
-            maxGenerations = 10;
-            secureBoot.enable = cfg.secureBoot;
+            limine = {
+              enable = lib.mkDefault true;
+              maxGenerations = 10;
+              secureBoot.enable = cfg.secureBoot;
 
-            style = {
-              wallpapers = [ "${custom.assets.black-sand-dunes}" ];
-              interface.branding = config.networking.hostName;
+              style = {
+                wallpapers = [ "${custom.assets.black-sand-dunes}" ];
+                interface.branding = config.networking.hostName;
+              };
             };
           };
         };
       };
-    };
-}
+  }

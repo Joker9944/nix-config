@@ -1,33 +1,18 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}:
-{
-  options.mixins.programs.utilities =
-    let
-      inherit (lib) mkEnableOption;
-    in
-    {
-      enable = mkEnableOption "utilities config mixin";
-    };
+{ mkMixinModule, ... }:
+{ pkgs, ... }:
+mkMixinModule "utilities" {
+  environment.systemPackages = with pkgs; [
+    # commands
+    curl
+    wget
+    dig
+    jq
+    yq
+    openssl
+    pciutils
+    file
 
-  config.environment.systemPackages = lib.optionals config.mixins.programs.utilities.enable (
-    with pkgs;
-    [
-      # commands
-      curl
-      wget
-      dig
-      jq
-      yq
-      openssl
-      pciutils
-      file
-
-      # languages
-      python3
-    ]
-  );
+    # languages
+    python3
+  ];
 }
