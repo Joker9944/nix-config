@@ -19,6 +19,7 @@
       kitty.enable = true;
       librewolf.enable = true;
       loupe.enable = true;
+      mcp.enable = true;
       mpv.enable = true;
       neovim.enable = false;
       nextcloud-client.enable = true;

@@ -3,6 +3,7 @@
   inputs,
   lib,
   pkgs,
+  config,
   ...
 }:
 mkMixinModule "claude-code" {
@@ -10,6 +11,8 @@ mkMixinModule "claude-code" {
     enable = true;
 
     context = ./files/CLAUDE.md;
+
+    enableMcpIntegration = lib.mkDefault config.programs.mcp.enable;
 
     plugins = [
       "${inputs.claude-plugins-official}/plugins/skill-creator"
