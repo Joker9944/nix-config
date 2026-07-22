@@ -1,6 +1,7 @@
 /result*
 /.cspellcache
 /.pre-commit-config.yaml
+/.direnv
 
 .nx/installation
 .nx/cache

@@ -9,3 +9,4 @@ The concepts here explain the shape of the repo — the ones a newcomer (human o
 * [auto-discovery](auto-discovery.md) — `custom.lib.mkDefaultModule` auto-imports every sibling `.nix` file in a directory, so dropping a file into `users/mixins/programs/` is enough to register it.
 * [entry-points](entry-points.md) — `mkNixosConfiguration` and `mkHomeConfiguration` are the two constructors called from `flake.nix`. Understanding them explains how NixOS and home-manager configurations stay paired.
 * [custom-lib](custom-lib.md) — Files in `lib/` are auto-discovered, exposed under `self.lib`, and passed into every module as `custom.lib`.
+* [packages](packages.md) — Flake packages live under `./pkgs`, auto-discovered by `pkgs/default.nix` (top-level `.nix` = a package, subdirs = shared support); `flake.nix` stays lean.

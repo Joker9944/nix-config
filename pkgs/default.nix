@@ -3,10 +3,11 @@
   lib,
   pkgs,
   ...
-}:
-lib.pipe
+}@args:
+(lib.pipe
   {
     dir = ./.;
+    types = [ "regular" ];
     exclude = [ ./default.nix ];
   }
   [
@@ -17,3 +18,15 @@ lib.pipe
     }))
     lib.listToAttrs
   ]
+)
+// (lib.pipe
+  {
+    dir = ./.;
+    types = [ "directory" ];
+  }
+  [
+    flake.lib.ls
+    (lib.map (path: import path args))
+    (lib.foldl (acc: attr: acc // attr) { })
+  ]
+)

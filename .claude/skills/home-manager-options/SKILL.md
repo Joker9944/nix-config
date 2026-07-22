@@ -7,7 +7,7 @@ description: Look up authoritative home-manager module options (name, type, defa
 
 This skill lets you query the *pinned* home-manager options.json before writing home-manager config. That JSON is the source of truth for this flake — it's generated from whatever home-manager revision `flake.lock` currently pins (release-26.05 at the time of writing).
 
-## When to call `hm-doc`
+## When to call `hm-options`
 
 Call it **before** writing any home-manager attribute you are not 100% sure exists in this revision. Concretely:
 
@@ -22,11 +22,11 @@ You do **not** need to call it for:
 - Pure syntax questions (e.g., how to write a nix `let` block).
 - NixOS system options — this JSON is home-manager only.
 
-## Prefer `hm-doc` over reading home-manager source
+## Prefer `hm-options` over reading home-manager source
 
-If you're about to `Read` a file under `<home-manager/modules/…>` or a nix-community/home-manager GitHub URL to figure out what an option does, **stop and use `hm-doc` first**. A `list` + `get` is two shell calls and a few hundred characters of output; opening a module source is often 500–2000 lines of nix that will drown your context and still leave you unsure whether the version you're reading matches the pinned revision. The JSON is generated from the exact pinned tree — it can't lie about what exists.
+If you're about to `Read` a file under `<home-manager/modules/…>` or a nix-community/home-manager GitHub URL to figure out what an option does, **stop and use `hm-options` first**. A `list` + `get` is two shell calls and a few hundred characters of output; opening a module source is often 500–2000 lines of nix that will drown your context and still leave you unsure whether the version you're reading matches the pinned revision. The JSON is generated from the exact pinned tree — it can't lie about what exists.
 
-The only reason to read source afterwards is if you need to understand *implementation logic* the description doesn't cover (e.g., how a `mkMerge` inside the module composes). For "what's this option called / what type is it / what's a valid example," `hm-doc` is faster, cheaper, and authoritative.
+The only reason to read source afterwards is if you need to understand *implementation logic* the description doesn't cover (e.g., how a `mkMerge` inside the module composes). For "what's this option called / what type is it / what's a valid example," `hm-options` is faster, cheaper, and authoritative.
 
 ## Common hallucination traps in 26.05
 
@@ -39,24 +39,24 @@ These are options a model is likely to write from memory that **do not exist** i
 | `programs.fish.abbreviations` | `programs.fish.shellAbbrs` |
 | `services.gpg-agent.sshSupport` / `.enableSSHSupport` | `services.gpg-agent.enableSshSupport` |
 
-Consider this table non-exhaustive — the point is that the exact-name recall is unreliable. When in doubt, `hm-doc list <namespace>` and `hm-doc get <path>`.
+Consider this table non-exhaustive — the point is that the exact-name recall is unreliable. When in doubt, `hm-options list <namespace>` and `hm-options get <path>`.
 
 ## The tool
 
-The entrypoint is `.claude/skills/home-manager-options/scripts/hm-doc`. Run it from the repo root (it needs to evaluate `.#home-manager-docs-json`). Four subcommands:
+The entrypoint is `hm-options` — a small binary provided by this repo's dev shell (defined in `flake.nix`, delivered on `PATH` via `direnv`, which auto-loads when you `cd` into the repo). The dataset's `options.json` is baked into the binary at build time, so there's no flake evaluation per call — every query is just `jq`, a few tens of milliseconds. Four subcommands:
 
 | Command | Purpose |
 |---|---|
-| `hm-doc path` | Print the resolved `options.json` store path. Useful if you want to pipe through `jq` yourself for anything the subcommands don't cover. |
-| `hm-doc get <option>` | Full JSON record for one exact option path. Use when you know the name and need type/default/example/description. |
-| `hm-doc list <prefix>` | All option keys under a dot-prefix, one per line. Use for "what does this module expose" — e.g., `hm-doc list programs.neovim`. |
-| `hm-doc search <keyword>` | Case-insensitive substring match across keys and descriptions. TSV output: `<key>\t<type>\t<description-snippet>`. Use when you know the concept but not the path. |
+| `hm-options path` | Print the resolved `options.json` store path. Useful if you want to pipe through `jq` yourself for anything the subcommands don't cover. |
+| `hm-options get <option>` | Full JSON record for one exact option path. Use when you know the name and need type/default/example/description. |
+| `hm-options list <prefix>` | All option keys under a dot-prefix, one per line. Use for "what does this module expose" — e.g., `hm-options list programs.neovim`. |
+| `hm-options search <keyword>` | Case-insensitive substring match across keys and descriptions. TSV output: `<key>\t<type>\t<description-snippet>`. Use when you know the concept but not the path. |
 
 ### Typical flow
 
-1. **Broad search** if you don't know the namespace: `hm-doc search "gpg agent"`.
-2. **List** the namespace once you spot it: `hm-doc list services.gpg-agent`.
-3. **Get** the specific options you plan to set: `hm-doc get services.gpg-agent.enableSshSupport`.
+1. **Broad search** if you don't know the namespace: `hm-options search "gpg agent"`.
+2. **List** the namespace once you spot it: `hm-options list services.gpg-agent`.
+3. **Get** the specific options you plan to set: `hm-options get services.gpg-agent.enableSshSupport`.
 
 Then write the module, using the exact `type` and `default` from the record. If the JSON says `"type": "boolean"` and `"default": {"text": "false"}`, don't wrap the value in a list or a string.
 
@@ -80,6 +80,6 @@ The fields that matter most when writing config: `type`, `default.text`, `exampl
 
 ## Failure modes
 
-- **`'nix build .#home-manager-docs-json' failed`** — you're probably not in the repo root, or the flake input needs to fetch. Cd to the nix-config repo and retry. If the fetch itself failed (no network), fall back to the last built store path (`ls /nix/store/*-options.json 2>/dev/null`) and tell the user the JSON might be stale.
+- **`hm-options: command not found`** — the repo dev shell isn't active. `cd` into the nix-config repo so `direnv` loads it (run `direnv allow` once if prompted), or use `nix develop --command hm-options …`. The binary is built from the current `flake.lock`; after a `flake update` the shell rebuilds on reload, so the JSON tracks the pinned revision.
 - **`no option 'X' in <json>`** — either the name is wrong (try `search`) or the option was renamed/removed in this revision. Look at the closest matches in the search output.
-- **Truncated `search` output** — descriptions are cut to 120 chars in the TSV. Follow up with `hm-doc get` for the full record if the snippet looks promising.
+- **Truncated `search` output** — descriptions are cut to 120 chars in the TSV. Follow up with `hm-options get` for the full record if the snippet looks promising.

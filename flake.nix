@@ -84,18 +84,20 @@
           pkgs = nixpkgs.legacyPackages.${system};
         in
         {
-          packages =
-            import ./pkgs {
-              inherit lib pkgs;
-              flake = self;
-            }
-            // {
-              home-manager-docs-json = inputs.home-manager.packages.${system}.docs-json;
-            };
+          packages = import ./pkgs {
+            inherit lib pkgs inputs;
+            flake = self;
+          };
 
           apps = import ./apps.nix { inherit lib pkgs system; };
 
           devShells = {
+            default = pkgs.mkShell {
+              buildInputs = [
+                self.packages.${system}.hm-options
+                self.packages.${system}.nixos-options
+              ];
+            };
             preCommitHooks = pkgs.mkShell {
               inherit (self.checks.${system}.preCommitHooks) shellHook;
               buildInputs = self.checks.${system}.preCommitHooks.enabledPackages;
@@ -141,7 +143,10 @@
                 # Shell
                 shellcheck = {
                   enable = true;
-                  excludes = [ "^nx(\\..+)?$" ];
+                  excludes = [
+                    "^nx(\\..+)?$"
+                    ".envrc"
+                  ];
                 };
                 shfmt.enable = true;
 
