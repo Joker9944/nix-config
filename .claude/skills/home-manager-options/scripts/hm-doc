@@ -34,6 +34,21 @@ EOF
 }
 
 resolve_json() {
+	# The store path only changes when flake.lock changes, but `nix build`
+	# re-evaluates the flake (~1s) on every call. Cache the resolved path and
+	# skip the eval while the cache is newer than flake.lock and still points
+	# at a readable options.json.
+	local cache="${XDG_CACHE_HOME:-$HOME/.cache}/hm-doc/options-path"
+	local lock="flake.lock"
+	if [[ -r $cache && (! -e $lock || $cache -nt $lock) ]]; then
+		local cached
+		cached="$(<"$cache")"
+		if [[ -r $cached ]]; then
+			printf '%s\n' "$cached"
+			return 0
+		fi
+	fi
+
 	local out
 	out="$(nix build --no-link --print-out-paths "$FLAKE_ATTR" 2>/dev/null)" || {
 		echo "hm-doc: 'nix build $FLAKE_ATTR' failed. Are you inside the nix-config flake?" >&2
@@ -44,6 +59,8 @@ resolve_json() {
 		echo "hm-doc: options.json not found at $json" >&2
 		return 1
 	fi
+	mkdir -p "$(dirname "$cache")"
+	printf '%s\n' "$json" >"$cache"
 	printf '%s\n' "$json"
 }
 
