@@ -2,8 +2,11 @@
 custom.lib.mkDefaultModule { dir = ./.; } {
   boot.loader.limine.style.interface.brandingColor = "#FF0000";
 
-  programs.regreet.hyprland.settings.windowrule = [
-    "match:initial_class apps\\.regreet, monitor DP-2"
+  programs.regreet.hyprland.settings.window_rule = [
+    {
+      match.initial_class = "apps\\.regreet";
+      monitor = "DP-2";
+    }
   ];
 
   # This value determines the NixOS release from which the default

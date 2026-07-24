@@ -1,4 +1,4 @@
-{ flake, ... }:
+_:
 {
   lib,
   config,
@@ -12,6 +12,15 @@
     in
     {
       package = mkPackageOption pkgs "hyprland" { };
+
+      execOnce = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        description = ''
+          Shell commands to run once on greeter startup. Rendered into a single
+          `hl.on("hyprland.start", …)` hook as `hl.exec_cmd` calls.
+        '';
+      };
 
       settings = mkOption {
         type =
@@ -34,9 +43,9 @@
           valueType;
         default = { };
         description = ''
-          Hyprland configuration written in Nix. Entries with the same key
-          should be written as lists. Variables' and colors' names should be
-          quoted. See <https://wiki.hypr.land> for more examples.
+          Hyprland configuration written in Nix, rendered as Lua. Each top-level
+          entry becomes an `hl.<name>(…)` call (e.g. `config`, `window_rule`);
+          list values emit one call per element. See <https://wiki.hypr.land>.
         '';
       };
     };
@@ -45,17 +54,37 @@
     let
       cfg = config.programs.regreet;
       getHyprlandExe = lib.getExe' cfg.hyprland.package;
+
+      # UPGRADE(26.11): drop this local renderer; home-manager unstable exposes the
+      # Hyprland Lua generator as a lib function.
+      toLua = lib.generators.toLua { };
+      renderArgs =
+        v: if lib.isAttrs v && v ? _args then lib.concatMapStringsSep ", " toLua v._args else toLua v;
+      toHlLua =
+        settings:
+        lib.concatStrings (
+          lib.mapAttrsToList (
+            name: value:
+            let
+              items = if builtins.isList value then value else [ value ];
+            in
+            lib.concatMapStrings (x: "hl.${name}(${renderArgs x})\n") items
+          ) settings
+        );
     in
     lib.mkIf (cfg.enable && cfg.compositor == "hyprland") {
-      programs.regreet.hyprland.settings.exec-once = [
+      programs.regreet.hyprland.execOnce = [
         "${lib.getExe cfg.package}; ${getHyprlandExe "hyprctl"} dispatch exit"
       ];
 
       services.greetd.settings.default_session.command =
         let
           hyprlandConfig = pkgs.writeTextFile {
-            name = "greetd-hyprland.conf";
-            text = flake.inputs.home-manager.lib.hm.generators.toHyprconf { attrs = cfg.hyprland.settings; };
+            name = "greetd-hyprland.lua";
+            text = toHlLua cfg.hyprland.settings + ''
+              hl.on("hyprland.start", (function()
+              ${lib.concatMapStrings (c: "  hl.exec_cmd(${toLua c})\n") cfg.hyprland.execOnce}end))
+            '';
           };
         in
         "${lib.getExe' pkgs.dbus "dbus-run-session"} ${getHyprlandExe "start-hyprland"} -- --config ${hyprlandConfig}";
