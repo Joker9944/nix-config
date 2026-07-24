@@ -52,6 +52,10 @@
       url = "github:nix-community/plasma-manager/trunk";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    tmux-which-key = {
+      url = "github:alexwforsythe/tmux-which-key"; # cSpell:ignore alexwforsythe
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # helpers
     pre-commit-hooks = {

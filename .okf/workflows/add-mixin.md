@@ -3,7 +3,7 @@ type: Playbook
 title: Add a new mixin
 description: The 3-step process for adding either a home-manager or a NixOS mixin — drop the file, enable it, rebuild.
 tags: [workflow, modules, home-manager, nixos]
-timestamp: 2026-07-17T00:00:00Z
+timestamp: 2026-07-24T00:00:00Z
 ---
 
 # Trigger
@@ -48,6 +48,7 @@ See [rebuild](rebuild.md).
 
 * Exposing multiple options beyond `enable`. See [decisions/enable-flag-mixins](/decisions/enable-flag-mixins.md) — if the mixin needs a knob, put it in `hosts/<host>/default.nix` or `users/<user>/hosts/<host>/default.nix` as a plain override.
 * Guessing home-manager option names from memory. See [lookup-hm-option](lookup-hm-option.md).
+* Hand-rolling a plugin's config generation when upstream ships a home-manager module — check first. Import via `imports = [ inputs.<flake>.homeManagerModules.default ]` inside `mkMixinModule` (imports stay structural; precedent: `users/mixins/desktop-environment/kde-plasma.nix`). Especially worth it for plugins that "autobuild" config into their own directory, which fails on the read-only store. Example: `users/mixins/programs/tmux/` (tmux-which-key).
 
 # Related
 
