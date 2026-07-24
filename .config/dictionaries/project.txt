@@ -22,6 +22,7 @@ gdkmonitor
 glibtop
 gnim
 gpgsign
+greppable
 gsub
 halign
 headerbar
