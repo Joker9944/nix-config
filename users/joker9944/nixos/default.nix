@@ -19,12 +19,12 @@ in
       homeMode = "750";
       description = "Felix von Arx";
       extraGroups = [
-        "networkmanager"
         "wheel"
         "keys"
-        "docker"
-        "gamemode"
-      ];
+      ]
+      ++ lib.optional config.mixins.networking.networkmanager.enable "networkmanager"
+      ++ lib.optional config.mixins.virtualisation.docker.enable "docker"
+      ++ lib.optional config.mixins.programs.steam.enable "gamemode";
 
       openssh.authorizedKeys.keys =
         (lib.optional (
@@ -41,8 +41,9 @@ in
     };
   };
 
-  # Since NixOS system config is reused unfree packages have to be configured here, not optimal but an exactable trade off
-  custom.nixpkgsCompat.allowUnfreePackages = [
+  # These serve the home-manager side, which reuses the system nixpkgs config and only exists on
+  # graphical hosts, so both are gated on it — a server has no home-manager and needs neither.
+  custom.nixpkgsCompat.allowUnfreePackages = lib.mkIf config.mixins.programs.home-manager.enable [
     "spotify"
     "idea"
     "pycharm"
@@ -57,7 +58,9 @@ in
     "vscode"
   ];
 
-  nixpkgs.overlays = [ inputs.audiomenu.overlays.default ];
+  nixpkgs.overlays = lib.mkIf config.mixins.programs.home-manager.enable [
+    inputs.audiomenu.overlays.default
+  ];
 
   # WORKAROUND Setting the profile avatar from home manager using the AccountsService is not documented so this has to suffice
   systemd.tmpfiles.rules = lib.mkIf config.mixins.desktopEnvironment.gnome.enable [

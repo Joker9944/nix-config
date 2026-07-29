@@ -4,7 +4,7 @@ title: Entry points — mkNixosConfiguration & mkHomeConfiguration
 description: The two constructors called from flake.nix that assemble every host system and every home-manager configuration.
 tags: [architecture, flake, entry-point]
 generated:
-  by: process:okf-migrate
+  by: claude-code/claude-opus-4-8
   at: 2026-07-29T00:00:00Z
 ---
 
@@ -15,7 +15,7 @@ Defined in `lib/mkNixosConfiguration.nix`. Assembles a `nixosSystem` from four s
 1. `hosts/mixins/` — the reusable NixOS mixin tree.
 2. `hosts/profiles/<profile>.nix` — the host's role, when the record sets a `profile` string (optional). See [profiles](profiles.md).
 3. `hosts/<hostname>/` — per-host modules (`default.nix`, `mixins.nix`, `disks.nix`, `hardware-configuration.nix`, …). Auto-loaded via `mkDefaultModule`.
-4. `users/<username>/nixos/` for each username in the host record — user-owned system-level tweaks.
+4. `users/<username>/nixos/` for each username in the host record — user-owned system-level tweaks. The module keeps a universal identity (account, ssh keys, `wheel`/`keys` groups) unconditional and gates its desktop-coupled extras — capability group memberships per owning mixin (`docker`/`gamemode`/`networkmanager`), the unfree-package allowlist and the `audiomenu` overlay on `mixins.programs.home-manager.enable` — so it imports cleanly on a graphical-free server.
 
 Also injects every module in `flake.nixosModules.*` (source: `modules/nixos/`) and the flake's overlays.
 
