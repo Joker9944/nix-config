@@ -6,8 +6,6 @@ custom.lib.mkDefaultModule { dir = ./.; } {
     layout = "de";
     variant = "us";
   };
-  # TODO move to a desktop blueprint
-  console.useXkbConfig = true;
 
   programs.regreet.hyprland.settings.window_rule = [
     {

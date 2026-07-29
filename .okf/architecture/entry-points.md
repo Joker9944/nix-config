@@ -3,16 +3,17 @@ type: Architecture Pattern
 title: Entry points — mkNixosConfiguration & mkHomeConfiguration
 description: The two constructors called from flake.nix that assemble every host system and every home-manager configuration.
 tags: [architecture, flake, entry-point]
-timestamp: 2026-07-17T00:00:00Z
+timestamp: 2026-07-29T00:00:00Z
 ---
 
 # `mkNixosConfiguration`
 
-Defined in `lib/mkNixosConfiguration.nix`. Assembles a `nixosSystem` from three sources:
+Defined in `lib/mkNixosConfiguration.nix`. Assembles a `nixosSystem` from four sources:
 
 1. `hosts/mixins/` — the reusable NixOS mixin tree.
-2. `hosts/<hostname>/` — per-host modules (`default.nix`, `mixins.nix`, `disks.nix`, `hardware-configuration.nix`, …). Auto-loaded via `mkDefaultModule`.
-3. `users/<username>/nixos/` for each username in the host record — user-owned system-level tweaks.
+2. `hosts/profiles/<profile>.nix` — the host's role, when the record sets a `profile` string (optional). See [profiles](profiles.md).
+3. `hosts/<hostname>/` — per-host modules (`default.nix`, `mixins.nix`, `disks.nix`, `hardware-configuration.nix`, …). Auto-loaded via `mkDefaultModule`.
+4. `users/<username>/nixos/` for each username in the host record — user-owned system-level tweaks.
 
 Also injects every module in `flake.nixosModules.*` (source: `modules/nixos/`) and the flake's overlays.
 
@@ -20,7 +21,7 @@ Also injects every module in `flake.nixosModules.*` (source: `modules/nixos/`) a
 
 * `inputs` — the flake inputs.
 * `custom.lib` — the loaded `lib/` (see [custom-lib](custom-lib.md)).
-* `custom.config` — the host record itself (`system`, `hostname`, `usernames`, `resolution`, …).
+* `custom.config` — the host record itself (`system`, `hostname`, `profile`, `usernames`, `resolution`, …).
 * `custom.assets` — packages from the `nix-assets` flake input.
 
 # `mkHomeConfiguration`
@@ -43,4 +44,5 @@ Also exposes `osConfig` in `extraSpecialArgs`, so home-manager modules can read 
 
 * [custom-lib](custom-lib.md) — how `self.lib.*` gets populated.
 * [mixin-pattern](mixin-pattern.md) — the modules these constructors compose.
+* [profiles](profiles.md) — the role module `mkNixosConfiguration` pulls in from the `profile` string.
 * [decisions/standalone-home-manager](/decisions/standalone-home-manager.md) — why home-manager isn't a NixOS module.

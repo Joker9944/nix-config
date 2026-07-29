@@ -49,11 +49,15 @@ Dropping a new leaf into `loader/` auto-registers it in the count — nothing to
 
 Canonical minimal example: `users/mixins/programs/claude-code/default.nix`. Real-world opt-in files: `hosts/HAL9000/mixins.nix` (NixOS side) and `users/joker9944/config/mixins.nix` (home-manager side).
 
+On the NixOS side the bulk of a host's enables now comes from its **[profile](profiles.md)** — a role selected by the `profile` string in the flake record — and `hosts/<host>/mixins.nix` holds only the per-host deltas on top. The home-manager side has no profile layer, so its `mixins.nix` is the full enable list.
+
 For the on-disk shape once a mixin grows beyond a single `.nix` file, see [module-layout](module-layout.md) — the folder + `files/` conventions apply to every module in the repo, not just mixins.
 
 # Where per-host config lives
 
 Config that isn't reusable — per-host quirks, monitor layouts, keyboard layout choices — does *not* go in a mixin. It lives directly in `hosts/<host>/default.nix` (NixOS) or `users/<user>/hosts/<host>/default.nix` (home-manager), alongside the enable list, as a plain assignment to the upstream option.
+
+Config that *is* reusable across a class of machines — the enable set that defines "a desktop", "a server" — goes one level up, in a **[profile](profiles.md)**, not copied into each host's `mixins.nix`. The three tiers: a mixin is one capability, a profile is a role (a shared set of mixin enables), a host holds only its deltas.
 
 # Cross-tree link
 
@@ -61,6 +65,7 @@ Config that isn't reusable — per-host quirks, monitor layouts, keyboard layout
 
 # Related
 
+* [profiles](profiles.md) — the role layer above mixins; a profile is a shared set of these enable flags.
 * [module-layout](module-layout.md) — folder/`files/` conventions for multi-file modules (applies repo-wide, not just to mixins).
 * [auto-discovery](auto-discovery.md) — how mixin files register themselves.
 * [entry-points](entry-points.md) — where the trees get evaluated.

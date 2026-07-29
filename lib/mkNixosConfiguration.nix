@@ -20,6 +20,7 @@
   - `context`: Base path for host/user modules (default: flake root)
   - `system`: System architecture (e.g., "x86_64-linux")
   - `hostname`: Host name, used to find modules at `hosts/<hostname>`
+  - `profile`: Role profile, resolved to `hosts/profiles/<profile>.nix` (optional)
   - `usernames`: List of users, modules loaded from `users/<username>/nixos`
   - `additionalModules`: Extra modules to include
 
@@ -45,6 +46,7 @@
   context ? ./..,
   system,
   hostname,
+  profile ? null,
   usernames,
   additionalModules ? [ ],
   ...
@@ -52,6 +54,9 @@
 let
   mixinsModulePath = ../hosts/mixins;
   hostModulePath = lib.path.append context "hosts/${hostname}";
+  profileModulePaths = lib.optional (profile != null) (
+    lib.path.append context "hosts/profiles/${profile}.nix"
+  );
   userModulePaths = lib.map (username: lib.path.append context "users/${username}/nixos") usernames;
 in
 lib.nixosSystem {
@@ -87,6 +92,7 @@ lib.nixosSystem {
       };
     })
   ]
+  ++ profileModulePaths
   ++ (lib.attrValues flake.nixosModules)
   ++ userModulePaths
   ++ additionalModules;

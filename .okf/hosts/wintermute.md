@@ -16,13 +16,13 @@ Host-specific quirks (all in `hosts/wintermute/default.nix`):
 * Firmware updates via `fwupd` are enabled.
 * Regreet window rule pinned to `eDP-1` (vs `DP-2` on HAL9000).
 * Blue limine boot branding (vs HAL9000's red).
-* Swiss keymap: `services.xserver.xkb.layout = "ch";` + `console.useXkbConfig = true;` (inlined; the shared `keymap` mixin was dissolved).
+* Swiss keymap: `services.xserver.xkb.layout = "ch";`
 
 # Host record & mixin selection
 
-Host record: `flake.nix#nixosConfigurations`. Enabled NixOS mixins: `hosts/wintermute/mixins.nix`. The mixin set overlaps with [HAL9000](HAL9000.md) but omits Nvidia / Steam / Docker and adds `openssh`.
+Host record: `flake.nix#nixosConfigurations`, selecting `profile = "hyprland-desktop"` — the shared graphical baseline (see [profiles](/architecture/profiles.md)). `hosts/wintermute/mixins.nix` holds only the deltas: `openssh` and `windowsSupport`. It differs from [HAL9000](HAL9000.md) — same profile, but no Nvidia / Steam / Docker — solely in those deltas.
 
 # Related
 
-* [HAL9000](HAL9000.md) — the desktop counterpart. Compare `mixins.nix` files when the two hosts should stay in sync on a shared concern.
+* [HAL9000](HAL9000.md) — the desktop counterpart. A shared concern belongs in the common `hyprland-desktop` [profile](/architecture/profiles.md), not copied into both `mixins.nix` files.
 * [architecture/entry-points](/architecture/entry-points.md).

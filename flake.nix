@@ -192,12 +192,14 @@
               {
                 system = "x86_64-linux";
                 hostname = "HAL9000";
+                profile = "hyprland-desktop";
                 usernames = [ "joker9944" ];
                 resolution = "2560x1440";
               }
               {
                 system = "x86_64-linux";
                 hostname = "wintermute";
+                profile = "hyprland-desktop";
                 usernames = [ "joker9944" ];
                 resolution = "3840x2160";
               }

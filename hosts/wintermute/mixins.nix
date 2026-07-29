@@ -1,37 +1,7 @@
 {
   mixins = {
-    fonts.enable = true;
-    localization.enable = true;
-    nix.enable = true;
+    boot.windowsSupport.enable = true;
 
-    desktopEnvironment.hyprland.enable = true;
-    displayManager.regreet.enable = true;
-
-    boot = {
-      loader.limine.enable = true;
-      windowsSupport.enable = true;
-    };
-
-    networking = {
-      hosts.enable = true;
-      networkmanager.enable = true;
-    };
-
-    programs = {
-      _1password.enable = true;
-      git.enable = true;
-      gnupg.enable = true;
-      home-manager.enable = true;
-      utilities.enable = true;
-      vim.enable = true;
-    };
-
-    services = {
-      maintenance.enable = true;
-      openssh.enable = true;
-      pipewire.enable = true;
-      printing.enable = true;
-      tailscale.enable = true;
-    };
+    services.openssh.enable = true;
   };
 }

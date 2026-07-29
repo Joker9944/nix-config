@@ -1,46 +1,14 @@
 {
   mixins = {
-    fonts.enable = true;
-    localization.enable = true;
-    nix.enable = true;
+    boot.windowsSupport.enable = true;
 
-    desktopEnvironment.hyprland.enable = true;
-    displayManager.regreet.enable = true;
-
-    boot = {
-      loader.limine.enable = true;
-      windowsSupport.enable = true;
-    };
-
-    hardware = {
-      nvidia.enable = true;
-    };
-
-    networking = {
-      hosts.enable = true;
-      networkmanager.enable = true;
-    };
+    hardware.nvidia.enable = true;
 
     programs = {
-      _1password.enable = true;
       ffmpeg.enable = true;
-      git.enable = true;
-      gnupg.enable = true;
-      home-manager.enable = true;
       steam.enable = true;
-      utilities.enable = true;
-      vim.enable = true;
     };
 
-    services = {
-      maintenance.enable = true;
-      pipewire.enable = true;
-      printing.enable = true;
-      tailscale.enable = true;
-    };
-
-    virtualisation = {
-      docker.enable = true;
-    };
+    virtualisation.docker.enable = true;
   };
 }
