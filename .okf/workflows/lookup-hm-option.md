@@ -4,8 +4,8 @@ title: Look up a home-manager option
 description: Use the home-manager-options Claude skill to query the pinned home-manager options.json before writing config. Prevents hallucinated option names and short-circuits source-reading rabbit holes.
 tags: [workflow, home-manager, skill, agent]
 generated:
-  by: process:okf-migrate
-  at: 2026-07-23T00:00:00Z
+  by: claude-code/claude-opus-4-8
+  at: 2026-07-29T00:00:00Z
 ---
 
 # Trigger
@@ -18,7 +18,7 @@ Home-manager options get renamed and restructured between releases. Whatever rev
 
 # Tool
 
-`hm-options` — a binary on `PATH` from this repo's dev shell (defined in `flake.nix`, auto-loaded by `direnv`). It queries a pinned home-manager `options.json` — baked into the binary at build time — with `jq`, so there's no flake evaluation per call. Sibling `nixos-options` binary exists for NixOS options (built from the same engine); a dedicated skill for it is a future step.
+`hm-options` — a binary on `PATH` from this repo's dev shell (defined in `flake.nix`, auto-loaded by `direnv`). It queries a pinned home-manager `options.json` — baked into the binary at build time — with `jq`, so there's no flake evaluation per call. A sibling `nixos-options` binary exists for NixOS options, built from the same engine.
 
 | Command | Purpose |
 |---|---|

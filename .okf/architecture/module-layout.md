@@ -4,7 +4,7 @@ title: Module layout — folders and files/
 description: On-disk layout for any nix module in the repo — single file for trivial modules, `<name>/default.nix` folder once more than one file is involved, `files/` subdir for non-nix payloads.
 tags: [architecture, modules, convention]
 generated:
-  by: process:okf-migrate
+  by: claude-code/claude-opus-4-8
   at: 2026-07-29T00:00:00Z
 ---
 
@@ -51,7 +51,7 @@ Non-nix files (patches, markdown context, dotfiles, static config) go in a `file
 
 Keeps nix code separate from its data payload. Example: `users/mixins/programs/claude-code/files/CLAUDE.md`, consumed by `programs.claude-code.context`.
 
-Historical inconsistency: `users/mixins/programs/vscodium/openssh-no-checkperm.patch` predates this rule and still sits at the module root. Not a template — flagged for future cleanup.
+One exception: `users/mixins/programs/vscodium/openssh-no-checkperm.patch` sits at the module root rather than under `files/` — an inconsistency to avoid copying, not a template.
 
 # Casing
 

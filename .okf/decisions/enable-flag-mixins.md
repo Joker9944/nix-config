@@ -4,7 +4,7 @@ title: Mixins expose only `enable`
 description: Every mixin under hosts/mixins/ and users/mixins/ declares exactly one option (`enable = mkEnableOption "…"`). Any per-host or per-user knob lives outside the mixin as a plain override.
 tags: [decision, modules, convention]
 generated:
-  by: process:okf-migrate
+  by: claude-code/claude-opus-4-8
   at: 2026-07-29T00:00:00Z
 ---
 
@@ -27,7 +27,7 @@ Configuration values that differ per host or per user do **not** get lifted into
 
 # Trade-off accepted
 
-* **Some duplication is possible** across hosts when both want the same non-default tweak. The convention is to accept the duplication until a genuine third case appears — then reconsider promoting the pattern into a helper or into the mixin's default block. Realized instance: the disk layout outgrew a mixin and became the `custom.lib.disko` helper (a *parametrized template* is a function, not an `enable` flag) — see [architecture/custom-lib](/architecture/custom-lib.md).
+* **Some duplication is possible** across hosts when both want the same non-default tweak. The convention is to accept it until a genuine third case appears, then promote the pattern into a helper or into the mixin's default block. The disk layout is such a helper (`custom.lib.disko`) rather than a mixin — a *parametrized template* is a function, not an `enable` flag; see [architecture/custom-lib](/architecture/custom-lib.md).
 
 # Related
 

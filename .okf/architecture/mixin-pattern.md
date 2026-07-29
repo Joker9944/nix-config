@@ -4,7 +4,7 @@ title: Mixin pattern
 description: Every reusable module declares one `enable` flag under `options.mixins.<category>.<name>`; hosts and users opt in from central `mixins.nix` files.
 tags: [architecture, modules, convention]
 generated:
-  by: process:okf-migrate
+  by: claude-code/claude-opus-4-8
   at: 2026-07-29T00:00:00Z
 ---
 
@@ -51,7 +51,7 @@ Dropping a new leaf into `loader/` auto-registers it in the count — nothing to
 
 Canonical minimal example: `users/mixins/programs/claude-code/default.nix`. Real-world opt-in files: `hosts/HAL9000/mixins.nix` (NixOS side) and `users/joker9944/config/mixins.nix` (home-manager side).
 
-On the NixOS side the bulk of a host's enables now comes from its **[profile](profiles.md)** — a role selected by the `profile` string in the flake record — and `hosts/<host>/mixins.nix` holds only the per-host deltas on top. The home-manager side has no profile layer, so its `mixins.nix` is the full enable list.
+On the NixOS side the bulk of a host's enables comes from its **[profile](profiles.md)** — a role selected by the `profile` string in the flake record — and `hosts/<host>/mixins.nix` holds only the per-host deltas on top. The home-manager side has no profile layer, so its `mixins.nix` is the full enable list.
 
 For the on-disk shape once a mixin grows beyond a single `.nix` file, see [module-layout](module-layout.md) — the folder + `files/` conventions apply to every module in the repo, not just mixins.
 

@@ -19,7 +19,7 @@ A host selects **one** profile, named by a `profile` string in its flake record 
 
 The tempting generalization is `profiles = [ … ]`, so a machine can stack orthogonal roles — a server that is a k8s worker *and* a NAS. Rejected because:
 
-* It re-opens composition in two places at once — `imports` chains *inside* profiles (IS-A) **and** a set union at the flake (HAS-A). That is the "mixin of mixins" tangle the [enable-flag-mixins](enable-flag-mixins.md) purity pass just removed one layer down.
+* It re-opens composition in two places at once — `imports` chains *inside* profiles (IS-A) **and** a set union at the flake (HAS-A). That reintroduces the "mixin of mixins" tangle [enable-flag-mixins](enable-flag-mixins.md) keeps out one layer down.
 * Modelling role *inheritance* (who imports `base`, how deep the chain runs) is OOP semantics grafted onto the module system; each added axis makes the profile graph harder to reason about than the flat mixin list beneath it.
 
 The orthogonal capabilities that motivated a list — k8s node / control-plane / longhorn / NAS — are **capabilities**, and capabilities are [mixins](/architecture/mixin-pattern.md). A host that plays several such roles enables several mixins; it still has one profile (or none). Composition then lives in exactly one place (the mixin enable list) and one shape (flat, binary).
