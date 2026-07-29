@@ -11,7 +11,10 @@ in
 {
   imports = [ ./config ] ++ lib.optional (builtins.pathExists hostModule) hostModule;
 
-  mixins = { inherit (osConfig.mixins) desktopEnvironment; };
+  mixins = {
+    inherit (osConfig.mixins) desktopEnvironment;
+    programs.steam.enable = osConfig.mixins.programs.steam.enable;
+  };
 
   sops = {
     defaultSopsFile = ./secrets.yaml;

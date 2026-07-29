@@ -1,7 +1,6 @@
 {
   mixins = {
     fonts.enable = true;
-    keymap.enable = true;
     localization.enable = true;
     nix.enable = true;
 
@@ -9,12 +8,11 @@
     displayManager.regreet.enable = true;
 
     boot = {
-      enable = true;
+      loader.limine.enable = true;
       windowsSupport.enable = true;
     };
 
     hardware = {
-      disko.enable = true;
       nvidia.enable = true;
     };
 

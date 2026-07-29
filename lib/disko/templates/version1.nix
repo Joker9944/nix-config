@@ -1,13 +1,13 @@
-{ lib, cfg, ... }:
+{ lib, config, ... }:
 {
   disk.main = {
-    device = "/dev/${cfg.main.name}";
+    device = "/dev/${config.main.name}";
     type = "disk";
     content = {
       type = "gpt";
       partitions = {
         ESP = {
-          end = cfg.main.size.boot;
+          end = config.main.size.boot;
           type = "EF00";
           content = {
             type = "filesystem";
@@ -17,7 +17,7 @@
         };
 
         luks = {
-          end = cfg.main.size.main;
+          end = config.main.size.main;
 
           content = {
             type = "luks";
@@ -46,9 +46,9 @@
                   ];
                 };
 
-                "swap" = lib.mkIf (cfg.main.size.swap != null) {
+                "swap" = lib.mkIf (config.main.size.swap != null) {
                   mountpoint = "/swap";
-                  swap.swapfile.size = cfg.main.size.swap;
+                  swap.swapfile.size = config.main.size.swap;
                 };
               };
             };

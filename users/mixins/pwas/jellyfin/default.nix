@@ -1,67 +1,37 @@
-_:
-{ lib, config, ... }:
-{
-  options.mixins.pwas.jellyfin =
-    let
-      inherit (lib) mkEnableOption mkOption types;
-    in
-    {
-      enable = mkEnableOption "jellyfin PWA config mixin";
+{ mkMixinModule, ... }:
+{ lib, ... }:
+let
+  profileId = "01KB0KV6DFPC17TBFBHNG8QHYF"; # cSpell:disable-line
+  siteId = "01KB0KWBEA7G5M4BFEZ2T42ETH"; # cSpell:disable-line
+in
+mkMixinModule "jellyfin" {
+  custom.browser-dispatcher = {
+    enable = lib.mkDefault true;
 
-      name = mkOption {
-        type = types.str;
-        default = "Jellyfin";
-      };
+    sites = [
+      {
+        patterns = [ "https://jellyfin.vonarx.online/*" ];
+        command = "firefoxpwa site launch ${siteId} --url \"$URL\"";
+      }
+    ];
+  };
 
-      urlBase = mkOption {
-        type = types.str;
-        default = "https://jellyfin.vonarx.online";
-      };
+  programs.firefoxpwa = {
+    enable = lib.mkDefault true;
 
-      profileId = mkOption {
-        type = types.str;
-        default = "01KB0KV6DFPC17TBFBHNG8QHYF"; # cSpell:disable-line
-      };
+    profiles.${profileId} = {
+      name = "Jellyfin";
 
-      siteId = mkOption {
-        type = types.str;
-        default = "01KB0KWBEA7G5M4BFEZ2T42ETH"; # cSpell:disable-line
-      };
-    };
+      sites.${siteId} = {
+        name = "Jellyfin";
+        url = "https://jellyfin.vonarx.online/";
+        manifestUrl = "https://jellyfin.vonarx.online/web/manifest.json";
 
-  config =
-    let
-      cfg = config.mixins.pwas.jellyfin;
-    in
-    lib.mkIf cfg.enable {
-      custom.browser-dispatcher = {
-        enable = lib.mkDefault true;
-
-        sites = [
-          {
-            patterns = [ "${cfg.urlBase}/*" ];
-            command = "firefoxpwa site launch ${cfg.siteId} --url \"$URL\"";
-          }
-        ];
-      };
-
-      programs.firefoxpwa = {
-        enable = lib.mkDefault true;
-
-        profiles.${cfg.profileId} = {
-          inherit (cfg) name;
-
-          sites.${cfg.siteId} = {
-            inherit (cfg) name;
-            url = "${cfg.urlBase}/";
-            manifestUrl = "${cfg.urlBase}/web/manifest.json";
-
-            desktopEntry = {
-              categories = lib.toList "AudioVideo";
-              icon = ./icon.png;
-            };
-          };
+        desktopEntry = {
+          categories = lib.toList "AudioVideo";
+          icon = ./icon.png;
         };
       };
     };
+  };
 }

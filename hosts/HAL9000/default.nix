@@ -2,6 +2,13 @@
 custom.lib.mkDefaultModule { dir = ./.; } {
   boot.loader.limine.style.interface.brandingColor = "#FF0000";
 
+  services.xserver.xkb = {
+    layout = "de";
+    variant = "us";
+  };
+  # TODO move to a desktop blueprint
+  console.useXkbConfig = true;
+
   programs.regreet.hyprland.settings.window_rule = [
     {
       match.initial_class = "apps\\.regreet";

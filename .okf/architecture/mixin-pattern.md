@@ -3,12 +3,12 @@ type: Architecture Pattern
 title: Mixin pattern
 description: Every reusable module declares one `enable` flag under `options.mixins.<category>.<name>`; hosts and users opt in from central `mixins.nix` files.
 tags: [architecture, modules, convention]
-timestamp: 2026-07-22T00:00:00Z
+timestamp: 2026-07-29T00:00:00Z
 ---
 
 # Shape
 
-Only the `enable` flag is exposed; everything else is gated behind it. See [decisions/enable-flag-mixins](/decisions/enable-flag-mixins.md) for the reasoning. Both trees (`users/mixins/` and `hosts/mixins/`) now use the `mkMixinModule` sugar; the manual shape survives only in the exceptions listed below.
+A mixin exposes exactly one option: **`enable`**. Everything it configures is gated behind that flag and set to a fixed baseline — per-host and per-user variation lives *outside* the mixin as a plain override (see [decisions/enable-flag-mixins](/decisions/enable-flag-mixins.md) for the reasoning, and [Where per-host config lives](#where-per-host-config-lives)). Every leaf on both trees (`users/mixins/`, `hosts/mixins/`) is written with the `mkMixinModule` sugar; there is no hand-written `options`/`config`/`mkIf` boilerplate.
 
 ## `mkMixinModule` sugar
 
@@ -22,27 +22,23 @@ mkMixinModule "atuin" {
 }
 ```
 
-`mkMixinModule "<name>"` declares `mixins.<prefix>.<name>.enable` and wraps the body in `lib.mkIf`. `<name>` is the option segment, **not necessarily the filename** (hm: `nix-helper.nix` → `"nix"`, `vscode/` → `"vscodium"`, `1password.nix` → `"_1password"`; NixOS: `dualboot-windows.nix` → `"windowsSupport"`, `1password.nix` → `"_1password"`). The prefix comes from the aggregator (`programs/` → `[ "programs" ]`, `desktop-environment/` → `[ "desktopEnvironment" ]`, `display-manager/` → `[ "displayManager" ]` — camelCase, so it can't be derived from the dir name).
+`mkMixinModule "<name>"` declares `mixins.<prefix>.<name>.enable` and wraps the body in `lib.mkIf`. `<name>` is the option segment in **camelCase**; the filename is its **kebab-case** form (module files are always kebab-case, option names always camelCase) — `systemdBoot` ↔ `systemd-boot.nix`, `windowsSupport` ↔ `windows-support.nix`; single-word names coincide (`limine` ↔ `limine.nix`). Extra exception: an option can't start with a digit, so `1password.nix` declares `"_1password"` (leading-`_` escape). See [module-layout](module-layout.md#casing). The prefix comes from the aggregator (`programs/` → `[ "programs" ]`, `desktop-environment/` → `[ "desktopEnvironment" ]`, `display-manager/` → `[ "displayManager" ]` — camelCase, so it can't be derived from the dir name; nested sub-categories compose, e.g. `boot/loader/` → `[ "boot" "loader" ]`).
 
-**Aggregator wiring.** The top-level `default.nix` of each tree (`users/mixins/default.nix`, `hosts/mixins/default.nix`) reads `config` once and builds a `lib.fix`ed `mkDefaultMixinModule` helper that it threads to every child. Category aggregators call `mkDefaultMixinModule { dir = ./.; prefix = [ … ]; } { }`; this re-threads `mkDefaultMixinModule` (for nested aggregators) plus a prefix-bound `mkMixinModule` (for leaves).
+**Aggregator wiring.** The top-level `default.nix` of each tree (`users/mixins/default.nix`, `hosts/mixins/default.nix`) reads `config` once and builds a `lib.fix`ed `mkDefaultMixinModule` helper that it threads to every child. Category aggregators call `mkDefaultMixinModule { dir = ./.; prefix = [ … ]; } { }`; this re-threads `mkDefaultMixinModule` (for nested aggregators) plus a prefix-bound `mkMixinModule` (for leaves). Atomicity: once an aggregator threads `args`, **every** child in that dir must be two-layer (`importApply` feeds the args to all of them), so add or convert an aggregator and its leaves together.
 
-Exceptions keep the manual shape (below) plus an outer `_:` absorb layer, because the sugar only declares `enable`: mixins with **extra options** (hm `pwas/*`, `1password` with `vault`; NixOS `keymap` with `type`, `services/maintenance` with `flake`, `hardware/disko`), a **custom enable default** (hm `steam`; NixOS `boot`, whose `default.nix` is also the category aggregator + carries `secureBoot`), **partial gating**, or their **own internal fan-out** (`hyprland` on both trees).
+Two mixins are **aggregators** rather than plain leaves, but both still expose only `enable`: `boot` is a category over a nested, mutually-exclusive `loader/` sub-category (see [Mutually-exclusive categories](#mutually-exclusive-categories)), and `hyprland` (both trees) is a hand-rolled fan-out whose `enable` is the toggle while an internal per-host config surface (`style`, `binds`, `waybar`, …) hangs under its namespace — the one place `mixins.*` carries more than an `enable`.
 
-## Manual shape (exceptions only)
+## Mutually-exclusive categories
+
+Some categories are "enable at most one leaf." The bootloaders under `hosts/mixins/boot/loader/` (`limine`, `systemdBoot`) are ordinary `mkMixinModule` leaves; exclusivity is enforced **structurally** by an assertion in the sub-category aggregator (`boot/loader/default.nix`) that derives the loader set from the namespace instead of a hardcoded list:
 
 ```nix
-_:
-{ lib, config, ... }:
-{
-  options.mixins.<category>.<name>.enable = lib.mkEnableOption "<name> config mixin";
-
-  config = lib.mkIf config.mixins.<category>.<name>.enable {
-    # real config here
-  };
-}
+assertion = lib.count (l: l.enable) (lib.attrValues config.mixins.boot.loader) <= 1;
 ```
 
-Atomicity: once an aggregator threads `args`, **every** child in that dir must be two-layer (`importApply` feeds the args to all of them) — convert an aggregator and its leaves together.
+Dropping a new leaf into `loader/` auto-registers it in the count — nothing to update. Hosts pick with `mixins.boot.loader.<name>.enable = true`.
+
+`desktopEnvironment` (gnome/hyprland/kde-plasma) and `displayManager` are the same pick-one shape but rely on convention — no assertion. Prefer this leaf-per-variant category over an `enable + type` enum: an enum centralizes every variant's config behind a switch and reintroduces an option beyond `enable`, whereas leaves decompose into files and keep the constraint in the category shape.
 
 # Directory layout
 

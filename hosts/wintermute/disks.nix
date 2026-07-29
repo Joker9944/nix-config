@@ -1,7 +1,14 @@
 {
+  custom,
+  inputs,
+  ...
+}:
+{
+  imports = [ inputs.disko.nixosModules.disko ];
+
   # Disk setup
-  mixins.hardware.disko = {
-    main = {
+  disko.devices = custom.lib.disko.mkDiskoLayout {
+    config.main = {
       name = "nvme0n1";
       size = {
         boot = "1G";

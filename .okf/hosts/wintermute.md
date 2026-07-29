@@ -3,7 +3,7 @@ type: Host
 title: wintermute
 description: Lenovo ThinkPad X1 Yoga Gen 4 laptop, x86_64-linux, Swiss keymap, 4K panel.
 tags: [host, laptop, hyprland, thinkpad]
-timestamp: 2026-07-17T00:00:00Z
+timestamp: 2026-07-29T00:00:00Z
 ---
 
 # Hardware
@@ -16,7 +16,7 @@ Host-specific quirks (all in `hosts/wintermute/default.nix`):
 * Firmware updates via `fwupd` are enabled.
 * Regreet window rule pinned to `eDP-1` (vs `DP-2` on HAL9000).
 * Blue limine boot branding (vs HAL9000's red).
-* Swiss keymap: `mixins.keymap.type = "ch";`.
+* Swiss keymap: `services.xserver.xkb.layout = "ch";` + `console.useXkbConfig = true;` (inlined; the shared `keymap` mixin was dissolved).
 
 # Host record & mixin selection
 

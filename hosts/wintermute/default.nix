@@ -1,11 +1,13 @@
 { custom, ... }:
 custom.lib.mkDefaultModule { dir = ./.; } {
-  mixins.keymap.type = "ch";
-
   # Lenovo ThinkPad X1 Yoga Gen 4
   # * https://wiki.archlinux.org/title/Lenovo_ThinkPad_X1_Yoga_(Gen_4)
 
   boot.loader.limine.style.interface.brandingColor = "#0000FF"; # blue
+
+  services.xserver.xkb.layout = "ch";
+  # TODO move to a desktop blueprint
+  console.useXkbConfig = true;
 
   programs.regreet.hyprland.settings.windowrule = [
     "match:initial_class apps\\.regreet, monitor eDP-1"

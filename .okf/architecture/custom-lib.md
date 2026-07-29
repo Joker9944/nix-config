@@ -3,7 +3,7 @@ type: Architecture Pattern
 title: Custom lib
 description: Files in `lib/` are auto-discovered by `lib/default.nix`, exposed as `flake.lib.*`, and injected into every module as `custom.lib`.
 tags: [architecture, lib, convention]
-timestamp: 2026-07-17T00:00:00Z
+timestamp: 2026-07-29T00:00:00Z
 ---
 
 # How it works
@@ -25,7 +25,7 @@ Notable helpers with non-obvious use:
 | `mkMixinModule.nix` | Per-mixin builder: declares `mixins.<prefix>.<name>.enable` + gates the body. Partially applied with `{ config, prefix }` by each tree's `mkDefaultMixinModule` aggregator helper and threaded to leaves; not called directly from the lib. See [mixin-pattern](mixin-pattern.md). |
 | `mkLuaCall.nix` | Builds hyprland-style multi-arg lua callbacks. Used in `users/joker9944/hosts/HAL9000/default.nix` for hyprland `on = …`. |
 | `lookupDesktopFiles.nix` | Finds `.desktop` files in a package. |
-| `hyprland/` | Hyprland-specific config helpers. |
+| `disko/` | Disk-layout template renderer. `custom.lib.disko.mkDiskoLayout { config, template ? templates.version1 }` renders a disko `devices` set from per-host params; templates live under `custom.lib.disko.templates.*`. Called from each `hosts/<host>/disks.nix` (which also imports `inputs.disko.nixosModules.disko` itself). Replaced the former `hardware/disko` mixin. |
 | `obfuscation/` | XOR-based string obfuscation, exposed via the `obfuscate` app in `apps.nix`. |
 
 Also present: small string / list / directory utilities (`indent`, `indentLines`, `mkCommand`, `mkIndentPrefix`, `first`, `last`, `nonNull`, `ls`). Names are self-descriptive; open `lib/` when you need one.

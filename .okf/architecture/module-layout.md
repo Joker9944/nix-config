@@ -3,7 +3,7 @@ type: Architecture Pattern
 title: Module layout — folders and files/
 description: On-disk layout for any nix module in the repo — single file for trivial modules, `<name>/default.nix` folder once more than one file is involved, `files/` subdir for non-nix payloads.
 tags: [architecture, modules, convention]
-timestamp: 2026-07-19T00:00:00Z
+timestamp: 2026-07-29T00:00:00Z
 ---
 
 # Scope
@@ -33,7 +33,7 @@ As soon as a module needs more than a single `.nix` file, expand it into a folde
 
 [auto-discovery](auto-discovery.md) picks up `<name>/default.nix` as the module entry point; siblings are imported explicitly from within `default.nix`. Prevents the parent category directory from filling up with fragment files.
 
-Real examples: `users/mixins/programs/vscode/`, `users/mixins/desktop-environment/hyprland/*/`, `users/mixins/pwas/*/`.
+Real examples: `users/mixins/programs/vscodium/`, `users/mixins/desktop-environment/hyprland/*/`, `users/mixins/pwas/*/`.
 
 # `files/` subdir for non-nix payloads
 
@@ -49,7 +49,13 @@ Non-nix files (patches, markdown context, dotfiles, static config) go in a `file
 
 Keeps nix code separate from its data payload. Example: `users/mixins/programs/claude-code/files/CLAUDE.md`, consumed by `programs.claude-code.context`.
 
-Historical inconsistency: `users/mixins/programs/vscode/openssh-no-checkperm.patch` predates this rule and still sits at the module root. Not a template — flagged for future cleanup.
+Historical inconsistency: `users/mixins/programs/vscodium/openssh-no-checkperm.patch` predates this rule and still sits at the module root. Not a template — flagged for future cleanup.
+
+# Casing
+
+Module files and directories are **kebab-case**; the mixin **option** they declare is **camelCase**. The filename is the kebab-case of the option name — `systemdBoot` ↔ `systemd-boot.nix`, `windowsSupport` ↔ `windows-support.nix`; single-word names coincide (`limine`). Digit escape: an option can't start with a digit, so `1password.nix` declares `_1password`.
+
+`lib/` is the exception: a lib file is named for the **function it exports, in camelCase** — `mkDiskoLayout.nix` → `custom.lib.disko.mkDiskoLayout`, `mkNixosConfiguration.nix`, etc. Namespace subdirs stay lowercase (`disko/`, `obfuscation/`).
 
 # Related
 

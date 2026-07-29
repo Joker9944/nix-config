@@ -1,67 +1,37 @@
-_:
-{ lib, config, ... }:
-{
-  options.mixins.pwas.audiobookshelf =
-    let
-      inherit (lib) mkEnableOption mkOption types;
-    in
-    {
-      enable = mkEnableOption "audiobookshelf PWA config mixin";
+{ mkMixinModule, ... }:
+{ lib, ... }:
+let
+  profileId = "01KB3K8PMHDDB98J3GYDHZFZRZ"; # cSpell:disable-line
+  siteId = "01KB3K8X63ANZAW0C5435Y13TC"; # cSpell:disable-line
+in
+mkMixinModule "audiobookshelf" {
+  custom.browser-dispatcher = {
+    enable = lib.mkDefault true;
 
-      name = mkOption {
-        type = types.str;
-        default = "audiobookshelf";
-      };
+    sites = [
+      {
+        patterns = [ "https://audiobookshelf.vonarx.online/*" ];
+        command = "firefoxpwa site launch ${siteId} --url \"$URL\"";
+      }
+    ];
+  };
 
-      urlBase = mkOption {
-        type = types.str;
-        default = "https://audiobookshelf.vonarx.online";
-      };
+  programs.firefoxpwa = {
+    enable = lib.mkDefault true;
 
-      profileId = mkOption {
-        type = types.str;
-        default = "01KB3K8PMHDDB98J3GYDHZFZRZ"; # cSpell:disable-line
-      };
+    profiles.${profileId} = {
+      name = "audiobookshelf";
 
-      siteId = mkOption {
-        type = types.str;
-        default = "01KB3K8X63ANZAW0C5435Y13TC"; # cSpell:disable-line
-      };
-    };
+      sites.${siteId} = {
+        name = "audiobookshelf";
+        url = "https://audiobookshelf.vonarx.online/";
+        manifestUrl = "https://audiobookshelf.vonarx.online/audiobookshelf/_nuxt/manifest.2f7e41c6.json"; # cSpell:ignore nuxt
 
-  config =
-    let
-      cfg = config.mixins.pwas.audiobookshelf;
-    in
-    lib.mkIf cfg.enable {
-      custom.browser-dispatcher = {
-        enable = lib.mkDefault true;
-
-        sites = [
-          {
-            patterns = [ "${cfg.urlBase}/*" ];
-            command = "firefoxpwa site launch ${cfg.siteId} --url \"$URL\"";
-          }
-        ];
-      };
-
-      programs.firefoxpwa = {
-        enable = lib.mkDefault true;
-
-        profiles.${cfg.profileId} = {
-          inherit (cfg) name;
-
-          sites.${cfg.siteId} = {
-            inherit (cfg) name;
-            url = "${cfg.urlBase}/";
-            manifestUrl = "${cfg.urlBase}/audiobookshelf/_nuxt/manifest.2f7e41c6.json"; # cSpell:ignore nuxt
-
-            desktopEntry = {
-              categories = lib.toList "AudioVideo";
-              icon = ./icon.png;
-            };
-          };
+        desktopEntry = {
+          categories = lib.toList "AudioVideo";
+          icon = ./icon.png;
         };
       };
     };
+  };
 }
