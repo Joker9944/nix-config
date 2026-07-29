@@ -19,6 +19,12 @@
 - No inline prose. Use comments sparingly - only where logic is unclear.
 - No boilerplate unless explicitly requested.
 
+## Documentation style
+
+- Document the *is* state; an ordinary change shouldn't outdate it.
+- No change-narrative or plans ("refactored X → Y", "will eventually") — those go in commits/log/decisions.
+- Rationale lives in decisions tied to the current state, not a running history.
+
 ## Delivery and communication
 
 - Match response length to the question. State results, don't narrate deliberation.
