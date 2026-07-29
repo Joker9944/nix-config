@@ -3,18 +3,21 @@ $schema: https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell
 version: '0.2'
 caseSensitive: false
 import:
-  - cspell-dicts/cspell.yaml
+  - ~/Workspace/cspell-dicts/cspell.yaml
 dictionaryDefinitions:
   - name: project
     path: ./dictionaries/project.txt
     addWords: true
 ignorePaths:
-  - '**/secrets.yaml'
+  - 'secrets.yaml'
   - /result
   - .sops.yaml
   - '*.patch'
   - .gitignore
   - .idea
   - flake.lock
+  - '@girs'
+  - 'node_modules'
+  - 'nx*'
 dictionaries:
   - project

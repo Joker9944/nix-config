@@ -131,13 +131,6 @@
                   args = [ "--fix=lf" ];
                 };
 
-                # General
-                cspell = {
-                  enable = true;
-                  args = [ "--no-must-find-files" ];
-                  excludes = [ "^nx(\\..+)?$" ];
-                };
-
                 # Nix
                 deadnix.enable = true;
                 nil.enable = true;

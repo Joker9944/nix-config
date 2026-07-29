@@ -1,0 +1,28 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "cSpell: check project",
+      "type": "shell",
+      "command": "nix",
+      "args": ["run", ".#cspell", "--", "lint", "--no-progress", "--no-summary", "--relative", "**"],
+      "problemMatcher": {
+        "owner": "cspell",
+        "source": "cSpell",
+        "severity": "warning",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": {
+          "regexp": "^(.+?):(\\d+):(\\d+)\\s+-\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "message": 4
+        }
+      },
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      }
+    }
+  ]
+}

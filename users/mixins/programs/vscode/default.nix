@@ -75,6 +75,23 @@ mkMixinModule "vscodium" {
           extensions = [
             open-vsx-release.streetsidesoftware.code-spell-checker
           ];
+
+          # Shared dictionaries live in a plain writable clone at ~/Workspace/cspell-dicts
+          # (git-synced across machines/repos), not a submodule. "Add word" targets the
+          # shared user dictionary so new terms propagate to every repo.
+          userSettings =
+            let
+              cspellDicts = "${config.home.homeDirectory}/Workspace/cspell-dicts";
+            in
+            {
+              "cSpell.import" = [ "${cspellDicts}/cspell.yaml" ];
+              "cSpell.customDictionaries".shared = {
+                name = "shared";
+                path = "${cspellDicts}/dictionaries/user.txt";
+                addWords = true;
+                scope = "user";
+              };
+            };
         }
         {
           # lang javascript

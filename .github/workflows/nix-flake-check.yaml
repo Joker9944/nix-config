@@ -22,9 +22,6 @@ jobs:
         id: git-checkout
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
 
-        with:
-          submodules: true
-
       - name: Setup nix
         id: nix-setup
         uses: Joker9944/nix-config/.github/composites/nix-setup@main
@@ -32,4 +29,4 @@ jobs:
       - name: Run flake check
         id: nix-check
 
-        run: nix flake check path:.
+        run: nix flake check

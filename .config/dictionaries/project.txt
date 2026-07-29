@@ -21,6 +21,7 @@ esac
 evals
 frontmatter
 gdkmonitor
+girs
 glibtop
 gnim
 gpgsign
