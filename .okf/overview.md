@@ -4,7 +4,9 @@ title: nix-config
 description: Single-flake NixOS + standalone home-manager configuration organized around a two-level enable-flag mixin pattern.
 resource: https://github.com/Joker9944/nix-config
 tags: [nixos, home-manager, flake, root]
-timestamp: 2026-07-17T00:00:00Z
+generated:
+  by: process:okf-migrate
+  at: 2026-07-17T00:00:00Z
 ---
 
 # What this repo is

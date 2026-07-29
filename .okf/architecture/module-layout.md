@@ -3,7 +3,9 @@ type: Architecture Pattern
 title: Module layout — folders and files/
 description: On-disk layout for any nix module in the repo — single file for trivial modules, `<name>/default.nix` folder once more than one file is involved, `files/` subdir for non-nix payloads.
 tags: [architecture, modules, convention]
-timestamp: 2026-07-29T00:00:00Z
+generated:
+  by: process:okf-migrate
+  at: 2026-07-29T00:00:00Z
 ---
 
 # Scope

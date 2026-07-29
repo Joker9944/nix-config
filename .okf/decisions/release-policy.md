@@ -3,7 +3,9 @@ type: Decision
 title: Track stable nixos, upgrade in lockstep
 description: nixpkgs and home-manager are pinned to matching stable release branches and upgraded together at each nixos release. Hyprland is the deliberate exception.
 tags: [decision, releases, flake]
-timestamp: 2026-07-17T00:00:00Z
+generated:
+  by: process:okf-migrate
+  at: 2026-07-17T00:00:00Z
 ---
 
 # The rule

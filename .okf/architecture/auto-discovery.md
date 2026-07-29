@@ -3,7 +3,9 @@ type: Architecture Pattern
 title: Auto-discovery via mkDefaultModule
 description: Every `default.nix` in a mixin category directory calls `mkDefaultModule { dir = ./.; }`, which auto-imports every sibling `.nix` file — dropping a new file is enough to register it.
 tags: [architecture, modules, convention]
-timestamp: 2026-07-17T00:00:00Z
+generated:
+  by: process:okf-migrate
+  at: 2026-07-17T00:00:00Z
 ---
 
 # What it does

@@ -3,7 +3,9 @@ type: Playbook
 title: Formatting and cspell
 description: What the pre-commit hooks enforce (nixfmt, shfmt, ruff, …), why cspell is deliberately NOT a hook (editor + on-demand only), and how to whitelist technical words.
 tags: [workflow, formatting, spellcheck, pre-commit]
-timestamp: 2026-07-29T00:00:00Z
+generated:
+  by: process:okf-migrate
+  at: 2026-07-29T00:00:00Z
 ---
 
 # Hook set

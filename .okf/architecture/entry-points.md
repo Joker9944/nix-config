@@ -3,7 +3,9 @@ type: Architecture Pattern
 title: Entry points — mkNixosConfiguration & mkHomeConfiguration
 description: The two constructors called from flake.nix that assemble every host system and every home-manager configuration.
 tags: [architecture, flake, entry-point]
-timestamp: 2026-07-29T00:00:00Z
+generated:
+  by: process:okf-migrate
+  at: 2026-07-29T00:00:00Z
 ---
 
 # `mkNixosConfiguration`

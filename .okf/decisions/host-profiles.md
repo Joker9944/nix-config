@@ -3,7 +3,12 @@ type: Decision
 title: One profile per host; multi-role is a mixin concern
 description: Hosts select exactly one high-level profile via a `profile` string; orthogonal roles are mixins, not a profile list, and a profile must stay shared across a class of machines.
 tags: [decision, profiles, hosts]
-timestamp: 2026-07-29T00:00:00Z
+generated:
+  by: claude-code/claude-opus-4-8
+  at: 2026-07-29T00:00:00Z
+verified:
+  - by: human:joker9944
+    at: 2026-07-29T00:00:00Z
 ---
 
 # Decision

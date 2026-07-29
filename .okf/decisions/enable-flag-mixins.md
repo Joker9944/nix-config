@@ -3,7 +3,9 @@ type: Decision
 title: Mixins expose only `enable`
 description: Every mixin under hosts/mixins/ and users/mixins/ declares exactly one option (`enable = mkEnableOption "…"`). Any per-host or per-user knob lives outside the mixin as a plain override.
 tags: [decision, modules, convention]
-timestamp: 2026-07-29T00:00:00Z
+generated:
+  by: process:okf-migrate
+  at: 2026-07-29T00:00:00Z
 ---
 
 # The rule

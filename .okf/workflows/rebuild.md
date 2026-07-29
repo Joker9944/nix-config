@@ -3,7 +3,9 @@ type: Playbook
 title: Rebuild the system
 description: How to rebuild NixOS and home-manager from this flake, including the shell completions that make the invocation short.
 tags: [workflow, build, nixos, home-manager]
-timestamp: 2026-07-17T00:00:00Z
+generated:
+  by: process:okf-migrate
+  at: 2026-07-17T00:00:00Z
 ---
 
 # Trigger

@@ -3,7 +3,9 @@ type: Host
 title: wintermute
 description: Lenovo ThinkPad X1 Yoga Gen 4 laptop, x86_64-linux, Swiss keymap, 4K panel.
 tags: [host, laptop, hyprland, thinkpad]
-timestamp: 2026-07-29T00:00:00Z
+generated:
+  by: process:okf-migrate
+  at: 2026-07-29T00:00:00Z
 ---
 
 # Hardware

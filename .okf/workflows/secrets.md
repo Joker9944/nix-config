@@ -3,7 +3,9 @@ type: Playbook
 title: Secrets with sops-nix
 description: Per-user encrypted secrets.yaml files, decrypted at activation via sops-nix using an age key.
 tags: [workflow, secrets, sops]
-timestamp: 2026-07-17T00:00:00Z
+generated:
+  by: process:okf-migrate
+  at: 2026-07-17T00:00:00Z
 ---
 
 # Layout

@@ -3,7 +3,9 @@ type: Playbook
 title: Look up a home-manager option
 description: Use the home-manager-options Claude skill to query the pinned home-manager options.json before writing config. Prevents hallucinated option names and short-circuits source-reading rabbit holes.
 tags: [workflow, home-manager, skill, agent]
-timestamp: 2026-07-23T00:00:00Z
+generated:
+  by: process:okf-migrate
+  at: 2026-07-23T00:00:00Z
 ---
 
 # Trigger

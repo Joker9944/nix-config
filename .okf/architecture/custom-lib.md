@@ -3,7 +3,9 @@ type: Architecture Pattern
 title: Custom lib
 description: Files in `lib/` are auto-discovered by `lib/default.nix`, exposed as `flake.lib.*`, and injected into every module as `custom.lib`.
 tags: [architecture, lib, convention]
-timestamp: 2026-07-29T00:00:00Z
+generated:
+  by: process:okf-migrate
+  at: 2026-07-29T00:00:00Z
 ---
 
 # How it works

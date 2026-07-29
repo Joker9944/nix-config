@@ -3,7 +3,12 @@ type: Architecture Pattern
 title: Host profiles
 description: A profile is a reusable host role — a named set of mixin enables that a class of machines shares, selected per host by the `profile` string in the flake record.
 tags: [architecture, profiles, hosts, convention]
-timestamp: 2026-07-29T00:00:00Z
+generated:
+  by: claude-code/claude-opus-4-8
+  at: 2026-07-29T00:00:00Z
+verified:
+  - by: human:joker9944
+    at: 2026-07-29T00:00:00Z
 ---
 
 # What a profile is

@@ -3,7 +3,9 @@ type: Decision
 title: Standalone home-manager
 description: Home-manager is built as a separate flake output (`homeConfigurations`) and invoked directly, not imported as a NixOS module. But it still inherits pkgs + specialArgs from the paired NixOS config.
 tags: [decision, home-manager, architecture]
-timestamp: 2026-07-17T00:00:00Z
+generated:
+  by: process:okf-migrate
+  at: 2026-07-17T00:00:00Z
 ---
 
 # The choice

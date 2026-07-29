@@ -3,7 +3,9 @@ type: Architecture Pattern
 title: Mixin pattern
 description: Every reusable module declares one `enable` flag under `options.mixins.<category>.<name>`; hosts and users opt in from central `mixins.nix` files.
 tags: [architecture, modules, convention]
-timestamp: 2026-07-29T00:00:00Z
+generated:
+  by: process:okf-migrate
+  at: 2026-07-29T00:00:00Z
 ---
 
 # Shape

@@ -3,7 +3,9 @@ type: Playbook
 title: Add a new mixin
 description: The 3-step process for adding either a home-manager or a NixOS mixin — drop the file, enable it, rebuild.
 tags: [workflow, modules, home-manager, nixos]
-timestamp: 2026-07-29T00:00:00Z
+generated:
+  by: process:okf-migrate
+  at: 2026-07-29T00:00:00Z
 ---
 
 # Trigger

@@ -3,7 +3,9 @@ type: Architecture Pattern
 title: Packages — pkgs/ auto-discovery and a lean flake.nix
 description: How the flake's package set is assembled from ./pkgs, and the convention that flake.nix stays thin — package logic lives in pkgs/, not inline in the flake.
 tags: [architecture, flake, packages, convention]
-timestamp: 2026-07-23T00:00:00Z
+generated:
+  by: process:okf-migrate
+  at: 2026-07-23T00:00:00Z
 ---
 
 # Where packages live

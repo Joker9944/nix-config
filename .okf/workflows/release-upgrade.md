@@ -3,7 +3,9 @@ type: Playbook
 title: Release upgrade — deferred changes
 description: How deferred "do this at the next nixpkgs/home-manager release" changes are tracked via UPGRADE(<release>) code markers, and the steps to run at a release bump.
 tags: [workflow, upgrade, nixpkgs, home-manager]
-timestamp: 2026-07-24T00:00:00Z
+generated:
+  by: process:okf-migrate
+  at: 2026-07-24T00:00:00Z
 ---
 
 # Trigger
