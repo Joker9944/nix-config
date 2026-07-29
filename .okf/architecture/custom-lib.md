@@ -30,6 +30,32 @@ Notable helpers with non-obvious use:
 
 Also present: small string / list / directory utilities (`indent`, `indentLines`, `mkCommand`, `mkIndentPrefix`, `first`, `last`, `nonNull`, `ls`). Names are self-descriptive; open `lib/` when you need one.
 
+# Doc-strings
+
+Public `lib/` functions carry an [RFC 145](https://github.com/NixOS/rfcs/blob/master/rfcs/0145-doc-strings.md) doc-comment: a `/** … */` block (note the **double asterisk** — a plain `/* … */` is *not* a doc-comment and the doc tooling skips it) placed immediately before the binding, with **CommonMark** content. Follow the nixdoc-conventional structure the existing helpers already use — a one-line summary, then `# Type` (a type signature), `# Arguments`, `# Example`:
+
+    /**
+      Build a NixOS configuration for a host.
+
+      # Type
+
+      ```
+      mkNixosConfiguration :: { system, hostname, usernames, … } -> nixosConfiguration
+      ```
+
+      # Arguments
+
+      - `hostname`: used to find modules at `hosts/<hostname>`
+
+      # Example
+
+      ```nix
+      mkNixosConfiguration { system = "x86_64-linux"; hostname = "my-host"; usernames = [ … ]; }
+      ```
+    */
+
+Those section headings are nixdoc convention, not mandated by the RFC (which fixes only the `/** */` outer format + CommonMark body), but keep them consistent across the tree. Exemplars: `lib/mkNixosConfiguration.nix`, `lib/mkHomeConfiguration.nix`, `lib/mkMixinModule.nix`, `lib/disko/mkDiskoLayout.nix`.
+
 # Tests
 
 Selected lib functions have pure tests under `tests/lib/`, wired into `flake.nix#checks.<system>.libTests`. Run them with `nix run .#test-lib`.
