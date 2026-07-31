@@ -6,6 +6,9 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 
 - `conform` gates commit messages at the commit-msg stage; types and scopes live in `.conform.yaml` — [workflows/formatting-and-cspell](/workflows/formatting-and-cspell.md)
 - A `pkgs/` subdir also holds a single package whose script lives under `files/`, not only input-hungry groups — [architecture/packages](/architecture/packages.md)
+- The `server` profile and the four headless nyx-cluster hosts; cluster roles are mixins, not a second profile — [architecture/profiles](/architecture/profiles.md), [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- System-level sops decrypted at activation via each host's SSH host key — [workflows/secrets](/workflows/secrets.md)
+- The `server-longhorn-v1` disko template and `mkDiskoLayout`'s `longhorn` size default — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 
 ## 2026-09-04
 

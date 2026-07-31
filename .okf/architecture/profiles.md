@@ -5,7 +5,7 @@ description: A profile is a reusable host role — a named set of mixin enables 
 tags: [architecture, profiles, hosts, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-04T00:00:00Z
+  at: 2026-09-05T00:00:00Z
 verified:
   - by: claude-code/claude-fable-5
     at: 2026-09-04T00:00:00Z
@@ -52,13 +52,19 @@ This is the guard against the failure mode where every machine grows a bespoke `
 
 # Current profiles
 
+Two role branches share `base`.
+
 `base` ← `desktop` ← `hyprland-desktop` (each `imports` the one on its left):
 
 * **base** — every machine: `nix`, `localization`, `git`/`vim`/`utilities`, `maintenance`, `tailscale`.
 * **desktop** — graphical baseline: the limine loader, `fonts`, `networkmanager`, `theme.orchidlift-lume`, `pipewire`, `printing`, `_1password`, `gnupg`, `home-manager`, plus `console.useXkbConfig`.
 * **hyprland-desktop** — picks the DE + DM: `desktopEnvironment.hyprland`, `displayManager.regreet`.
 
-Both current hosts select `hyprland-desktop`; their `mixins.nix` files hold only deltas.
+`base` ← `server`:
+
+* **server** — headless baseline: the systemd-boot loader, `openssh`, and a systemd-networkd baseline (`networking.useNetworkd`, `useDHCP = false` — static addressing is a host delta). No DE/DM, pipewire, or home-manager.
+
+HAL9000/wintermute select `hyprland-desktop`. The [nyx cluster](/hosts/nyx-cluster.md) selects `server`: `tars`/`case`/`kipp` (k3s servers) and `mother` (NAS k3s agent). Cluster roles are enabled as **mixins** on top of the one profile — `services.k3s` on all four, plus `services.zfs`/`services.nfs` on `mother` — never a second profile, exactly the multi-role case [decisions/host-profiles](/decisions/host-profiles.md) reserves for mixins. Every host's `mixins.nix` holds only deltas.
 
 # Related
 

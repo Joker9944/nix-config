@@ -6,6 +6,14 @@
 keys:
   - &joker9944 age1q4hag0cwjs5zr2t3n7d089ukynwpesde8vskudcqvjaydspxfcaqva92xc
 creation_rules:
+  # k3s cluster token — decrypted at system activation via each host's SSH host
+  # key. Host age recipients (derived from ssh_host_ed25519_key.pub via
+  # ssh-to-age) are appended here during rollout, then the file is re-encrypted.
+  # Must stay ABOVE the general rule: sops applies the first matching rule.
+  - path_regex: secrets/k3s\.yaml$
+    key_groups:
+      - age:
+        - *joker9944
   # Global secrets
   - path_regex: secrets/[^/]+\.(ya?ml|json|env|ini)$
     key_groups:
