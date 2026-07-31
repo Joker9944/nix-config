@@ -19,6 +19,7 @@ let
   cfg = lib.recursiveUpdate {
     main.size = {
       boot = "500M";
+      longhorn = null;
       swap = null;
       main = "100%";
     };

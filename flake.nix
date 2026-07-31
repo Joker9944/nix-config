@@ -286,6 +286,30 @@
                 profile = "hyprland-desktop";
                 usernames = [ "joker9944" ];
               }
+              {
+                system = "x86_64-linux";
+                hostname = "tars";
+                profile = "server";
+                usernames = [ "joker9944" ];
+              }
+              {
+                system = "x86_64-linux";
+                hostname = "case";
+                profile = "server";
+                usernames = [ "joker9944" ];
+              }
+              {
+                system = "x86_64-linux";
+                hostname = "kipp";
+                profile = "server";
+                usernames = [ "joker9944" ];
+              }
+              {
+                system = "x86_64-linux";
+                hostname = "mother";
+                profile = "server";
+                usernames = [ "joker9944" ];
+              }
             ]
             [
               (lib.map (cfg: {
