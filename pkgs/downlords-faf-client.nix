@@ -3,7 +3,7 @@
   stdenv,
   makeWrapper,
   copyDesktopItems,
-  temurin-jre-bin,
+  temurin-jre-bin-25,
   javaPackages,
   steam-run-free,
   fetchurl,
@@ -12,8 +12,8 @@
   ...
 }:
 stdenv.mkDerivation (finalAttrs: {
-  pname = "downlords-faf-client";
-  version = "2025.9.1";
+  pname = "downlords-faf-client"; # cSpell:ignore downlords
+  version = "2026.7.0";
 
   src =
     let
@@ -21,7 +21,7 @@ stdenv.mkDerivation (finalAttrs: {
     in
     fetchzip {
       url = "https://github.com/FAForever/${finalAttrs.pname}/releases/download/v${finalAttrs.version}/faf_unix_${escapedVersion}.tar.gz";
-      sha256 = "sha256-4h4hZkKLBrkNr+xLntMGkz+VYq7k9syXH4UVz6Lx2U4=";
+      sha256 = "sha256-2/NnUiKDziU9RNQXzDMR9PBL9nw5gGtPicasUohusvs=";
     };
 
   nativeBuildInputs = [
@@ -38,13 +38,14 @@ stdenv.mkDerivation (finalAttrs: {
 
     substituteInPlace $out/share/${finalAttrs.pname}/faf-client.vmoptions \
       --replace "-DnativeDir=natives" "-DnativeDir=$out/share/${finalAttrs.pname}/natives" \
-      --replace "-Djava.library.path=." "-Djava.library.path=${javaPackages.openjfx21}/modules_libs/javafx.media"
+      --replace "-Djava.library.path=." "-Djava.library.path=${javaPackages.openjfx25}/modules_libs/javafx.media"
 
     makeWrapper ${lib.getExe steam-run-free} $out/bin/${finalAttrs.pname} \
-      --set INSTALL4J_JAVA_HOME ${temurin-jre-bin} \
+      --set INSTALL4J_JAVA_HOME ${temurin-jre-bin-25} \
       --add-flags $out/share/${finalAttrs.pname}/faf-client
   '';
 
+  # cSpell:ignore faforever
   desktopItems =
     let
       fafIconPath = fetchurl {

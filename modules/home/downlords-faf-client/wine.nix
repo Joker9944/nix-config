@@ -2,54 +2,56 @@
   lib,
   pkgs,
   config,
-  utility,
   ...
 }:
 let
   cfg = config.programs.faf;
-  wrapWine = utility.custom.wrapWine { inherit pkgs; };
 in
 {
   options.programs.faf = with lib; {
-    wine = {
-      package = mkPackageOption pkgs "wine" { };
+    umu.package = mkPackageOption pkgs "umu-launcher" { };
 
-      prefixName = mkOption {
-        type = types.str;
-        default = "faf";
-        description = ''
-          Name for the wine prefix that will be located at `~/.wine/''${prefixName}`.
-        '';
-      };
-
-      # cSpell:words xact
-      winetricksArgs = mkOption {
-        type = types.listOf types.str;
-        default = [
+    winetricksArgs = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = literalExpression ''
+        [
           "--unattended"
           "d3dx9"
           "xact"
-        ];
-        description = ''
-          Arguments for `winetricks` during wine prefix setup.
-        '';
-      };
+        ]
+      '';
+      description = ''
+        Arguments passed to `umu-run winetricks` during wine prefix setup.
 
-      prefixCommands = mkOption {
-        type = types.listOf types.str;
-        default = [ ];
-        example = literalExpression ''
-          [
-            "gamemoderun"
-            "gamescope"
-            "--fullscreen"
-            "--"
-          ]
-        '';
-        description = ''
-          Command to run before invoking wine.
-        '';
-      };
+        Empty by default: Proton-GE bundles DXVK and its protonfixes handle the
+        DirectX bits for Supreme Commander (appid 9420), so no manual verbs are
+        usually needed. Add verbs here only if the prefix build turns out to need them.
+      '';
+    };
+
+    wine.prefixName = mkOption {
+      type = types.str;
+      default = "faf";
+      description = ''
+        Name for the wine prefix that will be located at `~/.wine/''${prefixName}`.
+      '';
+    };
+
+    wine.prefixCommands = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      example = literalExpression ''
+        [
+          "gamemoderun"
+          "gamescope"
+          "--fullscreen"
+          "--"
+        ]
+      '';
+      description = ''
+        Command to run before invoking umu.
+      '';
     };
 
     steam.enable = mkEnableOption "steam integration";
@@ -57,20 +59,32 @@ in
     proton = {
       package = mkOption {
         type = types.nullOr types.package;
-        default = null;
-        example = literalExpression "pkgs.proton-ge-bin";
+        default = pkgs.proton-ge-bin.steamcompattool; # cSpell:words steamcompattool
+        defaultText = literalExpression "pkgs.proton-ge-bin.steamcompattool";
+        example = literalExpression ''
+          (pkgs.proton-ge-bin.overrideAttrs (old: rec {
+            version = "GE-Proton10-34";
+            src = pkgs.fetchzip {
+              url = "https://github.com/GloriousEggroll/proton-ge-custom/releases/download/''${version}/''${version}.tar.gz";
+              hash = "sha256-...";
+            };
+          })).steamcompattool
+        '';
         description = ''
-          Custom Proton package to use.
+          Proton package to run the game with. Set to `null` to use a
+          Steam-installed Proton via `programs.faf.proton.path` instead.
+
+          Override this to pin a specific Proton-GE version.
         '';
       };
 
       path = mkOption {
         type = types.nullOr types.path;
-        default = "${cfg.steam.library.path}/steamapps/common/Proton - Experimental";
-        defaultText = literalExpression "\${config.programs.faf.steam.library.path}/steamapps/common/Proton - Experimental";
+        default = null;
         example = literalExpression "\${config.programs.faf.steam.library.path}/steamapps/common/Proton 10.0";
         description = ''
-          Location of the Proton version to use.
+          Location of a Steam-installed Proton to use instead of
+          `programs.faf.proton.package`. Takes precedence when set.
         '';
       };
     };
@@ -91,73 +105,31 @@ in
 
   config =
     let
-      bin = {
-        setup_dxvk = lib.getExe pkgs.dxvk.out;
-        cp = lib.getExe' pkgs.coreutils "cp";
-        steam-run = lib.getExe pkgs.steam-run-free;
-      };
-
-      dxvkConfPathPart = ".config/downlords-faf-client/dxvk.conf";
-      dxvkCachePathPart = ".local/state/downlords-faf-client/dxvk";
       wrapperHomePathPart = ".local/share/downlords-faf-client/wrapper.sh";
 
-      # Making sure only one is set with assertions
-      #protonPath = if cfg.proton.package != null then cfg.proton.package else cfg.proton.path;
+      launcher = pkgs.faf-game-launcher.override {
+        inherit (cfg.wine) prefixName prefixCommands;
+        inherit (cfg) winetricksArgs;
 
-      steamIntegrationSetup = lib.optionalString cfg.steam.enable ''
-        export ENABLE_VK_LAYER_VALVE_steam_overlay_1=1
-        export SteamGameId=9420
-        export SteamAppId=9420
-      '';
-
-      # cSpell:ignore GAMEID PROTONPATH
-      setup =
-        let
-          geProton =
-            (pkgs.proton-ge-bin.overrideAttrs (oldAttrs: rec {
-              version = "GE-Proton9-27";
-              src = pkgs.fetchzip {
-                url = "https://github.com/GloriousEggroll/proton-ge-custom/releases/download/${version}/${version}.tar.gz";
-                hash = "sha256-70au1dx9co3X+X7xkBCDGf1BxEouuw3zN+7eDyT7i5c=";
-              };
-            })).steamcompattool; # cSpell:words steamcompattool
-        in
-        steamIntegrationSetup
-        + ''
-          export GAMEID=9420
-          export STORE=steam
-          export PROTONPATH="${geProton}"
-          export DXVK_CONFIG_FILE="${config.home.homeDirectory}/${dxvkConfPathPart}"
-          export DXVK_STATE_CACHE_PATH="${config.home.homeDirectory}/${dxvkCachePathPart}"
-          export WINE_LARGE_ADDRESS_AWARE=1
-        '';
-
-      wrapper = wrapWine {
-        inherit (cfg.wine) prefixName winetricksArgs;
-
-        wine = cfg.wine.package;
-
-        setupScript = setup;
-
-        chdir = "${cfg.client.path}/bin";
-
-        # steam-run supplies all necessary libs for steam integration
-        prefixCommands = (lib.optional cfg.steam.enable "${bin.steam-run}") ++ cfg.wine.prefixCommands;
+        umu-launcher = cfg.umu.package;
+        stateDir = cfg.client.path;
+        proton = cfg.proton.package;
+        protonPath = cfg.proton.path;
+        steamIntegration = cfg.steam.enable;
+        dxvkConf = pkgs.writeText "dxvk.conf" cfg.dxvk.conf;
       };
     in
     lib.mkIf cfg.enable {
       assertions = [
         {
-          assertion = (cfg.proton.package != null) != (cfg.proton.path != null);
-          message = "Exactly one of `programs.faf.proton.package` or `programs.faf.proton.path` must be set";
+          assertion = (cfg.proton.package != null) || (cfg.proton.path != null);
+          message = "One of `programs.faf.proton.package` or `programs.faf.proton.path` must be set";
         }
       ];
 
-      home.file = {
-        ${dxvkConfPathPart}.text = cfg.dxvk.conf;
-        # Making generic wrapper link in home so the client does not overwrite the actual wrapper link by accident
-        ${wrapperHomePathPart}.source = "${wrapper}/bin/${cfg.wine.prefixName}";
-      };
+      # Stable home path pointing at the launcher so the client does not overwrite
+      # the actual store link by accident.
+      home.file.${wrapperHomePathPart}.source = lib.getExe launcher;
 
       programs.faf.client.preferencesOverrides.forgedAlliance = {
         executableDecorator = lib.mkDefault "${config.home.homeDirectory}/${wrapperHomePathPart} \"%s\"";

@@ -1,3 +1,4 @@
+_:
 {
   lib,
   pkgs,
@@ -9,9 +10,7 @@ let
   format.json = pkgs.formats.json { };
 in
 {
-  imports = [
-    ./wine.nix
-  ];
+  imports = [ ./wine.nix ];
 
   options.programs.faf = with lib; {
     enable = mkEnableOption "FAForever client";
@@ -101,9 +100,12 @@ in
         };
       };
 
-      # In-place deep merge client.prefs with client-override.prefs
+      # In-place deep merge client.prefs with client-override.prefs.
+      # Skipped on a fresh install where the client has not written its prefs yet.
       home.activation.overrideClientPreferences = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        ${bin.jq} --slurp '.[0] * .[1]' "${clientPrefs}" "${overridePrefs}" | ${bin.sponge} "${clientPrefs}"
+        if [ -f "${clientPrefs}" ]; then
+          ${bin.jq} --slurp '.[0] * .[1]' "${clientPrefs}" "${overridePrefs}" | ${bin.sponge} "${clientPrefs}"
+        fi
       '';
     };
 }
