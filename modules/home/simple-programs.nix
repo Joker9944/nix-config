@@ -38,6 +38,7 @@ let
     }
     {
       name = "freelens";
+      package = "freelens-bin";
     }
     {
       name = "zoom";

@@ -31,7 +31,7 @@ context. The options-query tools use the subdir form precisely because they read
 
 ```
 pkgs/
-├── freelens.nix          # file → one package (callPackage, flake only)
+├── eisvogel.nix          # file → one package (callPackage, flake only)
 └── nix-options/          # subdir → an attrset of packages (gets full args, incl. inputs)
     ├── default.nix       # returns { hm-options; nixos-options; } — factory + JSON resolution
     └── files/

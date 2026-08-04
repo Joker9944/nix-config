@@ -39,7 +39,6 @@
           let
             packages = [
               "File-MimeInfo"
-              "freelens"
             ];
           in
           lib.pipe packages [
