@@ -38,4 +38,12 @@ mkMixinModule "youtube" {
       };
     };
   };
+
+  wayland.windowManager.hyprland.settings.window_rule = [
+    {
+      name = "pwa-youtube-opaque";
+      match.initial_class = "FFPWA-${siteId}";
+      opaque = true;
+    }
+  ];
 }
