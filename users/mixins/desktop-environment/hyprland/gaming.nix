@@ -14,7 +14,7 @@ mkHyprlandModule {
       content = "game";
       float = true;
       decorate = false;
-      no_blur = true;
+      opaque = true;
       immediate = true;
       suppress_event = "";
     }) regexes;
