@@ -5,7 +5,7 @@ description: The hyprland tree emits `hyprland.lua`, not `hyprland.conf`. Docume
 tags: [architecture, hyprland, home-manager, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-10T00:00:00Z
+  at: 2026-08-10T18:00:00Z
 ---
 
 # configType = "lua"
@@ -52,6 +52,31 @@ hyprctl getprop "address:$ADDR" <effect>               # it applied to a live wi
 
 `$ADDR` comes from `hyprctl clients -j | jq -r '.[] | select(…) | .address'`. There is no
 `hyprctl rules`.
+
+# Runtime control is `eval`, not `keyword`
+
+`hyprctl keyword` **does not exist** under the lua config manager — the command is not
+registered and returns `unknown request`. Effectively every wiki example and every recalled
+snippet reaches for it, so this is the trap: it is not a syntax problem to work around, the
+verb is gone. The replacements are `hyprctl eval` / `hyprctl repl`, which evaluate lua
+against the live config, and `hyprctl dispatch`, which under lua is a thin wrapper for
+`hl.dispatch(…)`.
+
+A live experiment therefore re-issues the same `hl.<name>({…})` call the generated config
+emits, and `reload` throws it away:
+
+```bash
+hyprctl eval 'hl.monitor({["output"]="DP-2",["mode"]="2560x1440@143.97Hz",["position"]="1920x0",["bitdepth"]=10})'
+hyprctl reload   # discard, restore from ~/.config/hypr/hyprland.lua
+```
+
+Read the exact call shape out of `~/.config/hypr/hyprland.lua` rather than reconstructing
+it — home-manager emits bracketed string keys (`["output"] = …`), and re-declaring a rule
+for an output that already has one updates it rather than stacking a second.
+
+Pair this with the runtime-validation fact above: since a wrong key fails silently and a
+rebuild proves nothing, `eval` is the short loop for finding out whether Hyprland actually
+accepts something, and the nix change is what you write once it does.
 
 One shape trap is stable enough to name: config keys are **snake_case**
 (`initial_class`), while `hyprctl clients -j` reports the same fields in **camelCase**

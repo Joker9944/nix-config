@@ -50,6 +50,7 @@
         output = "DP-2";
         mode = "2560x1440@143.97Hz";
         position = "1920x0";
+        bitdepth = 10;
       }
       {
         output = "DP-3";
