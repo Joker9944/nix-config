@@ -14,10 +14,12 @@ This is a gate, not a guideline. If you haven't opened the index, open it now. D
 
 You are the arbiter of the bundle. That means:
 
-1. **Write back what you learn.** If, while working, you discover something durable that isn't already captured — a new architectural constraint, a fresh hallucination trap, a rebuild gotcha, a "why we did it that way" you had to reconstruct — update the relevant concept file, bump its `timestamp`, and append a dated entry to [`.okf/log.md`](.okf/log.md). Missing knowledge is your responsibility to fix.
-2. **Prefer editing existing concepts over creating new ones.** A new file is warranted when a topic is genuinely orthogonal to what's there; otherwise extend. Never touch reserved files (`index.md`, `log.md`) for concept content.
-3. **Cross-link generously.** A link asserts a relationship; the kind of relationship is implied by the surrounding prose. Absolute bundle-relative paths (`/architecture/mixin-pattern.md`) are preferred because they survive file moves.
-4. **Every concept file needs YAML frontmatter with a non-empty `type`.** That's the only hard OKF rule (§9 of the spec). If a conformance validator (`/okf:validate .okf --strict`) reports errors, fix them before finishing.
+1. **Write back what you learn.** If, while working, you discover something durable that isn't already captured — a new architectural constraint, a fresh hallucination trap, a rebuild gotcha, a "why we did it that way" you had to reconstruct — update the relevant concept file, bump its `timestamp`, and add a line to [`.okf/log.md`](.okf/log.md). Missing knowledge is your responsibility to fix.
+2. **Excess is also a defect.** Rule 1 has no natural brake, so this is it. Prefer amending a sentence to adding a paragraph, and deleting a stale one to qualifying it. Don't write the same fact in two places, don't explain your documentation choices, and don't restate what the code, the commit, or an upstream default already says. If a section is longer than the change it describes, it's wrong.
+3. **The log is an index, not a narrative.** One line per change: what changed, the commit SHA, the concept holding the detail. Rationale belongs in the commit message — git keeps it, tied to the diff — or in a decision. A log entry that needs a paragraph is a decision file you haven't written yet.
+4. **Prefer editing existing concepts over creating new ones.** A new file is warranted when a topic is genuinely orthogonal to what's there; otherwise extend. Never touch reserved files (`index.md`, `log.md`) for concept content.
+5. **Cross-link generously.** A link asserts a relationship; the kind of relationship is implied by the surrounding prose. Absolute bundle-relative paths (`/architecture/mixin-pattern.md`) are preferred because they survive file moves.
+6. **Every concept file needs YAML frontmatter with a non-empty `type`.** That's the only hard OKF rule (§9 of the spec). If a conformance validator (`/okf:validate .okf --strict`) reports errors, fix them before finishing.
 
 ## When the bundle contradicts reality
 
