@@ -5,7 +5,11 @@
     # nixpkgs
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-    hyprland.url = "github:hyprwm/Hyprland"; # cSpell:ignore hyprwm
+    # HACK(pedantic-borg) Hyprland had a regression where release binds are firing even when matching other binds, locked until fixed.
+    # Also had to downgrade further since v0.56.2 release was broken.
+    # https://github.com/hyprwm/Hyprland/discussions/15066
+    # https://github.com/hyprwm/Hyprland/pull/15568#issuecomment-5230819813
+    hyprland.url = "github:hyprwm/Hyprland/v0.56.1"; # cSpell:ignore hyprwm
 
     # home manager
     home-manager = {
