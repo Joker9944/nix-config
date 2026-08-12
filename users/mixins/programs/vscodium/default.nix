@@ -28,12 +28,7 @@ mkMixinModule "vscodium" {
 
       vscodeExtensions =
         inputs.nix-vscode-extensions.extensions.${pkgs-unstable.stdenv.hostPlatform.system}.forVSCodeVersion
-          (
-            builtins.warn ''
-              HACK(exciting-mayer): "nix-vscode-extensions" breaks when invalid SemVar versions are used, remove once fixed
-              https://github.com/NixOS/nixpkgs/issues/505096
-            '' (lib.substring 0 ((lib.stringLength vscodiumPackage.version) - 4) vscodiumPackage.version)
-          );
+          pkgs-unstable.vscodium.vscodeVersion;
 
       inherit (vscodeExtensions) open-vsx-release;
 
