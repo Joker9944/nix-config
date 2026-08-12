@@ -4,8 +4,8 @@ title: Add a new mixin
 description: The 3-step process for adding either a home-manager or a NixOS mixin — drop the file, enable it, rebuild.
 tags: [workflow, modules, home-manager, nixos]
 generated:
-  by: process:okf-migrate
-  at: 2026-07-29T00:00:00Z
+  by: claude-code/claude-opus-5
+  at: 2026-08-12T00:00:00Z
 ---
 
 # Trigger
@@ -18,7 +18,7 @@ You want to add a reusable module (a new program, service, or subsystem toggle) 
 
 | You're configuring | Tree | Category directories |
 |---|---|---|
-| Something in the user environment (programs, services, DE bits) | `users/mixins/` | `programs/`, `services/`, `desktop-environment/`, `helpers/`, `pwas/` |
+| Something in the user environment (programs, services, DE bits) | `users/mixins/` | `programs/`, `services/`, `desktop-environment/`, `pwas/` |
 | Something at the system level (boot, hardware, services, DE) | `hosts/mixins/` | `boot/`, `desktop-environment/`, `display-manager/`, `hardware/`, `networking/`, `programs/`, `services/`, `virtualisation/` |
 
 If uncertain, look at analogues in the existing tree.

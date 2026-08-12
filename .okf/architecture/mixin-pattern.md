@@ -4,8 +4,8 @@ title: Mixin pattern
 description: Every reusable module declares one `enable` flag under `options.mixins.<category>.<name>`; hosts and users opt in from central `mixins.nix` files.
 tags: [architecture, modules, convention]
 generated:
-  by: claude-code/claude-opus-4-8
-  at: 2026-07-29T00:00:00Z
+  by: claude-code/claude-opus-5
+  at: 2026-08-12T00:00:00Z
 ---
 
 # Shape
@@ -47,7 +47,7 @@ Dropping a new leaf into `loader/` auto-registers it in the count — nothing to
 | Domain | Location | Opt-in file |
 |---|---|---|
 | NixOS mixins | `hosts/mixins/{boot,desktop-environment,display-manager,hardware,networking,programs,services,virtualisation,…}/*.nix` | `hosts/<hostname>/mixins.nix` |
-| Home-manager mixins | `users/mixins/{programs,services,desktop-environment,helpers,pwas}/*.nix` | `users/<username>/config/mixins.nix` |
+| Home-manager mixins | `users/mixins/{programs,services,desktop-environment,pwas}/*.nix` | `users/<username>/config/mixins.nix` |
 
 Canonical minimal example: `users/mixins/programs/claude-code/default.nix`. Real-world opt-in files: `hosts/HAL9000/mixins.nix` (NixOS side) and `users/joker9944/config/mixins.nix` (home-manager side).
 

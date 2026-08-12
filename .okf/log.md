@@ -5,6 +5,7 @@ An index of bundle changes, not a narrative. One line each: what changed, the co
 ## 2026-08-12
 
 * `nh` adopted as the interactive rebuild front-end — [workflows/rebuild](/workflows/rebuild.md)
+* `custom.command-collection` and the `helpers/` mixin category deleted as code rot — [architecture/mixin-pattern](/architecture/mixin-pattern.md)
 * CI Nix moved off the DeterminateSystems actions onto `nix-quick-install-action` + `cache-nix-action`; `nix-flake-check` gained a `push: main` run to seed the cache — [decisions/ci-nix-installer](/decisions/ci-nix-installer.md)
 * Rejected on a second attempt, a year after the first: Renovate's nix manager — ref-pinned inputs raise no updates, and lock nodes are matched by key rather than resolved through `root.inputs` — 5910dfe — [decisions/renovate-scope](/decisions/renovate-scope.md)
 * Update channels returned to the workflow drivers; playbook added to the workflows index — 5910dfe — [workflows/dependency-updates](/workflows/dependency-updates.md)
