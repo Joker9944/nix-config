@@ -11,10 +11,8 @@ jobs:
   nix-flake-update:
 
     permissions:
-      contents: write
+      contents: read
       id-token: write
-      issues: write
-      pull-requests: write
 
     runs-on: ubuntu-latest
 
@@ -22,22 +20,15 @@ jobs:
 
       - name: Repository Checkout
         id: git-checkout
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Setup nix
         id: nix-setup
         uses: Joker9944/nix-config/.github/composites/nix-setup@main
 
-        # cSpell:ignore ghaction-import-gpg
-      - name: GPG Config
-        id: gpg-config
-        uses: crazy-max/ghaction-import-gpg@e89d40939c28e39f97cf32126055eeae86ba74ec # v6.3.0
-
-        with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.GPG_PASSPHRASE }}
-          git_user_signingkey: true
-          git_commit_gpgsign: true
+      - name: Git Identity
+        id: git-identity
+        uses: ./.github/composites/git-identity
 
       - name: Update Flakes
         id: nix-update
@@ -52,21 +43,11 @@ jobs:
           done
 
       - name: Create Pull Request
-        id: git-pr-create
-        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        id: update-pr
+        uses: ./.github/composites/update-pr
 
         with:
-          token: ${{ secrets.PAT }}
           branch: ci/nix-flake-update
-          title: "flakes: update flake.lock"
-
-      - name: Enable Automerge
-        id: git-pr-automerge
-        uses: peter-evans/enable-pull-request-automerge@a660677d5469627102a1c1e11409dd063606628d # v3.00
-
-        if: ${{ steps.git-pr-create.outputs.pull-request-number }}
-
-        with:
-          token: ${{ secrets.PAT }}
-          pull-request-number: ${{ steps.git-pr-create.outputs.pull-request-number }}
-          merge-method: squash
+          title: "chore(deps): lock file maintenance"
+          client-id: ${{ vars.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}

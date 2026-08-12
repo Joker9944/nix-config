@@ -9,3 +9,4 @@ Load-bearing choices behind the shape of the repo. Consult before proposing stru
 * [host-profiles](host-profiles.md) — One high-level profile per host; orthogonal roles are mixins, not a profile list; a profile must stay shared across machines.
 * [release-policy](release-policy.md) — Track stable nixos in lockstep with matching home-manager; hyprland is the exception.
 * [renovate-scope](renovate-scope.md) — Renovate covers GitHub Actions only; nix updates stay in workflows.
+* [ci-identity](ci-identity.md) — CI commits are authored and signed as a GitHub App, not with a personal GPG key.

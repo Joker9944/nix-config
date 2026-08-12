@@ -22,16 +22,24 @@ only — see [decisions/renovate-scope](/decisions/renovate-scope.md) for why no
 through it. `ignoreTests: true` on the automerge rule is safe for the same reason: every Renovate
 PR here is an action digest, which the flake gate has no opinion about.
 
+Both nix workflows end in `.github/composites/update-pr`, which owns the PR plumbing — app token,
+pull request, automerge — and the CI identity behind it
+([decisions/ci-identity](/decisions/ci-identity.md)). The step that produces the diff stays in the
+workflow rather than the composite, so it can be a `run:` or a curated action; the composite only
+cares that the working tree changed.
+
 `nix-flake-update.yaml` discovers flake directories by `find`, so the root flake and the two under
 `apps/` are all refreshed in one run, one commit per lock file. `nix-packages-update.yaml` stays a
 workflow rather than a Renovate manager because `nix-update` recomputes the FOD `hash` alongside
 `version`; Renovate has no equivalent.
 
 `.github/workflows/nix-flake-check.yaml` runs `nix flake check` on every PR to `main`. It is the
-gate both nix update PRs wait on.
+gate both nix update PRs wait on — which only holds because the app token triggers
+`on: pull_request`; `GITHUB_TOKEN` would not, and automerge would hang.
 
 # Related
 
+* [decisions/ci-identity](/decisions/ci-identity.md) — who the update PRs are authored as.
 * [decisions/renovate-scope](/decisions/renovate-scope.md) — why Renovate is limited to actions.
 * [release-upgrade](release-upgrade.md) — the manual bump the table's last row points at.
 * [decisions/release-policy](/decisions/release-policy.md) — why the two release inputs are pinned

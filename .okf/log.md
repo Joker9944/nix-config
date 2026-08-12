@@ -6,6 +6,8 @@ An index of bundle changes, not a narrative. One line each: what changed, the co
 
 * Rejected on a second attempt, a year after the first: Renovate's nix manager — ref-pinned inputs raise no updates, and lock nodes are matched by key rather than resolved through `root.inputs` — 5910dfe — [decisions/renovate-scope](/decisions/renovate-scope.md)
 * Update channels returned to the workflow drivers; playbook added to the workflows index — 5910dfe — [workflows/dependency-updates](/workflows/dependency-updates.md)
+* CI signing moved off the personal GPG key onto a GitHub App token; `GPG_PRIVATE_KEY`, `GPG_PASSPHRASE` and `PAT` retired — [decisions/ci-identity](/decisions/ci-identity.md)
+* Shared update skeleton extracted to `.github/composites/update-pr` — [workflows/dependency-updates](/workflows/dependency-updates.md)
 
 ## 2026-08-10
 
