@@ -5,8 +5,10 @@
   pkgs,
   ...
 }:
+# WORKAROUND Upstream drives `home-manager switch` from a checkout on disk, this repo upgrades from
+# a remote flake ref. See `.okf/decisions/vendored-auto-upgrade.md` for the full reasoning.
 # Lifted and adapted from https://github.com/NixOS/nixpkgs/blob/1807c2b91223227ad5599d7067a61665c52d1295/nixos/modules/tasks/auto-upgrade.nix
-# Remove once issue has been resolved https://github.com/nix-community/home-manager/issues/338
+# The request that upstream implemented https://github.com/nix-community/home-manager/issues/338 (shipped; not a removal condition) krank:ignore-line
 let
   upgradeServiceName = "home-manager-auto-upgrade";
 

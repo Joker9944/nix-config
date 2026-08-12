@@ -11,3 +11,4 @@ Load-bearing choices behind the shape of the repo. Consult before proposing stru
 * [renovate-scope](renovate-scope.md) — Renovate covers GitHub Actions only; nix updates stay in workflows.
 * [ci-identity](ci-identity.md) — CI commits are authored and signed as a GitHub App, not with a personal GPG key.
 * [ci-nix-installer](ci-nix-installer.md) — CI installs Nix single-user with community actions; the cache is keyed on the lock files and seeded from `main`.
+* [vendored-auto-upgrade](vendored-auto-upgrade.md) — The local `autoUpgrade` module displaces upstream's, which cannot upgrade from a remote flake ref.
