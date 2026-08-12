@@ -17,6 +17,7 @@
       },
       "original": {
         "owner": "aylur",
+        "ref": "v3.1.2",
         "repo": "ags",
         "type": "github"
       }

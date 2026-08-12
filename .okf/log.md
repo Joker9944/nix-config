@@ -2,6 +2,10 @@
 
 An index of bundle changes, not a narrative. One line each: what changed, the commit it rode in on, and the concept that holds the detail. Rationale lives in the commit message (git keeps it, tied to the diff) or in a [decision](/decisions/index.md) — not here.
 
+## 2026-08-12
+
+* `flake.lock` updates moved from `nix-flake-update.yaml` to Renovate `lockFileMaintenance`; the release bump now arrives as a grouped PR — [workflows/dependency-updates](/workflows/dependency-updates.md), [workflows/release-upgrade](/workflows/release-upgrade.md)
+
 ## 2026-08-10
 
 * HDR on DP-2, on demand rather than always on: `bitdepth = 10` — 56a9bdb — [hosts/HAL9000](/hosts/HAL9000.md)

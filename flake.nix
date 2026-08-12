@@ -31,15 +31,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-vscode-extensions = {
-      url = "github:nix-community/nix-vscode-extensions";
+      url = "github:nix-community/nix-vscode-extensions/master";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     claude-plugins-official = {
-      url = "github:anthropics/claude-plugins-official"; # cSpell:ignore anthropics
+      url = "github:anthropics/claude-plugins-official/main"; # cSpell:ignore anthropics
       flake = false;
     };
     claude-okf-skills = {
-      url = "github:scaccogatto/okf-skills"; # cSpell:ignore scaccogatto
+      url = "github:scaccogatto/okf-skills/main"; # cSpell:ignore scaccogatto
       flake = false;
     };
 
@@ -57,7 +57,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     tmux-which-key = {
-      url = "github:alexwforsythe/tmux-which-key"; # cSpell:ignore alexwforsythe
+      url = "github:alexwforsythe/tmux-which-key/main"; # cSpell:ignore alexwforsythe
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -67,7 +67,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-utils.url = "github:numtide/flake-utils/main"; # cSpell:ignore numtide
-    nix-jail.url = "sourcehut:~alexdavid/jail.nix"; # cSPell:ignore alexdavid
+    nix-jail.url = "sourcehut:~alexdavid/jail.nix/main"; # cSPell:ignore alexdavid
     nix-schemes = {
       url = ./apps/nix-schemes;
       inputs.nixpkgs.follows = "nixpkgs";

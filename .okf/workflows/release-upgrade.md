@@ -4,15 +4,15 @@ title: Release upgrade — deferred changes
 description: How deferred "do this at the next nixpkgs/home-manager release" changes are tracked via UPGRADE(<release>) code markers, and the steps to run at a release bump.
 tags: [workflow, upgrade, nixpkgs, home-manager]
 generated:
-  by: process:okf-migrate
-  at: 2026-07-24T00:00:00Z
+  by: claude-code/claude-opus-5
+  at: 2026-08-12T00:00:00Z
 ---
 
 # Trigger
 
-You are bumping this flake to a new nixpkgs / home-manager release (see
-[decisions/release-policy](/decisions/release-policy.md)), or you are about to add a workaround
-that can be dropped or simplified once a newer release lands.
+Renovate opened the grouped `nixos release` PR (see
+[dependency-updates](dependency-updates.md)), or you are about to add a workaround that can be
+dropped or simplified once a newer release lands.
 
 # The convention
 
@@ -37,12 +37,13 @@ no `.06` or `.10`.
 
 Only two inputs are pinned to a release; everything else follows `nixpkgs`/unstable.
 
-1. Bump the two pinned inputs in `flake.nix` to the new release, then `nix flake update`:
+1. Check out the `nixos release` PR branch. Renovate has already bumped the two pinned inputs and
+   refreshed `flake.lock`:
    * `nixpkgs.url = "github:NixOS/nixpkgs/nixos-<new-release>"`
    * `home-manager.url = "github:nix-community/home-manager/release-<new-release>"`
 
    (Note the differing branch prefixes: `nixos-` for nixpkgs, `release-` for home-manager.)
-   `nixpkgs-unstable` and the hyprland input are not release-pinned and need no change here.
+   `nixpkgs-unstable` and the hyprland input are not release-pinned and are untouched.
 2. `grep -rn 'UPGRADE(<new-release>)' .` — deterministic, and any older `UPGRADE(<older>)` tokens
    that are now ≤ the new release are also actionable.
 3. Work each hit: apply the change and remove the marker. The comment at the site says what to do.
@@ -52,4 +53,5 @@ Only two inputs are pinned to a release; everything else follows `nixpkgs`/unsta
 
 * [decisions/release-policy](/decisions/release-policy.md) — the stable-nixpkgs / matching-hm policy
   that creates these version gaps in the first place.
+* [dependency-updates](dependency-updates.md) — the Renovate rules that produce the release PR.
 * [rebuild](rebuild.md) — how to build and switch after applying an upgrade.

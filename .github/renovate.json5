@@ -5,6 +5,19 @@
     ":dependencyDashboard",
     "schedule:weekends",
   ],
+  assignees: [
+    "Joker9944"
+  ],
+  nix: {
+    enabled: true,
+  },
+  lockFileMaintenance: {
+    enabled: true,
+    automerge: true,
+    schedule: [
+      "* 3 * * *",
+    ],
+  },
   packageRules: [
     {
       matchUpdateTypes: [
@@ -21,7 +34,44 @@
         "digest",
       ],
       automerge: true,
+    },
+    {
+      matchManagers: [
+        "github-actions",
+      ],
+      matchUpdateTypes: [
+        "minor",
+        "patch",
+        "pin",
+        "digest",
+      ],
       ignoreTests: true,
+    },
+    {
+      matchManagers: [
+        "nix",
+      ],
+      matchDepNames: [
+        "nixpkgs",
+        "home-manager",
+      ],
+      enabled: true,
+      versioning: "nixpkgs",
+      groupName: "nixos release",
+      automerge: false,
+      dependencyDashboardApproval: true,
+      addLabels: [
+        "release-upgrade",
+      ],
+    },
+    {
+      matchManagers: [
+        "nix",
+      ],
+      matchDepNames: [
+        "hyprland",
+      ],
+      enabled: false,
     },
   ],
 }
