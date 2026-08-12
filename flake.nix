@@ -7,8 +7,8 @@
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     # HACK(pedantic-borg) Hyprland had a regression where release binds are firing even when matching other binds, locked until fixed.
     # Also had to downgrade further since v0.56.2 release was broken.
-    # https://github.com/hyprwm/Hyprland/discussions/15066
-    # https://github.com/hyprwm/Hyprland/pull/15568#issuecomment-5230819813
+    # https://github.com/hyprwm/Hyprland/discussions/15066 krank:ignore-line
+    # https://github.com/hyprwm/Hyprland/issues/15568#issuecomment-5230819813
     hyprland.url = "github:hyprwm/Hyprland/v0.56.1"; # cSpell:ignore hyprwm
 
     # home manager
@@ -140,6 +140,26 @@
                 nil.enable = true;
                 nixfmt.enable = true;
                 statix.enable = true;
+
+                # Links
+                rewrite-pr-links = {
+                  enable = true;
+                  name = "rewrite-pr-links";
+                  description = "Rewrites GitHub pull request links to their issue form so krank can read them";
+                  entry = lib.getExe (
+                    pkgs.writeShellApplication {
+                      name = "rewrite-pr-links";
+
+                      text = ''
+                        sed -i -E 's|(github\.com/[^/ ]+/[^/ ]+)/pull/([0-9]+)|\1/issues/\2|g' "$@"
+                      '';
+
+                      runtimeInputs = [ pkgs.gnused ];
+                    }
+                  );
+                  files = "\\.nix$";
+                  language = "system";
+                };
 
                 # Shell
                 shellcheck = {

@@ -10,7 +10,7 @@ let
 in
 mkDefaultHyprlandModule { dir = ./.; } {
   # WORKAROUND This is a hack to workaround a hack in NixOS
-  # See here: https://github.com/NixOS/nixpkgs/pull/297434#issuecomment-2348783988
+  # See here: https://github.com/NixOS/nixpkgs/issues/297434#issuecomment-2348783988
   # Remove when https://github.com/NixOS/nixpkgs/blob/fafef5049e2a7bcc36802e1ce72cd2f51d386388/nixos/modules/services/x11/display-managers/default.nix#L28-L50 ever gets fixed
   home.sessionVariables.XDG_CURRENT_DESKTOP = "Hyprland";
 

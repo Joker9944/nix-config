@@ -29,6 +29,43 @@
     inherit (pkgs.home-manager) meta;
   };
 
+  krank-tree = {
+    type = "app";
+    program = lib.getExe (
+      pkgs.writeShellApplication {
+        name = "krank-tree";
+
+        text = ''
+          cd "$(git rev-parse --show-toplevel)"
+
+          # krank only matches /issues/<n>; /pull/ and /discussions/ links are silently skipped
+          invisible=$(git ls-files -z |
+            xargs -0 grep -nE 'github\.com/[^/ ]+/[^/ ]+/(pull|discussions)/[0-9]+' |
+            grep -v 'krank:ignore-line' || true)
+          if [ -n "$invisible" ]; then
+            echo "warning: invisible to krank, use the /issues/ form (GitHub redirects it):"
+            echo "$invisible"
+            echo
+          fi
+
+          args=()
+          if [ -n "''${GITHUB_TOKEN:-}" ]; then
+            args+=(--issuetracker-githubkey "$GITHUB_TOKEN")
+          fi
+
+          mapfile -d "" -t files < <(git ls-files -z)
+          krank "''${args[@]}" "''${files[@]}"
+        '';
+
+        runtimeInputs = with pkgs; [
+          git
+          krank
+        ];
+      }
+    );
+    meta.description = "Reports the status of issue tracker links in this flake";
+  };
+
   update-packages = {
     type = "app";
     program = lib.getExe (
