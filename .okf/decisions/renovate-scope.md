@@ -49,7 +49,16 @@ without the config surface.
   is hand-edited rather than arriving as a PR.
 
 Revisit if upstream sets `currentValue` from `original.ref` and resolves node names through
-`root.inputs`.
+`root.inputs`. Two open pull requests would; krank watches both, and this decision is what they
+invalidate:
+
+* https://github.com/renovatebot/renovate/issues/43815 — both halves, except that `currentValue` is
+  gated on nixpkgs versioning (`nixos-*`, `nixpkgs-*`, `release-*`). That covers the three
+  release-shaped pins here and nothing else; `main`, `master`, `trunk` and tag pins like hyprland's
+  still yield none.
+* https://github.com/renovatebot/renovate/issues/40282 — the node resolution half alone.
+
+So 43815 merging would unblock the release bump specifically, not the ref-pinned majority.
 
 # Related
 

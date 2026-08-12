@@ -24,6 +24,10 @@ there is nothing extra to write — `HACK` and `WORKAROUND` keep the meanings
 `error`, and it exits non-zero if there is any error. Export `GITHUB_TOKEN` to lift the 60
 calls/hour anonymous API limit.
 
+This bundle is scanned too, which is what a [decision](/decisions/index.md) ending in "revisit
+if …" should exploit: carry the URL that represents the condition, and the decision reports itself
+when the ground under it moves.
+
 # Link form
 
 krank matches `/issues/<n>` only. Write pull request links in that form too — GitHub redirects
