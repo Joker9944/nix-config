@@ -14,7 +14,7 @@ This is a gate, not a guideline. If you haven't opened the index, open it now. D
 
 You are the arbiter of the bundle. That means:
 
-1. **Write back what you learn.** If, while working, you discover something durable that isn't already captured — a new architectural constraint, a fresh hallucination trap, a rebuild gotcha, a "why we did it that way" you had to reconstruct — update the relevant concept file, bump its `timestamp`, and add a line to [`.okf/log.md`](.okf/log.md). Missing knowledge is your responsibility to fix.
+1. **Write back what you learn.** If, while working, you discover something durable that isn't already captured — a new architectural constraint, a fresh hallucination trap, a rebuild gotcha, a "why we did it that way" you had to reconstruct — update the relevant concept file, bump its `timestamp`, and add a line to [`.okf/log.md`](.okf/log.md), in the same commit as the change it describes. Missing knowledge is your responsibility to fix.
 2. **Excess is also a defect.** Rule 1 has no natural brake, so this is it. Prefer amending a sentence to adding a paragraph, and deleting a stale one to qualifying it. Don't write the same fact in two places, don't explain your documentation choices, and don't restate what the code, the commit, or an upstream default already says. If a section is longer than the change it describes, it's wrong.
 3. **The log is an index, not a narrative.** One line per change: what changed, the commit SHA, the concept holding the detail. Rationale belongs in the commit message — git keeps it, tied to the diff — or in a decision. A log entry that needs a paragraph is a decision file you haven't written yet.
 4. **Prefer editing existing concepts over creating new ones.** A new file is warranted when a topic is genuinely orthogonal to what's there; otherwise extend. Never touch reserved files (`index.md`, `log.md`) for concept content.
@@ -39,4 +39,5 @@ The one exception: if you find yourself repeatedly wanting to remind future-you 
 ## Standing rules
 
 * **Do not commit unless asked.** Same policy as everywhere else — you propose the change, the user decides when to land it.
+* **Commit to main.** Don't create branches or open PRs unless asked — solo repo, nothing to review against.
 * **Follow the repo's formatting.** Pre-commit will rewrite files on commit (nixfmt, shfmt, ruff-format). Let it. Details in [`/workflows/formatting-and-cspell.md`](.okf/workflows/formatting-and-cspell.md).

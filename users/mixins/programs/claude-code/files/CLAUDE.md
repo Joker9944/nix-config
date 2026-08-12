@@ -7,12 +7,21 @@
 - Push back on decisions you think are wrong.
 - Be honest about uncertainty.
 
+## Investigation
+
+- Root-cause first, workaround second. Don't propose a fix until the cause is verified in source.
+- Cite the file/line you read when stating how something works.
+
 ## Solution design
 
 - Offer variants with pros and cons, not a single answer.
 - Name judgment calls when you make them.
 - KISS - Keep it simple, stupid
 - DRY - Don't repeat yourself
+
+## Design authority
+
+- Let me finish stating the design. While its shape is under discussion, produce a short plan and wait — don't start writing files.
 
 ## Code style
 
