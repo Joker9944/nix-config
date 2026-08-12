@@ -33,9 +33,11 @@ cares that the working tree changed.
 workflow rather than a Renovate manager because `nix-update` recomputes the FOD `hash` alongside
 `version`; Renovate has no equivalent.
 
-`.github/workflows/nix-flake-check.yaml` runs `nix flake check` on every PR to `main`. It is the
-gate both nix update PRs wait on — which only holds because the app token triggers
-`on: pull_request`; `GITHUB_TOKEN` would not, and automerge would hang.
+`.github/workflows/nix-flake-check.yaml` runs `nix flake check` on every PR to `main`, and again on
+the push that merges it — the second run is a cache seed, not a gate
+([decisions/ci-nix-installer](/decisions/ci-nix-installer.md)). It is the gate both nix update PRs
+wait on — which only holds because the app token triggers `on: pull_request`; `GITHUB_TOKEN` would
+not, and automerge would hang.
 
 # Related
 

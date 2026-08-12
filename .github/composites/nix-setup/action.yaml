@@ -1,20 +1,22 @@
 name: nix-setup
 
-inputs:
-  extra-conf:
-    description: Extra nix.conf lines passed to the Determinate Nix installer
-    required: false
-
 runs:
   using: "composite"
 
   steps:
-    - name: Install Determinate nix
+    - name: Install nix
       id: nix-install
-      uses: DeterminateSystems/determinate-nix-action@61cbfe2efc2d4e7a8a6d56967c3c1058e846c858 # v3.21.9
+      uses: nixbuild/nix-quick-install-action@9f63be77f412a248c9d9a65a4c82cf066cdf8f0c # v35
       with:
-        extra-conf: ${{ inputs.extra-conf }}
+        nix_conf: |
+          keep-env-derivations = true
+          keep-outputs = true
 
     - name: Setup nix cache
       id: nix-cache
-      uses: DeterminateSystems/magic-nix-cache-action@908b263ff629f4cc17666315b7fd3ec127c6244d # v14
+      uses: nix-community/cache-nix-action@7df957e333c1e5da7721f60227dbba6d06080569 # v7.0.2
+      with:
+        primary-key: nix-${{ runner.os }}-${{ hashFiles('**/flake.lock') }}
+        restore-prefixes-first-match: nix-${{ runner.os }}-
+        gc-max-store-size-linux: 2G
+        save: ${{ github.event_name != 'pull_request' || !endsWith(github.event.pull_request.user.login, '[bot]') }}

@@ -3,6 +3,9 @@ name: nix-flake-check
 on:
   workflow_call:
   workflow_dispatch:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
@@ -24,7 +27,7 @@ jobs:
 
       - name: Setup nix
         id: nix-setup
-        uses: Joker9944/nix-config/.github/composites/nix-setup@main
+        uses: ./.github/composites/nix-setup
 
       - name: Run flake check
         id: nix-check

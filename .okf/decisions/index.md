@@ -10,3 +10,4 @@ Load-bearing choices behind the shape of the repo. Consult before proposing stru
 * [release-policy](release-policy.md) — Track stable nixos in lockstep with matching home-manager; hyprland is the exception.
 * [renovate-scope](renovate-scope.md) — Renovate covers GitHub Actions only; nix updates stay in workflows.
 * [ci-identity](ci-identity.md) — CI commits are authored and signed as a GitHub App, not with a personal GPG key.
+* [ci-nix-installer](ci-nix-installer.md) — CI installs Nix single-user with community actions; the cache is keyed on the lock files and seeded from `main`.

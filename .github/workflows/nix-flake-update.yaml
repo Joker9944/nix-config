@@ -12,7 +12,6 @@ jobs:
 
     permissions:
       contents: read
-      id-token: write
 
     runs-on: ubuntu-latest
 
@@ -24,7 +23,7 @@ jobs:
 
       - name: Setup nix
         id: nix-setup
-        uses: Joker9944/nix-config/.github/composites/nix-setup@main
+        uses: ./.github/composites/nix-setup
 
       - name: Git Identity
         id: git-identity
