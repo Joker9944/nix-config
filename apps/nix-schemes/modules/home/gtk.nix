@@ -109,7 +109,7 @@ in
         };
 
         gtk4 = {
-          # WORKAROUND Has to be set since `home.stateVersion` is less than "26.05"
+          # WORKAROUND(nostalgic-lovelace) Has to be set since `home.stateVersion` is less than "26.05"
           theme = config.gtk.theme;
 
           extraCss = libScheme.gtk.adw-gtk3.mkGtk4ExtraCss {

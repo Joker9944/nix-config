@@ -20,7 +20,7 @@ mkHyprlandModule {
     enable = true;
     package = pkgs-unstable.yazi;
 
-    # WORKAROUND Has to be set since `home.stateVersion` is less than "26.05"
+    # WORKAROUND(nostalgic-lovelace) Has to be set since `home.stateVersion` is less than "26.05"
     shellWrapperName = "y";
 
     settings.opener.open = [

@@ -10,9 +10,9 @@ mkMixinModule "neovim" {
     vimAlias = true;
     vimdiffAlias = true;
 
-    # WORKAROUND Has to be set since `home.stateVersion` is less than "26.05"
+    # WORKAROUND(nostalgic-lovelace) Has to be set since `home.stateVersion` is less than "26.05"
     withRuby = false;
-    # WORKAROUND Has to be set since `home.stateVersion` is less than "26.05"
+    # WORKAROUND(nostalgic-lovelace) Has to be set since `home.stateVersion` is less than "26.05"
     withPython3 = false;
 
     initLua = ''
