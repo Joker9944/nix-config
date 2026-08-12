@@ -5,19 +5,6 @@
     ":dependencyDashboard",
     "schedule:weekends",
   ],
-  assignees: [
-    "Joker9944"
-  ],
-  nix: {
-    enabled: true,
-  },
-  lockFileMaintenance: {
-    enabled: true,
-    automerge: true,
-    schedule: [
-      "* 3 * * *",
-    ],
-  },
   packageRules: [
     {
       matchUpdateTypes: [
@@ -34,55 +21,7 @@
         "digest",
       ],
       automerge: true,
-    },
-    {
-      matchManagers: [
-        "github-actions",
-      ],
-      matchUpdateTypes: [
-        "minor",
-        "patch",
-        "pin",
-        "digest",
-      ],
       ignoreTests: true,
-    },
-    // ags and gnim come from the ags flake input; they are not on the npm registry.
-    {
-      matchManagers: [
-        "npm",
-      ],
-      matchDepNames: [
-        "ags",
-        "gnim",
-      ],
-      enabled: false,
-    },
-    {
-      matchManagers: [
-        "nix",
-      ],
-      matchDepNames: [
-        "nixpkgs",
-        "home-manager",
-      ],
-      enabled: true,
-      versioning: "nixpkgs",
-      groupName: "nixos release",
-      automerge: false,
-      dependencyDashboardApproval: true,
-      addLabels: [
-        "release-upgrade",
-      ],
-    },
-    {
-      matchManagers: [
-        "nix",
-      ],
-      matchDepNames: [
-        "hyprland",
-      ],
-      enabled: false,
     },
   ],
 }

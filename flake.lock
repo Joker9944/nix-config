@@ -128,7 +128,6 @@
       },
       "original": {
         "owner": "scaccogatto",
-        "ref": "main",
         "repo": "okf-skills",
         "type": "github"
       }
@@ -136,16 +135,15 @@
     "claude-plugins-official": {
       "flake": false,
       "locked": {
-        "lastModified": 1786500481,
-        "narHash": "sha256-vBItihvsoAsd1Tphv1JSOHzGnF7Rkur/a/68E2w4iPo=",
+        "lastModified": 1786387084,
+        "narHash": "sha256-IjOdiFSTmyXUjYcq74gfGcojXZ3QmNc4k/3mLIgdGts=",
         "owner": "anthropics",
         "repo": "claude-plugins-official",
-        "rev": "2593e3cb90719bcc7cf8ddeb557b01fe95a92dfc",
+        "rev": "920824c3e9509890fbec03ba6097014222393022",
         "type": "github"
       },
       "original": {
         "owner": "anthropics",
-        "ref": "main",
         "repo": "claude-plugins-official",
         "type": "github"
       }
@@ -749,7 +747,6 @@
       },
       "original": {
         "owner": "~alexdavid",
-        "ref": "main",
         "repo": "jail.nix",
         "type": "sourcehut"
       }
@@ -835,7 +832,6 @@
       },
       "original": {
         "owner": "nix-community",
-        "ref": "master",
         "repo": "nix-vscode-extensions",
         "type": "github"
       }
@@ -1154,7 +1150,6 @@
       },
       "original": {
         "owner": "alexwforsythe",
-        "ref": "main",
         "repo": "tmux-which-key",
         "type": "github"
       }

@@ -4,7 +4,8 @@ An index of bundle changes, not a narrative. One line each: what changed, the co
 
 ## 2026-08-12
 
-* `flake.lock` updates moved from `nix-flake-update.yaml` to Renovate `lockFileMaintenance`; the release bump now arrives as a grouped PR — [workflows/dependency-updates](/workflows/dependency-updates.md), [workflows/release-upgrade](/workflows/release-upgrade.md)
+* Rejected on a second attempt, a year after the first: Renovate's nix manager — ref-pinned inputs raise no updates, and lock nodes are matched by key rather than resolved through `root.inputs` — 5910dfe — [decisions/renovate-scope](/decisions/renovate-scope.md)
+* Update channels returned to the workflow drivers; playbook added to the workflows index — 5910dfe — [workflows/dependency-updates](/workflows/dependency-updates.md)
 
 ## 2026-08-10
 
