@@ -18,6 +18,7 @@ Defined in `flake.nix#checks.<system>.preCommitHooks.hooks`:
 | Nix | `deadnix`, `nil`, `nixfmt`, `statix` |
 | Shell | `shellcheck`, `shfmt` |
 | Python | `ruff`, `ruff-format` |
+| Links | `rewrite-pr-links` (`.nix` only) |
 
 Run everything at once: `nix fmt` (aliased to `pre-commit run --all-files`). Individual hooks fire automatically on `git commit`.
 
@@ -57,4 +58,6 @@ The VS Code cspell extension only lints open files. For an IntelliJ-style "all p
 # Related
 
 * [rebuild](rebuild.md) — `nix flake check` runs these hooks too. cspell is not among them (not a hook).
+* [architecture/comment-markers](/architecture/comment-markers.md) — the `cSpell:*` directives as one family among the repo's comment markers.
+* [track-upstream-blockers](track-upstream-blockers.md) — what `rewrite-pr-links` is for; a hook change needs `nix develop .#preCommitHooks` before it takes effect locally.
 * Repo dictionary: `.config/dictionaries/project.txt`. Shared dictionaries: `~/Workspace/cspell-dicts`.

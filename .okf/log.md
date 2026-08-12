@@ -4,6 +4,8 @@ An index of bundle changes, not a narrative. One line each: what changed, the co
 
 ## 2026-08-12
 
+* Upstream blockers tracked by krank, keyed on the issue URL already in the comment; pull request links normalised to the `/issues/` form by the `rewrite-pr-links` hook — 2574e74 — [workflows/track-upstream-blockers](/workflows/track-upstream-blockers.md)
+* Comment markers collected into one concept — `TODO` / `WORKAROUND` / `HACK` / `UPGRADE`, plus the optional docker-style id that groups a marker spanning several files — [architecture/comment-markers](/architecture/comment-markers.md)
 * `nh` adopted as the interactive rebuild front-end — [workflows/rebuild](/workflows/rebuild.md)
 * `custom.command-collection` and the `helpers/` mixin category deleted as code rot — [architecture/mixin-pattern](/architecture/mixin-pattern.md)
 * CI Nix moved off the DeterminateSystems actions onto `nix-quick-install-action` + `cache-nix-action`; `nix-flake-check` gained a `push: main` run to seed the cache — [decisions/ci-nix-installer](/decisions/ci-nix-installer.md)

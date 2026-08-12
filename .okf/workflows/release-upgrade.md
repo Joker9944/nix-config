@@ -25,7 +25,9 @@ release it can be revisited in:
 # Hyprland Lua generator as a lib function.
 ```
 
-Token shape: `UPGRADE(<target-release>)`. The release in the parens is the *earliest* release at
+Token shape: `UPGRADE(<target-release>)` — one of the four markers in
+[architecture/comment-markers](/architecture/comment-markers.md), and the only one taking a release
+rather than an id. The release in the parens is the *earliest* release at
 which the change becomes possible. One marker per site, co-located with the code it concerns so the
 "why is this weird" answer is right there.
 
@@ -53,3 +55,5 @@ Only two inputs are pinned to a release; everything else follows `nixpkgs`/unsta
 * [decisions/release-policy](/decisions/release-policy.md) — the stable-nixpkgs / matching-hm policy
   that creates these version gaps in the first place.
 * [rebuild](rebuild.md) — how to build and switch after applying an upgrade.
+* [track-upstream-blockers](track-upstream-blockers.md) — the sibling convention, for code waiting on
+  an upstream bug rather than on a release.

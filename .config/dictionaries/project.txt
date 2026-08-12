@@ -35,6 +35,7 @@ hyprwm
 imapnotify
 killp
 killw
+krank
 lastp
 linenumbers
 listchars

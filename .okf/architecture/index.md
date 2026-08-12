@@ -7,6 +7,7 @@ The concepts here explain the shape of the repo — the ones a newcomer (human o
 * [mixin-pattern](mixin-pattern.md) — Every reusable module is a binary-enable mixin under `options.mixins.<category>.<name>`. Hosts and users opt in from central `mixins.nix` files.
 * [profiles](profiles.md) — The role layer above mixins: a `hosts/profiles/*.nix` module bundles a class of machine's mixin enables, selected per host by the `profile` string in the flake record. High-level and shared — never per-machine.
 * [module-layout](module-layout.md) — Folder/`files/` conventions for how any nix module (mixin or otherwise) is arranged on disk once it grows beyond a single `.nix` file.
+* [comment-markers](comment-markers.md) — `TODO` / `WORKAROUND` / `HACK` / `UPGRADE` and what each promises about how long the code stays, plus the optional id that groups a marker across files.
 * [auto-discovery](auto-discovery.md) — `custom.lib.mkDefaultModule` auto-imports every sibling `.nix` file in a directory, so dropping a file into `users/mixins/programs/` is enough to register it.
 * [entry-points](entry-points.md) — `mkNixosConfiguration` and `mkHomeConfiguration` are the two constructors called from `flake.nix`. Understanding them explains how NixOS and home-manager configurations stay paired.
 * [custom-lib](custom-lib.md) — Files in `lib/` are auto-discovered, exposed under `self.lib`, and passed into every module as `custom.lib`.

@@ -1,0 +1,64 @@
+---
+type: Playbook
+title: Tracking upstream blockers
+description: krank reports whether the issue links in workaround comments are still open; the /issues/ URL form it needs, the pre-commit hook that enforces it, and when to reach for krank:ignore-line.
+tags: [workflow, krank, upstream, workarounds]
+generated:
+  by: claude-code/claude-opus-5
+  at: 2026-08-12T00:00:00Z
+---
+
+# Trigger
+
+You are adding a workaround that exists only because of an upstream bug, or you want to know whether
+any of the existing ones can go.
+
+# The convention
+
+**The URL in the comment is the marker.** krank scans for issue-tracker links, not for tokens, so
+there is nothing extra to write — `HACK` and `WORKAROUND` keep the meanings
+[architecture/comment-markers](/architecture/comment-markers.md) gives them. This is the opposite of
+`UPGRADE(<release>)`, which encodes a release gap rather than an upstream bug.
+
+`nix run .#krank-tree` scans every tracked file: still-open links report as `info`, closed ones as
+`error`, and it exits non-zero if there is any error. Export `GITHUB_TOKEN` to lift the 60
+calls/hour anonymous API limit.
+
+# Link form
+
+krank matches `/issues/<n>` only. Write pull request links in that form too — GitHub redirects
+`/issues/<n>` to `/pull/<n>`, so the link still resolves for a human. The `rewrite-pr-links`
+pre-commit hook ([formatting-and-cspell](formatting-and-cspell.md)) does this for `.nix` files
+automatically; markdown is deliberately left alone, because this bundle cites pull requests as prose.
+
+Discussions can never be tracked. Discussion numbers are a separate sequence from issues and pull
+requests, so rewriting one would silently point at an unrelated issue. `krank-tree` warns about any
+`/pull/` or `/discussions/` link it had to skip.
+
+Some blockers offer nothing krank can read — upstream may not accept issue reports at all. Do not
+open a stand-in issue in this repo to point at: its state is downstream of your own attention, since
+you would close it only once you had already noticed the fix, so it records the blocker without ever
+detecting anything. Watch the upstream release stream and subscribe to whatever thread the fix will
+be announced in.
+
+# Closed is a prompt, not a verdict
+
+krank reports the *link's* state, which is not the same as the workaround being removable. A pull
+request can be merged and still be the thing that **caused** the bug; another can be merged years
+before while the real removal condition sits in an untracked source file; an issue can close as
+stale. Read the site before deleting anything.
+
+When a link turns out not to be the removal condition, keep it for context and mark it
+`krank:ignore-line` with a short parenthetical saying why — a silenced line with no reason is worse
+than a noisy one.
+
+# Related
+
+* [architecture/comment-markers](/architecture/comment-markers.md) — the marker set these links sit
+  beside.
+* [release-upgrade](release-upgrade.md) — the `UPGRADE(<release>)` marker for the other kind of
+  deferred work.
+* [formatting-and-cspell](formatting-and-cspell.md) — the hook set `rewrite-pr-links` belongs to;
+  regenerating `.pre-commit-config.yaml` after a hook change needs `nix develop .#preCommitHooks`.
+* [decisions/renovate-scope](/decisions/renovate-scope.md) — a blocker with no code site, tracked as
+  prose instead.
