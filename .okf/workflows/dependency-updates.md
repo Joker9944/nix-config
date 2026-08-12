@@ -48,6 +48,9 @@ requires the two inputs to move together, and ungrouped Renovate would open one 
   `./apps/nix-schemes` need no rule. Sourcehut inputs (`nix-jail`) extract normally.
 * A rule scoped to `matchManagers: ["nix"]` alone also matches `lockFileMaintenance` branches, so
   every nix rule here narrows with `matchUpdateTypes` or `matchDepNames`.
+* `ags` is both an npm dep in `apps/yas/package.json` and a flake input in `apps/yas/flake.nix`.
+  The npm pair (`ags`, `gnim`) comes from the flake and is excluded per-manager — a top-level
+  `ignoreDeps` would also silence the tag-pinned flake input.
 
 # Related
 

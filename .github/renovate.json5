@@ -47,6 +47,17 @@
       ],
       ignoreTests: true,
     },
+    // ags and gnim come from the ags flake input; they are not on the npm registry.
+    {
+      matchManagers: [
+        "npm",
+      ],
+      matchDepNames: [
+        "ags",
+        "gnim",
+      ],
+      enabled: false,
+    },
     {
       matchManagers: [
         "nix",
