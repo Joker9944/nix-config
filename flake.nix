@@ -8,7 +8,7 @@
     # HACK(pedantic-borg) Hyprland had a regression where release binds are firing even when matching other binds, locked until fixed.
     # Also had to downgrade further since v0.56.2 release was broken.
     # https://github.com/hyprwm/Hyprland/discussions/15066 krank:ignore-line
-    # https://github.com/hyprwm/Hyprland/issues/15568#issuecomment-5230819813
+    # https://github.com/hyprwm/Hyprland/issues/15568#issuecomment-5230819813 (merged; the cause, not the fix) krank:ignore-line
     hyprland.url = "github:hyprwm/Hyprland/v0.56.1"; # cSpell:ignore hyprwm
 
     # home manager
