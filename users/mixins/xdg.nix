@@ -10,10 +10,9 @@ mkMixinModule "xdg" {
       createDirectories = true;
       setSessionVariables = true;
 
-      extraConfig = {
-        PROJECTS = "${config.home.homeDirectory}/Workspace";
-        SCREENSHOTS = "${config.xdg.userDirs.pictures}/Screenshots";
-      };
+      projects = "${config.home.homeDirectory}/Workspace";
+
+      extraConfig.SCREENSHOTS = "${config.xdg.userDirs.pictures}/Screenshots";
     };
   };
 }

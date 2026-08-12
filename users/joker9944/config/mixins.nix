@@ -23,6 +23,7 @@
       mpv.enable = true;
       neovim.enable = false;
       nextcloud-client.enable = true;
+      nh.enable = true;
       pandoc.enable = true;
       papers.enable = true;
       signal.enable = true;

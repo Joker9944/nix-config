@@ -1,24 +1,30 @@
 ---
 type: Playbook
 title: Rebuild the system
-description: How to rebuild NixOS and home-manager from this flake, including the shell completions that make the invocation short.
+description: How to rebuild NixOS and home-manager from this flake, via nh or the underlying tools.
 tags: [workflow, build, nixos, home-manager]
 generated:
-  by: process:okf-migrate
-  at: 2026-07-17T00:00:00Z
+  by: claude-code/claude-opus-5
+  at: 2026-08-12T00:00:00Z
 ---
 
 # Trigger
 
 You changed something in this repo and want the running system to reflect it.
 
+# nh
+
+`nh` (`mixins.programs.nh`) is the interactive front-end over both tools below — package diff, `-a` to confirm before activating. The mixin points `NH_FLAKE` at `<projects dir>/nix-config`, so the flakeref can be omitted from any directory; that location is a convention the repo does not enforce.
+
 # NixOS
 
 ```bash
+nh os switch
+# or
 nixos-rebuild switch --flake .
 ```
 
-The current hostname auto-selects the right configuration. The fish shell config (`users/joker9944/config/fish.nix`) provides completions that offer `.` (the current directory) and `github:joker9944/nix-config` as `--flake` candidates.
+The current hostname auto-selects the right configuration.
 
 Common variants:
 
@@ -30,12 +36,12 @@ Common variants:
 Home-manager runs standalone here (see [decisions/standalone-home-manager](/decisions/standalone-home-manager.md)):
 
 ```bash
-home-manager switch --flake .#joker9944@HAL9000
+nh home switch
 # or
-home-manager switch --flake .#joker9944@wintermute
+home-manager switch --flake .#joker9944@HAL9000
 ```
 
-The configuration key format is `<username>@<hostname>`. The same fish completions apply.
+The configuration key format is `<username>@<hostname>`; `nh` derives it from the current user and hostname.
 
 # Checks and dry runs
 
