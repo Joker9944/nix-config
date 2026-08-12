@@ -28,8 +28,9 @@ calls/hour anonymous API limit.
 
 krank matches `/issues/<n>` only. Write pull request links in that form too — GitHub redirects
 `/issues/<n>` to `/pull/<n>`, so the link still resolves for a human. The `rewrite-pr-links`
-pre-commit hook ([formatting-and-cspell](formatting-and-cspell.md)) does this for `.nix` files
-automatically; markdown is deliberately left alone, because this bundle cites pull requests as prose.
+pre-commit hook ([formatting-and-cspell](formatting-and-cspell.md)) does this for `.nix` and `.md`
+alike, so a pasted pull request link is normalised rather than silently going untracked. A link
+cited for context rather than tracking takes `krank:ignore-line`.
 
 Discussions can never be tracked. Discussion numbers are a separate sequence from issues and pull
 requests, so rewriting one would silently point at an unrelated issue. `krank-tree` warns about any

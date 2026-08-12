@@ -157,7 +157,7 @@
                       runtimeInputs = [ pkgs.gnused ];
                     }
                   );
-                  files = "\\.nix$";
+                  files = "\\.(nix|md)$";
                   language = "system";
                 };
 

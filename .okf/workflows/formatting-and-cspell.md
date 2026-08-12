@@ -18,7 +18,7 @@ Defined in `flake.nix#checks.<system>.preCommitHooks.hooks`:
 | Nix | `deadnix`, `nil`, `nixfmt`, `statix` |
 | Shell | `shellcheck`, `shfmt` |
 | Python | `ruff`, `ruff-format` |
-| Links | `rewrite-pr-links` (`.nix` only) |
+| Links | `rewrite-pr-links` (`.nix` and `.md`) |
 
 Run everything at once: `nix fmt` (aliased to `pre-commit run --all-files`). Individual hooks fire automatically on `git commit`.
 
