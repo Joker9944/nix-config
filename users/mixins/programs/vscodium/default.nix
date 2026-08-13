@@ -52,9 +52,10 @@ mkMixinModule "vscodium" {
             "telemetry.feedback.enabled" = false;
           };
 
-          extensions = [
-            open-vsx-release.k--kato.intellij-idea-keybindings # cSpell:words k--kato
-            open-vsx-release.editorconfig.editorconfig
+          extensions = with open-vsx-release; [
+            k--kato.intellij-idea-keybindings # cSpell:words k--kato
+            editorconfig.editorconfig
+            mkhl.direnv
           ];
         }
         {
@@ -153,6 +154,18 @@ mkMixinModule "vscodium" {
           extensions = [
             open-vsx-release.sumneko.lua # cSpell:ignore sumneko
           ];
+        }
+        {
+          # lang haskell
+          extensions = with open-vsx-release; [
+            haskell.haskell
+            haskell.language-haskell
+          ];
+
+          userSettings = {
+            "haskell.serverExecutablePath" =
+              lib.getExe' pkgs-unstable.haskellPackages.haskell-language-server "haskell-language-server-wrapper";
+          };
         }
       ];
 

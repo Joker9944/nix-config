@@ -20,9 +20,19 @@ mkMixinModule "claude-code" {
       "${inputs.claude-okf-skills}"
     ];
 
-    lspServers.nix = {
-      command = lib.getExe pkgs.nil;
-      extensionToLanguage.".nix" = "nix";
+    lspServers = {
+      nix = {
+        command = lib.getExe pkgs.nil;
+        extensionToLanguage.".nix" = "nix";
+      };
+      haskell = {
+        command = lib.getExe' pkgs.haskellPackages.haskell-language-server "haskell-language-server-wrapper";
+        args = [ "--lsp" ];
+        extensionToLanguage = {
+          ".hs" = "haskell";
+          ".lhs" = "haskell";
+        };
+      };
     };
   };
 }
