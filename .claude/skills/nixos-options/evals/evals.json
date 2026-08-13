@@ -1,0 +1,26 @@
+{
+  "skill_name": "nixos-options",
+  "evals": [
+    {
+      "id": 1,
+      "name": "eval-gdm-session",
+      "prompt": "Add a NixOS mixin at hosts/mixins/display-manager/gdm.nix that enables the GDM display manager, turns off GDM's automatic suspend on the login screen (this is a desktop, not a laptop), and sets the default session to gnome. Follow the existing mixin style in this repo (see hosts/mixins/display-manager/regreet.nix and hosts/mixins/services/openssh.nix for the mkMixinModule shape).",
+      "expected_output": "A .nix mixin using the 26.05 option paths: services.displayManager.gdm.enable, services.displayManager.gdm.autoSuspend = false, and services.displayManager.defaultSession = \"gnome\". Must NOT use the removed services.xserver.displayManager.gdm.* or services.xserver.displayManager.defaultSession paths. Follows mkMixinModule.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "eval-touchpad",
+      "prompt": "Add a NixOS mixin at hosts/mixins/hardware/touchpad.nix that enables libinput and configures the touchpad: natural scrolling on, tap-to-click on, and disable-while-typing on. Follow the existing mixin style in this repo (see hosts/mixins/services/openssh.nix for the mkMixinModule shape).",
+      "expected_output": "A .nix mixin using services.libinput.enable = true and services.libinput.touchpad.{naturalScrolling,tapping,disableWhileTyping} = true. Must NOT use the removed services.xserver.libinput.* paths. Follows mkMixinModule.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "eval-sddm-plasma",
+      "prompt": "Add a NixOS mixin at hosts/mixins/display-manager/sddm.nix that enables the SDDM display manager with Wayland support, and make it the login manager for a Plasma 6 desktop. Follow the existing mixin style in this repo.",
+      "expected_output": "A .nix mixin using services.displayManager.sddm.enable = true and services.displayManager.sddm.wayland.enable = true. If it enables Plasma it should use the documented services.desktopManager.plasma6.enable rather than the deprecated services.xserver.desktopManager.plasma6.enable alias that the repo's existing kde-plasma.nix still uses. Must NOT use services.xserver.displayManager.sddm.*.",
+      "files": []
+    }
+  ]
+}

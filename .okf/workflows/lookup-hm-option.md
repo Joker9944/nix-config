@@ -18,7 +18,7 @@ Home-manager options get renamed and restructured between releases. Whatever rev
 
 # Tool
 
-`hm-options` — a binary on `PATH` from this repo's dev shell (defined in `flake.nix`, auto-loaded by `direnv`). It queries a pinned home-manager `options.json` — baked into the binary at build time — with `jq`, so there's no flake evaluation per call. A sibling `nixos-options` binary exists for NixOS options, built from the same engine.
+`hm-options` — a binary on `PATH` from this repo's dev shell (defined in `flake.nix`, auto-loaded by `direnv`). It queries a pinned home-manager `options.json` — baked into the binary at build time — with `jq`, so there's no flake evaluation per call. The system-level sibling is [lookup-nixos-option](lookup-nixos-option.md), same engine and subcommands over a different dataset.
 
 | Command | Purpose |
 |---|---|
@@ -48,5 +48,6 @@ The skill's own `SKILL.md` at `.claude/skills/home-manager-options/SKILL.md` kee
 # Related
 
 * [add-mixin](add-mixin.md) — where the option lookups get used.
+* [release-upgrade](release-upgrade.md) — the bump this is most valuable during; see [lookup-nixos-option](lookup-nixos-option.md#where-it-pays-off-most) for why.
 * Skill source: `.claude/skills/home-manager-options/SKILL.md`.
 * Tooling: `pkgs/nix-options/default.nix` (a package-group returning both tools via `mkOptionsTool`) with its engine at `pkgs/nix-options/files/nix-options.sh`; dev shell wired in `flake.nix`. See [packages](/architecture/packages.md).

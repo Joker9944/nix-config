@@ -45,6 +45,11 @@ Only two inputs are pinned to a release; everything else follows `nixpkgs`/unsta
 
    (Note the differing branch prefixes: `nixos-` for nixpkgs, `release-` for home-manager.)
    `nixpkgs-unstable` and the hyprland input are not release-pinned and need no change here.
+
+   The dev shell's `hm-options` / `nixos-options` rebuild against the new pin on the next
+   `direnv reload`. From here until the upgrade is done they are the only non-stale account of what
+   the options are — see [lookup-hm-option](lookup-hm-option.md) and
+   [lookup-nixos-option](lookup-nixos-option.md).
 2. `grep -rn 'UPGRADE(<new-release>)' .` — deterministic, and any older `UPGRADE(<older>)` tokens
    that are now ≤ the new release are also actionable.
 3. Work each hit: apply the change and remove the marker. The comment at the site says what to do.

@@ -29,7 +29,7 @@ Create `<tree>/<category>/<name>.nix` following the template in [architecture/mi
 
 If your mixin needs more than one nix file, or any non-nix files (patches, markdown, static config), expand it into a folder rather than a single `.nix` — see [architecture/module-layout](/architecture/module-layout.md).
 
-Look up any home-manager option you assign here with [lookup-hm-option](lookup-hm-option.md) — that's the highest-leverage step for avoiding rebuild failures.
+Look up any option you assign here — [lookup-hm-option](lookup-hm-option.md) for the `users/` tree, [lookup-nixos-option](lookup-nixos-option.md) for the `hosts/` tree. That's the highest-leverage step for avoiding rebuild failures.
 
 No manual registration is needed: the parent `default.nix` uses `mkDefaultModule` and picks up new files automatically (see [architecture/auto-discovery](/architecture/auto-discovery.md)).
 

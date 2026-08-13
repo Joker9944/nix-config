@@ -33,7 +33,7 @@ The one exception: if you find yourself repeatedly wanting to remind future-you 
 
 ## Companion tooling
 
-* **home-manager option lookup skill** at `.claude/skills/home-manager-options/` — use it before writing config that touches `programs.*` / `services.*` / `wayland.*` etc. It drives the `hm-options` binary from this repo's dev shell (on `PATH` via `direnv`; `nix develop` if not). Prefer it over the `nix` MCP server for home-manager option lookups: it's pinned to this flake's revision, the MCP is not. Full details in [`/workflows/lookup-hm-option.md`](.okf/workflows/lookup-hm-option.md).
+* **Nix option lookup skills** under `.claude/skills/` — `home-manager-options` for the `users/` tree, `nixos-options` for the `hosts/` tree. Use the one matching the tree you're editing before writing any `programs.*` / `services.*` / `hardware.*` / `wayland.*` attribute. Both drive binaries from this repo's dev shell (on `PATH` via `direnv`; `nix develop` if not) and are pinned to this flake's revision — prefer them over the `nix` MCP server, which is not. Details in [`/workflows/lookup-hm-option.md`](.okf/workflows/lookup-hm-option.md) and [`/workflows/lookup-nixos-option.md`](.okf/workflows/lookup-nixos-option.md).
 * **OKF validator**: `/okf:validate .okf --strict` — run before declaring bundle changes done.
 
 ## Standing rules
