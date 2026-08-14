@@ -162,7 +162,7 @@ mkHyprlandModule {
       (lib.map (
         i:
         let
-          key = toString (custom.math.mod i 10);
+          key = toString (custom.libMath.mod i 10);
           workspace = toString i;
         in
         [

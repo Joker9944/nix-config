@@ -221,7 +221,7 @@
             flake = self;
 
             custom = {
-              inherit (inputs.nix-math.lib) math;
+              libMath = inputs.nix-math.lib.math;
               inherit (inputs.util-lib.lib) libUtil;
             };
           }
