@@ -13,7 +13,7 @@
   mkMixinModule :: { config, prefix :: [string]? } -> string -> module -> module
   ```
 */
-{ self, lib, ... }:
+{ libSelf, lib, ... }:
 {
   config,
   prefix ? [ ],
@@ -29,5 +29,7 @@ lib.recursiveUpdate
     };
   }
   (
-    self.mkConditionalModule (lib.mkIf (lib.getAttrFromPath (optionPath ++ [ "enable" ]) config)) module
+    libSelf.modules.mkConditionalModule (lib.mkIf (
+      lib.getAttrFromPath (optionPath ++ [ "enable" ]) config
+    )) module
   )

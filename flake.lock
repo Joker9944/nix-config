@@ -1017,6 +1017,7 @@
         "pre-commit-hooks": "pre-commit-hooks_3",
         "sops-nix": "sops-nix",
         "tmux-which-key": "tmux-which-key",
+        "util-lib": "util-lib",
         "yas": "yas"
       }
     },
@@ -1152,6 +1153,25 @@
         "repo": "tmux-which-key",
         "type": "github"
       }
+    },
+    "util-lib": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "path": "apps/util-lib",
+        "type": "path"
+      },
+      "original": {
+        "path": "apps/util-lib",
+        "type": "path"
+      },
+      "parent": []
     },
     "xdph": {
       "inputs": {

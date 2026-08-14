@@ -22,14 +22,14 @@
   => "firefox.desktop"
   ```
 */
-{ self, lib, ... }:
+{ libSelf, lib, ... }:
 {
   package,
   name ? "${lib.getName package}.desktop",
   ...
 }:
 let
-  available = self.lookupDesktopFiles package;
+  available = libSelf.lookupDesktopFiles package;
 in
 if lib.elem name available then
   name

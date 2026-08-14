@@ -52,7 +52,7 @@ mkDefaultHyprlandModule { dir = ./.; } {
     bind =
       let
         inherit (config.mixins.desktopEnvironment.hyprland.binds) mods;
-        inherit (custom.lib) mkLuaCall;
+        inherit (custom.lib.hyprland) mkLuaCall;
         terminalCommand = cfg.mkAppEntryCommand { package = cfg.terminal.package; };
         quickAccessCommand = cfg.mkAppCommand {
           elems = [

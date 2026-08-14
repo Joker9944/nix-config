@@ -72,11 +72,11 @@ in
   config = lib.mkIf cfg.enable {
     dconf.settings = {
       "org/gnome/desktop/interface" = {
-        enable-hot-corners = flake.lib.nonNull cfg.hotCorner;
+        enable-hot-corners = flake.lib.modules.nonNull cfg.hotCorner;
       };
 
       "org/gnome/mutter" = {
-        edge-tiling = flake.lib.nonNull cfg.activeScreenEdges;
+        edge-tiling = flake.lib.modules.nonNull cfg.activeScreenEdges;
         dynamic-workspaces = lib.mkIf (cfg.workspaces != null) (cfg.workspaces == "dynamic");
         workspaces-only-on-primary = lib.mkIf (cfg.multiMonitor != null) cfg.multiMonitor == "primary-only";
       };

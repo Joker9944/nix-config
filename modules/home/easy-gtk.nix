@@ -39,24 +39,24 @@
       gtk = {
         enable = lib.mkDefault true;
 
-        theme = flake.lib.nonNull cfg.theme;
-        cursorTheme = flake.lib.nonNull cfg.cursorTheme;
-        iconTheme = flake.lib.nonNull cfg.iconTheme;
+        theme = flake.lib.modules.nonNull cfg.theme;
+        cursorTheme = flake.lib.modules.nonNull cfg.cursorTheme;
+        iconTheme = flake.lib.modules.nonNull cfg.iconTheme;
       };
 
       gnome-settings.appearance = {
         enable = lib.mkDefault true;
 
-        style = flake.lib.nonNull cfg.style;
-        accentColor = flake.lib.nonNull cfg.accentColor;
+        style = flake.lib.modules.nonNull cfg.style;
+        accentColor = flake.lib.modules.nonNull cfg.accentColor;
       };
 
       gnome-tweaks.fonts = {
         enable = lib.mkDefault true;
 
-        interfaceText = flake.lib.nonNull cfg.interfaceText;
-        documentText = flake.lib.nonNull cfg.documentText;
-        monospaceText = flake.lib.nonNull cfg.monospaceText;
+        interfaceText = flake.lib.modules.nonNull cfg.interfaceText;
+        documentText = flake.lib.modules.nonNull cfg.documentText;
+        monospaceText = flake.lib.modules.nonNull cfg.monospaceText;
       };
 
       gnome-misc.qtCompat = lib.mkIf cfg.qtCompat.enable {

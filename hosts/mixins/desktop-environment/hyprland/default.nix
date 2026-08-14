@@ -15,7 +15,7 @@ _:
   ...
 }:
 {
-  imports = custom.lib.ls {
+  imports = custom.libUtil.files.list {
     dir = ./.;
     exclude = [ ./default.nix ];
   };

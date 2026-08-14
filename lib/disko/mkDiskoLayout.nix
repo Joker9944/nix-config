@@ -10,10 +10,10 @@
   mkDiskoLayout :: { config :: { main :: { name, size ? {...} } }, template ? } -> attrs
   ```
 */
-{ lib, templates }:
+{ libSelf, lib, ... }:
 {
   config,
-  template ? templates.version1,
+  template ? libSelf.disko.templates.version1,
 }:
 let
   cfg = lib.recursiveUpdate {
@@ -25,6 +25,5 @@ let
   } config;
 in
 template {
-  inherit lib;
   config = cfg;
 }

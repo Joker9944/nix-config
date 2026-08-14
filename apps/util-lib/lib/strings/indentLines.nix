@@ -14,10 +14,10 @@
   => "  line1\n  line2"
   ```
 */
-{ self, lib, ... }:
+{ libSelf, lib, ... }:
 count: lines:
 lib.pipe lines [
   (lib.splitString "\n")
-  (lib.map (self.indent count))
+  (lib.map (libSelf.strings.indent count))
   (lib.concatStringsSep "\n")
 ]

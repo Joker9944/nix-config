@@ -57,7 +57,7 @@ One exception: `users/mixins/programs/vscodium/openssh-no-checkperm.patch` sits 
 
 Module files and directories are **kebab-case**; the mixin **option** they declare is **camelCase**. The filename is the kebab-case of the option name — `systemdBoot` ↔ `systemd-boot.nix`, `windowsSupport` ↔ `windows-support.nix`; single-word names coincide (`limine`). Digit escape: an option can't start with a digit, so `1password.nix` declares `_1password`.
 
-`lib/` is the exception: a lib file is named for the **function it exports, in camelCase** — `mkDiskoLayout.nix` → `custom.lib.disko.mkDiskoLayout`, `mkNixosConfiguration.nix`, etc. Namespace subdirs stay lowercase (`disko/`, `obfuscation/`).
+`lib/` is the exception: a lib file is named for the **function it exports, in camelCase** — `mkDiskoLayout.nix` → `custom.lib.disko.mkDiskoLayout`, `mkNixosConfiguration.nix`, etc. Namespace subdirs stay lowercase and are the attribute path (`configuration/`, `disko/`, `hyprland/`, `modules/`, `obfuscation/`).
 
 # Related
 

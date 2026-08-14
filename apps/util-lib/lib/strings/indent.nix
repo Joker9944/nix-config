@@ -14,4 +14,4 @@
   => "  hello"
   ```
 */
-{ self, ... }: count: str: (self.mkIndentPrefix count) + str
+{ libSelf, ... }: count: str: (libSelf.strings.mkIndentPrefix count) + str

@@ -1,4 +1,5 @@
-{ lib, config, ... }:
+{ lib, ... }:
+{ config, ... }:
 {
   disk.main = {
     device = "/dev/${config.main.name}";

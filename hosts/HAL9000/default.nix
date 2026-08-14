@@ -1,5 +1,5 @@
 { custom, ... }:
-custom.lib.mkDefaultModule { dir = ./.; } {
+custom.lib.modules.mkDefaultModule { dir = ./.; } {
   boot.loader.limine.style.interface.brandingColor = "#FF0000";
 
   services.xserver.xkb = {

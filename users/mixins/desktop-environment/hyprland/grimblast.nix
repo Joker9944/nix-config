@@ -17,7 +17,7 @@ mkHyprlandModule {
   wayland.windowManager.hyprland.settings.bind =
     let
       inherit (config.mixins.desktopEnvironment.hyprland.binds) mods;
-      inherit (custom.lib) mkLuaCall;
+      inherit (custom.lib.hyprland) mkLuaCall;
       inherit (lib.generators) mkLuaInline;
     in
     [

@@ -28,7 +28,7 @@
   => { imports = [ someOtherModule /path/to/options/binds.nix /path/to/options/style.nix ... ]; }
   ```
 */
-{ self, lib, ... }:
+{ libUtil, lib, ... }:
 {
   dir,
   exclude ? [ ],
@@ -48,10 +48,10 @@ module
     module.imports or [ ]
     ++ (
       if args == null then
-        self.ls lsArgs
+        libUtil.files.list lsArgs
       else
         lib.pipe lsArgs [
-          self.ls
+          libUtil.files.list
           (lib.map (path: lib.modules.importApply path args))
         ]
     );

@@ -1,4 +1,4 @@
-{ flake, ... }:
+{ libUtil, ... }:
 {
   lib,
   config,
@@ -66,7 +66,7 @@
                   ;;
               ''))
               (lib.concatStringsSep "\n")
-              (flake.lib.indentLines 2)
+              (libUtil.strings.indentLines 2)
             ])
             + ''
               esac

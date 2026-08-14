@@ -1,1 +1,1 @@
-{ custom, ... }: custom.lib.mkDefaultModule { dir = ./.; } { }
+{ custom, ... }: custom.lib.modules.mkDefaultModule { dir = ./.; } { }

@@ -7,13 +7,13 @@ _:
 }:
 let
   args = lib.fix (self: {
-    mkHyprlandModule = custom.lib.mkConditionalModule (
+    mkHyprlandModule = custom.lib.modules.mkConditionalModule (
       lib.mkIf config.mixins.desktopEnvironment.hyprland.enable
     );
 
     mkDefaultHyprlandModule =
       fnArgs: module:
-      custom.lib.mkDefaultModule (lib.recursiveUpdate fnArgs { args = self; }) (
+      custom.lib.modules.mkDefaultModule (lib.recursiveUpdate fnArgs { args = self; }) (
         self.mkHyprlandModule module
       );
   });

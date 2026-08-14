@@ -57,7 +57,7 @@ mkHyprlandModule {
             icons ? false,
             ...
           }:
-          custom.lib.mkCommand [
+          custom.libUtil.strings.mkCommand [
             "rofi"
             "-show drun"
             (lib.optional icons "-show-icons")
@@ -124,7 +124,7 @@ mkHyprlandModule {
                   (lib.concatStringsSep " ")
                 ];
           in
-          custom.lib.mkCommand [
+          custom.libUtil.strings.mkCommand [
             "rofi"
             "-dmenu"
             (lib.optional (themeString != "") "-theme-str \"${themeString}\"")

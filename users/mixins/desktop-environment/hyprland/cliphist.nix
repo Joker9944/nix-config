@@ -22,7 +22,7 @@ mkHyprlandModule {
       dmenuCommand = cfg.launcher.mkDmenuCommand { };
     in
     [
-      (custom.lib.mkLuaCall [
+      (custom.lib.hyprland.mkLuaCall [
         "${cfg.binds.mods.utility} + V"
         (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"cliphist list | ${dmenuCommand} | cliphist decode | wl-copy\")")
       ])

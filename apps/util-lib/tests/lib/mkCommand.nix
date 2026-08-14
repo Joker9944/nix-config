@@ -1,7 +1,7 @@
-{ flakeLib, ... }:
+{ libUtil, ... }:
 {
   testMkCommandSimple = {
-    expr = flakeLib.mkCommand [
+    expr = libUtil.strings.mkCommand [
       "echo"
       "hello"
     ];
@@ -9,7 +9,7 @@
   };
 
   testMkCommandNested = {
-    expr = flakeLib.mkCommand [
+    expr = libUtil.strings.mkCommand [
       "cmd"
       [
         "--flag"
@@ -21,7 +21,7 @@
   };
 
   testMkCommandDeeplyNested = {
-    expr = flakeLib.mkCommand [
+    expr = libUtil.strings.mkCommand [
       "cmd"
       [
         [ "--a" ]
@@ -33,12 +33,12 @@
   };
 
   testMkCommandEmpty = {
-    expr = flakeLib.mkCommand [ ];
+    expr = libUtil.strings.mkCommand [ ];
     expected = "";
   };
 
   testMkCommandSingleElement = {
-    expr = flakeLib.mkCommand [ "single" ];
+    expr = libUtil.strings.mkCommand [ "single" ];
     expected = "single";
   };
 }

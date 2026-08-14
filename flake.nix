@@ -78,6 +78,11 @@
       url = "github:xddxdd/nix-math/master"; # cSpell:ignore xddxdd
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    util-lib = {
+      url = ./apps/util-lib;
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+    };
   };
 
   outputs =
@@ -94,6 +99,7 @@
         {
           packages = import ./pkgs {
             inherit lib pkgs inputs;
+            inherit (inputs.util-lib.lib) libUtil;
             flake = self;
           };
 
@@ -193,22 +199,33 @@
         overlays = import ./overlays.nix { flake = self; };
 
         nixosModules = {
-          default = lib.modules.importApply ./modules/nixos { flake = self; };
+          default = lib.modules.importApply ./modules/nixos {
+            inherit (inputs.util-lib.lib) libUtil;
+            flake = self;
+          };
         };
 
         homeModules = {
-          default = lib.modules.importApply ./modules/home { flake = self; };
-        };
-
-        lib = import ./lib {
-          inherit lib inputs;
-
-          flake = self;
-
-          custom = {
-            inherit (inputs.nix-math.lib) math;
+          default = lib.modules.importApply ./modules/home {
+            inherit (inputs.util-lib.lib) libUtil;
+            flake = self;
           };
         };
+
+        lib = lib.fix (
+          libSelf:
+          import ./lib {
+            inherit lib inputs libSelf;
+            inherit (inputs.util-lib.lib) libUtil;
+
+            flake = self;
+
+            custom = {
+              inherit (inputs.nix-math.lib) math;
+              inherit (inputs.util-lib.lib) libUtil;
+            };
+          }
+        );
 
         nixosConfigurations =
           lib.pipe
@@ -231,7 +248,7 @@
             [
               (lib.map (cfg: {
                 name = cfg.hostname;
-                value = self.lib.mkNixosConfiguration cfg;
+                value = self.lib.configuration.mkNixosConfiguration cfg;
               }))
               lib.listToAttrs
             ];
@@ -251,7 +268,7 @@
             [
               (lib.map (cfg: {
                 name = cfg.username + "@" + cfg.hostname;
-                value = self.lib.mkHomeConfiguration {
+                value = self.lib.configuration.mkHomeConfiguration {
                   nixosConfigurations = self.nixosConfigurations.${cfg.hostname};
                 } cfg;
               }))

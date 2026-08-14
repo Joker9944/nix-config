@@ -59,7 +59,7 @@
       }
     ];
 
-    on = custom.lib.mkLuaCall [
+    on = custom.lib.hyprland.mkLuaCall [
       "hyprland.start"
       (lib.generators.mkLuaInline ''
         function()

@@ -15,7 +15,7 @@ mkHyprlandModule {
       command = cfg.mkAppEntryCommand { package = config.programs.librewolf.finalPackage; };
     in
     lib.mkIf config.programs.librewolf.enable [
-      (custom.lib.mkLuaCall [
+      (custom.lib.hyprland.mkLuaCall [
         "${mods.main} + B"
         (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
         { description = "open the default browser"; }

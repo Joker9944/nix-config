@@ -10,12 +10,12 @@ generated:
 
 # What it does
 
-`custom.lib.mkDefaultModule { dir = ./.; } { … }` extends a module's `imports` list with every sibling `.nix` file in `dir`, excluding `default.nix` itself. Registration is by filesystem presence — dropping a new file into the right category directory is enough; no manual list to update. Implementation in `lib/mkDefaultModule.nix`.
+`custom.lib.modules.mkDefaultModule { dir = ./.; } { … }` extends a module's `imports` list with every sibling `.nix` file in `dir`, excluding `default.nix` itself. Registration is by filesystem presence — dropping a new file into the right category directory is enough; no manual list to update. Implementation in `lib/modules/mkDefaultModule.nix`.
 
 Every category `default.nix` under `hosts/mixins/` and `users/mixins/` is a one-liner:
 
 ```nix
-{ custom, ... }: custom.lib.mkDefaultModule { dir = ./.; } { }
+{ custom, ... }: custom.lib.modules.mkDefaultModule { dir = ./.; } { }
 ```
 
 Some directories pass a starter module (with its own `imports`, options, or config) as the second argument, merged with the auto-discovered files. See `users/mixins/default.nix` — it imports `sops-nix` and sets baseline `programs.git` config alongside auto-discovery.

@@ -42,7 +42,7 @@ mkHyprlandModule {
     bind =
       let
         inherit (cfg.binds) mods;
-        inherit (custom.lib) mkLuaCall;
+        inherit (custom.lib.hyprland) mkLuaCall;
         inherit (lib.generators) mkLuaInline;
         command = cfg.terminal.mkRunCommand {
           inherit id;

@@ -1,5 +1,6 @@
 {
   flake,
+  libUtil,
   lib,
   pkgs,
   ...
@@ -11,7 +12,7 @@
     exclude = [ ./default.nix ];
   }
   [
-    flake.lib.ls
+    libUtil.files.list
     (lib.map (path: {
       name = lib.strings.removeSuffix ".nix" (baseNameOf path);
       value = pkgs.callPackage path { inherit flake; };
@@ -25,7 +26,7 @@
     types = [ "directory" ];
   }
   [
-    flake.lib.ls
+    libUtil.files.list
     (lib.map (path: import path args))
     (lib.foldl (acc: attr: acc // attr) { })
   ]

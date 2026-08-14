@@ -6,7 +6,7 @@ let
     moduleArgs
     // {
       mkDefaultFlakeModule =
-        fnArgs: flake.lib.mkDefaultModule (lib.recursiveUpdate fnArgs { args = self; });
+        fnArgs: flake.lib.modules.mkDefaultModule (lib.recursiveUpdate fnArgs { args = self; });
     }
   );
 in

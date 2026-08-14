@@ -28,7 +28,7 @@ mkHyprlandModule {
           inherit id;
           command = "btop";
         };
-        inherit (custom.lib) mkLuaCall;
+        inherit (custom.lib.hyprland) mkLuaCall;
         inherit (lib.generators) mkLuaInline;
       in
       [

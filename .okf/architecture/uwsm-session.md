@@ -28,7 +28,7 @@ Both live in `users/mixins/desktop-environment/hyprland/hyprland/default.nix`, a
 UWSM off they degrade to something that still works.
 
 * `mkAppCommand` takes command elements and prefixes `uwsm-app --`. Ungated it is plain
-  `custom.lib.mkCommand`, so the command runs unwrapped.
+  `custom.libUtil.strings.mkCommand`, so the command runs unwrapped.
 * `mkAppEntryCommand` takes `custom.lib.requireDesktopFile`'s argument set and yields the entry ID
   wrapped by `mkAppCommand`. Ungated it yields `lib.getExe package`. It cannot share the other's
   fallback: an entry ID is executable *only* because uwsm resolves it, so degrading to a bare

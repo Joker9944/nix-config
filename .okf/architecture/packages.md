@@ -11,8 +11,8 @@ generated:
 # Where packages live
 
 Every flake package is defined under `./pkgs`. `pkgs/default.nix` builds the `packages.<system>`
-set by listing the directory with `flake.lib.ls` (see [custom-lib](custom-lib.md)). `flake.nix`
-just calls `import ./pkgs { inherit lib pkgs inputs; flake = self; }` and exposes the result.
+set by listing the directory with `libUtil.files.list` (see [custom-lib](custom-lib.md)). `flake.nix`
+just calls `import ./pkgs { inherit lib pkgs inputs libUtil; flake = self; }` and exposes the result.
 
 # Two kinds of entry: file packages and subdir package-groups
 
@@ -59,7 +59,7 @@ The flake stays small and stable so it doesn't drift.
 
 # Related
 
-* [custom-lib](custom-lib.md) — `flake.lib.ls` and the rest of the auto-loaded `lib/`.
+* [custom-lib](custom-lib.md) — `libUtil.files.list` and the rest of the two auto-loaded libs.
 * [auto-discovery](auto-discovery.md) — the parallel mechanism for *module* trees
   (`mkDefaultModule`), as opposed to this package tree.
 * [entry-points](entry-points.md) — the other things `flake.nix` wires up.

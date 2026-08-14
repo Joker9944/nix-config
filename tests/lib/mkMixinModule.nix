@@ -1,16 +1,16 @@
 { flakeLib, ... }:
 let
-  enabled = flakeLib.mkMixinModule {
+  enabled = flakeLib.modules.mkMixinModule {
     config.mixins.programs.foo.enable = true;
     prefix = [ "programs" ];
   };
 
-  disabled = flakeLib.mkMixinModule {
+  disabled = flakeLib.modules.mkMixinModule {
     config.mixins.programs.foo.enable = false;
     prefix = [ "programs" ];
   };
 
-  toplevel = flakeLib.mkMixinModule {
+  toplevel = flakeLib.modules.mkMixinModule {
     config.mixins.bar.enable = true;
   };
 

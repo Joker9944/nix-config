@@ -12,10 +12,10 @@ let
         prefix ? [ ],
         ...
       }@fnArgs:
-      custom.lib.mkDefaultModule (
+      custom.lib.modules.mkDefaultModule (
         lib.recursiveUpdate fnArgs {
           args = self // {
-            mkMixinModule = custom.lib.mkMixinModule { inherit config prefix; };
+            mkMixinModule = custom.lib.modules.mkMixinModule { inherit config prefix; };
           };
         }
       );

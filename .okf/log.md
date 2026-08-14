@@ -2,6 +2,10 @@
 
 An index of bundle changes, not a narrative. One line each: what changed, the commit it rode in on, and the concept that holds the detail. Rationale lives in the commit message (git keeps it, tied to the diff) or in a [decision](/decisions/index.md) — not here.
 
+## 2026-08-15
+
+* `lib/` split: general-purpose helpers to the new `apps/util-lib` flake as `libUtil`, the rest into `configuration/`, `hyprland/` and `modules/` namespaces, both libs directory-loaded by `mkLibNamespace` with a `libSelf` fixed point tied once per flake — [decisions/util-lib-split](/decisions/util-lib-split.md), [architecture/custom-lib](/architecture/custom-lib.md)
+
 ## 2026-08-14
 
 * Bind- and rofi-launched apps routed through `uwsm-app` so they get their own unit in `app-graphical.slice` instead of the compositor's; gated on `withUWSM`, with `mkAppEntryCommand` carrying its own fallback because an entry ID is not executable without uwsm — [architecture/uwsm-session](/architecture/uwsm-session.md)

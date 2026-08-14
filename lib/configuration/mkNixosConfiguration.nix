@@ -38,12 +38,12 @@
   flake,
   lib,
   inputs,
-  self,
+  libSelf,
   custom,
   ...
 }:
 {
-  context ? ./..,
+  context ? ../..,
   system,
   hostname,
   profile ? null,
@@ -52,7 +52,7 @@
   ...
 }@args:
 let
-  mixinsModulePath = ../hosts/mixins;
+  mixinsModulePath = ../../hosts/mixins;
   hostModulePath = lib.path.append context "hosts/${hostname}";
   profileModulePaths = lib.optional (profile != null) (
     lib.path.append context "hosts/profiles/${profile}.nix"
@@ -66,7 +66,7 @@ lib.nixosSystem {
     inherit inputs;
 
     custom = custom // {
-      lib = self;
+      lib = libSelf;
       config = args;
 
       assets = inputs.nix-assets.packages.${system};

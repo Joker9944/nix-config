@@ -80,7 +80,7 @@ mkDefaultHyprlandModule { dir = ./.; } {
     wayland.windowManager.hyprland.settings =
       let
         inherit (cfg.binds) mods;
-        inherit (custom.lib) mkLuaCall;
+        inherit (custom.lib.hyprland) mkLuaCall;
         inherit (lib.generators) mkLuaInline;
 
         trimmedProcessName = lib.substring 0 15 cfg.launcher.processName; # maximum process name length is 15 characters

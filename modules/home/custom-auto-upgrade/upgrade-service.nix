@@ -1,4 +1,4 @@
-{ flake, ... }:
+{ libUtil, ... }:
 {
   config,
   lib,
@@ -149,7 +149,7 @@ in
 
           ExecStart =
             let
-              homeManagerCommand = flake.lib.mkCommand [
+              homeManagerCommand = libUtil.strings.mkCommand [
                 "home-manager"
                 "switch"
                 cfg.flags

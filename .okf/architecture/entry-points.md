@@ -10,7 +10,7 @@ generated:
 
 # `mkNixosConfiguration`
 
-Defined in `lib/mkNixosConfiguration.nix`. Assembles a `nixosSystem` from four sources:
+Defined in `lib/configuration/mkNixosConfiguration.nix`. Assembles a `nixosSystem` from four sources:
 
 1. `hosts/mixins/` — the reusable NixOS mixin tree.
 2. `hosts/profiles/<profile>.nix` — the host's role, when the record sets a `profile` string (optional). See [profiles](profiles.md).
@@ -28,7 +28,7 @@ Also injects every module in `flake.nixosModules.*` (source: `modules/nixos/`) a
 
 # `mkHomeConfiguration`
 
-Defined in `lib/mkHomeConfiguration.nix`. Builds a **standalone** home-manager configuration — home-manager is not a NixOS module here (see [decisions/standalone-home-manager](/decisions/standalone-home-manager.md)). Inherits `pkgs` and `specialArgs` from the paired NixOS configuration, so both trees stay in lockstep.
+Defined in `lib/configuration/mkHomeConfiguration.nix`. Builds a **standalone** home-manager configuration — home-manager is not a NixOS module here (see [decisions/standalone-home-manager](/decisions/standalone-home-manager.md)). Inherits `pkgs` and `specialArgs` from the paired NixOS configuration, so both trees stay in lockstep.
 
 Sources:
 

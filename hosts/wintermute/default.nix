@@ -1,5 +1,5 @@
 { custom, ... }:
-custom.lib.mkDefaultModule { dir = ./.; } {
+custom.lib.modules.mkDefaultModule { dir = ./.; } {
   # Lenovo ThinkPad X1 Yoga Gen 4
   # * https://wiki.archlinux.org/title/Lenovo_ThinkPad_X1_Yoga_(Gen_4)
 

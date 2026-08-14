@@ -1,7 +1,7 @@
-{ flakeLib, ... }:
+{ libUtil, ... }:
 {
   testLastReturnsLastElement = {
-    expr = flakeLib.last [
+    expr = libUtil.lists.last [
       1
       2
       3
@@ -10,7 +10,7 @@
   };
 
   testLastWithStrings = {
-    expr = flakeLib.last [
+    expr = libUtil.lists.last [
       "a"
       "b"
       "c"
@@ -19,12 +19,12 @@
   };
 
   testLastSingleElement = {
-    expr = flakeLib.last [ 42 ];
+    expr = libUtil.lists.last [ 42 ];
     expected = 42;
   };
 
   testLastWithNested = {
-    expr = flakeLib.last [
+    expr = libUtil.lists.last [
       [
         1
         2
@@ -41,7 +41,7 @@
   };
 
   testLastEmptyListReturnsNull = {
-    expr = flakeLib.last [ ];
+    expr = libUtil.lists.last [ ];
     expected = null;
   };
 }

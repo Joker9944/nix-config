@@ -4,7 +4,7 @@
   # Type
 
   ```
-  ls :: { dir :: path, types :: [string]?, exclude :: [path]? } -> [path]
+  list :: { dir :: path, types :: [string]?, exclude :: [path]? } -> [path]
   ```
 
   # Arguments
@@ -16,7 +16,7 @@
   # Example
 
   ```nix
-  ls { dir = ./lib; types = [ "regular" ]; exclude = [ ./lib/default.nix ]; }
+  list { dir = ./lib; types = [ "regular" ]; exclude = [ ./lib/default.nix ]; }
   => [ /path/to/lib/first.nix /path/to/lib/last.nix ... ]
   ```
 */

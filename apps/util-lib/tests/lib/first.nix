@@ -1,7 +1,7 @@
-{ flakeLib, ... }:
+{ libUtil, ... }:
 {
   testFirstReturnsFirstElement = {
-    expr = flakeLib.first [
+    expr = libUtil.lists.first [
       1
       2
       3
@@ -10,7 +10,7 @@
   };
 
   testFirstWithStrings = {
-    expr = flakeLib.first [
+    expr = libUtil.lists.first [
       "a"
       "b"
       "c"
@@ -19,12 +19,12 @@
   };
 
   testFirstSingleElement = {
-    expr = flakeLib.first [ 42 ];
+    expr = libUtil.lists.first [ 42 ];
     expected = 42;
   };
 
   testFirstWithNested = {
-    expr = flakeLib.first [
+    expr = libUtil.lists.first [
       [
         1
         2
@@ -41,7 +41,7 @@
   };
 
   testFirstEmptyListReturnsNull = {
-    expr = flakeLib.first [ ];
+    expr = libUtil.lists.first [ ];
     expected = null;
   };
 }
