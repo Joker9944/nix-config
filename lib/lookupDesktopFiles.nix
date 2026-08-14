@@ -1,5 +1,9 @@
 /**
-  Get the names of desktop files from a package's applications directory.
+  Get the names of desktop files a package provides.
+
+  Reads `desktopItems` when the package declares them (the `copyDesktopItems` hook
+  convention), otherwise falls back to reading the package's applications directory,
+  which requires building the package.
 
   # Type
 
@@ -14,4 +18,13 @@
   => [ "firefox.desktop" ]
   ```
 */
-_: package: builtins.attrNames (builtins.readDir "${package}/share/applications")
+{ lib, ... }:
+package:
+let
+  # `copyDesktopItems` accepts a bare item as well as a list
+  items = lib.toList (package.desktopItems or [ ]);
+in
+if items != [ ] then
+  lib.map (item: item.name or (lib.baseNameOf (toString item))) items
+else
+  lib.attrNames (lib.readDir "${package}/share/applications")

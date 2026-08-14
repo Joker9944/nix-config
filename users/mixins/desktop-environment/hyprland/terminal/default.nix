@@ -1,5 +1,13 @@
 { mkDefaultHyprlandModule, ... }:
-{ lib, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.mixins.desktopEnvironment.hyprland;
+in
 mkDefaultHyprlandModule { dir = ./.; } {
   options.mixins.desktopEnvironment.hyprland.terminal =
     let
@@ -14,11 +22,15 @@ mkDefaultHyprlandModule { dir = ./.; } {
         type = types.functionTo types.str;
         default =
           {
-            id,
             command,
             ...
           }:
-          "kitty --override confirm_os_window_close=0 --app-id ${id} ${command}";
+          cfg.mkAppCommand {
+            elems = [
+              "kitty"
+              command
+            ];
+          };
         description = ''
           Function to generate a command to run a command in terminal.
         '';

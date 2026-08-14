@@ -1,4 +1,5 @@
 abbrs
+Activatable
 appname
 asciidoctor
 Astal

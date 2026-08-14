@@ -25,7 +25,17 @@ mkDefaultHyprlandModule { dir = ./.; } {
         command,
         ...
       }:
-      "kitty --override confirm_os_window_close=0 --app-id ${id} ${command}";
+      cfg.mkAppCommand {
+        name = id;
+        elems = [
+          "kitty"
+          "--override"
+          "confirm_os_window_close=0"
+          "--app-id"
+          id
+          command
+        ];
+      };
 
     mkWindowRules =
       { id, ... }:
@@ -43,15 +53,22 @@ mkDefaultHyprlandModule { dir = ./.; } {
       let
         inherit (config.mixins.desktopEnvironment.hyprland.binds) mods;
         inherit (custom.lib) mkLuaCall;
+        terminalCommand = cfg.mkAppEntryCommand { package = cfg.terminal.package; };
+        quickAccessCommand = cfg.mkAppCommand {
+          elems = [
+            "kitten"
+            "quick-access-terminal"
+          ];
+        };
       in
       [
         (mkLuaCall [
           "${mods.main} + T"
-          (mkLuaInline "hl.dsp.exec_cmd(\"kitty\")")
+          (mkLuaInline "hl.dsp.exec_cmd(\"${terminalCommand}\")")
         ])
         (mkLuaCall [
           "${mods.main} + SPACE"
-          (mkLuaInline "hl.dsp.exec_cmd(\"kitten quick-access-terminal\")")
+          (mkLuaInline "hl.dsp.exec_cmd(\"${quickAccessCommand}\")")
         ])
       ];
 

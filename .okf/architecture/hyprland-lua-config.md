@@ -5,7 +5,7 @@ description: The hyprland tree emits `hyprland.lua`, not `hyprland.conf`. Docume
 tags: [architecture, hyprland, home-manager, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-10T18:00:00Z
+  at: 2026-08-14T12:00:00Z
 ---
 
 # configType = "lua"
@@ -108,6 +108,8 @@ is **not** a usable reference for rule effects: its `HL.WindowRuleSpec` declares
 # Related
 
 * [custom-lib](custom-lib.md) — `mkLuaCall`, for the `_args` multi-argument lua form.
+* [uwsm-session](uwsm-session.md) — where a bind's `exec_cmd` process ends up, and why long-running
+  ones go through `cfg.mkAppCommand`.
 * [mixin-pattern](mixin-pattern.md) — the hyprland tree is the one hand-rolled fan-out
   whose namespace carries more than an `enable`.
 * [decisions/release-policy](/decisions/release-policy.md) — why hyprland tracks upstream

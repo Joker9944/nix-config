@@ -5,7 +5,7 @@ description: Files in `lib/` are auto-discovered by `lib/default.nix`, exposed a
 tags: [architecture, lib, convention]
 generated:
   by: claude-code/claude-opus-4-8
-  at: 2026-07-29T00:00:00Z
+  at: 2026-08-14T12:00:00Z
 ---
 
 # How it works
@@ -26,7 +26,8 @@ Notable helpers with non-obvious use:
 | `mkConditionalModule.nix` | Conditional module composition. |
 | `mkMixinModule.nix` | Per-mixin builder: declares `mixins.<prefix>.<name>.enable` + gates the body. Partially applied with `{ config, prefix }` by each tree's `mkDefaultMixinModule` aggregator helper and threaded to leaves; not called directly from the lib. See [mixin-pattern](mixin-pattern.md). |
 | `mkLuaCall.nix` | Builds hyprland-style multi-arg lua callbacks. Used in `users/joker9944/hosts/HAL9000/default.nix` for hyprland `on = …`. |
-| `lookupDesktopFiles.nix` | Finds `.desktop` files in a package. |
+| `lookupDesktopFiles.nix` | Names of the `.desktop` files a package provides. Reads `desktopItems` when the package declares them; the fallback reads `share/applications`, which builds the package during evaluation. |
+| `requireDesktopFile.nix` | Asserts a package provides an entry and returns its ID, so a renamed entry fails the build. `name` defaults to the package name + `.desktop`, which is a guess — the assertion is what catches cases like `signal-desktop` → `signal.desktop`. Used by the hyprland binds, see [uwsm-session](uwsm-session.md). |
 | `disko/` | Disk-layout template renderer. `custom.lib.disko.mkDiskoLayout { config, template ? templates.version1 }` renders a disko `devices` set from per-host params; templates live under `custom.lib.disko.templates.*`. Called from each `hosts/<host>/disks.nix` (which also imports `inputs.disko.nixosModules.disko` itself). |
 | `obfuscation/` | XOR-based string obfuscation, exposed via the `obfuscate` app in `apps.nix`. |
 

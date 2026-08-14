@@ -86,7 +86,9 @@ mkDefaultHyprlandModule { dir = ./.; } {
         trimmedProcessName = lib.substring 0 15 cfg.launcher.processName; # maximum process name length is 15 characters
         drunCommand = cfg.launcher.mkDrunCommand { icons = true; };
 
-        command = "pkill --exact \\\"${trimmedProcessName}\\\" || ${drunCommand}";
+        command = "pkill --exact \\\"${trimmedProcessName}\\\" || ${
+          cfg.mkAppCommand { elems = [ drunCommand ]; }
+        }";
       in
       {
         bind = [

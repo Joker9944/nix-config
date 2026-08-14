@@ -20,6 +20,17 @@ mkHyprlandModule {
           display-drun = "launch";
           display-window = "switch";
           scroll-method = 1;
+
+          # Only `drun` honours these; rofi bypasses both once it launches via GIO,
+          # which silently returns apps to the compositor's unit. Recheck on bump.
+          run-command = cfg.mkAppCommand { elems = [ "{cmd}" ]; };
+          run-shell-command = cfg.mkAppCommand {
+            elems = [
+              "{terminal}"
+              "-e"
+              "{cmd}"
+            ];
+          };
         };
 
         modes = [

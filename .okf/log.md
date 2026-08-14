@@ -2,6 +2,11 @@
 
 An index of bundle changes, not a narrative. One line each: what changed, the commit it rode in on, and the concept that holds the detail. Rationale lives in the commit message (git keeps it, tied to the diff) or in a [decision](/decisions/index.md) — not here.
 
+## 2026-08-14
+
+* Bind- and rofi-launched apps routed through `uwsm-app` so they get their own unit in `app-graphical.slice` instead of the compositor's; gated on `withUWSM`, with `mkAppEntryCommand` carrying its own fallback because an entry ID is not executable without uwsm — [architecture/uwsm-session](/architecture/uwsm-session.md)
+* `lookupDesktopFiles` reads `desktopItems` first; `requireDesktopFile` added to assert entry IDs at build time — [architecture/custom-lib](/architecture/custom-lib.md)
+
 ## 2026-08-13
 
 * `nixos-options` skill added as the system-level counterpart to `home-manager-options`; its blind spots (hidden renamed aliases, absent third-party modules, search breadth) and its release-upgrade payoff recorded — [workflows/lookup-nixos-option](/workflows/lookup-nixos-option.md)
