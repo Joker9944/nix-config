@@ -110,7 +110,8 @@
         "flake-utils": "flake-utils",
         "nix-math": "nix-math",
         "nixpkgs": "nixpkgs",
-        "schemes": "schemes"
+        "schemes": "schemes",
+        "util-lib": "util-lib"
       }
     },
     "schemes": {
@@ -144,6 +145,25 @@
         "repo": "default",
         "type": "github"
       }
+    },
+    "util-lib": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "path": "../util-lib",
+        "type": "path"
+      },
+      "original": {
+        "path": "../util-lib",
+        "type": "path"
+      },
+      "parent": []
     }
   },
   "root": "root",

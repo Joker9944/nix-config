@@ -70,6 +70,7 @@
     nix-jail.url = "sourcehut:~alexdavid/jail.nix"; # cSPell:ignore alexdavid
     nix-schemes = {
       url = ./apps/nix-schemes;
+      inputs.util-lib.follows = "util-lib";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -183,7 +184,10 @@
               };
             };
 
-            libTests = pkgs.callPackage ./tests/lib { flake = self; };
+            libTests = pkgs.callPackage ./tests/lib {
+              inherit (inputs.util-lib.lib) libUtil;
+              flake = self;
+            };
           };
 
           formatter =

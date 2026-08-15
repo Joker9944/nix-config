@@ -14,9 +14,14 @@
   => "255,85,0,0.5"
   ```
 */
-{ lib, libSchemes, ... }:
+{
+  lib,
+  libSelf,
+  libUtil,
+  ...
+}:
 color: alpha:
 lib.pipe color [
-  libSchemes.toRgb
-  (rgb: "${rgb},${libSchemes.util.toStringFloat alpha}")
+  libSelf.toRgb
+  (rgb: "${rgb},${libUtil.numbers.toStringFloat alpha}")
 ]

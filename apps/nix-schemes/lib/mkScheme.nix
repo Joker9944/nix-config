@@ -29,7 +29,7 @@
   }
   ```
 */
-{ lib, libSchemes, ... }:
+{ lib, libSelf, ... }:
 {
   system,
   name,
@@ -41,7 +41,7 @@ let
   transform =
     prevScheme: transformFunction:
     let
-      currScheme = lib.recursiveUpdate prevScheme (transformFunction prevScheme libSchemes);
+      currScheme = lib.recursiveUpdate prevScheme (transformFunction prevScheme libSelf);
     in
     currScheme
     // {

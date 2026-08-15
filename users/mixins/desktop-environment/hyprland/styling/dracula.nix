@@ -57,7 +57,7 @@ mkHyprlandModule {
                   "F" = mkColorFromHex "#FFFFFF";
                 };
               };
-            schemeTransformers = inputs.nix-schemes.lib.transformers;
+            schemeTransformers = inputs.nix-schemes.lib.libSchemes.transformers;
           in
           [
             schemeTransformers.named

@@ -6,7 +6,7 @@ flake:
   ...
 }:
 let
-  libScheme = flake.lib;
+  libSchemes = flake.lib.libSchemes;
 in
 {
   options.schemes.regreet =
@@ -18,7 +18,7 @@ in
         types
         literalExpression
         ;
-      customTypes = libScheme.types;
+      customTypes = libSchemes.types;
     in
     {
       enable = mkEnableOption "ReGreet theming based on adw-gtk3 and a scheme";
@@ -54,7 +54,7 @@ in
       overrides.accent = mkOption {
         type = types.nullOr (types.functionTo customTypes.color);
         default = null;
-        example = literalExpression "colorLib: colorLib.mkColor [ 0 127 255 ]";
+        example = literalExpression "libSchemes: libSchemes.mkColor [ 0 127 255 ]";
         description = ''
           Custom accent color to override accent colors derived from scheme.
         '';
@@ -67,9 +67,9 @@ in
 
       accents =
         if cfg.overrides.accent == null then
-          libScheme.gtk.mkAccentsFromPalette cfg.scheme.palette
+          libSchemes.gtk.mkAccentsFromPalette cfg.scheme.palette
         else
-          libScheme.gtk.mkAccentsFromColor (cfg.overrides.accent libScheme);
+          libSchemes.gtk.mkAccentsFromColor (cfg.overrides.accent libSchemes);
     in
     lib.mkIf cfg.enable {
       programs.regreet = {
@@ -80,7 +80,7 @@ in
           inherit (cfg.theme) package;
         };
 
-        extraCss = libScheme.gtk.adw-gtk3.mkGtk4ExtraCss {
+        extraCss = libSchemes.gtk.adw-gtk3.mkGtk4ExtraCss {
           inherit (cfg) scheme accent;
           inherit accents;
         };

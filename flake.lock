@@ -803,7 +803,10 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "schemes": "schemes"
+        "schemes": "schemes",
+        "util-lib": [
+          "util-lib"
+        ]
       },
       "locked": {
         "path": "apps/nix-schemes",

@@ -1,16 +1,22 @@
 ---
 type: Architecture Pattern
 title: Custom lib
-description: Two libs — `lib/` for module-system helpers (`flake.lib.*`, `custom.lib`) and the `apps/util-lib` flake for general-purpose ones (`libUtil`). Both are directory-loaded by `mkLibNamespace`.
+description: Three libs — `lib/` for module-system helpers, `apps/util-lib` for general-purpose ones (`libUtil`), `apps/nix-schemes` for colour schemes (`libSchemes`). All directory-loaded by `mkLibNamespace`, all naming themselves `libSelf`.
 tags: [architecture, lib, convention]
 generated:
   by: claude-code/claude-opus-5
   at: 2026-08-15T00:00:00Z
 ---
 
-# Two libs
+# Three libs
 
-`lib/` holds helpers that only mean something to a module evaluation. General-purpose ones live in `apps/util-lib`, a flake of its own that exports `libUtil`. [/decisions/util-lib-split.md](/decisions/util-lib-split.md) has the boundary and the reasoning.
+| Tree | Exported as | Holds |
+|---|---|---|
+| `lib/` | `flake.lib` | Helpers that only mean something to a module evaluation |
+| `apps/util-lib/lib/` | `lib.libUtil` | General-purpose Nix helpers — `strings`, `lists`, `files`, `numbers` |
+| `apps/nix-schemes/lib/` | `lib.libSchemes` | Colour-scheme construction, GTK CSS, transformers |
+
+[/decisions/util-lib-split.md](/decisions/util-lib-split.md) has the boundary and the reasoning. All three load the same way, name themselves the same way, and nest under `lib.<name>` so a consumer's `inherit` reads the same as the tree's own arg — matching `inputs.nix-math.lib.math`.
 
 # The loader
 
@@ -28,9 +34,11 @@ Inside `apps/util-lib` it reads `libSelf.mkLibNamespace` instead, since that tre
 
 Each flake ties the fixed point exactly once, in its own `flake.nix`. The args thread down unchanged, so a leaf at any depth sees the whole tree — `lib/modules/mkMixinModule.nix` reaches a sibling as `libSelf.modules.mkConditionalModule`.
 
+`apps/nix-schemes/lib/init/` is the one deliberate second fixed point. `init` is a lib *constructor* (`pkgs -> libSchemes`), not a namespace: it re-loads its own directory with `pkgs` in scope and merges the result into the **root**, so `generateScheme` and `fromYaml` are top-level members of the returned lib rather than living under `.init`.
+
 # Argument convention
 
-A lib is injected into its own files as **`libSelf`**; a foreign lib arrives under its own name, **`libUtil`**. `flake` is the flake self — never `self`, which used to mean the lib and read backwards next to `flake`.
+A lib is injected into its own files as **`libSelf`**; a foreign lib arrives under its own name — `libUtil`, `libSchemes`, `libMath`. That holds in *every* position, not just module arguments: a callback parameter takes the name too, so the transformer protocol at `apps/nix-schemes/lib/mkScheme.nix` is `prevScheme: libSchemes: attrset`. `flake` is the flake self — never `self`, which used to mean the lib and read backwards next to `flake`.
 
 Consumers outside `lib/`:
 
@@ -59,7 +67,7 @@ Notable helpers with non-obvious use:
 | `disko/` | Disk-layout template renderer. `custom.lib.disko.mkDiskoLayout { config, template ? templates.version1 }` renders a disko `devices` set from per-host params; templates live under `custom.lib.disko.templates.*` and are curried `lib` args first, then `{ config }`. Called from each `hosts/<host>/disks.nix` (which also imports `inputs.disko.nixosModules.disko` itself). |
 | `obfuscation/` | XOR-based string obfuscation, exposed via the `obfuscate` app in `apps.nix`. Hand-written `default.nix`, not directory-loaded — splitting it would make its ASCII table public. |
 
-`libUtil` holds the rest, in three namespaces: `strings` (`indent`, `indentLines`, `mkCommand`, `mkIndentPrefix`), `lists` (`first`, `last`), `files` (`list` — the directory scanner behind `mkDefaultModule` and `pkgs/default.nix`). Names are self-descriptive; open `apps/util-lib/lib/` when you need one.
+`libUtil` holds the rest, in four namespaces: `strings` (`indent`, `indentLines`, `mkCommand`, `mkIndentPrefix`), `lists` (`first`, `last`), `files` (`list` — the directory scanner behind `mkDefaultModule`, `pkgs/default.nix` and the test runners), `numbers` (`clamp`, `toStringFloat`). Names are self-descriptive; open `apps/util-lib/lib/` when you need one.
 
 # Doc-strings
 
@@ -89,7 +97,9 @@ Those section headings are nixdoc convention, not mandated by the RFC (which fix
 
 # Tests
 
-Each lib tests itself, with the same runner: pure `lib.runTests` suites in a `tests/lib/` directory, auto-collected and wired into that flake's `checks.<system>.libTests`. Run them with `nix run .#test-lib` — from the repo root for `lib/`, from `apps/util-lib` for `libUtil` (the app's `.#` is relative to the working directory).
+Each lib tests itself, with the same runner: pure `lib.runTests` suites in a `tests/lib/` directory, collected with `libUtil.files.list` and wired into that flake's `checks.<system>.libTests`. Run them with `nix run .#test-lib` — from that flake's own directory, since the app's `.#` resolves against the working directory.
+
+`apps/util-lib`'s own runner is the exception: it stays on raw `builtins.readDir`, so the harness never depends on the code under test.
 
 # Related
 

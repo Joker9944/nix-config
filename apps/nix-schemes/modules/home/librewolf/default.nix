@@ -14,7 +14,7 @@ flake:
         types
         literalExpression
         ;
-      customTypes = flake.lib.types;
+      customTypes = flake.lib.libSchemes.types;
     in
     {
       enable = mkEnableOption "librewolf theming based on custom theme";

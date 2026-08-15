@@ -16,6 +16,11 @@
       url = "github:psyclyx/base24-gen/main"; # cSpell:ignore psyclyx
       flake = false;
     };
+    util-lib = {
+      url = "path:../util-lib";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+    };
   };
 
   outputs =
@@ -54,21 +59,23 @@
 
           checks = {
             libTests = pkgs.callPackage ./tests/lib {
+              inherit (inputs.util-lib.lib) libUtil;
               flake = self;
             };
           };
         }
       ))
       {
-        lib = import ./lib {
-          inherit inputs lib;
+        lib.libSchemes = lib.fix (
+          libSelf:
+          import ./lib {
+            inherit inputs lib libSelf;
+            inherit (inputs.util-lib.lib) libUtil;
+            libMath = inputs.nix-math.lib.math;
 
-          flake = self;
-
-          custom = {
-            inherit (inputs.nix-math.lib) math;
-          };
-        };
+            flake = self;
+          }
+        );
 
         schemes = lib.pipe inputs.schemes [
           builtins.readDir
@@ -91,7 +98,7 @@
               (lib.map (schemeSlug: {
                 name = schemeSlug;
                 value = {
-                  convert = pkgs: (self.lib.init pkgs).generateScheme base schemeSlug;
+                  convert = pkgs: (self.lib.libSchemes.init pkgs).generateScheme base schemeSlug;
                 };
               }))
               lib.listToAttrs

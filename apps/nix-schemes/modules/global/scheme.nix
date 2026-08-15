@@ -9,7 +9,7 @@ flake:
   options.schemes =
     let
       inherit (lib) mkOption types;
-      customTypes = flake.lib.types;
+      customTypes = flake.lib.libSchemes.types;
     in
     {
       source = mkOption {
@@ -131,7 +131,7 @@ flake:
         flake.schemes.${cfg.source.scheme.system}.${cfg.source.scheme.slug}.convert
           pkgs;
 
-      imageScheme = (flake.lib.init pkgs).generateSchemeFromImage {
+      imageScheme = (flake.lib.libSchemes.init pkgs).generateSchemeFromImage {
         inherit (cfg.source.picture) image name author;
         mode = cfg.source.picture.variant;
       };

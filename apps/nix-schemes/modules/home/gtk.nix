@@ -8,7 +8,7 @@ flake:
   ...
 }:
 let
-  libScheme = flake.lib;
+  libSchemes = flake.lib.libSchemes;
 in
 {
   options.schemes.gtk =
@@ -20,7 +20,7 @@ in
         types
         literalExpression
         ;
-      customTypes = libScheme.types;
+      customTypes = libSchemes.types;
     in
     {
       enable = mkEnableOption "GTK theming based on adw-gtk3 and a scheme";
@@ -56,7 +56,7 @@ in
       overrides.accent = mkOption {
         type = types.nullOr (types.functionTo customTypes.color);
         default = null;
-        example = literalExpression "colorLib: colorLib.mkColor [ 0 127 255 ]";
+        example = literalExpression "libSchemes: libSchemes.mkColor [ 0 127 255 ]";
         description = ''
           Custom accent color to override accent colors derived from scheme.
         '';
@@ -80,9 +80,9 @@ in
       mkAccents =
         scheme:
         if cfg.overrides.accent == null then
-          libScheme.gtk.mkAccentsFromPalette scheme.palette
+          libSchemes.gtk.mkAccentsFromPalette scheme.palette
         else
-          libScheme.gtk.mkAccentsFromColor (cfg.overrides.accent libScheme);
+          libSchemes.gtk.mkAccentsFromColor (cfg.overrides.accent libSchemes);
 
       accents = mkAccents cfg.scheme;
     in
@@ -103,7 +103,7 @@ in
           inherit (cfg.theme) package;
         };
 
-        gtk3.extraCss = libScheme.gtk.adw-gtk3.mkGtk3ExtraCss {
+        gtk3.extraCss = libSchemes.gtk.adw-gtk3.mkGtk3ExtraCss {
           inherit (cfg) scheme accent;
           inherit accents;
         };
@@ -112,7 +112,7 @@ in
           # WORKAROUND(nostalgic-lovelace) Has to be set since `home.stateVersion` is less than "26.05"
           theme = config.gtk.theme;
 
-          extraCss = libScheme.gtk.adw-gtk3.mkGtk4ExtraCss {
+          extraCss = libSchemes.gtk.adw-gtk3.mkGtk4ExtraCss {
             inherit (cfg) scheme accent;
             inherit accents;
           };

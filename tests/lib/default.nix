@@ -2,20 +2,24 @@
   lib,
   pkgs,
   flake,
+  libUtil,
   ...
 }:
 let
   flakeLib = flake.lib;
 
   # Collect all test suites from lib/
-  libTests = lib.pipe ./. [
-    builtins.readDir
-    lib.attrNames
-    (lib.map (filename: lib.path.append ./. filename))
-    (lib.filter (path: path != ./default.nix))
-    (lib.map (path: import path { inherit lib flakeLib; }))
-    lib.mergeAttrsList
-  ];
+  libTests =
+    lib.pipe
+      {
+        dir = ./.;
+        exclude = [ ./default.nix ];
+      }
+      [
+        libUtil.files.list
+        (lib.map (path: import path { inherit lib flakeLib; }))
+        lib.mergeAttrsList
+      ];
 
   # Run all tests and collect failures
   failures = lib.runTests libTests;

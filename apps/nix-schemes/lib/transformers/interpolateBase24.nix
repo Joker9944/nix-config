@@ -13,20 +13,25 @@
   => { system = "base24"; palette = { base10 = ...; base11 = ...; ... }; ... }
   ```
 */
-{ lib, custom, ... }:
+{
+  lib,
+  libUtil,
+  libMath,
+  ...
+}:
 {
   lightenWeight ? 0.2,
 }:
-scheme: colorLib:
+scheme: libSchemes:
 let
   inherit (scheme) palette;
   adjust =
     color: ratios:
     lib.pipe ratios [
       (lib.zipListsWith (dec: ratio: dec + 255 * ratio) color)
-      (lib.map custom.math.round)
-      (lib.map (colorLib.util.clamp 0 255))
-      (dec: colorLib.mkColor dec)
+      (lib.map libMath.round)
+      (lib.map (libUtil.numbers.clamp 0 255))
+      (dec: libSchemes.mkColor dec)
     ];
 in
 if scheme.system == "base24" then
@@ -37,10 +42,10 @@ else
 
     palette = lib.fix (self: {
       base10 = adjust palette.base00.dec (
-        lib.map (n: -n) (colorLib.util.calcColorRatios palette.base00.dec palette.base01.dec)
+        lib.map (n: -n) (libSchemes.color.calcColorRatios palette.base00.dec palette.base01.dec)
       );
       base11 = adjust self.base10.dec (
-        lib.map (n: -n) (colorLib.util.calcColorRatios palette.base01.dec palette.base02.dec)
+        lib.map (n: -n) (libSchemes.color.calcColorRatios palette.base01.dec palette.base02.dec)
       );
       base12 = palette.base08.lighten lightenWeight;
       base13 = palette.base09.lighten lightenWeight;

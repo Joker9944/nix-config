@@ -15,9 +15,9 @@
   => { dec = [ 64 64 64 ]; ... }
   ```
 */
-{ libSchemes, ... }:
+{ libSelf, ... }:
 color: weight:
-libSchemes.mix color [
+libSelf.mix color [
   0
   0
   0

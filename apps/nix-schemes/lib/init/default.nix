@@ -12,30 +12,28 @@
 
   ```nix
   let
-    libSchemes = inputs.nix-schemes.lib.init pkgs;
+    libSchemes = inputs.nix-schemes.lib.libSchemes.init pkgs;
   in
   libSchemes.generateScheme "base16" "gruvbox-dark-hard"
   ```
 */
-{ lib, libSchemes, ... }@args:
+{
+  lib,
+  libSelf,
+  libUtil,
+  ...
+}@args:
 pkgs:
-(lib.removeAttrs libSchemes [ "init" ])
+# Members land at the root of the returned lib, not under `init` — hence the second
+# fixed point, and `generateScheme` reaching siblings as `libSelf.fromYaml`.
+(lib.removeAttrs libSelf [ "init" ])
 // (lib.fix (
-  self:
-  lib.pipe ./. [
-    builtins.readDir
-    lib.attrNames
-    (lib.filter (filename: filename != "default.nix"))
-    (lib.map (filename: {
-      name = lib.removeSuffix ".nix" filename;
-      value = import (lib.path.append ./. filename) (
-        args
-        // {
-          inherit pkgs;
-          libSchemes = lib.recursiveUpdate libSchemes self;
-        }
-      );
-    }))
-    lib.listToAttrs
-  ]
+  initSelf:
+  libUtil.mkLibNamespace {
+    context = ./.;
+    args = args // {
+      inherit pkgs;
+      libSelf = lib.recursiveUpdate libSelf initSelf;
+    };
+  }
 ))

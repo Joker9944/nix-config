@@ -40,16 +40,30 @@ directory name already says, or contradict it.
 # Naming: `libSelf`, and foreign libs by name
 
 A lib tree is injected into its own files as `libSelf`; a foreign lib arrives under its own
-name, `libUtil`. One attrset, one name, no aliases.
+name — `libUtil`, `libSchemes`, `libMath`. One attrset, one name, no aliases.
 
 This displaced `self`, which had been the flake lib. `self` is also what a flake calls
 itself, and both were in scope in the same argument sets — `lib/configuration/mkNixosConfiguration.nix`
 took the flake as `flake` and the lib as `self`, which reads backwards.
 
+The rule binds in *every* position a lib is passed, not just module arguments. A callback
+that receives a lib names its parameter after that lib: the transformer protocol in
+`apps/nix-schemes/lib/mkScheme.nix` is `prevScheme: libSchemes: attrset`, and the
+`overrides.accent` option takes `libSchemes` too. Before this, one lib answered to four names
+(`libSchemes`, `colorLib`, `libScheme`, `flake.lib`) depending on which file you opened.
+
+Each lib nests under `lib.<name>` rather than exporting flat, so `inherit (inputs.x.lib)
+libFoo` yields the same identifier the tree uses internally. `inputs.nix-math.lib.math` set
+that shape; `libUtil` and `libSchemes` follow it.
+
 # Consequences
 
-* `libUtil` reaches consumers as a plain argument (`custom.libUtil` in the mixin trees, a
-  direct `libUtil` arg in `modules/` and `pkgs/`), not as a flake output of this repo.
-* The two flakes must be locked separately; `apps/util-lib` follows the root's `nixpkgs` and
-  `flake-utils`.
-* `apps/nix-schemes` still carries its own copy of the older flat loader.
+* A lib reaches consumers as a plain argument (`custom.libUtil` in the mixin trees, a direct
+  `libUtil` arg in `modules/`, `pkgs/` and the test runners), not as a flake output of this
+  repo.
+* Each flake locks separately. `apps/util-lib` follows the root's `nixpkgs` and `flake-utils`;
+  `apps/nix-schemes` reaches its sibling with a relative `path:../util-lib` input, and the
+  root `follows` it so the tree carries one instance.
+* Adding an input to a sub-flake needs `nix flake update <input>` at the root — a plain
+  `nix flake lock` keeps the stale node and reports the `follows` as targeting a
+  non-existent input.

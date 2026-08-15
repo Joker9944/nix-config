@@ -32,7 +32,7 @@
 */
 {
   flake,
-  libSchemes,
+  libSelf,
   lib,
   pkgs,
   ...
@@ -75,9 +75,9 @@ let
       )
   ) { inherit (flake.packages.${pkgs.stdenv.hostPlatform.system}) base24-gen; };
 
-  scheme = libSchemes.fromYaml yaml;
+  scheme = libSelf.fromYaml yaml;
 in
-libSchemes.mkScheme {
+libSelf.mkScheme {
   system = "base24";
   name = scheme.scheme;
   inherit (scheme) author;
@@ -85,7 +85,7 @@ libSchemes.mkScheme {
 
   palette = lib.pipe scheme [
     (lib.filterAttrs (name: _: lib.hasPrefix "base" name))
-    (lib.mapAttrs (_: hex: libSchemes.fromHex hex))
-    (lib.mapAttrs (_: dec: libSchemes.mkColor dec))
+    (lib.mapAttrs (_: hex: libSelf.fromHex hex))
+    (lib.mapAttrs (_: dec: libSelf.mkColor dec))
   ];
 }
