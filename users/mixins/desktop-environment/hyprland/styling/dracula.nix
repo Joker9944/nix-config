@@ -33,9 +33,9 @@ mkHyprlandModule {
         transformers =
           let
             draculaAnsi =
-              _: colorLib:
+              _: libSchemes:
               let
-                mkColorFromHex = hex: colorLib.mkColor (colorLib.fromHex hex);
+                mkColorFromHex = hex: libSchemes.mkColor (libSchemes.fromHex hex);
               in
               {
                 ansi = {
@@ -69,8 +69,8 @@ mkHyprlandModule {
           accent = "purple";
 
           overrides.accent =
-            colorLib:
-            colorLib.mkColor [
+            libSchemes:
+            libSchemes.mkColor [
               129
               92
               214

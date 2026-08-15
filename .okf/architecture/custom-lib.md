@@ -66,6 +66,7 @@ Notable helpers with non-obvious use:
 | `requireDesktopFile.nix` | Asserts a package provides an entry and returns its ID, so a renamed entry fails the build. `name` defaults to the package name + `.desktop`, which is a guess — the assertion is what catches cases like `signal-desktop` → `signal.desktop`. Used by the hyprland binds, see [uwsm-session](uwsm-session.md). |
 | `disko/` | Disk-layout template renderer. `custom.lib.disko.mkDiskoLayout { config, template ? templates.version1 }` renders a disko `devices` set from per-host params; templates live under `custom.lib.disko.templates.*` and are curried `lib` args first, then `{ config }`. Called from each `hosts/<host>/disks.nix` (which also imports `inputs.disko.nixosModules.disko` itself). |
 | `obfuscation/` | XOR-based string obfuscation, exposed via the `obfuscate` app in `apps.nix`. Hand-written `default.nix`, not directory-loaded — splitting it would make its ASCII table public. |
+| `schemes/mkSchemeSpecs.nix` | Resolves every hyprland style's scheme through its transformers, keyed by theme. Behind the `scheme-spec` app; see [/workflows/inspect-scheme.md](/workflows/inspect-scheme.md). |
 
 `libUtil` holds the rest, in four namespaces: `strings` (`indent`, `indentLines`, `mkCommand`, `mkIndentPrefix`), `lists` (`first`, `last`), `files` (`list` — the directory scanner behind `mkDefaultModule`, `pkgs/default.nix` and the test runners), `numbers` (`clamp`, `toStringFloat`). Names are self-descriptive; open `apps/util-lib/lib/` when you need one.
 

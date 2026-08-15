@@ -5,6 +5,7 @@ An index of bundle changes, not a narrative. One line each: what changed, the co
 ## 2026-08-15
 
 * `lib/` split: general-purpose helpers to the new `apps/util-lib` flake as `libUtil`, the rest into `configuration/`, `hyprland/` and `modules/` namespaces, both libs directory-loaded by `mkLibNamespace` with a `libSelf` fixed point tied once per flake — [decisions/util-lib-split](/decisions/util-lib-split.md), [architecture/custom-lib](/architecture/custom-lib.md)
+* `scheme-spec` app + `libSchemes.toSpec` + `flake.lib.schemes.mkSchemeSpecs`: dump a style's fully-transformed scheme as JSON — [workflows/inspect-scheme](/workflows/inspect-scheme.md)
 * `apps/nix-schemes` adopted `libUtil` and the lib conventions: six flat loaders replaced, `clamp` + `toStringFloat` moved up to `libUtil.numbers`, `util/` → `color/`, exported as `lib.libSchemes` — [architecture/custom-lib](/architecture/custom-lib.md)
 
 ## 2026-08-14

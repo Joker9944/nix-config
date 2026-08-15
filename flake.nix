@@ -104,7 +104,10 @@
             flake = self;
           };
 
-          apps = import ./apps.nix { inherit lib pkgs system; };
+          apps = import ./apps.nix {
+            inherit lib pkgs system;
+            flake = self;
+          };
 
           devShells = {
             default = pkgs.mkShell {

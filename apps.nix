@@ -2,6 +2,7 @@
   lib,
   pkgs,
   system,
+  flake,
   ...
 }:
 {
@@ -127,4 +128,40 @@
     );
     meta.description = "Obfuscate a string using XOR with a mask";
   };
+
+  scheme-spec =
+    let
+      # Resolved at build time from the flake itself. Going through `builtins.getFlake`
+      # instead would copy the *working tree*, which carries untracked files the git
+      # snapshot omits — see `.okf/workflows/inspect-scheme.md`.
+      specs = flake.lib.schemes.mkSchemeSpecs {
+        username = "joker9944";
+        hostname = "HAL9000";
+      };
+      specsFile = pkgs.writers.writeJSON "scheme-specs.json" specs;
+      themes = lib.concatStringsSep " " (lib.attrNames specs);
+    in
+    {
+      type = "app";
+      program = lib.getExe (
+        pkgs.writeShellApplication {
+          name = "scheme-spec";
+
+          text = ''
+            theme="''${1:-}"
+
+            if [ -z "$theme" ]; then
+              echo "Usage: scheme-spec <theme>" >&2
+              echo "Themes: ${themes}" >&2
+              exit 1
+            fi
+
+            ${lib.getExe pkgs.jq} --arg t "$theme" \
+              'if has($t) then .[$t] else "unknown theme: \($t)" | halt_error(1) end' \
+              ${specsFile}
+          '';
+        }
+      );
+      meta.description = "Dump a hyprland style's fully-transformed color scheme as JSON";
+    };
 }
