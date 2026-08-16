@@ -18,6 +18,10 @@ The durable knowledge about this repository lives here — the "why" behind the 
 
 * [hosts/](hosts/) — Per-machine facts (hardware, monitor layouts, quirks).
 
+# Apps
+
+* [apps/](apps/) — The sub-flakes this repo develops rather than consumes.
+
 # Workflows
 
 * [workflows/](workflows/) — How to rebuild, add a mixin, look up a home-manager option, handle secrets, and satisfy the formatter/spellchecker.

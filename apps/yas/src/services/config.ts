@@ -27,5 +27,5 @@ function parseConfig(config: string): Config {
 
 const config = loadConfig()
 
-export const showGpu = config.gpu !== undefined && config.gpu
-export const showBattery = config.battery !== undefined && config.battery
+export const showGpu = config.gpu ?? false
+export const showBattery = config.battery ?? false

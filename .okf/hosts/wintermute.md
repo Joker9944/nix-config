@@ -4,11 +4,8 @@ title: wintermute
 description: Lenovo ThinkPad X1 Yoga Gen 4 laptop, x86_64-linux, Swiss keymap, 4K panel.
 tags: [host, laptop, hyprland, thinkpad]
 generated:
-  by: process:okf-migrate
-  at: 2026-07-29T00:00:00Z
-verified:
-  - by: claude-code/claude-opus-5
-    at: 2026-08-16T00:00:00Z
+  by: claude-code/claude-opus-5
+  at: 2026-08-16T00:00:00Z
 ---
 
 # Hardware
@@ -26,6 +23,8 @@ Host-specific quirks (all in `hosts/wintermute/default.nix`):
 # Host record & mixin selection
 
 Host record: `flake.nix#nixosConfigurations`, selecting `profile = "hyprland-desktop"` — the shared graphical baseline (see [profiles](/architecture/profiles.md)). `hosts/wintermute/mixins.nix` holds only the deltas: `openssh` and `windowsSupport`. It differs from [HAL9000](HAL9000.md) — same profile, but no Nvidia / Steam / Docker — solely in those deltas.
+
+Home-manager side: `users/joker9944/hosts/wintermute/default.nix` enables the `wayvnc` mixin and sets `programs.yas.config.battery = true;` — the only host with a battery, so the [yas](/apps/yas.md) battery module is off everywhere else.
 
 # Related
 

@@ -26,7 +26,7 @@ export default function Bar({ gdkmonitor }: BarProps): JSX.Element {
 		<window
 			layer={BOTTOM} // WORKAROUND Due to a hyprland bug the layer has to be defined at the top: https://github.com/Aylur/astal/issues/332
 			visible
-			name={`yab_${gdkmonitor.get_connector()}`}
+			name={`yas_bar_${gdkmonitor.get_connector()}`}
 			gdkmonitor={gdkmonitor}
 			exclusivity={EXCLUSIVE}
 			anchor={TOP | LEFT | RIGHT}

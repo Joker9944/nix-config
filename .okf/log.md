@@ -4,6 +4,10 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 
 ## 2026-08-16
 
+- `apps/yas` documented: runtime shape, lazy-accessor convention, styling and nix integration — [apps/yas](/apps/yas.md), [apps/](/apps/index.md)
+- yas dev loop recorded: ags CLI scripts, `@girs` regeneration, prettier outside the hook set — [workflows/develop-yas](/workflows/develop-yas.md)
+- wintermute's home-manager deltas recorded (`wayvnc`, yas battery) — [hosts/wintermute](/hosts/wintermute.md)
+- Why a `prettier` hook cannot cover `apps/yas` recorded, after trying one — [workflows/develop-yas](/workflows/develop-yas.md)
 - Log rewritten to rule 3's form: one line per change, no commit SHAs
 - Hyprland is pinned to an upstream tag, not the default branch — [architecture/hyprland-lua-config](/architecture/hyprland-lua-config.md), [decisions/release-policy](/decisions/release-policy.md)
 - Sibling modules are auto-discovered; only `tmux`, `waybar` and `rofi` import siblings explicitly — [architecture/module-layout](/architecture/module-layout.md)

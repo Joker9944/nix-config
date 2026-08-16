@@ -2,15 +2,15 @@ import { Gdk } from "ags/gtk4"
 
 import Adw from "gi://Adw?version=1"
 import AstalNotifd from "gi://AstalNotifd"
-import Gio from "gi://Gio?version=2.0"
 import GLib from "gi://GLib"
+import Gio from "gi://Gio?version=2.0"
 import Gtk from "gi://Gtk?version=4.0"
 import Pango from "gi://Pango"
 
 import { SPACING, formatUnixTime } from "../../helpers"
 import { fileExists } from "../../helpers/files"
 
-const NOTIFICATION_SIZE=600
+const NOTIFICATION_SIZE = 600
 
 export default function Notification({
 	notification,

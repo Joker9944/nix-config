@@ -4,10 +4,7 @@ import { Astal, Gdk } from "ags/gtk4"
 import Gtk from "gi://Gtk?version=4.0"
 
 import { SPACING, lazyAccessor } from "../../helpers"
-import {
-	dontDisturbAccessor,
-	timeoutNotificationsAccessor,
-} from "../../services/notifications"
+import { dontDisturbAccessor, timeoutNotificationsAccessor } from "../../services/notifications"
 import Notification from "./Notification"
 
 export default function Notifications({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }): Astal.Window {
@@ -15,7 +12,7 @@ export default function Notifications({ gdkmonitor }: { gdkmonitor: Gdk.Monitor 
 		<window
 			layer={Astal.Layer.OVERLAY}
 			visible={visibleAccessor}
-			name={`yand_${gdkmonitor.get_connector()}`}
+			name={`yas_notifications_${gdkmonitor.get_connector()}`}
 			class="Notifications"
 			gdkmonitor={gdkmonitor}
 			anchor={Astal.WindowAnchor.TOP}

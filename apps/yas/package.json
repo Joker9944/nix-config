@@ -1,4 +1,5 @@
 {
+	"name": "yas",
 	"dependencies": {
 		"ags": "*",
 		"gnim": "*"

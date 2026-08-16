@@ -12,7 +12,6 @@ import {
 } from "../../../services/workspaces"
 import { Module } from "./Module"
 
-
 type WorkspacesProps = {
 	connector: string
 }

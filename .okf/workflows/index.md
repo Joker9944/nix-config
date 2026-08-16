@@ -8,6 +8,7 @@ Playbooks for the concrete tasks that come up when working in this repo. Each on
 * [add-mixin](add-mixin.md) — Add a new home-manager or NixOS mixin the correct way.
 * [lookup-hm-option](lookup-hm-option.md) — Use the home-manager-options skill to check a user-level option before writing config.
 * [lookup-nixos-option](lookup-nixos-option.md) — The system-level counterpart, via the nixos-options skill.
+* [develop-yas](develop-yas.md) — the edit-run-check loop for the [yas](/apps/yas.md) shell in `apps/yas`.
 * [secrets](secrets.md) — sops-nix layout, age keys, and how to add a new secret.
 * [release-upgrade](release-upgrade.md) — track deferred "do at next release" changes via `UPGRADE(<release>)` markers; the release-bump steps.
 * [track-upstream-blockers](track-upstream-blockers.md) — Find out whether the upstream bug a workaround waits on is still open, via `krank-tree`.
