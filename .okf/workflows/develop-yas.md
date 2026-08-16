@@ -1,11 +1,11 @@
 ---
 type: Playbook
 title: Develop yas
-description: The edit-run-check loop for apps/yas — the four npm scripts over the ags CLI, regenerating @girs, formatting nothing enforces, and how a change reaches the running desktop.
+description: The edit-run-check loop for apps/yas — the four npm scripts over the ags CLI, what `npm run types` produces, type checking, formatting nothing enforces, and how a change reaches the running desktop.
 tags: [workflow, yas, ags, typescript]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-16T00:00:00Z
+  at: 2026-08-17T00:00:00Z
 ---
 
 # Trigger
@@ -20,7 +20,7 @@ All of them shell out to the ags CLI through the sub-flake, so run them **from `
 |---|---|---|
 | `npm run run` | `ags run --gtk 4 --directory src` | Live instance straight from `src/`, no build step. |
 | `npm run inspect` | `ags inspect` | GTK inspector against the running instance — the way to check which CSS node a widget actually is. |
-| `npm run types` | `ags types --update --ignore Gtk3 --ignore Astal3 --directory .` | Regenerates `@girs/`. |
+| `npm run types` | `ags types --update --ignore Gtk3 --ignore Astal3 --directory .` | Regenerates `@girs/`, `tsconfig.json` and the `node_modules` links. |
 | `npm run build` | `nix build .` | Standalone build of the bundled executable. |
 
 A dev instance and the installed user unit both create layer surfaces, so you get two bars unless you
@@ -28,15 +28,41 @@ A dev instance and the installed user unit both create layer surfaces, so you ge
 
 # Untracked working state
 
-`@girs/`, `node_modules/` and `package-lock.json` are all gitignored — a fresh checkout type-checks
-against nothing until you populate them. `@girs/` is picked up because `tsconfig.json` declares no
-`include`, so every `.d.ts` under the project is ambient; that is what makes `import Gtk from
-"gi://Gtk?version=4.0"` resolve. Re-run `npm run types` after bumping the `ags` or `astal` inputs,
-otherwise the declarations describe libraries the bundle no longer links against.
+`@girs/`, `node_modules/`, `package-lock.json` and `tsconfig.json` are all gitignored, and
+`npm run types` is what produces them: it writes `tsconfig.json` if absent (rewriting it in its own
+two-space style if not), regenerates `@girs/`, and relinks `node_modules/ags` and `node_modules/gnim`
+into the `/nix/store` path holding the ags JS library. Run it on a fresh checkout, after bumping the
+`ags` or `astal` inputs, and whenever those two symlinks dangle — a garbage collection breaks them, and
+every `ags` import then silently resolves to `any` in the editor.
 
-`node_modules/ags` and `node_modules/gnim` are symlinks into `/nix/store`. They dangle after a garbage
-collection and the editor silently loses every `ags` type until they are reinstalled — the bundler
-itself is unaffected, it resolves those imports on its own.
+None of it reaches the build. `ags bundle` carries its own JSX settings and resolves `ags`/`gnim`
+itself; a package built with `tsconfig.json` deleted is byte-identical to one built with it.
+
+**The generated `tsconfig.json` is not equivalent to a hand-written one.** ags emits no `lib`, so the
+project falls back to `target: ES2020` — and `services/workspaces.ts` uses `.at()`, which is ES2022:
+
+```
+src/services/workspaces.ts(37,41): error TS2550: Property 'at' does not exist on type 'string[]'.
+```
+
+Add `"lib": ["ES2023"]` back after a fresh generation. `@girs/` needs no wiring — `tsconfig.json`
+declares no `include`, so every `.d.ts` under the project is ambient, which is what makes
+`import Gtk from "gi://Gtk?version=4.0"` resolve.
+
+# Type checking
+
+Nothing in the build checks types: `ags bundle` runs esbuild, which strips them. A full pass needs a
+`tsc` you bring yourself (TypeScript is not a devDependency) and `--skipLibCheck`, or the generated
+Gtk3 and Gtk4 declarations under `@girs/` collide on duplicate identifiers:
+
+```bash
+tsc --noEmit --skipLibCheck -p apps/yas
+```
+
+What survives that is upstream noise — the ags JS library ships `.ts` sources importing
+`gi://AstalApps`, `AstalBluetooth`, `AstalPowerProfiles` and `AstalTray`, none of which this project
+puts in `extraPackages`. Errors under `src/` are yours; anything reported from a `/nix/store` path is
+not.
 
 # Formatting is entirely editor-side
 

@@ -2,6 +2,11 @@
 
 An index of bundle changes, not a narrative. One line each: what changed and the concept that holds the detail, in the form `CLAUDE.md` rule 3 sets. Rationale lives in the commit message, tied to the diff, or in a [decision](/decisions/index.md) — not here.
 
+## 2026-08-17
+
+- `npm run types` identified as what produces `@girs/` and the `node_modules` links; type-checking recipe added — [workflows/develop-yas](/workflows/develop-yas.md)
+- `tsconfig.json` untracked, with the `lib` it loses on regeneration recorded — [workflows/develop-yas](/workflows/develop-yas.md)
+
 ## 2026-08-16
 
 - `apps/yas` documented: runtime shape, lazy-accessor convention, styling and nix integration — [apps/yas](/apps/yas.md), [apps/](/apps/index.md)
