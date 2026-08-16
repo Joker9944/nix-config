@@ -25,12 +25,26 @@ mkMixinModule "claude-code" {
         command = lib.getExe pkgs.nil;
         extensionToLanguage.".nix" = "nix";
       };
+
       haskell = {
         command = lib.getExe' pkgs.haskellPackages.haskell-language-server "haskell-language-server-wrapper";
         args = [ "--lsp" ];
         extensionToLanguage = {
           ".hs" = "haskell";
           ".lhs" = "haskell";
+        };
+      };
+
+      typescript = {
+        args = [
+          "--stdio"
+        ];
+        command = lib.getExe pkgs.typescript-language-server;
+        extensionToLanguage = {
+          ".js" = "javascript";
+          ".jsx" = "javascriptreact";
+          ".ts" = "typescript";
+          ".tsx" = "typescriptreact";
         };
       };
     };
