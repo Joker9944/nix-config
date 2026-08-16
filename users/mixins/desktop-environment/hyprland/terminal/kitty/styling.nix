@@ -1,8 +1,9 @@
 { mkHyprlandModule, ... }:
 { lib, config, ... }:
 let
-  cfg = config.mixins.desktopEnvironment.hyprland.style;
-  inherit (cfg) fonts opacity scheme;
+  inherit (config.mixins.desktopEnvironment.hyprland.style) opacity;
+  inherit (config.custom.theme) fonts;
+  inherit (config.schemes) scheme;
   inherit (scheme) ansi;
 in
 mkHyprlandModule {

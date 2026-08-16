@@ -106,6 +106,27 @@ flake.lib.modules.mkDefaultModule
               Terminal text font of the active theme.
             '';
           };
+
+          document = mkOption {
+            type = fontType;
+            description = ''
+              Document text font of the active theme.
+            '';
+          };
+
+          monospace = mkOption {
+            type = fontType;
+            description = ''
+              Monospace text font of the active theme.
+            '';
+          };
+
+          emoji = mkOption {
+            type = fontType;
+            description = ''
+              Emoji font of the the active theme.
+            '';
+          };
         };
       };
 
@@ -124,6 +145,24 @@ flake.lib.modules.mkDefaultModule
           terminal = {
             name = "JetBrainsMono Nerd Font Mono";
             package = pkgs.nerd-fonts.jetbrains-mono;
+            size = 10;
+          };
+
+          document = {
+            name = "Lato";
+            package = pkgs.lato;
+            size = 12;
+          };
+
+          monospace = {
+            name = "JetBrains Mono";
+            package = pkgs.jetbrains-mono;
+            size = 10;
+          };
+
+          emoji = {
+            name = "Noto Color Emoji";
+            package = pkgs.noto-fonts-color-emoji;
             size = 10;
           };
         };

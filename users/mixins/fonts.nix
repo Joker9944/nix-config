@@ -12,18 +12,11 @@ mkMixinModule "fonts" {
   fonts.fontconfig = {
     enable = true;
 
-    defaultFonts = {
-      monospace = [
-        "JetBrainsMono Nerd Font Mono"
-        "JetBrains Mono"
-      ];
-      sansSerif = [
-        "Lato"
-        "Roboto"
-      ];
-      emoji = [
-        "Noto Color Emoji"
-      ];
-    };
+    # `monospace` and `emoji` are bound by the theme. Setting them here too would concatenate
+    # into one murky preference list rather than conflict — `defaultFonts.*` is a `listOf str`.
+    defaultFonts.sansSerif = [
+      "Lato"
+      "Roboto"
+    ];
   };
 }

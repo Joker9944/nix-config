@@ -8,8 +8,9 @@
 mkHyprlandModule {
   programs.hyprlock.settings =
     let
-      cfg = config.mixins.desktopEnvironment.hyprland.style;
-      inherit (cfg) border fonts scheme;
+      inherit (config.mixins.desktopEnvironment.hyprland.style) border;
+      inherit (config.custom.theme) fonts;
+      inherit (config.schemes) scheme;
     in
     {
       animations = {
@@ -39,7 +40,7 @@ mkHyprlandModule {
         fail_color = "rgba(${scheme.error.rgba 0.93})";
 
         font_color = "rgb(${scheme.foreground.normal.rgb})";
-        font_family = lib.mkIf (fonts.interface != null) fonts.interface.name;
+        font_family = fonts.interface.name;
 
         dots_spacing = 0.3;
 
@@ -73,7 +74,7 @@ mkHyprlandModule {
           # Time
           text = "$TIME"; # ref. https://wiki.hyprland.org/Hypr-Ecosystem/hyprlock/#variable-substitution
           font_size = 90;
-          font_family = lib.mkIf (fonts.interface != null) fonts.interface.name;
+          font_family = fonts.interface.name;
 
           position = "-30, 0";
           halign = "right";
@@ -83,7 +84,7 @@ mkHyprlandModule {
           # Date
           text = "cmd[update:60000] date +\"%A, %d %B %Y\""; # update every 60 seconds
           font_size = 25;
-          font_family = lib.mkIf (fonts.interface != null) fonts.interface.name;
+          font_family = fonts.interface.name;
 
           position = "-30, -150";
           halign = "right";

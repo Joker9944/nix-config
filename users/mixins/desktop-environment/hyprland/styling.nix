@@ -2,8 +2,6 @@
 {
   lib,
   config,
-  options,
-  pkgs,
   pkgs-unstable,
   custom,
   ...
@@ -14,35 +12,10 @@ mkHyprlandModule {
       inherit (lib) mkOption types;
     in
     {
-      fonts = {
-        interface = mkOption {
-          type = types.nullOr lib.hm.types.fontType;
-          default = null;
-          description = ''
-            Preferred interface text font for reference.
-          '';
-        };
-
-        terminal = mkOption {
-          type = types.nullOr lib.hm.types.fontType;
-          default = null;
-          description = ''
-            Preferred terminal text font for reference.
-          '';
-        };
-      };
-
-      scheme = mkOption {
-        type = types.nullOr types.attrs;
-        description = ''
-          Color scheme that can be reference.
-        '';
-      };
-
       opacity = {
         active = mkOption {
           type = types.float;
-          default = 1.0;
+          default = 0.95;
           description = ''
             Opacity for active widgets.
           '';
@@ -50,7 +23,7 @@ mkHyprlandModule {
 
         inactive = mkOption {
           type = types.float;
-          default = 1.0;
+          default = 0.9;
           description = ''
             Opacity for inactive widgets.
           '';
@@ -84,77 +57,30 @@ mkHyprlandModule {
           };
         };
       };
-
-      xCursor = options.gtk.cursorTheme // {
-        description = ''
-          xCursor for reference.
-        '';
-      };
-
-      icons = options.gtk.iconTheme // {
-        description = ''
-          Icon pack for reference.
-        '';
-      };
     };
 
   config =
     let
-      cfg = config.mixins.desktopEnvironment.hyprland.style;
+      theme = config.custom.theme;
     in
     {
-      home.packages = lib.flatten [
-        (lib.optional (
-          cfg.fonts.interface != null && cfg.fonts.interface.package != null
-        ) cfg.fonts.interface.package)
-        (lib.optional (
-          cfg.fonts.terminal != null && cfg.fonts.terminal.package != null
-        ) cfg.fonts.terminal.package)
-        (lib.optional (cfg.xCursor != null && cfg.xCursor.package != null) cfg.xCursor.package)
-        (lib.optional (cfg.icons != null && cfg.icons.package != null) cfg.icons.package)
-      ];
-
-      mixins.desktopEnvironment.hyprland.style = {
-        inherit (config.custom.theme) fonts;
-
-        xCursor = config.custom.theme.cursor;
-        icons = config.custom.theme.icons;
-
-        inherit (config.schemes) scheme;
-
-        opacity = {
-          active = 0.95;
-          inactive = 0.9;
-        };
-
-        border = {
-          size = 2;
-
-          corners = {
-            rounding = 10;
-            power = 2.0;
-          };
-        };
-      };
+      home.packages =
+        lib.optional (theme.fonts.interface.package != null) theme.fonts.interface.package
+        ++ lib.optional (theme.fonts.terminal.package != null) theme.fonts.terminal.package
+        ++ [
+          theme.cursor.package
+          theme.icons.package
+        ];
 
       custom.easyGtk = {
         enable = lib.mkDefault true;
 
-        documentText = {
-          name = "Lato";
-          package = pkgs.lato;
-          size = 12;
-        };
+        interfaceText = lib.mkDefault theme.fonts.interface;
+        documentText = lib.mkDefault theme.fonts.document;
+        monospaceText = lib.mkDefault theme.fonts.monospace;
 
-        monospaceText = {
-          name = "JetBrains Mono";
-          package = pkgs.jetbrains-mono;
-          size = 10;
-        };
-
-        interfaceText = lib.mkDefault cfg.fonts.interface;
-        cursorTheme = lib.mkDefault cfg.xCursor;
-        iconTheme = lib.mkDefault cfg.icons;
+        cursorTheme = lib.mkDefault theme.cursor;
+        iconTheme = lib.mkDefault theme.icons;
 
         qtCompat = {
           qt5DecorationsPackage = pkgs-unstable.qadwaitadecorations;

@@ -3,7 +3,7 @@
 mkHyprlandModule {
   programs.wayneko =
     let
-      inherit (config.mixins.desktopEnvironment.hyprland.style) scheme;
+      inherit (config.schemes) scheme;
     in
     {
       enable = true;

@@ -1,7 +1,8 @@
 { config, ... }:
 # TODO make a nix to css lib
 let
-  inherit (config.mixins.desktopEnvironment.hyprland.style) scheme opacity;
+  inherit (config.mixins.desktopEnvironment.hyprland.style) opacity;
+  inherit (config.schemes) scheme;
 in
 ''
   window#waybar {

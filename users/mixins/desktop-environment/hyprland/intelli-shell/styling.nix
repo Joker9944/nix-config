@@ -3,8 +3,8 @@
 mkHyprlandModule {
   programs.intelli-shell.settings.theme =
     let
-      inherit (config.mixins.desktopEnvironment.hyprland.style) scheme;
-      inherit (config.mixins.desktopEnvironment.hyprland.style.scheme) palette;
+      inherit (config.schemes) scheme;
+      inherit (scheme) palette;
     in
     {
       primary = "default";

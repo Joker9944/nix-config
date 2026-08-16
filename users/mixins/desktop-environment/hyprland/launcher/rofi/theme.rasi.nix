@@ -1,8 +1,14 @@
-{ cfg, rasi, ... }:
+{
+  config,
+  cfg,
+  rasi,
+  ...
+}:
 let
-  inherit (cfg.style) scheme opacity border;
+  inherit (cfg.style) opacity border;
+  inherit (config.schemes) scheme;
   inherit (rasi) mkLiteral;
-  font = cfg.style.fonts.interface;
+  font = config.custom.theme.fonts.interface;
 in
 {
   # cSpell:words rasi mainbox inputbar listview

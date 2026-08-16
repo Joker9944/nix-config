@@ -44,7 +44,7 @@ mkHyprlandModule {
 
         # cSpell:words rasi
         theme = import ./theme.rasi.nix {
-          inherit cfg;
+          inherit config cfg;
           inherit (config.lib.formats) rasi;
         };
       };

@@ -5,13 +5,13 @@ let
 in
 mkHyprlandModule {
   home.sessionVariables = {
-    XCURSOR_THEME = cfg.xCursor.name;
-    XCURSOR_SIZE = if cfg.xCursor.size != null then cfg.xCursor.size else 16;
+    XCURSOR_THEME = config.custom.theme.cursor.name;
+    XCURSOR_SIZE = 16;
   };
 
   wayland.windowManager.hyprland.settings =
     let
-      inherit (cfg) scheme;
+      inherit (config.schemes) scheme;
     in
     {
       config = {

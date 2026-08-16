@@ -1,5 +1,10 @@
 { mkMixinModule, ... }:
-{ lib, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 mkMixinModule "gnome" {
   config =
     let
@@ -117,23 +122,9 @@ mkMixinModule "gnome" {
         fonts = {
           enable = true;
 
-          interfaceText = {
-            name = "Inter";
-            package = pkgs.inter;
-            size = 10;
-          };
-
-          documentText = {
-            name = "Lato";
-            package = pkgs.lato;
-            size = 12;
-          };
-
-          monospaceText = {
-            name = "JetBrains Mono";
-            package = pkgs.jetbrains-mono;
-            size = 10;
-          };
+          interfaceText = config.custom.theme.fonts.interface;
+          documentText = config.custom.theme.fonts.document;
+          monospaceText = config.custom.theme.fonts.monospace;
         };
       };
 

@@ -4,6 +4,8 @@ An index of bundle changes, not a narrative. One line each: what changed, the co
 
 ## 2026-08-16
 
+* Theme took over the `monospace` and `emoji` fontconfig generics in the home tree, so GTK's `.monospace` class resolves to the theme's font; `serif`/`sansSerif` stayed with the fonts mixin — [architecture/module-layout](/architecture/module-layout.md)
+* Hyprland `style` lost its theme pass-throughs (`fonts`, `scheme`, `xCursor`, `icons`) — consumers read `custom.theme` / `config.schemes.scheme` directly; `fonts.document` and `fonts.monospace` lifted into the theme, deduplicating the gnome mixin — [architecture/mixin-pattern](/architecture/mixin-pattern.md)
 * Themes became a `mkMixinModule` category under `mixins.theme.<name>.enable`, replacing the hyprland `style.theme` enum; five `orchidlift-*` base24 palettes added — [architecture/mixin-pattern](/architecture/mixin-pattern.md)
 * Theme moved to `modules/global/theme/`, loaded into both trees so regreet and hyprland styling share one selection; `modules/global/` recorded as the class-agnostic third module tree — [architecture/module-layout](/architecture/module-layout.md)
 * Accent split into a renderer-agnostic `custom.theme.accent` hex and the GTK slot name, resolved by a theme-owned transformer; per-tree glue modules took over the nix-schemes renderer imports and `librewolf` gained a required `accent` option — [architecture/module-layout](/architecture/module-layout.md)
