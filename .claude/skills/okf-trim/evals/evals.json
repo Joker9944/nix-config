@@ -1,0 +1,82 @@
+{
+  "skill_name": "okf-trim",
+  "evals": [
+    {
+      "id": 1,
+      "name": "eval-density-trap",
+      "prompt": "The .okf bundle in this directory has gotten far too detailed. Trim it back to something usable. Treat /home/joker9944/Workspace/nix-config as read-only ground truth for checking facts, but only edit files inside this working directory.",
+      "expected_output": "lookup-hm-option.md collapses to a pointer at the home-manager-options SKILL.md; module-layout.md keeps every quantified constraint and barely shrinks.",
+      "files": [
+        "fixtures/density/"
+      ],
+      "assertions": [
+        "module-layout.md still contains the 220 MiB figure",
+        "module-layout.md still contains the lib.mkAfter constraint",
+        "module-layout.md still names the monospace and emoji generics",
+        "module-layout.md still states that modules/global is loaded into both trees",
+        "lookup-hm-option.md no longer contains the four-row hm-options command table",
+        "lookup-hm-option.md no longer contains the 'stop and use hm-options first' instruction",
+        "lookup-hm-option.md points at .claude/skills/home-manager-options/SKILL.md",
+        "trimmed the restated file far harder than the dense one (shrink spread > 40 points)",
+        "module-layout.md shrank by less than 25 percent",
+        "both files still parse as OKF concepts with a non-empty type in frontmatter"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "eval-log-rewrite",
+      "prompt": "Compact .okf/log.md in this directory. Every entry should be one short line naming what changed plus the concept that holds the detail, following CLAUDE.md rule 3 in /home/joker9944/Workspace/nix-config. Merge entries that describe one piece of work.",
+      "expected_output": "42 entries become 20-35, no SHAs, date headings preserved, and entry prose compressed to a ~100-char median measured with link markup excluded.",
+      "files": [
+        "fixtures/log/"
+      ],
+      "assertions": [
+        "no 7-character hex SHA remains anywhere in log.md",
+        "all 14 YYYY-MM-DD headings are present and in the original order",
+        "the five 2026-08-16 entries were merged into 1 or 2",
+        "median entry prose (excluding link markup) is at or under 100 characters",
+        "at most a quarter of entries exceed the 100-character prose budget",
+        "entry count is between 20 and 35 inclusive",
+        "every entry that originally had a concept link still has at least one link",
+        "no concept link target was invented \u2014 all links match paths that existed in the original log"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "eval-leak-vs-constraint",
+      "prompt": "Behavioral rules have leaked into the .okf bundle in this directory, and there is duplicated content between concepts. Clean it up. Use /home/joker9944/Workspace/nix-config as read-only ground truth.",
+      "expected_output": "Duplication resolved to one authority; rebuild.md commands untouched; the krank imperative removed or promoted while its reason survives; human-verified files not silently rewritten.",
+      "files": [
+        "fixtures/leak/"
+      ],
+      "assertions": [
+        "rebuild.md still contains 'nh os switch'",
+        "rebuild.md still contains the standalone home-manager switch command",
+        "rebuild.md still contains 'nix run .#test-lib'",
+        "track-upstream-blockers.md still contains the /issues/ link-form constraint",
+        "track-upstream-blockers.md still contains krank:ignore-line",
+        "the reason a merged PR can still be the cause of a bug survives somewhere",
+        "the 'would a second machine select this profile unchanged' test appears in only one of the two profile files",
+        "the file that lost the test links to the one that kept it",
+        "neither profile file retains an unchanged human:joker9944 verified block over rewritten text",
+        "at most one AskUserQuestion round was used",
+        "Playbook prose imperatives were surfaced as a consult rather than cut unilaterally"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "eval-idempotence",
+      "prompt": "The .okf bundle in this directory has gotten too detailed. Trim it back to something usable. Treat /home/joker9944/Workspace/nix-config as read-only ground truth.",
+      "expected_output": "Input is an already-trimmed bundle; the correct outcome is no edits and an empty audit report.",
+      "files": [
+        "fixtures/trimmed/"
+      ],
+      "assertions": [
+        "no file content changed",
+        "the audit script reports zero narrative hits",
+        "the audit script reports zero broken internal links",
+        "the run explicitly reports that the bundle was already trimmed"
+      ]
+    }
+  ]
+}
