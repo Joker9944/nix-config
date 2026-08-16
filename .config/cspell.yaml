@@ -8,6 +8,9 @@ dictionaryDefinitions:
   - name: project
     path: ./dictionaries/project.txt
     addWords: true
+ignoreRegExpList:
+  # Color palette hex values, e.g. "1E1823" or "#B478AE"
+  - '"#?[0-9A-Fa-f]{6}"'
 ignorePaths:
   - 'secrets.yaml'
   - /result

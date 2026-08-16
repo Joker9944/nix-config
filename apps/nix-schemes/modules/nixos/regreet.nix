@@ -80,10 +80,12 @@ in
           inherit (cfg.theme) package;
         };
 
-        extraCss = libSchemes.gtk.adw-gtk3.mkGtk4ExtraCss {
-          inherit (cfg) scheme accent;
-          inherit accents;
-        };
+        extraCss = lib.mkBefore (
+          libSchemes.gtk.adw-gtk3.mkGtk4ExtraCss {
+            inherit (cfg) scheme accent;
+            inherit accents;
+          }
+        );
       };
     };
 }

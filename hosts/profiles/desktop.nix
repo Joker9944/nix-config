@@ -8,6 +8,8 @@
 
     networking.networkmanager.enable = true;
 
+    theme.orchidlift-lume.enable = true;
+
     programs = {
       _1password.enable = true;
       gnupg.enable = true;

@@ -27,6 +27,15 @@ flake:
         '';
       };
 
+      accent = mkOption {
+        type = customTypes.color;
+        example = literalExpression "config.schemes.gtk.accent";
+        description = ''
+          Accent color used for focused elements. Has no default since a scheme carries no
+          accent on its own; supply one from a transformer or another module.
+        '';
+      };
+
       profiles = mkOption {
         type = types.listOf types.str;
         default = [ ];

@@ -1,0 +1,72 @@
+{ flake, mkThemeModule, ... }:
+{
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  libSchemes = inputs.nix-schemes.lib.libSchemes;
+
+  # The designed mapping deviates from the base24 default in these four slots.
+  orchidliftAnsi =
+    scheme: _:
+    let
+      inherit (scheme) palette;
+    in
+    {
+      ansi = {
+        "0" = palette.base00;
+        "8" = palette.base03;
+        "3" = palette.base0A;
+        "7" = palette.base05;
+      };
+    };
+
+  defaultCursor = {
+    name = "breeze_cursors";
+    package = pkgs.kdePackages.breeze;
+  };
+
+  defaultIcons = {
+    name = "Colloid-Dark";
+    package = pkgs.colloid-icon-theme;
+  };
+
+  mkOrchidliftTheme =
+    variant:
+    {
+      accent,
+      palette,
+      cursor ? defaultCursor,
+      icons ? defaultIcons,
+    }:
+    mkThemeModule "orchidlift-${variant}" {
+      custom.theme = {
+        inherit accent cursor icons;
+
+        gtk.accent = "purple";
+      };
+
+      schemes = {
+        source.override = libSchemes.mkScheme {
+          system = "base24";
+          name = "ORCHIDLIFT ${lib.toUpper variant}";
+          author = "Joker9944 (https://github.com/Joker9944)";
+          variant = "dark";
+
+          palette = lib.mapAttrs (_: hex: libSchemes.mkColor (libSchemes.fromHex hex)) palette;
+        };
+
+        transformers = [
+          libSchemes.transformers.named
+          libSchemes.transformers.ansi
+          orchidliftAnsi
+        ];
+      };
+    };
+in
+flake.lib.modules.mkDefaultModule {
+  dir = ./.;
+  args = { inherit mkOrchidliftTheme; };
+} { }

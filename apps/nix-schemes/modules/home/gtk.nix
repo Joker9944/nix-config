@@ -103,19 +103,23 @@ in
           inherit (cfg.theme) package;
         };
 
-        gtk3.extraCss = libSchemes.gtk.adw-gtk3.mkGtk3ExtraCss {
-          inherit (cfg) scheme accent;
-          inherit accents;
-        };
+        gtk3.extraCss = lib.mkBefore (
+          libSchemes.gtk.adw-gtk3.mkGtk3ExtraCss {
+            inherit (cfg) scheme accent;
+            inherit accents;
+          }
+        );
 
         gtk4 = {
           # WORKAROUND(nostalgic-lovelace) Has to be set since `home.stateVersion` is less than "26.05"
           theme = config.gtk.theme;
 
-          extraCss = libSchemes.gtk.adw-gtk3.mkGtk4ExtraCss {
-            inherit (cfg) scheme accent;
-            inherit accents;
-          };
+          extraCss = lib.mkBefore (
+            libSchemes.gtk.adw-gtk3.mkGtk4ExtraCss {
+              inherit (cfg) scheme accent;
+              inherit accents;
+            }
+          );
         };
       };
 

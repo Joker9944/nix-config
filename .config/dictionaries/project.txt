@@ -40,12 +40,14 @@ krank
 lastp
 linenumbers
 listchars
+lume
 menubutton
 messagedialog
 mountpoint
 neww
 nextl
 noinherit
+orchidlift
 PAMFAIL
 pasteb
 pipefail

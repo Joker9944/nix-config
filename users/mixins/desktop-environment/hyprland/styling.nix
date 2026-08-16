@@ -1,6 +1,5 @@
-{ mkDefaultHyprlandModule, ... }:
+{ mkHyprlandModule, ... }:
 {
-  inputs,
   lib,
   config,
   options,
@@ -9,29 +8,12 @@
   custom,
   ...
 }:
-mkDefaultHyprlandModule { dir = ./.; } {
-  imports = with inputs.nix-schemes.homeModules; [
-    scheme
-    gtk
-    librewolf
-  ];
-
+mkHyprlandModule {
   options.mixins.desktopEnvironment.hyprland.style =
     let
       inherit (lib) mkOption types;
     in
     {
-      theme = mkOption {
-        type = types.enum [
-          "dracula"
-          "uwunicorn"
-        ];
-        default = "uwunicorn";
-        description = ''
-          The theme to style hyprland and apps with.
-        '';
-      };
-
       fonts = {
         interface = mkOption {
           type = types.nullOr lib.hm.types.fontType;
@@ -133,19 +115,10 @@ mkDefaultHyprlandModule { dir = ./.; } {
       ];
 
       mixins.desktopEnvironment.hyprland.style = {
-        fonts = {
-          interface = {
-            name = "Inter";
-            package = pkgs.inter;
-            size = 10;
-          };
+        inherit (config.custom.theme) fonts;
 
-          terminal = {
-            name = "JetBrainsMono Nerd Font Mono";
-            package = pkgs.nerd-fonts.jetbrains-mono;
-            size = 10;
-          };
-        };
+        xCursor = config.custom.theme.cursor;
+        icons = config.custom.theme.icons;
 
         inherit (config.schemes) scheme;
 

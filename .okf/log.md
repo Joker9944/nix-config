@@ -2,6 +2,12 @@
 
 An index of bundle changes, not a narrative. One line each: what changed, the commit it rode in on, and the concept that holds the detail. Rationale lives in the commit message (git keeps it, tied to the diff) or in a [decision](/decisions/index.md) — not here.
 
+## 2026-08-16
+
+* Themes became a `mkMixinModule` category under `mixins.theme.<name>.enable`, replacing the hyprland `style.theme` enum; five `orchidlift-*` base24 palettes added — [architecture/mixin-pattern](/architecture/mixin-pattern.md)
+* Theme moved to `modules/global/theme/`, loaded into both trees so regreet and hyprland styling share one selection; `modules/global/` recorded as the class-agnostic third module tree — [architecture/module-layout](/architecture/module-layout.md)
+* Accent split into a renderer-agnostic `custom.theme.accent` hex and the GTK slot name, resolved by a theme-owned transformer; per-tree glue modules took over the nix-schemes renderer imports and `librewolf` gained a required `accent` option — [architecture/module-layout](/architecture/module-layout.md)
+
 ## 2026-08-15
 
 * `lib/` split: general-purpose helpers to the new `apps/util-lib` flake as `libUtil`, the rest into `configuration/`, `hyprland/` and `modules/` namespaces, both libs directory-loaded by `mkLibNamespace` with a `libSelf` fixed point tied once per flake — [decisions/util-lib-split](/decisions/util-lib-split.md), [architecture/custom-lib](/architecture/custom-lib.md)

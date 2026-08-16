@@ -15,7 +15,9 @@
       programs.regreet = {
         compositor = "hyprland";
 
-        extraCss = ''
+        # Ordered explicitly since this overrides the scheme CSS, which arrives from a
+        # separate module whose position in the merge order is not guaranteed.
+        extraCss = lib.mkAfter ''
           window, overlay {
             background-color: transparent;
           }

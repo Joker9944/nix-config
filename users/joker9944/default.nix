@@ -12,7 +12,7 @@ in
   imports = [ ./config ] ++ lib.optional (builtins.pathExists hostModule) hostModule;
 
   mixins = {
-    inherit (osConfig.mixins) desktopEnvironment;
+    inherit (osConfig.mixins) desktopEnvironment theme;
     programs.steam.enable = osConfig.mixins.programs.steam.enable;
   };
 

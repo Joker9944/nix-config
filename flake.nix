@@ -207,10 +207,20 @@
             inherit (inputs.util-lib.lib) libUtil;
             flake = self;
           };
+
+          theme = lib.modules.importApply ./modules/global/theme {
+            inherit (inputs.util-lib.lib) libUtil;
+            flake = self;
+          };
         };
 
         homeModules = {
           default = lib.modules.importApply ./modules/home {
+            inherit (inputs.util-lib.lib) libUtil;
+            flake = self;
+          };
+
+          theme = lib.modules.importApply ./modules/global/theme {
             inherit (inputs.util-lib.lib) libUtil;
             flake = self;
           };

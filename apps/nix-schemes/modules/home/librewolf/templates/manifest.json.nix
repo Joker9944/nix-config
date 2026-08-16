@@ -21,7 +21,7 @@ builtins.toJSON {
           toolbar_text = "rgb(${palette.base05.rgb})"; # navigation bar text
           toolbar_field = "rgb(${palette.base01.rgb})"; # navigation fields background -> URL bar
           toolbar_field_text = "rgb(${palette.base05.rgb})"; # navigation bar fields text
-          toolbar_field_border_focus = "rgb(${scheme.accent.rgb})"; # focused element
+          toolbar_field_border_focus = "rgb(${cfg.accent.rgb})"; # focused element
           popup = "rgb(${palette.base00.rgb})"; # menu background
           popup_border = "rgb(${palette.base01.rgb})"; # menu border
           popup_text = "rgb(${palette.base05.rgb})";
