@@ -5,7 +5,10 @@ description: The hyprland tree emits `hyprland.lua`, not `hyprland.conf`. Docume
 tags: [architecture, hyprland, home-manager, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-14T12:00:00Z
+  at: 2026-08-16T00:00:00Z
+verified:
+  - by: claude-code/claude-opus-5
+    at: 2026-08-16T00:00:00Z
 ---
 
 # configType = "lua"
@@ -83,13 +86,13 @@ One shape trap is stable enough to name: config keys are **snake_case**
 (`initialClass`). Copying a key out of `hyprctl` output into a rule is the easy way to hit
 the silent failure above.
 
-# Look the keys up, don't recall them
+# Match keys live upstream, not here
 
-`flake.nix` pins `hyprland.url = "github:hyprwm/Hyprland"` — the default branch, not a
-release (see [decisions/release-policy](/decisions/release-policy.md)). It advances most
-days, so any enumeration of match properties, effect names, or their lua value types is
-stale on a scale of days and is deliberately **not** reproduced here. Read them out of the
-pinned tree instead:
+`flake.nix` pins `hyprland.url` to an upstream tag, bumped on its own schedule rather than
+the nixos release train (see [decisions/release-policy](/decisions/release-policy.md)). The
+lua vocabulary moves with those bumps, so any enumeration of match properties, effect names,
+or their value types would be stale one bump later and is deliberately **not** reproduced
+here. The pinned tree is the authority:
 
 ```bash
 HYPR=$(nix flake archive --json | jq -r '.inputs.hyprland.path')

@@ -4,8 +4,11 @@ title: Track stable nixos, upgrade in lockstep
 description: nixpkgs and home-manager are pinned to matching stable release branches and upgraded together at each nixos release. Hyprland is the deliberate exception.
 tags: [decision, releases, flake]
 generated:
-  by: process:okf-migrate
-  at: 2026-07-17T00:00:00Z
+  by: claude-code/claude-opus-5
+  at: 2026-08-16T00:00:00Z
+verified:
+  - by: claude-code/claude-opus-5
+    at: 2026-08-16T00:00:00Z
 ---
 
 # The rule
@@ -13,7 +16,7 @@ generated:
 * `nixpkgs` follows the current *stable* nixos channel (`nixos-N.NN`), never `nixos-unstable`.
 * `home-manager` is pinned to the matching `release-N.NN` — always the same major/minor as nixpkgs.
 * Both are bumped together with each new nixos release (roughly May and November).
-* `hyprland` is the exception: pulled directly from `github:hyprwm/Hyprland` and moves independently of the nixos release train.
+* `hyprland` is the exception: taken from upstream `github:hyprwm/Hyprland` at a pinned tag rather than the nixpkgs package, and bumped independently of the nixos release train.
 
 Current pins live in `flake.nix#inputs`; concrete revisions are in `flake.lock`.
 

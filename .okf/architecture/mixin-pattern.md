@@ -6,6 +6,9 @@ tags: [architecture, modules, convention]
 generated:
   by: claude-code/claude-opus-5
   at: 2026-08-16T00:00:00Z
+verified:
+  - by: claude-code/claude-opus-5
+    at: 2026-08-16T00:00:00Z
 ---
 
 # Shape
@@ -24,7 +27,7 @@ mkMixinModule "atuin" {
 }
 ```
 
-`mkMixinModule "<name>"` declares `mixins.<prefix>.<name>.enable` and wraps the body in `lib.mkIf`. `<name>` is the option segment in **camelCase**; the filename is its **kebab-case** form (module files are always kebab-case, option names always camelCase) — `systemdBoot` ↔ `systemd-boot.nix`, `windowsSupport` ↔ `windows-support.nix`; single-word names coincide (`limine` ↔ `limine.nix`). Extra exception: an option can't start with a digit, so `1password.nix` declares `"_1password"` (leading-`_` escape). See [module-layout](module-layout.md#casing). The prefix comes from the aggregator (`programs/` → `[ "programs" ]`, `desktop-environment/` → `[ "desktopEnvironment" ]`, `display-manager/` → `[ "displayManager" ]` — camelCase, so it can't be derived from the dir name; nested sub-categories compose, e.g. `boot/loader/` → `[ "boot" "loader" ]`).
+`mkMixinModule "<name>"` declares `mixins.<prefix>.<name>.enable` and wraps the body in `lib.mkIf`. `<name>` is the option segment in **camelCase** and the filename its **kebab-case** form; [module-layout](module-layout.md#casing) owns that mapping and its exceptions. The prefix comes from the aggregator (`programs/` → `[ "programs" ]`, `desktop-environment/` → `[ "desktopEnvironment" ]`, `display-manager/` → `[ "displayManager" ]` — camelCase, so it can't be derived from the dir name; nested sub-categories compose, e.g. `boot/loader/` → `[ "boot" "loader" ]`).
 
 **Aggregator wiring.** The top-level `default.nix` of each tree (`users/mixins/default.nix`, `hosts/mixins/default.nix`) reads `config` once and builds a `lib.fix`ed `mkDefaultMixinModule` helper that it threads to every child. Category aggregators call `mkDefaultMixinModule { dir = ./.; prefix = [ … ]; } { }`; this re-threads `mkDefaultMixinModule` (for nested aggregators) plus a prefix-bound `mkMixinModule` (for leaves). Atomicity: once an aggregator threads `args`, **every** child in that dir must be two-layer (`importApply` feeds the args to all of them), so add or convert an aggregator and its leaves together.
 

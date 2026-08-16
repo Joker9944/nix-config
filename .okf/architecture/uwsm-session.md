@@ -6,6 +6,9 @@ tags: [architecture, hyprland, uwsm, systemd, rofi]
 generated:
   by: claude-code/claude-opus-5
   at: 2026-08-14T12:00:00Z
+verified:
+  - by: claude-code/claude-opus-5
+    at: 2026-08-16T00:00:00Z
 ---
 
 # The compositor is a systemd unit

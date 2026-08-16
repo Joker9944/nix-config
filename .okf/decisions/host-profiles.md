@@ -4,11 +4,11 @@ title: One profile per host; multi-role is a mixin concern
 description: Hosts select exactly one high-level profile via a `profile` string; orthogonal roles are mixins, not a profile list, and a profile must stay shared across a class of machines.
 tags: [decision, profiles, hosts]
 generated:
-  by: claude-code/claude-opus-4-8
-  at: 2026-07-29T00:00:00Z
+  by: claude-code/claude-opus-5
+  at: 2026-08-16T00:00:00Z
 verified:
   - by: human:joker9944
-    at: 2026-07-29T00:00:00Z
+    at: 2026-08-16T00:00:00Z
 ---
 
 # Decision
@@ -30,7 +30,7 @@ The orthogonal capabilities that motivated a list — k8s node / control-plane /
 
 # Why "high-level, never per-machine"
 
-Without the rule, the profile layer decays into a second host layer: each machine grows a `foo-host` profile and the indirection buys nothing. The test is concrete — *would a second machine select this profile unchanged?* If not, it is a host delta (`hosts/<host>/mixins.nix` or `default.nix`), not a profile. Prefer few broad roles refined by a short `imports` chain over many narrow ones.
+Without the rule, the profile layer decays into a second host layer: each machine grows a `foo-host` profile and the indirection buys nothing. The test that keeps it out, and where the config goes instead, are in [architecture/profiles](/architecture/profiles.md#profiles-are-high-level--never-per-machine).
 
 # Related
 

@@ -5,7 +5,10 @@ description: nix-setup uses nixbuild/nix-quick-install-action plus nix-community
 tags: [decision, ci, nix, cache]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-12T00:00:00Z
+  at: 2026-08-16T00:00:00Z
+verified:
+  - by: claude-code/claude-opus-5
+    at: 2026-08-16T00:00:00Z
 ---
 
 # The rule
@@ -13,7 +16,7 @@ generated:
 `.github/composites/nix-setup` is the only place CI gets Nix. It installs
 `nixbuild/nix-quick-install-action` — unprivileged, single-user, no daemon — and caches `/nix`
 through `nix-community/cache-nix-action`, an `actions/cache` fork. Neither DeterminateSystems action
-is used; the move off them was about the vendor, not a defect in the tooling.
+is used — a vendor choice, not a defect in the tooling.
 
 The composite takes no inputs. `nix_conf` carries `keep-outputs` and `keep-env-derivations`, which
 is what makes a restored store useful rather than a pile of unreferenced paths; the action appends

@@ -6,11 +6,14 @@ tags: [decision, lib, architecture]
 generated:
   by: claude-code/claude-opus-5
   at: 2026-08-15T00:00:00Z
+verified:
+  - by: claude-code/claude-opus-5
+    at: 2026-08-16T00:00:00Z
 ---
 
 # The choice
 
-`lib/` is split in two. General-purpose helpers moved to `apps/util-lib`, a flake with its own
+`lib/` is split in two. General-purpose helpers live in `apps/util-lib`, a flake with its own
 tests that exports a single `libUtil` attrset. `lib/` keeps everything else. See
 [/architecture/custom-lib.md](/architecture/custom-lib.md) for the resulting shape.
 
@@ -42,15 +45,13 @@ directory name already says, or contradict it.
 A lib tree is injected into its own files as `libSelf`; a foreign lib arrives under its own
 name — `libUtil`, `libSchemes`, `libMath`. One attrset, one name, no aliases.
 
-This displaced `self`, which had been the flake lib. `self` is also what a flake calls
-itself, and both were in scope in the same argument sets — `lib/configuration/mkNixosConfiguration.nix`
-took the flake as `flake` and the lib as `self`, which reads backwards.
+`self` is unavailable for a lib because a flake already uses it for itself, and both land in
+the same argument sets — `lib/configuration/mkNixosConfiguration.nix` takes the flake as
+`flake`, so naming the lib `self` beside it reads backwards.
 
-The rule binds in *every* position a lib is passed, not just module arguments. A callback
-that receives a lib names its parameter after that lib: the transformer protocol in
-`apps/nix-schemes/lib/mkScheme.nix` is `prevScheme: libSchemes: attrset`, and the
-`overrides.accent` option takes `libSchemes` too. Before this, one lib answered to four names
-(`libSchemes`, `colorLib`, `libScheme`, `flake.lib`) depending on which file you opened.
+The rule binds in *every* position a lib is passed, not just module arguments — see
+[/architecture/custom-lib.md](/architecture/custom-lib.md#argument-convention) for where that
+lands.
 
 Each lib nests under `lib.<name>` rather than exporting flat, so `inherit (inputs.x.lib)
 libFoo` yields the same identifier the tree uses internally. `inputs.nix-math.lib.math` set

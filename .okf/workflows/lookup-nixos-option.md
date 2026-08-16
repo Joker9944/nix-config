@@ -5,7 +5,7 @@ description: Use the nixos-options Claude skill to query the pinned NixOS option
 tags: [workflow, nixos, skill, agent]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-13T00:00:00Z
+  at: 2026-08-16T00:00:00Z
 ---
 
 # Trigger
@@ -14,7 +14,7 @@ You are about to write a `services.*`, `boot.*`, `hardware.*`, `networking.*`, `
 
 # Tool
 
-`nixos-options` — the system-level sibling of `hm-options`, same engine and subcommands (see [lookup-hm-option](lookup-hm-option.md) for the table and the general flow). It queries an `options.json` baked in at build time, so a query is `jq` rather than a flake evaluation.
+`nixos-options` — the system-level sibling of `hm-options`, same engine and subcommands (the surface is documented in `.claude/skills/nixos-options/SKILL.md`). It queries an `options.json` baked in at build time, so a query is `jq` rather than a flake evaluation.
 
 The two datasets overlap in namespace (`programs.*`, `services.*` exist in both), so pick the tool by which tree you are editing, not by the attribute prefix. An empty result is a reason to try the sibling tool before concluding the option doesn't exist.
 
@@ -38,7 +38,7 @@ A [release upgrade](release-upgrade.md). The dataset tracks `flake.lock`, so aft
 
 # Related
 
-* [lookup-hm-option](lookup-hm-option.md) — the user-level counterpart; shared subcommand reference.
+* [lookup-hm-option](lookup-hm-option.md) — the user-level counterpart.
 * [release-upgrade](release-upgrade.md) — the bump procedure this is most valuable during.
 * [add-mixin](add-mixin.md) — where these lookups get used.
 * Tooling: `pkgs/nix-options/default.nix` builds both tools from one engine; dev shell wired in `flake.nix`. See [packages](/architecture/packages.md).

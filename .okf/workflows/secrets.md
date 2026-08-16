@@ -6,6 +6,9 @@ tags: [workflow, secrets, sops]
 generated:
   by: process:okf-migrate
   at: 2026-07-17T00:00:00Z
+verified:
+  - by: claude-code/claude-opus-5
+    at: 2026-08-16T00:00:00Z
 ---
 
 # Layout

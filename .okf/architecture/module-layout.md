@@ -6,6 +6,9 @@ tags: [architecture, modules, convention]
 generated:
   by: claude-code/claude-opus-5
   at: 2026-08-16T00:00:00Z
+verified:
+  - by: claude-code/claude-opus-5
+    at: 2026-08-16T00:00:00Z
 ---
 
 # Scope
@@ -26,7 +29,12 @@ The constraint: such a module may only touch options that exist in both trees. T
 
 Such a module also has to *own* any third-party module it needs (`modules/global/theme/` is the sole importer of nix-schemes' `scheme` module), because importing the same non-path module value from two places declares its options twice.
 
-What it cannot own is tree-specific wiring, so each tree gets a thin glue module beside it: `modules/{home,nixos}/theme.nix` import the nix-schemes renderers for their own tree (`gtk`/`librewolf`, `regreet`) and translate `custom.theme` into their options. Splitting an option's definitions across modules also splits their merge order — `programs.regreet.extraCss` is concatenated, so the fragment meant to win needs `lib.mkAfter`, and `fonts.fontconfig.defaultFonts.*` concatenates rather than conflicts, so each generic needs exactly one owner. `modules/home/theme.nix` claims `monospace` and `emoji` (the generics whose name is itself a classification), leaving `serif`/`sansSerif` to `users/mixins/fonts.nix` as content decisions. That binding sits in the home glue rather than the shared module deliberately: naming a font obliges the tree to install it, and the theme's Nerd Font is ~220 MiB the NixOS closure has no use for — nothing system-side resolves a generic, since regreet names its font outright.
+What it cannot own is tree-specific wiring, so each tree gets a thin glue module beside it: `modules/{home,nixos}/theme.nix` import the nix-schemes renderers for their own tree (`gtk`/`librewolf`, `regreet`) and translate `custom.theme` into their options. Four constraints follow from that split:
+
+* Splitting an option's definitions across modules splits their merge order too. `programs.regreet.extraCss` is concatenated, so the fragment meant to win needs `lib.mkAfter`.
+* `fonts.fontconfig.defaultFonts.*` concatenates rather than conflicts, so each generic needs exactly one owner.
+* `modules/home/theme.nix` claims `monospace` and `emoji` — the generics whose name is itself a classification — leaving `sansSerif` to `users/mixins/fonts.nix` as a content decision. Nothing sets `serif`.
+* That binding sits in the home glue rather than the shared module deliberately: naming a font obliges the tree to install it, and the theme's Nerd Font is ~220 MiB the NixOS closure has no use for — nothing system-side resolves a generic, since regreet names its font outright.
 
 nix-schemes' contract forces that split: **a scheme carries no accent at origin** — a consumer adds one via `schemes.transformers` — so a nix-schemes *library* module must never read a transformer-added field, while a consumer may read what it supplied. `modules/global/theme/` is the consumer and contributes the accent transformer, resolving `schemes.scheme.accent` in both trees with no renderer module enabled.
 
@@ -43,11 +51,11 @@ As soon as a module needs more than a single `.nix` file, expand it into a folde
 ```
 <name>/
 ├── default.nix        # entrypoint — picked up by auto-discovery
-├── <sibling>.nix      # additional nix files, imported explicitly from default.nix
+├── <sibling>.nix      # a further module, or a data payload default.nix imports
 └── …
 ```
 
-[auto-discovery](auto-discovery.md) picks up `<name>/default.nix` as the module entry point; siblings are imported explicitly from within `default.nix`. Prevents the parent category directory from filling up with fragment files.
+[auto-discovery](auto-discovery.md) picks up `<name>/default.nix` as the module entry point. How a sibling is reached depends on what it is: a sibling **module** is auto-discovered when `default.nix` calls a `mkDefault*Module { dir = ./.; }` loader (`users/mixins/desktop-environment/hyprland/hyprlock/` picks up `styling.nix` this way), while a sibling that is a **value** — a settings or stylesheet fragment — is named explicitly, as `import ./settings.main.nix args`. Only `tmux/`, `waybar/` and `rofi/` take the second form. Either way the parent category directory stays free of fragment files.
 
 Real examples: `users/mixins/programs/vscodium/`, `users/mixins/desktop-environment/hyprland/*/`, `users/mixins/pwas/*/`.
 

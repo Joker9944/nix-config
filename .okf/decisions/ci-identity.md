@@ -5,7 +5,10 @@ description: Update workflows mint a short-lived GitHub App installation token; 
 tags: [decision, ci, secrets, signing]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-12T00:00:00Z
+  at: 2026-08-16T00:00:00Z
+verified:
+  - by: claude-code/claude-opus-5
+    at: 2026-08-16T00:00:00Z
 ---
 
 # The rule
@@ -35,11 +38,11 @@ replacing the identity with the app's.
   bot work.
 * **Blast radius.** A signing key held in CI can forge commits under that identity anywhere, with
   no expiry. An installation token lasts an hour and is scoped to one repo and two permissions.
-* **The PAT was load-bearing for the wrong reason.** It existed only because PRs opened with
-  `GITHUB_TOKEN` don't trigger `on: pull_request`, which would strand `nix-flake-check` and hang
-  automerge. App tokens do trigger it, so the PAT goes too.
-* **Signing then costs nothing.** `sign-commits` requires a bot token — a PAT silently produces
-  unsigned commits — so it comes free with the app token and removes the GPG step entirely.
+* **A PAT buys nothing here.** PRs opened with `GITHUB_TOKEN` don't trigger `on: pull_request`,
+  which strands `nix-flake-check` and hangs automerge; app tokens do trigger it, so the one thing
+  a PAT would be for is already covered.
+* **Signing costs nothing.** `sign-commits` requires a bot token — a PAT silently produces
+  unsigned commits — so it comes free with the app token, and no GPG key is needed.
 
 # Trade-off accepted
 

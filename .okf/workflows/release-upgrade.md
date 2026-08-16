@@ -4,15 +4,15 @@ title: Release upgrade — deferred changes
 description: How deferred "do this at the next nixpkgs/home-manager release" changes are tracked via UPGRADE(<release>) code markers, and the steps to run at a release bump.
 tags: [workflow, upgrade, nixpkgs, home-manager]
 generated:
-  by: process:okf-migrate
-  at: 2026-07-24T00:00:00Z
+  by: claude-code/claude-opus-5
+  at: 2026-08-16T00:00:00Z
 ---
 
 # Trigger
 
-You are bumping this flake to a new nixpkgs / home-manager release (see
-[decisions/release-policy](/decisions/release-policy.md)), or you are about to add a workaround
-that can be dropped or simplified once a newer release lands.
+A flake bump to a new nixpkgs / home-manager release (see
+[decisions/release-policy](/decisions/release-policy.md)), or a workaround being added that can be
+dropped or simplified once a newer release lands.
 
 # The convention
 

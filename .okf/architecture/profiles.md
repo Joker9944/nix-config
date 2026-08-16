@@ -4,11 +4,11 @@ title: Host profiles
 description: A profile is a reusable host role — a named set of mixin enables that a class of machines shares, selected per host by the `profile` string in the flake record.
 tags: [architecture, profiles, hosts, convention]
 generated:
-  by: claude-code/claude-opus-4-8
-  at: 2026-07-29T00:00:00Z
+  by: claude-code/claude-opus-5
+  at: 2026-08-16T00:00:00Z
 verified:
   - by: human:joker9944
-    at: 2026-07-29T00:00:00Z
+    at: 2026-08-16T00:00:00Z
 ---
 
 # What a profile is
@@ -55,7 +55,7 @@ This is the guard against the failure mode where every machine grows a bespoke `
 `base` ← `desktop` ← `hyprland-desktop` (each `imports` the one on its left):
 
 * **base** — every machine: `nix`, `localization`, `git`/`vim`/`utilities`, `maintenance`, `tailscale`.
-* **desktop** — graphical baseline: the limine loader, `fonts`, `networkmanager`, `pipewire`, `printing`, `_1password`, `gnupg`, `home-manager`, plus `console.useXkbConfig`.
+* **desktop** — graphical baseline: the limine loader, `fonts`, `networkmanager`, `theme.orchidlift-lume`, `pipewire`, `printing`, `_1password`, `gnupg`, `home-manager`, plus `console.useXkbConfig`.
 * **hyprland-desktop** — picks the DE + DM: `desktopEnvironment.hyprland`, `displayManager.regreet`.
 
 Both current hosts select `hyprland-desktop`; their `mixins.nix` files hold only deltas.

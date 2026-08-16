@@ -5,7 +5,10 @@ description: Three libs — `lib/` for module-system helpers, `apps/util-lib` fo
 tags: [architecture, lib, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-15T00:00:00Z
+  at: 2026-08-16T00:00:00Z
+verified:
+  - by: claude-code/claude-opus-5
+    at: 2026-08-16T00:00:00Z
 ---
 
 # Three libs
@@ -38,7 +41,7 @@ Each flake ties the fixed point exactly once, in its own `flake.nix`. The args t
 
 # Argument convention
 
-A lib is injected into its own files as **`libSelf`**; a foreign lib arrives under its own name — `libUtil`, `libSchemes`, `libMath`. That holds in *every* position, not just module arguments: a callback parameter takes the name too, so the transformer protocol at `apps/nix-schemes/lib/mkScheme.nix` is `prevScheme: libSchemes: attrset`. `flake` is the flake self — never `self`, which used to mean the lib and read backwards next to `flake`.
+A lib is injected into its own files as **`libSelf`**; a foreign lib arrives under its own name — `libUtil`, `libSchemes`, `libMath`. That holds in *every* position, not just module arguments: a callback parameter takes the name too, so the transformer protocol at `apps/nix-schemes/lib/mkScheme.nix` is `prevScheme: libSchemes: attrset`. `flake` is the flake self; `self` names nothing here. Why it works that way is in [decisions/util-lib-split](/decisions/util-lib-split.md).
 
 Consumers outside `lib/`:
 

@@ -5,7 +5,7 @@ description: krank reports whether the issue links in workaround comments are st
 tags: [workflow, krank, upstream, workarounds]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-12T00:00:00Z
+  at: 2026-08-16T00:00:00Z
 ---
 
 # Trigger
@@ -40,9 +40,9 @@ Discussions can never be tracked. Discussion numbers are a separate sequence fro
 requests, so rewriting one would silently point at an unrelated issue. `krank-tree` warns about any
 `/pull/` or `/discussions/` link it had to skip.
 
-Some blockers offer nothing krank can read — upstream may not accept issue reports at all. Do not
-open a stand-in issue in this repo to point at: its state is downstream of your own attention, since
-you would close it only once you had already noticed the fix, so it records the blocker without ever
+Some blockers offer nothing krank can read — upstream may not accept issue reports at all. A
+stand-in issue in this repo is not a substitute: its state is downstream of your own attention,
+closing only once the fix has already been noticed, so it records the blocker without ever
 detecting anything. Watch the upstream release stream and subscribe to whatever thread the fix will
 be announced in.
 
@@ -53,9 +53,9 @@ request can be merged and still be the thing that **caused** the bug; another ca
 before while the real removal condition sits in an untracked source file; an issue can close as
 stale. Read the site before deleting anything.
 
-When a link turns out not to be the removal condition, keep it for context and mark it
-`krank:ignore-line` with a short parenthetical saying why — a silenced line with no reason is worse
-than a noisy one.
+A link that turns out not to be the removal condition still carries context, so it stays and takes
+`krank:ignore-line` with a short parenthetical for why it is silenced — the parenthetical is what
+distinguishes a deliberate exemption from an unexplained one.
 
 # Related
 

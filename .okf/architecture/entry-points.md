@@ -6,6 +6,9 @@ tags: [architecture, flake, entry-point]
 generated:
   by: claude-code/claude-opus-4-8
   at: 2026-07-29T00:00:00Z
+verified:
+  - by: claude-code/claude-opus-5
+    at: 2026-08-16T00:00:00Z
 ---
 
 # `mkNixosConfiguration`
