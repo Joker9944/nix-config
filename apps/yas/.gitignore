@@ -3,3 +3,4 @@ package-lock.json
 /@girs/
 tsconfig.json
 /result*
+example-notifications.json

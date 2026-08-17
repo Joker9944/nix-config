@@ -28,6 +28,18 @@ in
         description = "The yas package to use.";
       };
 
+      notifd.package = mkOption {
+        type = types.package;
+        default = flake.packages.${pkgs.stdenv.hostPlatform.system}.astal-notifd;
+        defaultText = literalExpression "inputs.yas.packages.\${pkgs.stdenv.hostPlatform.system}.astal-notifd";
+        description = ''
+          The astal-notifd package to use.
+
+          Provides the CLI that talks to the notification daemon yas runs — listing notifications,
+          invoking actions and toggling do not disturb, none of which yas exposes on its own.
+        '';
+      };
+
       systemd = {
         enable = mkEnableOption "yas systemd integration";
 
@@ -60,7 +72,10 @@ in
       cfg = config.programs.yas;
     in
     lib.mkIf cfg.enable {
-      home.packages = [ cfg.package ];
+      home.packages = [
+        cfg.package
+        cfg.notifd.package
+      ];
 
       xdg.configFile."yas/config.json" = lib.mkIf (cfg.config != { }) {
         source = jsonFormat.generate "yas-config.json" cfg.config;

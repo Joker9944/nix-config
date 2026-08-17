@@ -76,6 +76,9 @@
         packages = {
           default = self.packages.${system}.yas;
 
+          # CLI client for whichever process daemonized astal-notifd, which is yas itself
+          astal-notifd = ags.packages.${system}.notifd;
+
           yas = pkgs.stdenv.mkDerivation (finalAttrs: {
             name = "yas";
 

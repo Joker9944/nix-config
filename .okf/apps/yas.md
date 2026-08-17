@@ -23,7 +23,9 @@ whole shell. The waybar mixin's `blur on, xray on` rule is the precedent; yas ha
 # Runtime shape
 
 `src/app.tsx` is the only entry point: `app.start` maps over `app.monitors` and mounts a `Bar` and a
-`Notifications` window per monitor, so hotplugging a display creates and destroys windows on its own.
+`Notifications` window per monitor. Unmounting does *not* dispose the widget — gnim's `This` only
+disconnects the handlers it added — so every window carries
+`$={(self) => onCleanup(() => self.destroy())}` or it survives the monitor being unplugged.
 The bar is a `centerbox` — workspaces at the start, clock in the centre, and the stat modules
 (CPU, GPU, memory, disk, network, battery, audio) at the end. GPU and battery are the only ones behind
 a config flag.
@@ -41,6 +43,10 @@ The API in use is AGS v3: `Accessor`, `createBinding`, `createState`, `createCom
 typed GIR namespaces via `gi://…`. The v1/v2 vocabulary — `Widget.Box`, `Variable`, `bind()`,
 `App.config` — does not exist here; reaching for it is the standard hallucination in this codebase.
 
+`@girs` also mistypes every function that takes a `GError**`: GJS raises on failure, but the
+declaration keeps the C success flag, so `const [ok] = Pango.parse_markup(…)` type-checks and its
+`ok === false` branch is unreachable. Such calls need `try`/`catch`, not a boolean check.
+
 # Everything is lazy, on purpose
 
 Every service accessor is wrapped in `lazyAccessor` (`helpers/accessors.ts`), which defers the real
@@ -49,6 +55,15 @@ otherwise start their timers at *import* time — and `Bar/index.tsx` imports `G
 unconditionally even when `showGpu` / `showBattery` are false. Laziness is what keeps a desktop
 without a battery from polling UPower, and a desktop without an Nvidia card from spawning
 `nvidia-smi` every second. Keep new services in that shape.
+
+# Never destructure a live property
+
+`const { primary } = AstalNetwork.get_default()` copies the value once and never sees
+`notify::primary` again — the same for `Wp.defaultSpeaker`, which swaps to a *different* `Endpoint`
+whenever the default output changes. Hold the singleton, not its properties. For display, chain the
+binding — `createBinding(wp, "defaultSpeaker", "volume")` re-subscribes when the intermediate object
+changes; for actions, read through the singleton at call time (`wp.get_default_speaker().set_mute(…)`)
+and export that as a function, so components never hold a GObject reference of their own.
 
 Parameterised services use `memoize` (`Disk`'s per-path accessor) and `weakMemoize` when the key is a
 GObject (`Audio`'s per-endpoint CSS accessor), so repeated calls return the *same* accessor rather
@@ -75,6 +90,12 @@ window renders; the un-timed `staticNotificationsAccessor` and `Notification`'s 
 `showActions` blocks are built but nothing mounts them. The popup window hides itself when the list
 empties or do-not-disturb is on.
 
+yas *is* the notification daemon — the first `AstalNotifd` instance in the session takes
+`org.freedesktop.Notifications` and serves `io.astal.notifd` alongside it. The `astal-notifd` binary
+is the CLI client of that second name, so it drives the running yas: `-l` dumps the store as JSON,
+`-t` toggles do-not-disturb, `-i` / `-c` invoke and close. yas only ever *reads* `dontDisturb`, which
+makes the CLI the sole way to flip it.
+
 # Configuration
 
 `services/config.ts` reads `$XDG_CONFIG_HOME/yas/config.json` **once at startup** and exports plain
@@ -94,9 +115,11 @@ Three outputs matter:
   `ags bundle src/app.tsx` into a single executable. `extraPackages` (the astal libraries plus
   `libadwaita`, `libsoup_3`, `libgtop`) is shared between the bundler's ags and the derivation, so a
   new GIR dependency has to be added there or the bundle fails to find the typelib at runtime.
-* `homeModules.yas` — `programs.yas` with `enable`, `package`, `config`, and `systemd.{enable,target}`.
-  It writes `xdg.configFile."yas/config.json"` and a user unit bound to `wayland.systemd.target` and
-  `tray.target`.
+  `packages.<system>.astal-notifd` re-exports the ags input's `notifd` so the module can install its
+  CLI; it is the same store path `extraPackages` already pulls in, so it adds nothing to the closure.
+* `homeModules.yas` — `programs.yas` with `enable`, `package`, `notifd.package`, `config`, and
+  `systemd.{enable,target}`. It installs both packages, writes `xdg.configFile."yas/config.json"`, and
+  defines a user unit bound to `wayland.systemd.target` and `tray.target`.
 * `overlays.yas` — exists but is not applied by this repo; the module's `package` default reaches
   into the flake directly.
 

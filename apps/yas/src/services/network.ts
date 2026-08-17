@@ -7,6 +7,7 @@ import NM from "gi://NM?version=1.0"
 import { exponentialMovingAverage, lazyAccessor } from "../helpers"
 
 type Snapshot = {
+	networkInterface: string | null
 	rx: number
 	tx: number
 	timestamp: number
@@ -18,45 +19,57 @@ export type Speed = {
 }
 
 const netload = new GTop.glibtop_netload()
-const { primary: primaryDevice, wired: wired, wifi: wifi } = AstalNetwork.get_default()
+const network = AstalNetwork.get_default()
 
 function primaryNetworkInterface(): string | null {
 	return primaryNetworkDevice()?.get_iface() ?? null
 }
 
 function primaryNetworkDevice(): NM.Device | null {
-	switch (primaryDevice) {
+	switch (network.get_primary()) {
 		case AstalNetwork.Primary.WIRED:
-			return wired!.get_device()
+			return network.get_wired()?.get_device() ?? null
 		case AstalNetwork.Primary.WIFI:
-			return wifi!.get_device()
+			return network.get_wifi()?.get_device() ?? null
 		case AstalNetwork.Primary.UNKNOWN:
 		default:
 			return null
 	}
 }
 
-function snapshot(networkInterface: string): Snapshot {
+function snapshot(): Snapshot {
+	const networkInterface = primaryNetworkInterface()
+	const timestamp = Date.now()
+
+	if (networkInterface === null) return { networkInterface, rx: 0, tx: 0, timestamp }
+
 	GTop.glibtop_get_netload(netload, networkInterface)
 	return {
+		networkInterface,
 		rx: netload.bytes_in * 8,
 		tx: netload.bytes_out * 8,
-		timestamp: Date.now(),
+		timestamp,
 	}
-}
-
-function primarySnapshot(): Snapshot {
-	const networkInterface = primaryNetworkInterface()
-	return networkInterface ? snapshot(networkInterface) : { rx: 0, tx: 0, timestamp: Date.now() }
 }
 
 let previousSnapshot: Snapshot
 
-const smoothingDown = exponentialMovingAverage()
-const smoothingUp = exponentialMovingAverage()
+let smoothingDown = exponentialMovingAverage()
+let smoothingUp = exponentialMovingAverage()
 
 function speed(): Speed {
-	const currentSnapshot = primarySnapshot()
+	const currentSnapshot = snapshot()
+
+	// Counters are per interface, so a delta spanning a switch is meaningless and the averages carry the old link
+	if (currentSnapshot.networkInterface !== previousSnapshot.networkInterface) {
+		previousSnapshot = currentSnapshot
+		smoothingDown = exponentialMovingAverage()
+		smoothingUp = exponentialMovingAverage()
+		return { down: -1, up: -1 }
+	}
+
+	if (currentSnapshot.networkInterface === null) return { down: -1, up: -1 }
+
 	const deltaTime = (currentSnapshot.timestamp - previousSnapshot.timestamp) / 1000
 
 	const speed = {
@@ -70,6 +83,6 @@ function speed(): Speed {
 }
 
 export const speedAccessor = lazyAccessor(() => {
-	previousSnapshot = primarySnapshot()
+	previousSnapshot = snapshot()
 	return createPoll<Speed>({ down: -1, up: -1 }, 1000, () => speed())
 })

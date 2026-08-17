@@ -1,7 +1,7 @@
 ---
 type: Playbook
 title: Develop yas
-description: The edit-run-check loop for apps/yas — the four npm scripts over the ags CLI, what `npm run types` produces, type checking, formatting nothing enforces, and how a change reaches the running desktop.
+description: The edit-run-check loop for apps/yas — the four npm scripts over the ags CLI, what `npm run types` produces, type checking, the notify-send corpus, formatting nothing enforces, and how a change reaches the running desktop.
 tags: [workflow, yas, ags, typescript]
 generated:
   by: claude-code/claude-opus-5
@@ -38,6 +38,10 @@ every `ags` import then silently resolves to `any` in the editor.
 None of it reaches the build. `ags bundle` carries its own JSX settings and resolves `ags`/`gnim`
 itself; a package built with `tsconfig.json` deleted is byte-identical to one built with it.
 
+The flake source is the git tree, so the same rule catches *new* source files: until a file is at
+least `git add -N`'d, `nix build` cannot see it and fails as `✘ [ERROR] Could not resolve "./x"` —
+an esbuild error that says nothing about git.
+
 **The generated `tsconfig.json` is not equivalent to a hand-written one.** ags emits no `lib`, so the
 project falls back to `target: ES2020` — and `services/workspaces.ts` uses `.at()`, which is ES2022:
 
@@ -63,6 +67,41 @@ What survives that is upstream noise — the ags JS library ships `.ts` sources 
 `gi://AstalApps`, `AstalBluetooth`, `AstalPowerProfiles` and `AstalTray`, none of which this project
 puts in `extraPackages`. Errors under `src/` are yours; anything reported from a `/nix/store` path is
 not.
+
+# Testing notifications
+
+Against a dev instance, not the installed unit. Bodies need **single** quotes — `!` and backticks
+inside double quotes are eaten by the shell before yas sees them. The fields map through
+`notify-send` as `-i` → `appIcon`, `-h string:image-path:` → `image`, `-h string:desktop-entry:` →
+`desktopEntry`.
+
+```bash
+# body kept as markup
+notify-send 'markup'     '<b>bold</b>, <i>italic</i>, <u>underline</u>, <tt>mono</tt>'
+notify-send 'amp'        'Tom & Jerry'
+notify-send 'amp+markup' '<i>italic</i> & <b>bold</b>'
+notify-send 'entities'   'already &amp; escaped, 100% &lt;done&gt;'
+
+# body falls back to plain text, tags stripped
+notify-send 'unclosed'   '<b>unclosed'
+notify-send 'unknown'    '<blink>hi</blink>'
+notify-send 'bare-lt'    'a < b'
+notify-send 'img'        'see <img src="/tmp/x.png" alt="pic"> here'
+notify-send 'link'       'PR <a href="https://x.dev/1?a=1&b=2">#1</a> merged'
+
+# visual resolution
+PNG=/run/current-system/sw/share/icons/hicolor/128x128/apps/cups.png
+notify-send -i firefox                  'icon-name'  'themed icon'
+notify-send -i "$PNG"                   'icon-file'  'path -> Gtk.Picture'
+notify-send -h "string:image-path:$PNG" 'image-hint' 'image wins over appIcon'
+notify-send                             'no-visual'  'no icon and no separator'
+
+# neither icon nor separator: image set but invalid, appIcon valid
+notify-send -i firefox -h string:image-path:/nonexistent.png 'stray-sep' 'no separator'
+```
+
+Two expected non-results: `link` renders as unclickable plain text, and `-u low` / `-u critical`
+look identical because the urgency classes have no rules in the stylesheet.
 
 # Formatting is entirely editor-side
 

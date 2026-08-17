@@ -5,14 +5,16 @@ import Gtk from "gi://Gtk?version=4.0"
 
 import { SPACING, formatPercentage, lazyAccessor, weakMemoize } from "../../../helpers"
 import {
-	defaultSpeaker,
 	defaultSpeakerAccessor,
 	defaultSpeakerMuteAccessor,
 	defaultSpeakerVolumeAccessor,
 	defaultSpeakerVolumeIconAccessor,
+	setDefaultSpeaker,
+	setDefaultSpeakerVolume,
 	speakersAccessor,
+	toggleDefaultSpeakerMute,
 } from "../../../services/audio"
-import { IconStatModule, Module } from "./Module"
+import { Module } from "./Module"
 
 export default function Audio(): JSX.Element {
 	return (
@@ -25,22 +27,19 @@ export default function Audio(): JSX.Element {
 				<popover hasArrow={false} $={(self) => self.set_offset(0, SPACING.NORMAL)}>
 					<box spacing={SPACING.NORMAL} orientation={Gtk.Orientation.VERTICAL}>
 						<box>
-							<button class="circular" onClicked={() => defaultSpeaker.set_mute(!defaultSpeaker.get_mute())}>
+							<button class="circular" onClicked={() => toggleDefaultSpeakerMute()}>
 								<image iconName={muteButtonIcon} />
 							</button>
 							<slider
 								hexpand={true}
-								onChangeValue={({ value }) => defaultSpeaker.set_volume(value)}
+								onChangeValue={({ value }) => setDefaultSpeakerVolume(value)}
 								value={defaultSpeakerVolumeAccessor}
 							/>
 						</box>
 						<box cssClasses={["base-background"]} spacing={SPACING.TIGHT} orientation={Gtk.Orientation.VERTICAL}>
 							<For each={speakersAccessor}>
 								{(speaker) => (
-									<button
-										cssClasses={speakerButtonCssAccessors(speaker)}
-										onClicked={() => speaker.set_is_default(true)}
-									>
+									<button cssClasses={speakerButtonCssAccessors(speaker)} onClicked={() => setDefaultSpeaker(speaker)}>
 										<label label={speakerLabel(speaker)} />
 									</button>
 								)}
