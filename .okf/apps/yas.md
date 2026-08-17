@@ -84,11 +84,17 @@ urgency classes) have no rule in either stylesheet yet.
 
 # Notifications
 
-`services/notifications.ts` wraps `AstalNotifd` twice: `timeoutNotificationsAccessor` holds an
-auto-expiring list (per-notification `expireTimeout`, falling back to 10 s) and is what the popup
-window renders; the un-timed `staticNotificationsAccessor` and `Notification`'s `showHeader` /
-`showActions` blocks are built but nothing mounts them. The popup window hides itself when the list
-empties or do-not-disturb is on.
+`services/notifications.ts` wraps `AstalNotifd` twice: `timeoutNotificationsAccessor` holds the list
+the popup window renders; the un-timed `staticNotificationsAccessor` and `Notification`'s
+`showHeader` / `showActions` blocks are built but nothing mounts them. The popup window hides itself
+when the list empties or do-not-disturb is on.
+
+Expiry is split with the daemon along `expireTimeout > 0`. Above zero the daemon resolves the
+notification itself and the `resolved` signal clears the popup, so yas adds no timer. At or below
+zero — `-1` meaning "server decides", which resolves to the `default-timeout` gsetting, itself `-1` —
+the daemon keeps the notification forever, so yas times the *popup* out after 10 s without resolving
+it. That asymmetry is why the notification store accumulates: everything in it is a `-1`. Setting
+`ignore-timeout` would break the first half, since nothing would then expire a positive timeout.
 
 yas *is* the notification daemon — the first `AstalNotifd` instance in the session takes
 `org.freedesktop.Notifications` and serves `io.astal.notifd` alongside it. The `astal-notifd` binary
@@ -126,9 +132,14 @@ Three outputs matter:
 The mixin at `users/mixins/desktop-environment/hyprland/statusbar/yas/` is thin on purpose: it imports
 the home module and ties `systemd.enable` to `programs.yas.enable`.
 
-The unit lists `gtk-4.0/gtk.css` and `yas/config.json` under `X-Reload-Triggers`, and home-manager's
-`systemd.user.startServices` defaults to `sd-switch`, so a theme or config change restarts yas on
-`nh home switch` — a package change restarts it anyway.
+The unit lists `gtk-4.0/gtk.css` and `yas/config.json` under **`X-Restart-Triggers`**, so a theme or
+config change stops and starts yas on `nh home switch` — a package change restarts it anyway.
+
+The key matters. sd-switch restarts any unit whose file changed; `X-Reload-Triggers` *downgrades* that
+to a reload, which a unit without `ExecReload` cannot perform — so naming the triggers that way is
+worse than omitting them, and fails silently. Every home-manager module that uses the reload form
+supplies an `ExecReload` to go with it (`waybar` signals `SIGUSR2`, `dunst` calls `dunstctl reload`);
+yas has nothing to reload, since it reads its css and config once at startup.
 
 # Related
 

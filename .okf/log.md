@@ -4,6 +4,9 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 
 ## 2026-08-17
 
+- Unit switched to `X-Restart-Triggers`; the reload form silently no-ops without `ExecReload` — [apps/yas](/apps/yas.md)
+- Popup timers only for `expireTimeout <= 0`; the daemon resolves the rest — [apps/yas](/apps/yas.md)
+
 - Live GObject properties must not be destructured; windows need an explicit `onCleanup` destroy; `GError` calls throw instead of returning a flag — [apps/yas](/apps/yas.md)
 - `npm run types` identified as what produces `@girs/` and the `node_modules` links; type-checking recipe added — [workflows/develop-yas](/workflows/develop-yas.md)
 - `tsconfig.json` untracked, with the `lib` it loses on regeneration recorded — [workflows/develop-yas](/workflows/develop-yas.md)

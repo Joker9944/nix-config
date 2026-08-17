@@ -6,7 +6,7 @@ import Gio from "gi://Gio?version=2.0"
 import Gtk from "gi://Gtk?version=4.0"
 import Pango from "gi://Pango"
 
-import { SPACING, formatUnixTime, resolveBody } from "../../helpers"
+import { SPACING, formatUnixTime, lazy, resolveBody } from "../../helpers"
 import { fileExists } from "../../helpers/files"
 
 const NOTIFICATION_SIZE = 600
@@ -138,9 +138,10 @@ function resolveVisual(notification: AstalNotifd.Notification): Visual {
 	return null
 }
 
-function isIcon(icon?: string | null) {
-	const iconTheme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default()!)
-	return icon && iconTheme.has_icon(icon)
+const iconTheme = lazy(() => Gtk.IconTheme.get_for_display(Gdk.Display.get_default()!))
+
+function isIcon(icon?: string | null): boolean {
+	return !!icon && iconTheme().has_icon(icon)
 }
 
 function urgency(notification: AstalNotifd.Notification) {

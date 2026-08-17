@@ -36,44 +36,42 @@ export const timeoutNotificationsAccessor = lazyAccessor(() => {
 	const [notifications, setNotifications] = createState(new Array<AstalNotifd.Notification>())
 	const timers = new Map<number, number>()
 
+	function clearTimer(id: number): void {
+		const timer = timers.get(id)
+		if (timer === undefined) return
+
+		GLib.Source.remove(timer)
+		timers.delete(id)
+	}
+
 	notifd().connect("notified", (_, id, replaced) => {
 		const notification = notifd().get_notification(id)!
 
 		if (replaced && notifications.peek().some((n) => n.id === id)) {
-			const existingTimer = timers.get(id)
-			if (existingTimer !== undefined) {
-				GLib.Source.remove(existingTimer)
-				timers.delete(id)
-			}
+			clearTimer(id)
 			setNotifications((ns) => ns.map((n) => (n.id === id ? notification : n)))
 		} else {
 			setNotifications((ns) => [notification, ...ns])
 		}
 
-		const timer = GLib.timeout_add(GLib.PRIORITY_DEFAULT, determineTimeout(notification), () => {
-			timers.delete(id)
-			setNotifications((ns) => ns.filter((n) => n.id !== id))
-			return GLib.SOURCE_REMOVE
-		})
-		timers.set(id, timer)
+		// The daemon resolves a positive expireTimeout itself; it never expires the rest, so the popup has to
+		if (notification.expireTimeout <= 0) {
+			const timer = GLib.timeout_add(GLib.PRIORITY_DEFAULT, DEFAULT_TIMEOUT, () => {
+				timers.delete(id)
+				setNotifications((ns) => ns.filter((n) => n.id !== id))
+				return GLib.SOURCE_REMOVE
+			})
+			timers.set(id, timer)
+		}
 	})
 
 	notifd().connect("resolved", (_, id) => {
-		const existingTimer = timers.get(id)
-		if (existingTimer !== undefined) {
-			GLib.Source.remove(existingTimer)
-			timers.delete(id)
-		}
+		clearTimer(id)
 		setNotifications((ns) => ns.filter((n) => n.id !== id))
 	})
 
 	return notifications
 })
-
-function determineTimeout(notification: AstalNotifd.Notification): number {
-	if (notification.expireTimeout < 0) return DEFAULT_TIMEOUT
-	return notification.expireTimeout
-}
 
 export const dontDisturbAccessor = lazyAccessor(() => {
 	return createBinding(notifd(), "dontDisturb")
