@@ -4,8 +4,8 @@ title: Mixin pattern
 description: Every reusable module declares one `enable` flag under `options.mixins.<category>.<name>`; hosts and users opt in from central `mixins.nix` files.
 tags: [architecture, modules, convention]
 generated:
-  by: claude-code/claude-opus-5
-  at: 2026-08-16T00:00:00Z
+  by: claude-code/claude-fable-5
+  at: 2026-08-18T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -45,9 +45,11 @@ Dropping a new leaf into `loader/` auto-registers it in the count — nothing to
 
 `desktopEnvironment` (gnome/hyprland/kde-plasma) and `displayManager` are the same pick-one shape but rely on convention — no assertion. Prefer this leaf-per-variant category over an `enable + type` enum: an enum centralizes every variant's config behind a switch and reintroduces an option beyond `enable`, whereas leaves decompose into files and keep the constraint in the category shape.
 
-Themes (`modules/global/theme/`) are the same shape from *outside* both mixin trees: `mkMixinModule` is generic over its prefix, so the shared module threads its own `mkThemeModule` with `prefix = [ "theme" ]`, declaring `mixins.theme.<name>.enable` in whichever tree loads it. That placement is deliberate — a theme is consumed by regreet on the NixOS side and by hyprland styling on the home side, both reading `custom.theme` and `config.schemes.scheme` directly rather than re-declaring them as mixin options, and keeping the toggles under `mixins.` makes the mirror one word (`inherit (osConfig.mixins) desktopEnvironment theme;`). See [module-layout](module-layout.md) for `modules/global/` itself.
+Themes (`modules/global/theme/`) are the same shape from *outside* both mixin trees: `mkMixinModule` is generic over its prefix, so the shared module threads its own `mkThemeModule` with `prefix = [ "theme" ]`, declaring `mixins.theme.<name>.enable` in whichever tree loads it. That placement is deliberate — a theme is consumed by regreet on the NixOS side and by hyprland styling on the home side, both reading `custom.theme` and `config.schemes.scheme` directly rather than re-declaring them as mixin options, and keeping the toggles under `mixins.` keeps the mirror a single assignment (`mixins.theme = lib.mkDefault osConfig.mixins.theme;` — `mkDefault` so a host home config can diverge from the system-side theme). See [module-layout](module-layout.md) for `modules/global/` itself.
 
 The theme category carries **no assertion**, and adding one would be dead code: every theme defines `schemes.source`, a single `attrTag`, so two enabled themes already fail the module merge with an error naming both files — and a merge error precedes assertion checking, so an `assertions` entry can never fire. Enabling *none* is the weak spot: the failure is a `schemes.librewolf.scheme` type error on `null`, several modules away from the cause, which is why the default selection sits in `hosts/profiles/desktop.nix` rather than per-host.
+
+Themes also switch at **runtime** without a rebuild: `modules/home/theme-switch/` generates a home-manager `specialisation` per theme in its hardcoded list and ships the `theme-switch` script that activates them (recording the choice for `theme-switch resume` after a rebuild resets to the profile default). Each specialisation forces the *full* `mixins.theme` enable map: enabling only the selected theme would leave the base-enabled one on and fail the `attrTag` merge, and `mkForce` on every slot keeps the switch immune to theme definitions at any lower priority. The script walks generations newest-first for one with a `specialisation/` dir — a specialisation's own generation has none (home-manager voids `specialisation` inside it to prevent recursion).
 
 # Directory layout
 

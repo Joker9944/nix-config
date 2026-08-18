@@ -2,6 +2,11 @@
 
 An index of bundle changes, not a narrative. One line each: what changed and the concept that holds the detail, in the form `CLAUDE.md` rule 3 sets. Rationale lives in the commit message, tied to the diff, or in a [decision](/decisions/index.md) — not here.
 
+## 2026-08-18
+
+- Runtime theme switching via home-manager specialisations and `theme-switch` recorded — [architecture/mixin-pattern](/architecture/mixin-pattern.md)
+- Theme mirror loosened to `mkDefault` so host home configs can diverge — [architecture/mixin-pattern](/architecture/mixin-pattern.md)
+
 ## 2026-08-17
 
 - Unit switched to `X-Restart-Triggers`; the reload form silently no-ops without `ExecReload` — [apps/yas](/apps/yas.md)
