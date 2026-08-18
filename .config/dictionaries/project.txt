@@ -82,6 +82,7 @@ vsplit
 Weaveworks
 wxmaxima
 xalign
+xcrun
 xoffset
 xrgb
 xwaylandprimary

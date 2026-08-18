@@ -7,10 +7,10 @@ description: Trim the `.okf/` knowledge bundle back to terse documentation that 
 
 An on-demand sweep that enforces `CLAUDE.md` rules 2 and 3 across the whole bundle. The target is **redundancy, restated authority, and change-narrative** — never density. The bundle's most valuable paragraphs are also its ugliest, and the instinct that "shorter is better" gets this exactly backwards if you let it run unchecked.
 
-Read the two exemplars before you cut anything. They are the calibration:
+Read the two exemplars before you cut anything. They are the calibration — frozen pre-trim snapshots under this skill's `evals/fixtures/density/.okf/`, kept there precisely because the live bundle stops exhibiting the disease the moment a pass succeeds:
 
-* `.okf/workflows/lookup-hm-option.md` — well-formatted, tidy tables, and roughly two thirds of it is a second copy of `.claude/skills/home-manager-options/SKILL.md`. **This is the bloat.**
-* `.okf/architecture/module-layout.md`, the `modules/global/` section — a wall of unbroken prose where every clause is a constraint someone paid for: which tree owns which fontconfig generic, that `extraCss` concatenates so the winning fragment needs `lib.mkAfter`, that a ~220 MiB Nerd Font is why the binding sits in the home glue. **This is what you are protecting.**
+* `evals/fixtures/density/.okf/workflows/lookup-hm-option.md` — well-formatted, tidy tables, and roughly two thirds of it is a second copy of `.claude/skills/home-manager-options/SKILL.md`. **This is the bloat.** (The live concept is what a correct trim left behind: a pointer.)
+* `evals/fixtures/density/.okf/architecture/module-layout.md`, the `modules/global/` section — a wall of unbroken prose where every clause is a constraint someone paid for: which tree owns which fontconfig generic, that `extraCss` concatenates so the winning fragment needs `lib.mkAfter`, that a ~220 MiB Nerd Font is why the binding sits in the home glue. **This is what you are protecting.**
 
 ## Scope
 
@@ -23,14 +23,14 @@ Takes a scope: the whole bundle (default `.okf/`), a directory, or a single file
 
 ## The audit script
 
-`scripts/okf-audit.py --bundle .okf --repo .` (stdlib only, no dev shell needed; `--json` for graders). Run it first — it turns "read 2,000 lines and form an opinion" into "open these lines."
+`scripts/okf-audit.py --bundle .okf --repo .` (python3 from this repo's dev shell; stdlib only, no third-party packages; `--json` for graders). Run it first — it turns "read 2,000 lines and form an opinion" into "open these lines."
 
 It emits **data, never verdicts.** Every check below was measured against this bundle and every one has a false-positive rate that would make an automatic edit wrong more often than right. Read the hit, then decide.
 
 | Section | What it gives you | How to read it |
 |---|---|---|
 | narrative | Test C hits, tagged with the concept's `type` | Rewrite to the present, or cut if nothing survives that. A `Decision` is not exempt — its alternatives stay, its description of the replaced state does not |
-| duplicate paragraphs | Sentence pairs across files above a similarity threshold | The one check a per-file pass cannot make. Top hits are real; parallel sibling files (the two hosts, the two CI decisions) legitimately rhyme |
+| duplicate paragraphs | Sentence pairs above a similarity threshold, across bundle files and against `.claude/skills/*/SKILL.md` | The one check a per-file pass cannot make. Top hits are real; parallel sibling files (the two hosts, the two CI decisions) legitimately rhyme. A bundle sentence rhyming with a skill file is Test B's restated authority |
 | behavioral candidates | Agent-directed rules only | Small and high-precision by design. A bare second person is a coin flip here and is deliberately not matched, so this list is a floor, not a ceiling |
 | reference suspects | Backticked path-like tokens that resolve nowhere | Expect upstream and generated paths (`options.json`, nixpkgs sources, `hyprland.lua`). A hit is a question, not a defect |
 | broken bundle links | Internal link targets that do not exist | SPEC §11 forbids the validator rejecting a bundle for these, so this is the only thing that catches them. Run it again at the end — trimming creates them |
@@ -59,7 +59,7 @@ For each claim, name the single place that must change for the claim to become f
 | Another bundle file | Delete here, link there |
 | Outside the bundle, in something an agent already reads — a `SKILL.md`, a tool's source, an upstream option description, `flake.nix` | Replace the restatement with a pointer |
 
-Test B is what actually kills the `lookup-hm-option.md` command table. Not "too long" — "second copy of a fact owned elsewhere." And it is what spares `module-layout.md`, because nothing outside the bundle asserts *why* the font binding sits where it does.
+Test B is what kills the command table in the `lookup-hm-option.md` exemplar. Not "too long" — "second copy of a fact owned elsewhere." And it is what spares `module-layout.md`, because nothing outside the bundle asserts *why* the font binding sits where it does.
 
 ### Test C — present tense or nothing
 
@@ -120,7 +120,7 @@ Per SPEC §5.2, `generated.at` marks the content's **last meaningful change** �
 * Read it, checked it against the repo, changed nothing → add `verified: [{ by: claude-code/<model>, at: <now> }]`. That is the machine-confirmed tier, and it makes the pass durable.
 * Could not confirm a claim → leave it, add no `verified`, and list it in the closing summary.
 
-**A `verified` entry by `human:joker9944` demotes autonomy.** `architecture/profiles.md` and `decisions/host-profiles.md` both carry that sign-off — and they are also the strongest duplication pair in the bundle, so they are precisely what this skill wants to rewrite. Editing one while leaving its `verified` block attaches a human sign-off to text the human never saw. Human-reviewed files move into the consult set, and any edit drops or refreshes the entry.
+**A `verified` entry by `human:joker9944` demotes autonomy.** The trust-tiers section of the report lists which files carry that sign-off. Editing one while leaving its `verified` block attaches a human sign-off to text the human never saw. Human-reviewed files move into the consult set, and any edit drops or refreshes the entry.
 
 ## Typical flow
 
@@ -153,7 +153,7 @@ Measure the prose, not the raw line. A `— [architecture/module-layout](/archit
 
 Keep the `## YYYY-MM-DD` headings and their order. Every entry that carried a concept link keeps one. Merge, never drop — an entry disappearing loses a distinct change.
 
-**This pass writes one log entry, not twelve.** One line if you changed the format itself, because that changes how a reader interprets every line above it. Zero for the trims: compressing, restructuring, deduplicating and retensing all leave the bundle asserting exactly what it asserted before, so there is nothing to index, and a log full of bundle-maintenance narrative is the defect rule 3 exists to prevent. The log already carries two entries of that kind — do not add more.
+**This pass writes one log entry, not twelve.** One line if you changed the format itself, because that changes how a reader interprets every line above it. Zero for the trims: compressing, restructuring, deduplicating and retensing all leave the bundle asserting exactly what it asserted before, so there is nothing to index, and a log full of bundle-maintenance narrative is the defect rule 3 exists to prevent. The log already carries entries of that kind — do not add more.
 
 **A corrected fact is not a trim.** When the bundle asserted something false and now asserts something true, a reader who believed the old claim was misled, and the log is the only place they would ever see it move. Those earn a line, and `CLAUDE.md` rule 1 already asks for one. Two brakes stop this reopening the floodgate:
 
@@ -175,7 +175,8 @@ A second run on an already-trimmed bundle must produce **no edits**. The report 
 
 ## Failure modes
 
-* **`okf-audit.py: No such file or directory`** — run it by path from the repo root: `python3 .claude/skills/okf-trim/scripts/okf-audit.py`. It needs no dev shell.
+* **`okf-audit.py: No such file or directory`** — run it by path from the repo root: `python3 .claude/skills/okf-trim/scripts/okf-audit.py`.
+* **`python3` missing or `error: tool 'python3' not found`** — the darwin host has no system Python (`/usr/bin/python3` is a broken xcrun shim); python3 comes from this repo's dev shell (`direnv`, or `nix develop`).
 * **`okf-audit: no bundle at <path>`** — `--bundle` points somewhere without an OKF tree. From the repo root the default `.okf` is correct.
 * **Reference suspects full of `<placeholder>` paths** — the filters dropped a case. Fix `looks_like_path`, don't work around it by ignoring the section.
 * **`/okf:validate` passes but links are broken** — expected. SPEC §11 forbids rejecting a bundle for broken cross-links; the audit script's link section is what catches them.

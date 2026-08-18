@@ -126,12 +126,9 @@ def parse_frontmatter(text):
     found = re.search(r"(?m)^generated:.*?\bat:\s*(\S+)", block, re.S)
     if found:
         data["generated_at"] = found.group(1).strip()
-    verifiers = re.findall(r"(?m)^\s*(?:-\s*)?(?:\{\s*)?by:\s*(\S+?)[,}\s]*$", block)
     verified_block = re.search(r"(?m)^verified:(.*?)(?=^\w|\Z)", block, re.S)
     if verified_block:
         data["verified_by"] = re.findall(r"by:\s*([^\s,}]+)", verified_block.group(1))
-    elif verifiers:
-        data["verified_by"] = []
     return data, text[match.end() :]
 
 
@@ -144,6 +141,19 @@ def concept_files(bundle):
 
 def strip_code_blocks(text):
     return re.sub(r"```.*?```", "", text, flags=re.S)
+
+
+def source_lines(text):
+    """Yield (lineno, line) for lines outside fenced code blocks. Stripping the
+    blocks before splitting shifts every later line number, so fences are
+    skipped in place instead."""
+    in_fence = False
+    for lineno, line in enumerate(text.splitlines(), 1):
+        if line.lstrip().startswith("```"):
+            in_fence = not in_fence
+            continue
+        if not in_fence:
+            yield lineno, line
 
 
 def sentences(text):
@@ -170,7 +180,7 @@ def scan_lines(bundle, patterns, flags=0):
     for path in concept_files(bundle):
         raw = path.read_text()
         meta, _ = parse_frontmatter(raw)
-        for lineno, line in enumerate(strip_code_blocks(raw).splitlines(), 1):
+        for lineno, line in source_lines(raw):
             stripped = line.strip()
             if not stripped or stripped.startswith("#"):
                 continue
@@ -198,16 +208,23 @@ def section_behavioral(bundle):
     return scan_lines(bundle, BEHAVIORAL_PATTERNS)
 
 
-def section_duplicates(bundle, threshold):
+def section_duplicates(bundle, repo, threshold):
+    """Also compares against the repo's skill files: the worst restated-authority
+    case is a bundle concept mirroring a `.claude/skills/*/SKILL.md`, which a
+    bundle-internal scan can never see."""
     blocks = []
-    for path in concept_files(bundle):
+    external = sorted(Path(repo).glob(".claude/skills/*/SKILL.md"))
+    for path in [*concept_files(bundle), *external]:
         _, body = parse_frontmatter(path.read_text())
         for sentence in sentences(body):
             blocks.append((str(path), sentence, normalize(sentence)))
+    prefix = str(Path(bundle)) + os.sep
     pairs = []
     for i in range(len(blocks)):
         for j in range(i + 1, len(blocks)):
             if blocks[i][0] == blocks[j][0]:
+                continue
+            if not (blocks[i][0].startswith(prefix) or blocks[j][0].startswith(prefix)):
                 continue
             matcher = difflib.SequenceMatcher(None, blocks[i][2], blocks[j][2])
             if matcher.quick_ratio() < threshold:
@@ -248,8 +265,7 @@ def strip_anchor(token):
 def section_refs(bundle, repo, tracked):
     suspects = []
     for path in concept_files(bundle):
-        body = strip_code_blocks(path.read_text())
-        for lineno, line in enumerate(body.splitlines(), 1):
+        for lineno, line in source_lines(path.read_text()):
             for raw in PATHISH.findall(line):
                 token = strip_anchor(raw).rstrip(".,;").rstrip("/")
                 if not looks_like_path(token):
@@ -480,13 +496,13 @@ def emit_text(report, out):
         commits = "n/a" if row["commits"] is None else row["commits"]
         print(f"  {commits:>4} commits since {row['since']}  {row['file']}", file=out)
 
+    verified = [r for r in report["trust"] if r["tier"] != "unverified"]
     head(
         "trust tiers — human-reviewed files need a consult before editing",
-        len(report["trust"]),
+        len(verified),
     )
-    for row in report["trust"]:
-        if row["tier"] != "unverified":
-            print(f"  {row['tier']:<18} {row['file']}  {row['verified_by']}", file=out)
+    for row in verified:
+        print(f"  {row['tier']:<18} {row['file']}  {row['verified_by']}", file=out)
 
     head(
         "index bullets vs frontmatter descriptions — scan for contradictions",
@@ -544,7 +560,7 @@ def main():
         "bundle": str(bundle),
         "repo": str(args.repo),
         "narrative": section_narrative(bundle),
-        "duplicates": section_duplicates(bundle, args.duplicate_threshold),
+        "duplicates": section_duplicates(bundle, args.repo, args.duplicate_threshold),
         "behavioral": section_behavioral(bundle),
         "refs": section_refs(bundle, args.repo, tracked),
         "links": section_links(bundle),

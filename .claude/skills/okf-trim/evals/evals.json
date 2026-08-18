@@ -1,10 +1,11 @@
 {
   "skill_name": "okf-trim",
+  "prompt_note": "{{REPO}} is substituted by the runner with the absolute path of the nix-config checkout. Fixture bundles are excerpts; cross-links to concepts outside the excerpt are expected and not part of any eval. Every prompt declares the repo's own .okf/ out of bounds: it contains the post-trim versions of the fixtures (the answer key) — iteration 1 showed agents copying it instead of trimming.",
   "evals": [
     {
       "id": 1,
       "name": "eval-density-trap",
-      "prompt": "The .okf bundle in this directory has gotten far too detailed. Trim it back to something usable. Treat /home/joker9944/Workspace/nix-config as read-only ground truth for checking facts, but only edit files inside this working directory.",
+      "prompt": "The .okf bundle in this directory has gotten far too detailed. Trim it back to something usable. Treat {{REPO}} as read-only ground truth for checking facts, but only edit files inside this working directory. The repo's own .okf/ directory is out of bounds — check facts against the code, not against the repo's documentation.",
       "expected_output": "lookup-hm-option.md collapses to a pointer at the home-manager-options SKILL.md; module-layout.md keeps every quantified constraint and barely shrinks.",
       "files": [
         "fixtures/density/"
@@ -25,7 +26,7 @@
     {
       "id": 2,
       "name": "eval-log-rewrite",
-      "prompt": "Compact .okf/log.md in this directory. Every entry should be one short line naming what changed plus the concept that holds the detail, following CLAUDE.md rule 3 in /home/joker9944/Workspace/nix-config. Merge entries that describe one piece of work.",
+      "prompt": "Compact .okf/log.md in this directory. Every entry should be one short line naming what changed plus the concept that holds the detail, following CLAUDE.md rule 3 in {{REPO}}. Merge entries that describe one piece of work. The repo's own .okf/ directory is out of bounds — work from the rule, not from the repo's documentation.",
       "expected_output": "42 entries become 20-35, no SHAs, date headings preserved, and entry prose compressed to a ~100-char median measured with link markup excluded.",
       "files": [
         "fixtures/log/"
@@ -38,14 +39,14 @@
         "at most a quarter of entries exceed the 100-character prose budget",
         "entry count is between 20 and 35 inclusive",
         "every entry that originally had a concept link still has at least one link",
-        "no concept link target was invented \u2014 all links match paths that existed in the original log"
+        "no concept link target was invented — all links match paths that existed in the original log"
       ]
     },
     {
       "id": 3,
       "name": "eval-leak-vs-constraint",
-      "prompt": "Behavioral rules have leaked into the .okf bundle in this directory, and there is duplicated content between concepts. Clean it up. Use /home/joker9944/Workspace/nix-config as read-only ground truth.",
-      "expected_output": "Duplication resolved to one authority; rebuild.md commands untouched; the krank imperative removed or promoted while its reason survives; human-verified files not silently rewritten.",
+      "prompt": "Behavioral rules have leaked into the .okf bundle in this directory, and there is duplicated content between concepts. Clean it up. Use {{REPO}} as read-only ground truth; the repo's own .okf/ directory is out of bounds — check facts against the code, not against the repo's documentation. No user is available for questions: when the skill calls for a consult, write the full batched consult to consult.md in this directory instead, and treat every unanswered item as kept.",
+      "expected_output": "Duplication resolved to one authority; rebuild.md commands untouched; the krank imperative surfaced in consult.md with its reason kept; human-verified files not silently rewritten.",
       "files": [
         "fixtures/leak/"
       ],
@@ -56,25 +57,23 @@
         "track-upstream-blockers.md still contains the /issues/ link-form constraint",
         "track-upstream-blockers.md still contains krank:ignore-line",
         "the reason a merged PR can still be the cause of a bug survives somewhere",
-        "the 'would a second machine select this profile unchanged' test appears in only one of the two profile files",
-        "the file that lost the test links to the one that kept it",
+        "the consult proposes collapsing the duplicated 'second machine' litmus test to a single authority file, asking whether to trim the human-verified pair anyway",
+        "with the consult unanswered, the duplicated test survives in both profile files — no unilateral collapse of human-verified text",
         "neither profile file retains an unchanged human:joker9944 verified block over rewritten text",
-        "at most one AskUserQuestion round was used",
-        "Playbook prose imperatives were surfaced as a consult rather than cut unilaterally"
+        "consult.md exists and is a single batched consult, not one file or section per item",
+        "consult.md lists the Playbook prose imperatives, and those imperatives survive unchanged in the concept files"
       ]
     },
     {
       "id": 4,
       "name": "eval-idempotence",
-      "prompt": "The .okf bundle in this directory has gotten too detailed. Trim it back to something usable. Treat /home/joker9944/Workspace/nix-config as read-only ground truth.",
-      "expected_output": "Input is an already-trimmed bundle; the correct outcome is no edits and an empty audit report.",
+      "prompt": "The .okf bundle in this directory has gotten too detailed. Trim it back to something usable. Treat {{REPO}} as read-only ground truth; the repo's own .okf/ directory is out of bounds — check facts against the code, not against the repo's documentation.",
+      "expected_output": "Input is an already-trimmed bundle; the correct outcome is no edits.",
       "files": [
         "fixtures/trimmed/"
       ],
       "assertions": [
         "no file content changed",
-        "the audit script reports zero narrative hits",
-        "the audit script reports zero broken internal links",
         "the run explicitly reports that the bundle was already trimmed"
       ]
     }

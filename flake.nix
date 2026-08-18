@@ -111,6 +111,7 @@
               buildInputs = [
                 self.packages.${system}.hm-options
                 self.packages.${system}.nixos-options
+                pkgs.python3
               ];
             };
             preCommitHooks = pkgs.mkShell {
