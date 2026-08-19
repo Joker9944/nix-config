@@ -8,7 +8,7 @@ flake:
   ...
 }:
 let
-  libSchemes = flake.lib.libSchemes;
+  libSchemes = flake.lib.libSchemes.init pkgs;
 in
 {
   options.schemes.gtk =
@@ -87,6 +87,11 @@ in
       accents = mkAccents cfg.scheme;
 
       themeName = if cfg.scheme.variant == "light" then "adw-gtk3" else "adw-gtk3-dark";
+
+      themeCss = libSchemes.mkThemeCss {
+        inherit (cfg) scheme accent;
+        inherit accents;
+      };
     in
     lib.mkIf cfg.enable {
       schemes.gtk.accentTransformer = scheme: _: {
@@ -103,12 +108,7 @@ in
           inherit (cfg.theme) package;
         };
 
-        gtk3.extraCss = lib.mkBefore (
-          libSchemes.gtk.adw-gtk3.mkGtk3ExtraCss {
-            inherit (cfg) scheme accent;
-            inherit accents;
-          }
-        );
+        gtk3.extraCss = lib.mkBefore "@import \"${themeCss}/gtk3.css\";";
 
         gtk4 = {
           # The adw-gtk3 theme is for gtk3 and gtk4 apps, NOT libadwaita apps.
@@ -118,12 +118,7 @@ in
           # WORKAROUND Home-manager only emits `gtk-theme-name` when `gtk4.theme` is set
           extraConfig.gtk-theme-name = themeName;
 
-          extraCss = lib.mkBefore (
-            libSchemes.gtk.adw-gtk3.mkGtk4ExtraCss {
-              inherit (cfg) scheme accent;
-              inherit accents;
-            }
-          );
+          extraCss = lib.mkBefore "@import \"${themeCss}/gtk4.css\";";
         };
       };
 

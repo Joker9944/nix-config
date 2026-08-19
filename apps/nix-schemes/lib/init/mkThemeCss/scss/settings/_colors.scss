@@ -1,0 +1,10 @@
+@use 'abstracts/settings' as *;
+@use 'abstracts/functions' as *;
+
+// Late-bound reference forms for widget declarations: GTK resolves these at render
+// time, so rules track the colour instead of freezing a literal. `_defaults.scss`
+// must not use them — `var()` is invalid inside `@define-color` and self-referential
+// inside `:root`. Add an entry when a widget rule needs one.
+
+$window_bg_color: if($toolkit == 'gtk4', var(--window-bg-color), gtkcolor(window_bg_color));
+$headerbar_bg_color: if($toolkit == 'gtk4', var(--headerbar-bg-color), gtkcolor(headerbar_bg_color));

@@ -1,0 +1,66 @@
+@use 'settings' as *;
+
+// Only colours whose upstream default is an opaque literal are set. Translucent
+// defaults composite correctly over any palette and are left to
+// adw-gtk3 / libadwaita, which also branch them per variant.
+//
+// Values come from the palette only, never from `settings/_colors.scss`: its
+// reference forms are invalid inside `@define-color` and self-referential in `:root`.
+
+@define-color window_bg_color #{$window_bg}; /* background */
+@define-color window_fg_color #{$window_fg}; /* foreground */
+@define-color view_bg_color #{$view_bg}; /* background */
+@define-color view_fg_color #{$view_fg}; /* foreground */
+@define-color accent_bg_color #{$accent_bg};
+@define-color accent_fg_color #{$accent_fg};
+@define-color headerbar_bg_color #{$surface_bg}; /* light background */
+@define-color headerbar_fg_color #{$window_fg}; /* foreground */
+@define-color headerbar_border_color #{$window_fg};
+@define-color popover_bg_color #{$window_bg}; /* background */
+@define-color popover_fg_color #{$window_fg}; /* foreground */
+@define-color dialog_bg_color #{$surface_bg}; /* light background */
+@define-color dialog_fg_color #{$view_fg};
+@define-color card_bg_color #{$surface_bg}; /* light background */
+@define-color card_fg_color #{$view_fg};
+@define-color thumbnail_bg_color #{$surface_bg}; /* light background */
+@define-color thumbnail_fg_color #{$view_fg};
+@define-color sidebar_bg_color #{$window_bg}; /* background */
+@define-color sidebar_fg_color #{$window_fg}; /* foreground */
+@define-color sidebar_backdrop_color #{$window_bg};
+@define-color scrollbar_outline_color #{$window_bg}; /* background */
+@define-color destructive_bg_color #{$destructive_bg}; /* red */
+@define-color destructive_fg_color #{$destructive_fg};
+@define-color success_bg_color #{$success_bg}; /* green */
+@define-color success_fg_color #{$success_fg};
+@define-color warning_bg_color #{$warning_bg}; /* orange */
+@define-color warning_fg_color #{$warning_fg};
+@define-color error_bg_color #{$destructive_bg};
+@define-color error_fg_color #{$destructive_fg};
+
+// Secondary sidebars are GTK4-only.
+@if $toolkit == 'gtk4' {
+  @define-color secondary_sidebar_bg_color #{$window_bg}; /* background */
+  @define-color secondary_sidebar_fg_color #{$view_fg};
+  @define-color secondary_sidebar_backdrop_color #{$view_bg};
+}
+
+@if $toolkit == 'gtk4' {
+  :root {
+    --accent-blue: #{$accent_blue};
+    --accent-teal: #{$accent_teal};
+    --accent-green: #{$accent_green};
+    --accent-yellow: #{$accent_yellow};
+    --accent-orange: #{$accent_orange};
+    --accent-red: #{$accent_red};
+    --accent-pink: #{$accent_pink};
+    --accent-purple: #{$accent_purple};
+    --accent-slate: #{$accent_slate};
+    /* Every other named color is bridged upstream; these two are re-pinned
+       because adw-gtk3's libadwaita-tweaks.css hardcodes the accent to blue. */
+    --accent-bg-color: #{$accent_bg};
+    --accent-fg-color: #{$accent_fg};
+    /* No named-color counterpart upstream. */
+    --overview-bg-color: #{$surface_bg}; /* light background */
+    --overview-fg-color: #{$window_fg}; /* foreground */
+  }
+}

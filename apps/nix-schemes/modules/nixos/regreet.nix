@@ -6,7 +6,7 @@ flake:
   ...
 }:
 let
-  libSchemes = flake.lib.libSchemes;
+  libSchemes = flake.lib.libSchemes.init pkgs;
 in
 {
   options.schemes.regreet =
@@ -70,6 +70,11 @@ in
           libSchemes.gtk.mkAccentsFromPalette cfg.scheme.palette
         else
           libSchemes.gtk.mkAccentsFromColor (cfg.overrides.accent libSchemes);
+
+      themeCss = libSchemes.mkThemeCss {
+        inherit (cfg) scheme accent;
+        inherit accents;
+      };
     in
     lib.mkIf cfg.enable {
       programs.regreet = {
@@ -80,12 +85,7 @@ in
           inherit (cfg.theme) package;
         };
 
-        extraCss = lib.mkBefore (
-          libSchemes.gtk.adw-gtk3.mkGtk4ExtraCss {
-            inherit (cfg) scheme accent;
-            inherit accents;
-          }
-        );
+        extraCss = lib.mkBefore "@import \"${themeCss}/gtk4.css\";";
       };
     };
 }

@@ -1,5 +1,22 @@
 {
   "nodes": {
+    "adw-colors": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1773587672,
+        "narHash": "sha256-WCG662t3EWk6FFJxm4rmz7h/d10il4YUvLKeTBK+Tvs=",
+        "owner": "lassekongo83",
+        "repo": "adw-colors",
+        "rev": "389dff2e6ae48438693473c97f0aac6a2fc019cf",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lassekongo83",
+        "ref": "main",
+        "repo": "adw-colors",
+        "type": "github"
+      }
+    },
     "base24-gen": {
       "flake": false,
       "locked": {
@@ -106,6 +123,7 @@
     },
     "root": {
       "inputs": {
+        "adw-colors": "adw-colors",
         "base24-gen": "base24-gen",
         "flake-utils": "flake-utils",
         "nix-math": "nix-math",

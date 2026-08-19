@@ -16,6 +16,10 @@
       url = "github:psyclyx/base24-gen/main"; # cSpell:ignore psyclyx
       flake = false;
     };
+    adw-colors = {
+      url = "github:lassekongo83/adw-colors/main"; # cSpell:ignore lassekongo
+      flake = false;
+    };
     util-lib = {
       url = "path:../util-lib";
       inputs.nixpkgs.follows = "nixpkgs";
