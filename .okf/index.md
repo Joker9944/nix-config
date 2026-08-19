@@ -30,6 +30,10 @@ The durable knowledge about this repository lives here — the "why" behind the 
 
 * [decisions/](decisions/) — Why the repo looks the way it does. Consult before proposing structural changes.
 
+# Reference
+
+* [reference/](reference/) — External specifications this repo builds on.
+
 # Meta
 
 * [log](log.md) — Chronological change history for this bundle.

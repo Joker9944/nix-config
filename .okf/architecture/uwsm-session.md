@@ -2,10 +2,10 @@
 type: Architecture Pattern
 title: UWSM session and app slices
 description: Hyprland runs under UWSM, so anything long-running a bind or rofi launches must go through `cfg.mkAppCommand` or `cfg.mkAppEntryCommand`, or it lands inside the compositor's own systemd unit.
-tags: [architecture, hyprland, uwsm, systemd, rofi]
+tags: [architecture, hyprland, uwsm, systemd, rofi, vicinae]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-14T12:00:00Z
+  at: 2026-08-19T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -96,6 +96,18 @@ available for free.
 
 `cfg.launcher.mkDmenuCommand` is deliberately untouched — the dmenu form is a stdin/stdout filter,
 not an app launcher.
+
+# vicinae
+
+vicinae needs no equivalent of those hooks: it detects UWSM and prefixes `uwsm-app --` itself, so
+its launches already land in `app-graphical.slice`. Its journal logs the command it built, which is
+the quickest way to check.
+
+`Terminal=true` entries depend on `xdg-terminals.list` (set in `users/mixins/programs/kitty.nix`).
+Without it vicinae can resolve the terminal to kitty's `kitty +open %U` URL-launcher entry and
+append `-e <cmd>`, which errors instead of running anything. With it, vicinae passes
+`--class <entry-id>`, so a vicinae-launched `btop` has class `btop.desktop` where the bind's
+`cfg.terminal.mkRunCommand` gives `btop` — `mkWindowRules` matches only the latter.
 
 `nix build` proves the string was generated, nothing more; the check that means anything is
 `cut -d: -f3 < /proc/<pid>/cgroup` on a running app.

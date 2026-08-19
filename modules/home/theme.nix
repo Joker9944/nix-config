@@ -9,6 +9,7 @@ _:
   imports = with inputs.nix-schemes.homeModules; [
     gtk
     librewolf
+    vicinae
   ];
 
   config =

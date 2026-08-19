@@ -48,7 +48,7 @@ in
   error = palette.base08;
 
   black = {
-    dull = palette.base00;
+    dull = palette.base01;
     bright = palette.base02;
   };
 
@@ -77,7 +77,7 @@ in
     dull = palette.base0D;
   }
   // lib.optionalAttrs isBase24 {
-    bright = palette.base12;
+    bright = palette.base16;
   };
 
   magenta = {

@@ -4,8 +4,8 @@ title: Auto-discovery via mkDefaultModule
 description: Every `default.nix` in a mixin category directory calls `mkDefaultModule { dir = ./.; }`, which auto-imports every sibling `.nix` file — dropping a new file is enough to register it.
 tags: [architecture, modules, convention]
 generated:
-  by: process:okf-migrate
-  at: 2026-07-17T00:00:00Z
+  by: claude-code/claude-opus-5
+  at: 2026-08-19T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -35,6 +35,10 @@ For the mechanics of the fixed-point wrapper, read those files; the OKF-worthy f
 # Also applies to `lib/`
 
 `lib/default.nix` uses the same idea to expose every sibling file as an attribute. See [custom-lib](custom-lib.md).
+
+# The sub-flakes are the exception
+
+`apps/nix-schemes/` does **not** auto-discover: its `flake.nix` lists every module by hand under `nixosModules` / `homeModules`. A new file in `modules/home/` needs two registrations to reach a config — the export in `apps/nix-schemes/flake.nix`, then an entry in this repo's `modules/home/theme.nix` `imports`. Neither failure is loud; the module simply never loads and its options report as nonexistent.
 
 # Related
 

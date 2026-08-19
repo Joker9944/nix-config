@@ -14,28 +14,11 @@ mkDefaultHyprlandModule { dir = ./.; } {
       inherit (lib) mkOption types literalExpression;
     in
     {
-      type = mkOption {
+      toggleCommand = mkOption {
         type = types.str;
+        example = "vicinae toggle";
         description = ''
-          Which launcher to use.
-        '';
-      };
-
-      processName = mkOption {
-        type = types.str;
-        example = ".wofi-wrapped";
-        description = ''
-          The process name as reported by `ps -e`.
-        '';
-      };
-
-      mkDrunCommand = mkOption {
-        type = types.functionTo types.str;
-        example = literalExpression ''
-          { ... }: "''${bin.wofi}"
-        '';
-        description = ''
-          Function to generate a drun command.
+          Command to toggle the launcher.
         '';
       };
 
@@ -75,30 +58,33 @@ mkDefaultHyprlandModule { dir = ./.; } {
     };
 
   config = {
-    mixins.desktopEnvironment.hyprland.launcher.type = "rofi";
+    assertions = [
+      {
+        assertion =
+          lib.count (l: l.enable or false) (lib.filter lib.isAttrs (lib.attrValues cfg.launcher)) <= 1;
+        message = "hyprland: enable at most one launcher, got ${
+          toString (lib.attrNames (lib.filterAttrs (_: l: l.enable) cfg.launcher))
+        }";
+      }
+    ];
+
+    mixins.desktopEnvironment.hyprland.launcher.vicinae.enable = true;
 
     wayland.windowManager.hyprland.settings =
       let
         inherit (cfg.binds) mods;
         inherit (custom.lib.hyprland) mkLuaCall;
         inherit (lib.generators) mkLuaInline;
-
-        trimmedProcessName = lib.substring 0 15 cfg.launcher.processName; # maximum process name length is 15 characters
-        drunCommand = cfg.launcher.mkDrunCommand { icons = true; };
-
-        command = "pkill --exact \\\"${trimmedProcessName}\\\" || ${
-          cfg.mkAppCommand { elems = [ drunCommand ]; }
-        }";
       in
       {
         bind = [
           (mkLuaCall [
             "${mods.main} + R"
-            (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
+            (mkLuaInline "hl.dsp.exec_cmd(\"${cfg.launcher.toggleCommand}\")")
           ])
           (mkLuaCall [
             "${mods.main} + ${mods.main}_L"
-            (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
+            (mkLuaInline "hl.dsp.exec_cmd(\"${cfg.launcher.toggleCommand}\")")
             { release = true; }
           ])
         ];
