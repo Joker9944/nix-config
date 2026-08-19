@@ -18,7 +18,12 @@ mkDefaultHyprlandModule { dir = ./.; } {
     {
       mkAppCommand = mkOption {
         type = types.functionTo types.str;
-        default = { elems, ... }: custom.libUtil.strings.mkCommand elems;
+        default =
+          {
+            elems ? [ ],
+            ...
+          }:
+          custom.libUtil.strings.mkCommand elems;
         description = ''
           Wrap a command so UWSM launches it as its own unit in `app-graphical.slice`
           instead of inside the compositor's unit. `name` overrides the unit name UWSM
@@ -46,7 +51,7 @@ mkDefaultHyprlandModule { dir = ./.; } {
     mixins.desktopEnvironment.hyprland = lib.mkIf osConfig.programs.hyprland.withUWSM {
       mkAppCommand =
         {
-          elems,
+          elems ? [ ],
           name ? null,
           ...
         }:

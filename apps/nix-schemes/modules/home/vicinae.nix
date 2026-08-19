@@ -148,7 +148,10 @@ in
     in
     lib.mkIf cfg.enable {
       programs.vicinae = {
-        settings.theme.${cfg.scheme.variant}.name = slug;
+        settings = {
+          theme.${cfg.scheme.variant}.name = lib.mkDefault slug;
+          providers.theme.entrypoints.set.enabled = lib.mkDefault false;
+        };
 
         themes.${slug} = lib.recursiveUpdate theme cfg.theme;
       };

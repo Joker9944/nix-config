@@ -28,7 +28,50 @@ mkHyprlandModule {
         target = config.wayland.systemd.target;
       };
 
-      settings.launcher_window.opacity = cfg.style.opacity.active;
+      settings = {
+        # general
+        telemetry.system_info = false;
+        global_shortcuts.toggle = ""; # bind handled in hyprland
+        providers.applications.preferences.launchPrefix = cfg.mkAppCommand { };
+
+        # additional theming
+        launcher_window.opacity = cfg.style.opacity.active;
+        font.normal =
+          let
+            interfaceFont = config.custom.theme.fonts.interface;
+          in
+          {
+            family = interfaceFont.name;
+            inherit (interfaceFont) size;
+          };
+
+        # preferences
+        providers = {
+          clipboard.entrypoints.history.alias = "clip";
+          core.entrypoints = {
+            search-emojis.alias = "emoji";
+            about.enabled = false;
+            documentation.enabled = false;
+            sponsor.enabled = false;
+          };
+          files.entrypoints.search.alias = "file";
+          power.entrypoints = {
+            power-off.alias = "poweroff";
+            reboot.alias = "reboot";
+          };
+          system.entrypoints = {
+            run.alias = "run";
+            toggle-mute.enabled = false;
+            volume-0.enabled = false;
+            volume-25.enabled = false;
+            volume-50.enabled = false;
+            volume-75.enabled = false;
+            volume-100.enabled = false;
+            volume-down.enabled = false;
+            volume-up.enabled = false;
+          };
+        };
+      };
     };
 
     schemes.vicinae.enable = true;

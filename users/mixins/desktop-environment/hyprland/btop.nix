@@ -37,7 +37,7 @@ mkHyprlandModule {
           (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
         ])
         (mkLuaCall [
-          "CTRL + ALT + ESCAPE"
+          "CTRL + SHIFT + ESCAPE"
           (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
         ])
       ];
