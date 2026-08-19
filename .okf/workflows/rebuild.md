@@ -5,7 +5,7 @@ description: How to rebuild NixOS and home-manager from this flake, via nh or th
 tags: [workflow, build, nixos, home-manager]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-12T00:00:00Z
+  at: 2026-08-19T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -45,6 +45,12 @@ home-manager switch --flake .#joker9944@HAL9000
 ```
 
 The configuration key format is `<username>@<hostname>`; `nh` derives it from the current user and hostname.
+
+# Taking over a file that already exists
+
+`home.file` aborts activation when the target is already there and home-manager did not put it there. No `backupFileExtension` is set anywhere in this repo, so nothing moves the old file aside for you — delete it by hand, then rebuild.
+
+`programs.claude-code.settings` is the case that bites: it turns the runtime-written `~/.claude/settings.json` into a read-only store symlink, so every key `/config` or `/model` used to persist has to be declared in the mixin instead.
 
 # Checks and dry runs
 
