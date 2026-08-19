@@ -123,6 +123,8 @@ a spec disagreement — every other slot derives from the table.
 
 * [/architecture/custom-lib.md](/architecture/custom-lib.md) — how `libSchemes` and its transformers
   load.
+* [/reference/gtk-theming.md](/reference/gtk-theming.md) — why the GTK consumers above need adw-gtk3
+  for these slots to reach anything.
 
 [^base24-styling]: base24 styling specification (tinted-theming, v0.1.3)
 [^base16-styling]: tinted-theming base16 styling guidelines

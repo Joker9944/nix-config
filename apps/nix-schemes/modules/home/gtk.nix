@@ -85,10 +85,10 @@ in
           libSchemes.gtk.mkAccentsFromColor (cfg.overrides.accent libSchemes);
 
       accents = mkAccents cfg.scheme;
+
+      themeName = if cfg.scheme.variant == "light" then "adw-gtk3" else "adw-gtk3-dark";
     in
     lib.mkIf cfg.enable {
-      # TODO Rebuild this without a theme
-
       schemes.gtk.accentTransformer = scheme: _: {
         accent = (mkAccents scheme).${cfg.accent};
       };
@@ -99,7 +99,7 @@ in
         colorScheme = cfg.scheme.variant;
 
         theme = {
-          name = if cfg.scheme.variant == "light" then "adw-gtk3" else "adw-gtk3-dark";
+          name = themeName;
           inherit (cfg.theme) package;
         };
 
@@ -111,8 +111,12 @@ in
         );
 
         gtk4 = {
-          # WORKAROUND(nostalgic-lovelace) Has to be set since `home.stateVersion` is less than "26.05"
-          theme = config.gtk.theme;
+          # The adw-gtk3 theme is for gtk3 and gtk4 apps, NOT libadwaita apps.
+          # With the theme setting hm forces ALL apps to take the theme.
+          # Setting `gtk-theme-name` only for gtk3 and gtk4 apps.
+          theme = null;
+          # WORKAROUND Home-manager only emits `gtk-theme-name` when `gtk4.theme` is set
+          extraConfig.gtk-theme-name = themeName;
 
           extraCss = lib.mkBefore (
             libSchemes.gtk.adw-gtk3.mkGtk4ExtraCss {
