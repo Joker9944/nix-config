@@ -58,7 +58,7 @@ in
 
         colors = {
           core = {
-            accent = hex cfg.scheme.accent;
+            accent = hex (libSchemes.requireKey cfg.scheme "accent");
             accent_foreground = hex palette.base00;
             background = hex palette.base00;
             foreground = hex palette.base05;

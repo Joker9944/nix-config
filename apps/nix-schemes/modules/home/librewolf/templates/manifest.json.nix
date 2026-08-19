@@ -1,16 +1,20 @@
 # https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme#colors
-cfg:
+{
+  scheme,
+  accent,
+  addonId,
+  overrides,
+}:
 let
-  inherit (cfg) scheme;
   inherit (scheme) palette;
 in
 builtins.toJSON {
   manifest_version = 2;
   version = "1.0.0";
   inherit (scheme) name author;
-  browser_specific_settings.gecko.id = cfg.addonId;
+  browser_specific_settings.gecko.id = addonId;
   theme =
-    if cfg.overrides.theme == null then
+    if overrides.theme == null then
       {
         colors = {
           frame = "rgb(${palette.base01.rgb})"; # active frame background
@@ -21,12 +25,12 @@ builtins.toJSON {
           toolbar_text = "rgb(${palette.base05.rgb})"; # navigation bar text
           toolbar_field = "rgb(${palette.base01.rgb})"; # navigation fields background -> URL bar
           toolbar_field_text = "rgb(${palette.base05.rgb})"; # navigation bar fields text
-          toolbar_field_border_focus = "rgb(${cfg.accent.rgb})"; # focused element
+          toolbar_field_border_focus = "rgb(${accent.rgb})"; # focused element
           popup = "rgb(${palette.base00.rgb})"; # menu background
           popup_border = "rgb(${palette.base01.rgb})"; # menu border
           popup_text = "rgb(${palette.base05.rgb})";
         };
       }
     else
-      cfg.overrides.theme;
+      overrides.theme;
 }

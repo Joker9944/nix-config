@@ -1,11 +1,11 @@
 ---
 type: Architecture Pattern
 title: Custom lib
-description: Three libs — `lib/` for module-system helpers, `apps/util-lib` for general-purpose ones (`libUtil`), `apps/nix-schemes` for colour schemes (`libSchemes`). All directory-loaded by `mkLibNamespace`, all naming themselves `libSelf`.
+description: Three libs — `lib/` for module-system helpers, `apps/util-lib` for general-purpose ones (`libUtil`), `apps/nix-schemes` for colour schemes (`libSchemes`). All directory-loaded by `mkLibNamespace`, all naming themselves `libSelf`. Plus how a scheme's non-standard keys are supplied and read.
 tags: [architecture, lib, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-16T00:00:00Z
+  at: 2026-08-19T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -71,6 +71,19 @@ Notable helpers with non-obvious use:
 | `obfuscation/` | XOR-based string obfuscation, exposed via the `obfuscate` app in `apps.nix`. Hand-written `default.nix`, not directory-loaded — splitting it would make its ASCII table public. |
 
 `libUtil` holds the rest, in four namespaces: `strings` (`indent`, `indentLines`, `mkCommand`, `mkIndentPrefix`), `lists` (`first`, `last`), `files` (`list` — the directory scanner behind `mkDefaultModule`, `pkgs/default.nix` and the test runners), `numbers` (`clamp`, `toStringFloat`). Names are self-descriptive; open `apps/util-lib/lib/` when you need one.
+
+# Scheme keys
+
+A scheme guarantees only `system`, `name`, `author`, `variant` and `palette`; the type is freeform
+(`apps/nix-schemes/lib/types.nix`), so `accent`, `ansi` and `named`'s colour words exist only when a
+transformer added them. `schemes.transformers` is the *only* place they may come from — `mkScheme`
+keeps a closed argument pattern because each transformer is `recursiveUpdate`-merged over the scheme,
+so a key set at construction is silently clobbered by any later transformer touching the same
+subtree.
+
+Read them with `libSchemes.requireKey scheme path` (a bare string is a one-element path), which names
+the scheme, the path, and what was available at the level that failed. Reading one directly gets you
+`attribute 'accent' missing` and no hint about the transformer that was supposed to supply it.
 
 # Doc-strings
 

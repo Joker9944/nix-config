@@ -1,7 +1,8 @@
 /**
   Create a scheme object with a chainable `transform` method.
   The `transform` method accepts a function `(prevScheme: libSchemes: attrset)`
-  whose return value is recursively merged into the scheme.
+  whose return value is recursively merged into the scheme, so a later transformer
+  wins over an earlier one on any key both touch.
 
   # Type
 

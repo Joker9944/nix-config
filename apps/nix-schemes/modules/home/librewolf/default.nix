@@ -5,6 +5,9 @@ flake:
   pkgs,
   ...
 }:
+let
+  libSchemes = flake.lib.libSchemes;
+in
 {
   options.schemes.librewolf =
     let
@@ -14,7 +17,7 @@ flake:
         types
         literalExpression
         ;
-      customTypes = flake.lib.libSchemes.types;
+      customTypes = libSchemes.types;
     in
     {
       enable = mkEnableOption "librewolf theming based on custom theme";
@@ -24,15 +27,6 @@ flake:
         default = config.schemes.scheme;
         description = ''
           Color scheme used to theme librewolf.
-        '';
-      };
-
-      accent = mkOption {
-        type = customTypes.color;
-        example = literalExpression "config.schemes.gtk.accent";
-        description = ''
-          Accent color used for focused elements. Has no default since a scheme carries no
-          accent on its own; supply one from a transformer or another module.
         '';
       };
 
@@ -75,6 +69,8 @@ flake:
     let
       cfg = config.schemes.librewolf;
 
+      accent = libSchemes.requireKey cfg.scheme "accent";
+
       themeExtensionPackage = pkgs.callPackage (
         { stdenvNoCC, zip, ... }:
         stdenvNoCC.mkDerivation {
@@ -82,7 +78,10 @@ flake:
 
           nativeBuildInputs = [ zip ];
 
-          manifest = import ./templates/manifest.json.nix cfg;
+          manifest = import ./templates/manifest.json.nix {
+            inherit (cfg) scheme addonId overrides;
+            inherit accent;
+          };
           passAsFile = [ "manifest" ];
 
           dontUnpack = true;

@@ -48,17 +48,21 @@ mkHyprlandModule {
         # preferences
         providers = {
           clipboard.entrypoints.history.alias = "clip";
+
           core.entrypoints = {
             search-emojis.alias = "emoji";
             about.enabled = false;
             documentation.enabled = false;
             sponsor.enabled = false;
           };
+
           files.entrypoints.search.alias = "file";
+
           power.entrypoints = {
             power-off.alias = "poweroff";
             reboot.alias = "reboot";
           };
+
           system.entrypoints = {
             run.alias = "run";
             toggle-mute.enabled = false;
