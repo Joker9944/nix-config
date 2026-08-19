@@ -24,7 +24,7 @@ let
   isBase24 = scheme.system == "base24";
 in
 {
-  # https://github.com/Base24/base24/blob/master/styling.md
+  # https://github.com/tinted-theming/base24/blob/main/styling.md
   background = {
     normal = palette.base00;
     light = palette.base01;

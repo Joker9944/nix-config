@@ -102,6 +102,7 @@ dull/bright pair that shifts hue is the symptom of having crossed the two vocabu
 | `apps/nix-schemes/lib/transformers/named.nix` | base24 ANSI, despite colour-word attribute names; shape is 8 colours × `dull`/`bright` |
 | `apps/nix-schemes/lib/gtk/mkAccentsFromPalette.nix` | base24 — `yellow = base09`; no orange slot, so derives one as `base08.mix base09 0.5` |
 | `apps/nix-schemes/modules/home/vicinae.nix` | base16 colour names — `orange = base09`, `yellow = base0A` |
+| `apps/nix-schemes/modules/home/kitty.nix` | base24 — reads the scheme's `ansi` for `color0`–`color15` rather than naming colours itself |
 
 `named.nix` is the one to read twice: its attributes look like colour names but the framing is ANSI,
 so `yellow.dull = base09` is correct there and would be wrong in a UI accent block.

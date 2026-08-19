@@ -9,6 +9,7 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 - vicinae wraps its own launches in `uwsm-app`; its `Terminal=true` path needs `xdg-terminals.list` — [architecture/uwsm-session](/architecture/uwsm-session.md)
 - base24 slots documented: the five ANSI assignments base16 and base24 disagree on, and which each consumer follows — [reference/base24](/reference/base24.md)
 - Scheme non-standard keys come only from `schemes.transformers` and are read with `libSchemes.requireKey` — [architecture/custom-lib](/architecture/custom-lib.md)
+- kitty home module added; follows base24 ANSI via the scheme's `ansi` attribute — [reference/base24](/reference/base24.md)
 
 ## 2026-08-17
 

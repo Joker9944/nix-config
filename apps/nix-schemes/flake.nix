@@ -118,6 +118,7 @@
 
           scheme = import ./modules/global/scheme.nix self;
           gtk = import ./modules/home/gtk.nix self;
+          kitty = import ./modules/home/kitty.nix self;
           librewolf = import ./modules/home/librewolf self;
           vicinae = import ./modules/home/vicinae.nix self;
         };

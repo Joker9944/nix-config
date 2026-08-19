@@ -8,6 +8,7 @@ _:
 {
   imports = with inputs.nix-schemes.homeModules; [
     gtk
+    kitty
     librewolf
     vicinae
   ];
