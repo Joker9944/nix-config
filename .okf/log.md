@@ -10,6 +10,8 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 - base24 slots documented: the five ANSI assignments base16 and base24 disagree on, and which each consumer follows — [reference/base24](/reference/base24.md)
 - Scheme non-standard keys come only from `schemes.transformers` and are read with `libSchemes.requireKey` — [architecture/custom-lib](/architecture/custom-lib.md)
 - kitty home module added; follows base24 ANSI via the scheme's `ansi` attribute — [reference/base24](/reference/base24.md)
+- base24 spec source corrected to tinted-theming; the fork's four divergent ANSI slots were wrong in `ansi.nix`, `named.nix` and `mkAccentsFromPalette.nix` — [reference/base24](/reference/base24.md)
+- Status colours documented as a deliberate deviation: `warning` is `base09`, not the spec's `base0F`; `success` added — [reference/base24](/reference/base24.md)
 
 ## 2026-08-17
 

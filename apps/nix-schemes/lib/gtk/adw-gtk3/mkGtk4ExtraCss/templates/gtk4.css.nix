@@ -36,7 +36,7 @@ palette: accents: accent: ''
   @define-color destructive_bg_color #${palette.base08.hex}; /* red */
 
   @define-color success_bg_color #${palette.base0B.hex}; /* green */
-  @define-color warning_bg_color #${palette.base09.hex}; /* yellow */
+  @define-color warning_bg_color #${palette.base09.hex}; /* orange */
   @define-color error_bg_color #${palette.base08.hex}; /* red */
   :root {
     --accent-blue: #${accents.blue.hex};

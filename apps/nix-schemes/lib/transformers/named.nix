@@ -2,6 +2,10 @@
   Add semantic named color attributes to the scheme.
   Provides human-readable names like background, foreground, error, etc.
 
+  Status colors are `info` blue, `warning` orange, `error` red and `success` green. The color
+  words are ANSI-framed: `yellow.dull` is ANSI 3, so `base0A`, and `base09` (orange) carries no
+  color word of its own.
+
   # Example
 
   ```nix
@@ -9,9 +13,10 @@
   => {
     background = { normal = <color>; light = <color>; ... };
     foreground = { dark = <color>; normal = <color>; ... };
-    error = <color>;
-    warning = <color>;
     info = <color>;
+    warning = <color>;
+    error = <color>;
+    success = <color>;
     red = { dull = <color>; bright = <color>; };
     ...
   }
@@ -43,13 +48,16 @@ in
     lighter = palette.base07;
   };
 
+  # Status colors follow the conventional UI hues, not the spec's text-editor guidance, which
+  # assigns `base0F` to warnings — a dark red or brown that is hard to tell from `error`.
   info = palette.base0D;
   warning = palette.base09;
   error = palette.base08;
+  success = palette.base0B;
 
   black = {
-    dull = palette.base01;
-    bright = palette.base02;
+    dull = palette.base00;
+    bright = palette.base03;
   };
 
   red = {
@@ -67,7 +75,7 @@ in
   };
 
   yellow = {
-    dull = palette.base09;
+    dull = palette.base0A;
   }
   // lib.optionalAttrs isBase24 {
     bright = palette.base13;
@@ -95,7 +103,7 @@ in
   };
 
   white = {
-    dull = palette.base06;
+    dull = palette.base05;
     bright = palette.base07;
   };
 }

@@ -8,21 +8,6 @@
 let
   libSchemes = inputs.nix-schemes.lib.libSchemes;
 
-  # The designed mapping deviates from the base24 default in these four slots.
-  orchidliftAnsi =
-    scheme: _:
-    let
-      inherit (scheme) palette;
-    in
-    {
-      ansi = {
-        "0" = palette.base00;
-        "8" = palette.base03;
-        "3" = palette.base0A;
-        "7" = palette.base05;
-      };
-    };
-
   defaultCursor = {
     name = "breeze_cursors";
     package = pkgs.kdePackages.breeze;
@@ -61,7 +46,6 @@ let
         transformers = [
           libSchemes.transformers.named
           libSchemes.transformers.ansi
-          orchidliftAnsi
         ];
       };
     };

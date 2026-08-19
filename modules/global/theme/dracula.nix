@@ -29,35 +29,16 @@ mkThemeModule "dracula" {
 
     transformers =
       let
-        draculaAnsi =
-          _: colorLib:
-          let
-            mkColorFromHex = hex: colorLib.mkColor (colorLib.fromHex hex);
-          in
-          {
-            ansi = {
-              "0" = mkColorFromHex "#21222C";
-              "8" = mkColorFromHex "#6272A4";
-              "1" = mkColorFromHex "#FF5555";
-              "9" = mkColorFromHex "#FF6E6E";
-              "2" = mkColorFromHex "#50FA7B";
-              "A" = mkColorFromHex "#69FF94";
-              "3" = mkColorFromHex "#F1FA8C";
-              "B" = mkColorFromHex "#FFFFA5";
-              "4" = mkColorFromHex "#BD93F9";
-              "C" = mkColorFromHex "#D6ACFF";
-              "5" = mkColorFromHex "#FF79C6";
-              "D" = mkColorFromHex "#FF92DF";
-              "6" = mkColorFromHex "#8BE9FD";
-              "E" = mkColorFromHex "#A4FFFF";
-              "7" = mkColorFromHex "#F8F8F2";
-              "F" = mkColorFromHex "#FFFFFF";
-            };
-          };
+        # Dracula ships an ANSI black distinct from its background; the scheme parks it in
+        # base01, where the spec puts base00. Every other slot derives from the spec.
+        draculaAnsi = scheme: _: {
+          ansi."0" = scheme.palette.base01;
+        };
         schemeTransformers = inputs.nix-schemes.lib.libSchemes.transformers;
       in
       [
         schemeTransformers.named
+        schemeTransformers.ansi
         draculaAnsi
       ];
   };

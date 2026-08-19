@@ -48,7 +48,7 @@ else
         lib.map (n: -n) (libSchemes.color.calcColorRatios palette.base01.dec palette.base02.dec)
       );
       base12 = palette.base08.lighten lightenWeight;
-      base13 = palette.base09.lighten lightenWeight;
+      base13 = palette.base0A.lighten lightenWeight;
       base14 = palette.base0B.lighten lightenWeight;
       base15 = palette.base0C.lighten lightenWeight;
       base16 = palette.base0D.lighten lightenWeight;

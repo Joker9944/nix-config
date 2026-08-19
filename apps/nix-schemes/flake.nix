@@ -114,7 +114,7 @@
         };
 
         homeModules = {
-          default = self.homeManagerModules.scheme;
+          default = self.homeModules.scheme;
 
           scheme = import ./modules/global/scheme.nix self;
           gtk = import ./modules/home/gtk.nix self;
