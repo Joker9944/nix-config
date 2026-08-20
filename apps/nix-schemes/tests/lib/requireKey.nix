@@ -1,11 +1,11 @@
 { libSchemes, ... }:
 let
-  base = libSchemes.mkScheme {
+  base = libSchemes.color.mkScheme {
     system = "base16";
     name = "Test Scheme";
     author = "tester";
     variant = "dark";
-    palette.base00 = libSchemes.mkColor [
+    palette.base00 = libSchemes.color.mkColor [
       0
       0
       0
@@ -14,13 +14,13 @@ let
 
   scheme = base.transform (
     _: _: {
-      accent = libSchemes.mkColor [
+      accent = libSchemes.color.mkColor [
         180
         120
         174
       ];
 
-      background.normal = libSchemes.mkColor [
+      background.normal = libSchemes.color.mkColor [
         1
         2
         3

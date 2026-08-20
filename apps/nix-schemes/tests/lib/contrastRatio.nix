@@ -18,13 +18,13 @@
   testAcceptsColor = {
     expr =
       libSchemes.color.contrastRatio
-        (libSchemes.mkColor [
+        (libSchemes.color.mkColor [
           217
           83
           107
         ])
         (
-          libSchemes.mkColor [
+          libSchemes.color.mkColor [
             233
             221
             242

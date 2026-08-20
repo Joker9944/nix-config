@@ -37,7 +37,7 @@ base: slug:
 let
   scheme = libSelf.fromYaml "${inputs.schemes}/${base}/${slug}.yaml";
 in
-libSelf.mkScheme {
+libSelf.color.mkScheme {
   inherit (scheme)
     system
     name
@@ -46,7 +46,7 @@ libSelf.mkScheme {
     ;
 
   palette = lib.pipe scheme.palette [
-    (lib.mapAttrs (_: hex: libSelf.fromHex hex))
-    (lib.mapAttrs (_: dec: libSelf.mkColor dec))
+    (lib.mapAttrs (_: hex: libSelf.color.fromHex hex))
+    (lib.mapAttrs (_: dec: libSelf.color.mkColor dec))
   ];
 }

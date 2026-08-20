@@ -13,7 +13,7 @@ let
 in
 {
   testLightenZero = {
-    expr = (libSchemes.lighten gray 0).dec;
+    expr = (libSchemes.color.lighten gray 0).dec;
     expected = [
       128
       128
@@ -22,7 +22,7 @@ in
   };
 
   testLightenFull = {
-    expr = (libSchemes.lighten gray 1).dec;
+    expr = (libSchemes.color.lighten gray 1).dec;
     expected = [
       255
       255
@@ -31,7 +31,7 @@ in
   };
 
   testLightenHalf = {
-    expr = (libSchemes.lighten gray 0.5).dec;
+    expr = (libSchemes.color.lighten gray 0.5).dec;
     expected = [
       192
       192
@@ -40,7 +40,7 @@ in
   };
 
   testLightenBlack = {
-    expr = (libSchemes.lighten black 0.5).dec;
+    expr = (libSchemes.color.lighten black 0.5).dec;
     expected = [
       128
       128
@@ -49,7 +49,7 @@ in
   };
 
   testLightenColorObject = {
-    expr = (libSchemes.lighten (libSchemes.mkColor gray) 0.5).dec;
+    expr = (libSchemes.color.lighten (libSchemes.color.mkColor gray) 0.5).dec;
     expected = [
       192
       192

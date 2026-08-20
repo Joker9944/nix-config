@@ -1,16 +1,16 @@
 { libSchemes, ... }:
 let
-  red = libSchemes.mkColor [
+  red = libSchemes.color.mkColor [
     255
     0
     0
   ];
-  white = libSchemes.mkColor [
+  white = libSchemes.color.mkColor [
     255
     255
     255
   ];
-  black = libSchemes.mkColor [
+  black = libSchemes.color.mkColor [
     0
     0
     0
@@ -42,7 +42,7 @@ in
   };
 
   testMkColorIsColor = {
-    expr = libSchemes.isColor red;
+    expr = libSchemes.color.isColor red;
     expected = true;
   };
 

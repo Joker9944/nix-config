@@ -23,11 +23,11 @@
 }:
 a: b: weight:
 let
-  aDec = if libSelf.isColor a then a.dec else a;
-  bDec = if libSelf.isColor b then b.dec else b;
+  aDec = if libSelf.color.isColor a then a.dec else a;
+  bDec = if libSelf.color.isColor b then b.dec else b;
 in
 lib.pipe bDec [
   (lib.zipListsWith (a: b: a * (1 - weight) + b * weight) aDec)
   (lib.map libMath.round)
-  libSelf.mkColor
+  libSelf.color.mkColor
 ]

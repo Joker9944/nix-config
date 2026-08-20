@@ -27,11 +27,11 @@
 }:
 a: factor:
 let
-  aDec = if libSelf.isColor a then a.dec else a;
+  aDec = if libSelf.color.isColor a then a.dec else a;
 in
 lib.pipe aDec [
   (lib.map (c: c * factor))
   (lib.map libMath.round)
   (lib.map (libUtil.numbers.clamp 0 255))
-  libSelf.mkColor
+  libSelf.color.mkColor
 ]

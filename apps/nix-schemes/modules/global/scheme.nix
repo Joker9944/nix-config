@@ -43,51 +43,6 @@ flake:
               '';
             };
 
-            picture = mkOption {
-              type = types.submodule {
-                options = {
-                  image = mkOption {
-                    type = types.path;
-                    description = ''
-                      The image the scheme should be based on.
-                    '';
-                  };
-
-                  name = mkOption {
-                    type = types.nullOr types.str;
-                    default = null;
-                    description = ''
-                      The name set for the generated scheme.
-                    '';
-                  };
-
-                  author = mkOption {
-                    type = types.nullOr types.str;
-                    default = null;
-                    description = ''
-                      The author set for the generated scheme.
-                    '';
-                  };
-
-                  variant = mkOption {
-                    type = types.nullOr (
-                      types.enum [
-                        "light"
-                        "dark"
-                      ]
-                    );
-                    default = null;
-                    description = ''
-                      Forces light or dark mode for `base24-gen`. Will be auto detected if set to null.
-                    '';
-                  };
-                };
-              };
-              description = ''
-                Generates a base24 color scheme based on an image using `base24-gen`.
-              '';
-            };
-
             override = mkOption {
               type = customTypes.scheme;
               description = ''
@@ -109,7 +64,7 @@ flake:
           Functions that modify the scheme before it becomes available as `schemes.scheme`.
           Common uses include adding custom colors, converting base16 to base24, or
           adding accent colors from other modules like `schemes.gtk.accentTransformer`.
-          Some built-in transformers are available in `libColor.transformers`.
+          Some built-in transformers are available in `libSchemes.transformers`.
         '';
       };
 
@@ -131,18 +86,11 @@ flake:
         flake.schemes.${cfg.source.scheme.system}.${cfg.source.scheme.slug}.convert
           pkgs;
 
-      imageScheme = (flake.lib.libSchemes.init pkgs).generateSchemeFromImage {
-        inherit (cfg.source.picture) image name author;
-        mode = cfg.source.picture.variant;
-      };
-
       scheme =
         if cfg.source == null then
           null
         else if cfg.source ? scheme then
           tintedThemingScheme
-        else if cfg.source ? picture then
-          imageScheme
         else
           cfg.source.override;
 

@@ -1,8 +1,8 @@
 { libSchemes, ... }:
 {
   testIsColorWithColorObject = {
-    expr = libSchemes.isColor (
-      libSchemes.mkColor [
+    expr = libSchemes.color.isColor (
+      libSchemes.color.mkColor [
         255
         0
         0
@@ -12,7 +12,7 @@
   };
 
   testIsColorWithDecList = {
-    expr = libSchemes.isColor [
+    expr = libSchemes.color.isColor [
       255
       0
       0
@@ -21,22 +21,22 @@
   };
 
   testIsColorWithString = {
-    expr = libSchemes.isColor "#FF0000";
+    expr = libSchemes.color.isColor "#FF0000";
     expected = false;
   };
 
   testIsColorWithEmptyAttrs = {
-    expr = libSchemes.isColor { };
+    expr = libSchemes.color.isColor { };
     expected = false;
   };
 
   testIsColorWithWrongAttr = {
-    expr = libSchemes.isColor { rgb = "rgb(0,0,0)"; };
+    expr = libSchemes.color.isColor { rgb = "rgb(0,0,0)"; };
     expected = false;
   };
 
   testIsColorWithDecAttr = {
-    expr = libSchemes.isColor {
+    expr = libSchemes.color.isColor {
       dec = [
         0
         0
@@ -47,7 +47,7 @@
   };
 
   testIsColorWithWrongLength = {
-    expr = libSchemes.isColor {
+    expr = libSchemes.color.isColor {
       dec = [
         0
         0
@@ -57,7 +57,7 @@
   };
 
   testIsColorWithDecNotList = {
-    expr = libSchemes.isColor { dec = "not a list"; };
+    expr = libSchemes.color.isColor { dec = "not a list"; };
     expected = false;
   };
 }

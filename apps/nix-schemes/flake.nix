@@ -3,27 +3,27 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable-small";
+
     flake-utils.url = "github:numtide/flake-utils/main"; # cSpell:ignore numtide
-    schemes = {
-      url = "github:tinted-theming/schemes/spec-0.11";
-      flake = false;
-    };
     nix-math = {
       url = "github:xddxdd/nix-math/master"; # cSpell:ignore xddxdd
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    base24-gen = {
-      url = "github:psyclyx/base24-gen/main"; # cSpell:ignore psyclyx
+    util-lib = {
+      url = ../util-lib;
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
+    };
+
+    schemes = {
+      url = "github:tinted-theming/schemes/spec-0.11";
       flake = false;
     };
     adw-colors = {
       url = "github:lassekongo83/adw-colors/main"; # cSpell:ignore lassekongo
       flake = false;
-    };
-    util-lib = {
-      url = "path:../util-lib";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-utils.follows = "flake-utils";
     };
   };
 
@@ -39,10 +39,6 @@
           pkgs = nixpkgs.legacyPackages.${system};
         in
         {
-          packages = {
-            base24-gen = pkgs.callPackage "${inputs.base24-gen}/package.nix" { };
-          };
-
           apps = {
             test-lib = {
               type = "app";
@@ -52,12 +48,6 @@
                 ''
               );
               meta.description = "Run lib tests";
-            };
-
-            base24-gen = {
-              type = "app";
-              program = lib.getExe self.packages.${system}.base24-gen;
-              inherit (self.packages.${system}.base24-gen) meta;
             };
           };
 

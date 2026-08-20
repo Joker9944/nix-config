@@ -5,7 +5,7 @@ description: Three libs — `lib/` for module-system helpers, `apps/util-lib` fo
 tags: [architecture, lib, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-19T00:00:00Z
+  at: 2026-08-20T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -17,7 +17,7 @@ verified:
 |---|---|---|
 | `lib/` | `flake.lib` | Helpers that only mean something to a module evaluation |
 | `apps/util-lib/lib/` | `lib.libUtil` | General-purpose Nix helpers — `strings`, `lists`, `files`, `numbers` |
-| `apps/nix-schemes/lib/` | `lib.libSchemes` | Colour-scheme construction, GTK CSS, transformers |
+| `apps/nix-schemes/lib/` | `lib.libSchemes` | `color` (construction, conversion, WCAG metrics), `gtk`, `transformers`, plus `requireKey`, `types` and `init` at the root |
 
 [/decisions/util-lib-split.md](/decisions/util-lib-split.md) has the boundary and the reasoning. All three load the same way, name themselves the same way, and nest under `lib.<name>` so a consumer's `inherit` reads the same as the tree's own arg — matching `inputs.nix-math.lib.math`.
 
@@ -37,11 +37,11 @@ Inside `apps/util-lib` it reads `libSelf.mkLibNamespace` instead, since that tre
 
 Each flake ties the fixed point exactly once, in its own `flake.nix`. The args thread down unchanged, so a leaf at any depth sees the whole tree — `lib/modules/mkMixinModule.nix` reaches a sibling as `libSelf.modules.mkConditionalModule`.
 
-`apps/nix-schemes/lib/init/` is the one deliberate second fixed point. `init` is a lib *constructor* (`pkgs -> libSchemes`), not a namespace: it re-loads its own directory with `pkgs` in scope and merges the result into the **root**, so `generateScheme` and `fromYaml` are top-level members of the returned lib rather than living under `.init`.
+`apps/nix-schemes/lib/init/` is the one deliberate second fixed point. `init` is a lib *constructor* (`pkgs -> libSchemes`), not a namespace: it re-loads its own directory with `pkgs` in scope and merges the result into the **root**, so `generateScheme`, `fromYaml` and `mkGtkThemeCss` are top-level members of the returned lib rather than living under `.init`.
 
 # Argument convention
 
-A lib is injected into its own files as **`libSelf`**; a foreign lib arrives under its own name — `libUtil`, `libSchemes`, `libMath`. That holds in *every* position, not just module arguments: a callback parameter takes the name too, so the transformer protocol at `apps/nix-schemes/lib/mkScheme.nix` is `prevScheme: libSchemes: attrset`. `flake` is the flake self; `self` names nothing here. Why it works that way is in [decisions/util-lib-split](/decisions/util-lib-split.md).
+A lib is injected into its own files as **`libSelf`**; a foreign lib arrives under its own name — `libUtil`, `libSchemes`, `libMath`. That holds in *every* position, not just module arguments: a callback parameter takes the name too, so the transformer protocol at `apps/nix-schemes/lib/color/mkScheme.nix` is `prevScheme: libSchemes: attrset`. `flake` is the flake self; `self` names nothing here. Why it works that way is in [decisions/util-lib-split](/decisions/util-lib-split.md).
 
 Consumers outside `lib/`:
 

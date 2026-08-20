@@ -1,7 +1,7 @@
 { libSchemes, ... }:
 {
   testFromHexBlack = {
-    expr = libSchemes.fromHex "#000000";
+    expr = libSchemes.color.fromHex "#000000";
     expected = [
       0
       0
@@ -10,7 +10,7 @@
   };
 
   testFromHexWhite = {
-    expr = libSchemes.fromHex "#FFFFFF";
+    expr = libSchemes.color.fromHex "#FFFFFF";
     expected = [
       255
       255
@@ -19,7 +19,7 @@
   };
 
   testFromHexRed = {
-    expr = libSchemes.fromHex "#FF0000";
+    expr = libSchemes.color.fromHex "#FF0000";
     expected = [
       255
       0
@@ -28,7 +28,7 @@
   };
 
   testFromHexGreen = {
-    expr = libSchemes.fromHex "#00FF00";
+    expr = libSchemes.color.fromHex "#00FF00";
     expected = [
       0
       255
@@ -37,7 +37,7 @@
   };
 
   testFromHexBlue = {
-    expr = libSchemes.fromHex "#0000FF";
+    expr = libSchemes.color.fromHex "#0000FF";
     expected = [
       0
       0
@@ -46,7 +46,7 @@
   };
 
   testFromHexMixed = {
-    expr = libSchemes.fromHex "#1A2B3C";
+    expr = libSchemes.color.fromHex "#1A2B3C";
     expected = [
       26
       43
@@ -55,7 +55,7 @@
   };
 
   testFromHexLowercase = {
-    expr = libSchemes.fromHex "#abcdef";
+    expr = libSchemes.color.fromHex "#abcdef";
     expected = [
       171
       205
@@ -64,7 +64,7 @@
   };
 
   testFromHexWithoutHash = {
-    expr = libSchemes.fromHex "AABBCC"; # cSpell:ignore AABBCC
+    expr = libSchemes.color.fromHex "AABBCC"; # cSpell:ignore AABBCC
     expected = [
       170
       187

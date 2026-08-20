@@ -10,7 +10,7 @@
   # Type
 
   ```
-  mkThemeCss :: { scheme, accents, accent? } -> derivation
+  mkGtkThemeCss :: { scheme, accents, accent? } -> derivation
   ```
 
   # Arguments
@@ -22,7 +22,7 @@
   # Example
 
   ```nix
-  mkThemeCss {
+  mkGtkThemeCss {
     inherit scheme;
     accents = gtk.mkAccentsFromPalette scheme.palette;
     accent = "purple";
@@ -74,8 +74,8 @@ let
 
     # adw-colors' $wm_border / $wm_border_backdrop: 18% and 5% white over the
     # window background.
-    wm_border = libSelf.lighten palette.base00 0.18;
-    wm_border_backdrop = libSelf.lighten palette.base00 0.05;
+    wm_border = libSelf.color.lighten palette.base00 0.18;
+    wm_border_backdrop = libSelf.color.lighten palette.base00 0.05;
   }
   // lib.mapAttrs' (name: lib.nameValuePair "accent_${name}") accents;
 in

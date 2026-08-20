@@ -34,13 +34,13 @@ let
       };
 
       schemes = {
-        source.override = libSchemes.mkScheme {
+        source.override = libSchemes.color.mkScheme {
           system = "base24";
           name = "ORCHIDLIFT ${lib.toUpper variant}";
           author = "Joker9944 (https://github.com/Joker9944)";
           variant = "dark";
 
-          palette = lib.mapAttrs (_: hex: libSchemes.mkColor (libSchemes.fromHex hex)) palette;
+          palette = lib.mapAttrs (_: hex: libSchemes.color.mkColor (libSchemes.color.fromHex hex)) palette;
         };
 
         transformers = [

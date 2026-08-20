@@ -29,7 +29,7 @@
   ```
 */
 { libSelf, ... }:
-dec: with libSelf; {
+dec: with libSelf.color; {
   inherit dec;
   hex = toHex dec;
   rgb = toRgb dec;

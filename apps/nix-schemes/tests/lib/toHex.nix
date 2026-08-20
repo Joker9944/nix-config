@@ -1,7 +1,7 @@
 { libSchemes, ... }:
 {
   testToHexBlack = {
-    expr = libSchemes.toHex [
+    expr = libSchemes.color.toHex [
       0
       0
       0
@@ -10,7 +10,7 @@
   };
 
   testToHexWhite = {
-    expr = libSchemes.toHex [
+    expr = libSchemes.color.toHex [
       255
       255
       255
@@ -19,7 +19,7 @@
   };
 
   testToHexRed = {
-    expr = libSchemes.toHex [
+    expr = libSchemes.color.toHex [
       255
       0
       0
@@ -28,7 +28,7 @@
   };
 
   testToHexGreen = {
-    expr = libSchemes.toHex [
+    expr = libSchemes.color.toHex [
       0
       255
       0
@@ -37,7 +37,7 @@
   };
 
   testToHexBlue = {
-    expr = libSchemes.toHex [
+    expr = libSchemes.color.toHex [
       0
       0
       255
@@ -46,7 +46,7 @@
   };
 
   testToHexMixed = {
-    expr = libSchemes.toHex [
+    expr = libSchemes.color.toHex [
       26
       43
       60
@@ -55,7 +55,7 @@
   };
 
   testToHexSingleDigit = {
-    expr = libSchemes.toHex [
+    expr = libSchemes.color.toHex [
       1
       2
       3

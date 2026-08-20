@@ -174,7 +174,7 @@ flake.lib.modules.mkDefaultModule
           (scheme: libSchemes: {
             accent =
               if cfg.accent != null then
-                libSchemes.mkColor (libSchemes.fromHex cfg.accent)
+                libSchemes.color.mkColor (libSchemes.color.fromHex cfg.accent)
               else
                 (libSchemes.gtk.mkAccentsFromPalette scheme.palette).${cfg.gtk.accent};
           })

@@ -54,7 +54,7 @@ in
       overrides.accent = mkOption {
         type = types.nullOr (types.functionTo customTypes.color);
         default = null;
-        example = literalExpression "libSchemes: libSchemes.mkColor [ 0 127 255 ]";
+        example = literalExpression "libSchemes: libSchemes.color.mkColor [ 0 127 255 ]";
         description = ''
           Custom accent color to override accent colors derived from scheme.
         '';
@@ -71,7 +71,7 @@ in
         else
           libSchemes.gtk.mkAccentsFromColor (cfg.overrides.accent libSchemes);
 
-      themeCss = libSchemes.mkThemeCss {
+      themeCss = libSchemes.mkGtkThemeCss {
         inherit (cfg) scheme accent;
         inherit accents;
       };

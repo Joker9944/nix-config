@@ -13,7 +13,7 @@ let
 in
 {
   testDarkenZero = {
-    expr = (libSchemes.darken gray 0).dec;
+    expr = (libSchemes.color.darken gray 0).dec;
     expected = [
       128
       128
@@ -22,7 +22,7 @@ in
   };
 
   testDarkenFull = {
-    expr = (libSchemes.darken gray 1).dec;
+    expr = (libSchemes.color.darken gray 1).dec;
     expected = [
       0
       0
@@ -31,7 +31,7 @@ in
   };
 
   testDarkenHalf = {
-    expr = (libSchemes.darken gray 0.5).dec;
+    expr = (libSchemes.color.darken gray 0.5).dec;
     expected = [
       64
       64
@@ -40,7 +40,7 @@ in
   };
 
   testDarkenWhite = {
-    expr = (libSchemes.darken white 0.5).dec;
+    expr = (libSchemes.color.darken white 0.5).dec;
     expected = [
       128
       128
@@ -49,7 +49,7 @@ in
   };
 
   testDarkenColorObject = {
-    expr = (libSchemes.darken (libSchemes.mkColor gray) 0.5).dec;
+    expr = (libSchemes.color.darken (libSchemes.color.mkColor gray) 0.5).dec;
     expected = [
       64
       64

@@ -67,7 +67,7 @@ named-colour counterpart.
 
 # How the CSS is generated
 
-`libSchemes.mkThemeCss { scheme, accents, accent }` compiles `lib/init/mkThemeCss/scss/` with
+`libSchemes.mkGtkThemeCss { scheme, accents, accent }` compiles `lib/init/mkGtkThemeCss/scss/` with
 dart-sass into a directory holding `gtk3.css` and `gtk4.css`. Consumers `@import` those store paths
 from `extraCss`, so evaluation never reads the derivation — no IFD. Entry points are static, one per
 toolkit and variant. Colour maths stays in `libSchemes` where `tests/lib/` can reach it.

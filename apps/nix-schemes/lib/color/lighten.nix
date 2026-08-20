@@ -17,7 +17,7 @@
 */
 { libSelf, ... }:
 color: weight:
-libSelf.mix color [
+libSelf.color.mix color [
   255
   255
   255

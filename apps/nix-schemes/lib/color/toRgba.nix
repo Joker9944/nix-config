@@ -22,6 +22,6 @@
 }:
 color: alpha:
 lib.pipe color [
-  libSelf.toRgb
+  libSelf.color.toRgb
   (rgb: "${rgb},${libUtil.numbers.toStringFloat alpha}")
 ]

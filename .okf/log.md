@@ -4,13 +4,15 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 
 ## 2026-08-20
 
+- Colour primitives and WCAG metrics moved under `libSchemes.color`; only `requireKey`, `types` and `init`'s members sit at the root — [architecture/custom-lib](/architecture/custom-lib.md)
+- The image-based scheme source (`schemes.source.picture`, `base24-gen`) is gone — [architecture/custom-lib](/architecture/custom-lib.md)
 - GTK CSS routing split: `_defaults.scss` reads palette literals only, `settings/_colors.scss` holds toolkit-branched reference forms for widget rules — [reference/gtk-theming](/reference/gtk-theming.md)
-- `mkThemeCss` drops IFD (consumers `@import` the store path), gains static per-variant entry points and multi-root `SASS_PATH` — [reference/gtk-theming](/reference/gtk-theming.md)
+- `mkGtkThemeCss` drops IFD (consumers `@import` the store path), gains static per-variant entry points and multi-root `SASS_PATH` — [reference/gtk-theming](/reference/gtk-theming.md)
 
 ## 2026-08-19
 
 - New concept: adw-gtk3 is mandatory because the stock stylesheets are flat-compiled; `gtk.gtk4.theme` applies it through the user stylesheet — [reference/gtk-theming](/reference/gtk-theming.md)
-- GTK CSS compiled from SCSS by `mkThemeCss`; Nix resolves colours, SCSS owns structure, opaque-literal defaults are the override surface — [reference/gtk-theming](/reference/gtk-theming.md)
+- GTK CSS compiled from SCSS by `mkGtkThemeCss`; Nix resolves colours, SCSS owns structure, opaque-literal defaults are the override surface — [reference/gtk-theming](/reference/gtk-theming.md)
 - `color.relativeLuminance` / `color.contrastRatio` added; GTK foreground picks use WCAG contrast — [reference/base24](/reference/base24.md)
 - `home.file` aborts on a pre-existing unmanaged target and no `backupFileExtension` is set; `programs.claude-code.settings` hits it — [workflows/rebuild](/workflows/rebuild.md)
 - The `nix-schemes` sub-flake exports modules by hand; a new one needs registering twice — [architecture/auto-discovery](/architecture/auto-discovery.md)

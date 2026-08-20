@@ -17,23 +17,6 @@
         "type": "github"
       }
     },
-    "base24-gen": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1782267999,
-        "narHash": "sha256-PRgUYKXygC81ql1wqRvOKFx4EiLR4pv+npanKS2+ydU=",
-        "owner": "psyclyx",
-        "repo": "base24-gen",
-        "rev": "250d89578ecc9566d3518441a9c5a8ec9490cc3c",
-        "type": "github"
-      },
-      "original": {
-        "owner": "psyclyx",
-        "ref": "main",
-        "repo": "base24-gen",
-        "type": "github"
-      }
-    },
     "flake-parts": {
       "inputs": {
         "nixpkgs-lib": "nixpkgs-lib"
@@ -124,7 +107,6 @@
     "root": {
       "inputs": {
         "adw-colors": "adw-colors",
-        "base24-gen": "base24-gen",
         "flake-utils": "flake-utils",
         "nix-math": "nix-math",
         "nixpkgs": "nixpkgs",

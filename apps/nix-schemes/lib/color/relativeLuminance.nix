@@ -39,7 +39,7 @@ let
     in
     if c <= 0.04045 then c / 12.92 else libMath.pow ((c + 0.055) / 1.055) 2.4;
 in
-lib.pipe (if libSelf.isColor color then color.dec else color) [
+lib.pipe (if libSelf.color.isColor color then color.dec else color) [
   (lib.map linearize)
   (lib.zipListsWith (weight: channel: weight * channel) [
     0.2126

@@ -24,7 +24,7 @@ in
 {
   # Weight 0 = 100% first color
   testMixZeroWeight = {
-    expr = (libSchemes.mix red blue 0).dec;
+    expr = (libSchemes.color.mix red blue 0).dec;
     expected = [
       255
       0
@@ -34,7 +34,7 @@ in
 
   # Weight 1 = 100% second color
   testMixFullWeight = {
-    expr = (libSchemes.mix red blue 1).dec;
+    expr = (libSchemes.color.mix red blue 1).dec;
     expected = [
       0
       0
@@ -44,7 +44,7 @@ in
 
   # Weight 0.5 = 50/50 mix
   testMixHalfWeight = {
-    expr = (libSchemes.mix red blue 0.5).dec;
+    expr = (libSchemes.color.mix red blue 0.5).dec;
     expected = [
       128
       0
@@ -54,7 +54,7 @@ in
 
   # Mix with white (lighten)
   testMixWithWhite = {
-    expr = (libSchemes.mix black white 0.5).dec;
+    expr = (libSchemes.color.mix black white 0.5).dec;
     expected = [
       128
       128
@@ -64,7 +64,7 @@ in
 
   # Mix with black (darken)
   testMixWithBlack = {
-    expr = (libSchemes.mix white black 0.5).dec;
+    expr = (libSchemes.color.mix white black 0.5).dec;
     expected = [
       128
       128
@@ -74,7 +74,8 @@ in
 
   # Mix using color objects
   testMixColorObjects = {
-    expr = (libSchemes.mix (libSchemes.mkColor red) (libSchemes.mkColor blue) 0.5).dec;
+    expr =
+      (libSchemes.color.mix (libSchemes.color.mkColor red) (libSchemes.color.mkColor blue) 0.5).dec;
     expected = [
       128
       0

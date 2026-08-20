@@ -1,7 +1,7 @@
 { libSchemes, ... }:
 {
   testToRgbBlack = {
-    expr = libSchemes.toRgb [
+    expr = libSchemes.color.toRgb [
       0
       0
       0
@@ -10,7 +10,7 @@
   };
 
   testToRgbWhite = {
-    expr = libSchemes.toRgb [
+    expr = libSchemes.color.toRgb [
       255
       255
       255
@@ -19,7 +19,7 @@
   };
 
   testToRgbMixed = {
-    expr = libSchemes.toRgb [
+    expr = libSchemes.color.toRgb [
       128
       64
       32

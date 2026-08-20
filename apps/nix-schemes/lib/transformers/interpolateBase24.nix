@@ -31,7 +31,7 @@ let
       (lib.zipListsWith (dec: ratio: dec + 255 * ratio) color)
       (lib.map libMath.round)
       (lib.map (libUtil.numbers.clamp 0 255))
-      (dec: libSchemes.mkColor dec)
+      (dec: libSchemes.color.mkColor dec)
     ];
 in
 if scheme.system == "base24" then

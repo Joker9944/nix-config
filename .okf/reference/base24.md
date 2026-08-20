@@ -112,7 +112,7 @@ templates use the table above.
 | `apps/nix-schemes/lib/transformers/ansi.nix` | The table above, verbatim — `"0" = base00`, `"3" = base0A`, `"7" = base05`, `"8" = base03` |
 | `apps/nix-schemes/lib/transformers/named.nix` | Same table, exposed as colour words × `dull`/`bright`, plus the semantic names |
 | `apps/nix-schemes/lib/gtk/mkAccentsFromPalette.nix` | Nine GTK4 accents — `yellow = base0A`, `orange = base09` |
-| `apps/nix-schemes/lib/init/mkThemeCss/` | Surfaces from `base00`/`base01`, text from `base05`, the semantic table above; each `*_fg_color` picks whichever of `base00` / `base05` scores higher on `color.contrastRatio` against its fill |
+| `apps/nix-schemes/lib/init/mkGtkThemeCss/` | Surfaces from `base00`/`base01`, text from `base05`, the semantic table above; each `*_fg_color` picks whichever of `base00` / `base05` scores higher on `color.contrastRatio` against its fill |
 | `apps/nix-schemes/modules/home/vicinae.nix` | Palette slots directly, base24 extras behind its `pick` helper |
 | `apps/nix-schemes/modules/home/kitty.nix` | The scheme's `ansi` for `color0`–`color15`, palette slots for chrome |
 

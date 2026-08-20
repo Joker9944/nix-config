@@ -8,7 +8,7 @@ let
 in
 {
   testAdjustNoChange = {
-    expr = (libSchemes.adjust gray 1).dec;
+    expr = (libSchemes.color.adjust gray 1).dec;
     expected = [
       128
       128
@@ -17,7 +17,7 @@ in
   };
 
   testAdjustDouble = {
-    expr = (libSchemes.adjust gray 2).dec;
+    expr = (libSchemes.color.adjust gray 2).dec;
     expected = [
       255
       255
@@ -26,7 +26,7 @@ in
   };
 
   testAdjustHalf = {
-    expr = (libSchemes.adjust gray 0.5).dec;
+    expr = (libSchemes.color.adjust gray 0.5).dec;
     expected = [
       64
       64
@@ -35,7 +35,7 @@ in
   };
 
   testAdjustZero = {
-    expr = (libSchemes.adjust gray 0).dec;
+    expr = (libSchemes.color.adjust gray 0).dec;
     expected = [
       0
       0
@@ -44,7 +44,7 @@ in
   };
 
   testAdjustClampsMax = {
-    expr = (libSchemes.adjust [ 200 200 200 ] 2).dec;
+    expr = (libSchemes.color.adjust [ 200 200 200 ] 2).dec;
     expected = [
       255
       255
@@ -53,7 +53,7 @@ in
   };
 
   testAdjustColorObject = {
-    expr = (libSchemes.adjust (libSchemes.mkColor gray) 0.5).dec;
+    expr = (libSchemes.color.adjust (libSchemes.color.mkColor gray) 0.5).dec;
     expected = [
       64
       64
