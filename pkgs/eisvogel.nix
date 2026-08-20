@@ -1,10 +1,10 @@
 {
   lib,
   fetchFromGitHub,
-  stdenvNoCC,
+  stdenv,
   ...
 }:
-stdenvNoCC.mkDerivation (finalAttrs: {
+stdenv.mkDerivation (finalAttrs: {
   pname = "eisvogel";
   version = "3.4.0";
 

@@ -72,8 +72,8 @@ in
       accent = libSchemes.requireKey cfg.scheme "accent";
 
       themeExtensionPackage = pkgs.callPackage (
-        { stdenvNoCC, zip, ... }:
-        stdenvNoCC.mkDerivation {
+        { stdenv, zip, ... }:
+        stdenv.mkDerivation {
           name = "firefox-${cfg.scheme.name}-theme";
 
           nativeBuildInputs = [ zip ];
