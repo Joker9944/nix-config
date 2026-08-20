@@ -1,11 +1,11 @@
 ---
 type: Architecture Pattern
 title: Module layout — folders and files/
-description: On-disk layout for any nix module in the repo — single file for trivial modules, `<name>/default.nix` folder once more than one file is involved, `files/` subdir for non-nix payloads.
+description: On-disk layout for any nix module in the repo — single file for trivial modules, `<name>/default.nix` folder once more than one file is involved, `files/` subdir for non-nix payloads, and shell bodies over 400 characters extracted to `files/<name>.sh`.
 tags: [architecture, modules, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-16T00:00:00Z
+  at: 2026-08-21T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -75,6 +75,41 @@ Keeps nix code separate from its data payload. Example: `users/mixins/programs/c
 
 One exception: `users/mixins/programs/vscodium/openssh-no-checkperm.patch` sits at the module root rather than under `files/` — an inconsistency to avoid copying, not a template.
 
+# Shell bodies longer than 400 characters
+
+A shell body handed to `writeShellApplication`, `writeShellScriptBin` or a systemd `script` stays
+inline while it is short. Past **400 characters** it moves to `files/<name>.sh` and is read back:
+
+```nix
+text = builtins.readFile ./files/update-schemes.sh;
+```
+
+Shell inside a nix string gets no syntax highlighting, is never touched by `shfmt`, and needs
+`''${…}` for every shell expansion. A `.sh` file gets all three back, plus the `shellcheck` hook —
+which systemd bodies and `writeShellScriptBin` otherwise never see, since only
+`writeShellApplication` shellchecks at build time.
+
+The cost is that nix values can no longer be interpolated into the script. Hand them over as
+environment variables — `runtimeEnv` on `writeShellApplication` (`apps/nix-schemes/apps/default.nix`),
+which keeps `text` a bare `readFile`; `replaceVars` where there is no such argument.
+`pkgs/nix-options/default.nix` instead concatenates an assignment ahead of the file, which puts shell
+back into a nix string — not the form to copy.
+
+The hook lints the file standalone, with no knowledge that the wrapper sets `errexit` — so a bare
+`cd` needs an explicit `|| exit` that would be redundant inline.
+
+# `git` is ambient, not a `runtimeInput`
+
+A script that shells out to `git` does **not** list it in `runtimeInputs` — `inheritPath` is on by
+default, so it gets the caller's git: nixpkgs' on a dev machine, the runner's in CI. Anything
+operating on a working copy already presupposes git, and pinning a second copy into the closure
+buys nothing the ambient one doesn't already do better, since the repo, its config and its hooks are
+ambient regardless. `apps.nix#krank-tree` and `apps/nix-schemes#update-schemes` both rely on this.
+
+Two boundaries. This is an argument about `git` specifically, from it being a precondition for the
+repo existing — every other tool still gets declared. And it does not hold under systemd, where the
+unit's PATH is minimal; a service that shells out to `git` must pin it.
+
 # Casing
 
 Module files and directories are **kebab-case**; the mixin **option** they declare is **camelCase**. The filename is the kebab-case of the option name — `systemdBoot` ↔ `systemd-boot.nix`, `windowsSupport` ↔ `windows-support.nix`; single-word names coincide (`limine`). Digit escape: an option can't start with a digit, so `1password.nix` declares `_1password`.
@@ -85,3 +120,4 @@ Module files and directories are **kebab-case**; the mixin **option** they decla
 
 * [mixin-pattern](mixin-pattern.md) — the *shape* of mixin-style modules (options / config / enable flag); this concept covers *where the files go*.
 * [auto-discovery](auto-discovery.md) — how `default.nix` gets picked up by the parent aggregator.
+* [/workflows/formatting-and-cspell](/workflows/formatting-and-cspell.md) — the `shellcheck` and `shfmt` hooks an extracted `.sh` file becomes subject to.

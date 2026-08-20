@@ -2,8 +2,14 @@
 
 An index of bundle changes, not a narrative. One line each: what changed and the concept that holds the detail, in the form `CLAUDE.md` rule 3 sets. Rationale lives in the commit message, tied to the diff, or in a [decision](/decisions/index.md) — not here.
 
-## 2026-08-20
+## 2026-08-21
+- Shell bodies longer than 400 characters move to `files/<name>.sh`, with nix values passed as environment via `runtimeEnv` — [architecture/module-layout](/architecture/module-layout.md)
+- `git` is taken from the ambient PATH rather than declared in `runtimeInputs`, except under systemd — [architecture/module-layout](/architecture/module-layout.md)
 
+## 2026-08-20
+- `generateScheme` reads a vendored Nix tree instead of parsing YAML; `fromYaml` and its IFD are gone — [decisions/vendored-schemes](/decisions/vendored-schemes.md)
+- The vendored schemes are refreshed by a monthly `nix-schemes-update.yaml`, not checked at eval time; `spec-0.11` is a branch, not a tag — [workflows/dependency-updates](/workflows/dependency-updates.md)
+- `flake.schemes.<schemeSystem>.<schemeSlug>` is the scheme itself; the `convert pkgs` wrapper is gone and `generateScheme` moved to `lib/` — [architecture/custom-lib](/architecture/custom-lib.md)
 - Colour primitives and WCAG metrics moved under `libSchemes.color`; only `requireKey`, `types` and `init`'s members sit at the root — [architecture/custom-lib](/architecture/custom-lib.md)
 - The image-based scheme source (`schemes.source.picture`, `base24-gen`) is gone — [architecture/custom-lib](/architecture/custom-lib.md)
 - GTK CSS routing split: `_defaults.scss` reads palette literals only, `settings/_colors.scss` holds toolkit-branched reference forms for widget rules — [reference/gtk-theming](/reference/gtk-theming.md)

@@ -31,6 +31,7 @@
     inputs@{ self, nixpkgs, ... }:
     let
       inherit (nixpkgs) lib;
+      inherit (inputs.util-lib.lib) libUtil;
     in
     lib.recursiveUpdate
       (inputs.flake-utils.lib.eachDefaultSystem (
@@ -39,21 +40,18 @@
           pkgs = nixpkgs.legacyPackages.${system};
         in
         {
-          apps = {
-            test-lib = {
-              type = "app";
-              program = lib.getExe (
-                pkgs.writeShellScriptBin "test" ''
-                  nix build .#checks.${system}.libTests --no-link "$@"
-                ''
-              );
-              meta.description = "Run lib tests";
-            };
+          apps = import ./apps {
+            inherit
+              inputs
+              lib
+              system
+              pkgs
+              ;
           };
 
           checks = {
             libTests = pkgs.callPackage ./tests/lib {
-              inherit (inputs.util-lib.lib) libUtil;
+              inherit libUtil;
               flake = self;
             };
           };
@@ -63,37 +61,37 @@
         lib.libSchemes = lib.fix (
           libSelf:
           import ./lib {
-            inherit inputs lib libSelf;
-            inherit (inputs.util-lib.lib) libUtil;
+            inherit
+              inputs
+              lib
+              libSelf
+              libUtil
+              ;
             libMath = inputs.nix-math.lib.math;
 
             flake = self;
           }
         );
 
-        schemes = lib.pipe inputs.schemes [
+        schemes = lib.pipe ./vendor/schemes [
           builtins.readDir
           lib.attrNames
-          (lib.filter (lib.hasPrefix "base"))
-          (lib.map (filename: {
-            name = filename;
-            value = lib.pipe filename [
-              (filename: "${inputs.schemes}/${filename}")
+          (lib.map (schemeSystem: {
+            name = schemeSystem;
+            value = lib.pipe schemeSystem [
+              (lib.path.append ./vendor/schemes)
               builtins.readDir
               lib.attrNames
-              (lib.filter (lib.hasSuffix ".yaml"))
-              (lib.map (lib.removeSuffix ".yaml"))
+              (lib.map (lib.removeSuffix ".nix"))
             ];
           }))
           lib.listToAttrs
           (lib.mapAttrs (
-            base: schemes:
+            schemeSystem: schemes:
             lib.pipe schemes [
               (lib.map (schemeSlug: {
                 name = schemeSlug;
-                value = {
-                  convert = pkgs: (self.lib.libSchemes.init pkgs).generateScheme base schemeSlug;
-                };
+                value = self.lib.libSchemes.generateScheme schemeSystem schemeSlug;
               }))
               lib.listToAttrs
             ]

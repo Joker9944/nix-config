@@ -57,10 +57,7 @@
           krank "''${args[@]}" "''${files[@]}"
         '';
 
-        runtimeInputs = with pkgs; [
-          git
-          krank
-        ];
+        runtimeInputs = [ pkgs.krank ];
       }
     );
     meta.description = "Reports the status of issue tracker links in this flake";

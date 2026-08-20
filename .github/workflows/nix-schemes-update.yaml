@@ -1,0 +1,46 @@
+name: nix-schemes-update
+
+on:
+  workflow_call:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 4 1 * *'
+
+jobs:
+
+  nix-schemes-update:
+
+    permissions:
+      contents: read
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Repository Checkout
+        id: git-checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup nix
+        id: nix-setup
+        uses: ./.github/composites/nix-setup
+
+      - name: Git Identity
+        id: git-identity
+        uses: ./.github/composites/git-identity
+
+      - name: Update Schemes
+        id: nix-update
+        working-directory: apps/nix-schemes
+
+        run: nix run .#update-schemes
+
+      - name: Create Pull Request
+        id: update-pr
+        uses: ./.github/composites/update-pr
+
+        with:
+          branch: ci/nix-schemes-update
+          title: "chore(deps): vendored schemes"
+          client-id: ${{ vars.APP_CLIENT_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}

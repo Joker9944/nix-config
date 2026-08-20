@@ -14,7 +14,7 @@
   let
     libSchemes = inputs.nix-schemes.lib.libSchemes.init pkgs;
   in
-  libSchemes.generateScheme "base16" "gruvbox-dark-hard"
+  libSchemes.mkGtkThemeCss { ... }
   ```
 */
 {
@@ -25,7 +25,7 @@
 }@args:
 pkgs:
 # Members land at the root of the returned lib, not under `init` — hence the second
-# fixed point, and `generateScheme` reaching siblings as `libSelf.fromYaml`.
+# fixed point, and members reaching siblings as `libSelf.<name>`.
 (lib.removeAttrs libSelf [ "init" ])
 // (lib.fix (
   initSelf:

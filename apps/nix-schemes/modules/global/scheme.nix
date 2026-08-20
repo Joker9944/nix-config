@@ -2,7 +2,6 @@ flake:
 {
   lib,
   config,
-  pkgs,
   ...
 }:
 {
@@ -82,9 +81,7 @@ flake:
     let
       cfg = config.schemes;
 
-      tintedThemingScheme =
-        flake.schemes.${cfg.source.scheme.system}.${cfg.source.scheme.slug}.convert
-          pkgs;
+      tintedThemingScheme = flake.schemes.${cfg.source.scheme.system}.${cfg.source.scheme.slug};
 
       scheme =
         if cfg.source == null then
