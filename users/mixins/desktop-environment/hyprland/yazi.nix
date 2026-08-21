@@ -23,19 +23,30 @@ mkHyprlandModule {
     # WORKAROUND(nostalgic-lovelace) Has to be set since `home.stateVersion` is less than "26.05"
     shellWrapperName = "y";
 
-    settings.opener.open = [
-      {
-        desc = "Open";
-        run = "xdg-open %s1";
-        for = "linux";
-      }
-      {
-        desc = "Open with";
-        run = "clear; ${lib.getExe pkgs-unstable.File-MimeInfo} --ask %s1";
-        block = true;
-        for = "linux";
-      }
-    ];
+    settings = {
+      opener.open = [
+        {
+          desc = "Open";
+          run = "xdg-open %s1";
+          for = "linux";
+        }
+        {
+          desc = "Open with";
+          run = "clear; ${lib.getExe pkgs-unstable.File-MimeInfo} --ask %s1";
+          block = true;
+          for = "linux";
+        }
+      ];
+
+      plugin.prepend_previewers = [
+        {
+          url = "*.md";
+          run = "piper -- CLICOLOR_FORCE=1 ${lib.getExe pkgs-unstable.glow} --width=$w --style=dark \"$1\"";
+        }
+      ];
+    };
+
+    plugins.piper.package = pkgs-unstable.yaziPlugins.piper;
   };
 
   wayland.windowManager.hyprland.settings = {
