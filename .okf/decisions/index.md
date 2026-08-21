@@ -14,3 +14,4 @@ Load-bearing choices behind the shape of the repo. Consult before proposing stru
 * [vendored-auto-upgrade](vendored-auto-upgrade.md) — The local `autoUpgrade` module displaces upstream's, which cannot upgrade from a remote flake ref.
 * [util-lib-split](util-lib-split.md) — General-purpose helpers live in the `apps/util-lib` flake; `lib/` keeps what touches the module system. A lib names itself `libSelf`.
 * [vendored-schemes](vendored-schemes.md) — Upstream schemes are converted to Nix and committed; a monthly job refreshes them, nothing checks them at eval time.
+* [desktop-files-at-build-time](desktop-files-at-build-time.md) — Desktop-file contents are read by derivations, never during evaluation; `[Added Associations]` is not reproduced.

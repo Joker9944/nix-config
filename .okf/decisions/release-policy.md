@@ -1,11 +1,11 @@
 ---
 type: Decision
 title: Track stable nixos, upgrade in lockstep
-description: nixpkgs and home-manager are pinned to matching stable release branches and upgraded together at each nixos release. Hyprland is the deliberate exception.
+description: nixpkgs and home-manager are pinned to matching stable release branches and upgraded together at each nixos release. Hyprland from upstream and a per-package `pkgs-unstable` are the two deliberate escape hatches.
 tags: [decision, releases, flake]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-16T00:00:00Z
+  at: 2026-08-21T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -16,7 +16,7 @@ verified:
 * `nixpkgs` follows the current *stable* nixos channel (`nixos-N.NN`), never `nixos-unstable`.
 * `home-manager` is pinned to the matching `release-N.NN` — always the same major/minor as nixpkgs.
 * Both are bumped together with each new nixos release (roughly May and November).
-* `hyprland` is the exception: taken from upstream `github:hyprwm/Hyprland` at a pinned tag rather than the nixpkgs package, and bumped independently of the nixos release train.
+* Two escape hatches exist. `hyprland` is taken from upstream `github:hyprwm/Hyprland` at a pinned tag rather than the nixpkgs package, and bumped independently of the nixos release train. Per-package, `custom.pkgs.pkgs-unstable` (`lib/configuration/mkNixosConfiguration.nix`) exposes `nixos-unstable` as `pkgs-unstable`, which around 25 files pull individual packages from.
 
 Current pins live in `flake.nix#inputs`; concrete revisions are in `flake.lock`.
 
@@ -30,7 +30,7 @@ Current pins live in `flake.nix#inputs`; concrete revisions are in `flake.lock`.
 
 * **Delayed access to new packages.** Anything landing on unstable takes about six months to reach here.
 * **Semi-annual coordinated upgrade.** nixpkgs, home-manager, and any user-facing option renames all land at once, not on a smooth continuous curve. The [home-manager-options lookup skill](/workflows/lookup-hm-option.md) exists in part to catch the option-rename churn that comes with each release-N.NN bump.
-* **Hyprland can break independently.** An upstream regression or option rename requires an ad-hoc fix, rather than being caught by the release-branch stability guarantee.
+* **Anything on an escape hatch can break independently.** An upstream regression or option rename requires an ad-hoc fix, and a `pkgs-unstable` package can change its config schema mid-cycle with no upgrade moment to catch it — yazi 26.8 moved opener placeholders from `$1` to `%s1`, which silently handed every opener an empty argument.
 
 # Related
 

@@ -1,5 +1,4 @@
 { mkMixinModule, ... }:
-{ config, ... }:
 mkMixinModule "xournalpp" {
   programs = {
     xournalpp.enable = true;
@@ -14,8 +13,4 @@ mkMixinModule "xournalpp" {
       }
     ];
   };
-
-  xdg.mimeApps.custom.apps.associations.added = [
-    "${config.programs.xournalpp.package}/share/applications/com.github.xournalpp.xournalpp.desktop"
-  ];
 }

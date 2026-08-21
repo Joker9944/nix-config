@@ -3,6 +3,9 @@
 An index of bundle changes, not a narrative. One line each: what changed and the concept that holds the detail, in the form `CLAUDE.md` rule 3 sets. Rationale lives in the commit message, tied to the diff, or in a [decision](/decisions/index.md) — not here.
 
 ## 2026-08-21
+- `pkgs-unstable` named as the second escape hatch from the stable-only pin, and what it costs when a package changes config schema mid-cycle — [decisions/release-policy](/decisions/release-policy.md)
+- Desktop-file contents are read by derivations, never during evaluation; `[Added Associations]` is gone — [decisions/desktop-files-at-build-time](/decisions/desktop-files-at-build-time.md)
+- `requireDesktopFile` takes `pkgs` and checks an undeclared entry at build time; `lookupDesktopFiles` reads `desktopItems` only — [architecture/custom-lib](/architecture/custom-lib.md)
 - Shell bodies longer than 400 characters move to `files/<name>.sh`, with nix values passed as environment via `runtimeEnv` — [architecture/module-layout](/architecture/module-layout.md)
 - `git` is taken from the ambient PATH rather than declared in `runtimeInputs`, except under systemd — [architecture/module-layout](/architecture/module-layout.md)
 

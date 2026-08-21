@@ -50,11 +50,7 @@ mkMixinModule "librewolf" {
 
   custom.browser-dispatcher.defaultBrowserCommand = "librewolf --name librewolf \"$URL\"";
 
-  xdg.mimeApps.custom.apps.default =
-    let
-      inherit (config.programs.librewolf) finalPackage;
-    in
-    [
-      "${finalPackage}/share/applications/${custom.lib.requireDesktopFile { package = finalPackage; }}"
-    ];
+  xdg.mimeApps.custom.apps.default = [
+    "${config.programs.librewolf.finalPackage}/share/applications/librewolf.desktop"
+  ];
 }

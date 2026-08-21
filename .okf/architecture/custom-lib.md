@@ -5,7 +5,7 @@ description: Three libs — `lib/` for module-system helpers, `apps/util-lib` fo
 tags: [architecture, lib, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-20T00:00:00Z
+  at: 2026-08-21T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -65,8 +65,8 @@ Notable helpers with non-obvious use:
 | `modules/mkMixinModule.nix` | Per-mixin builder: declares `mixins.<prefix>.<name>.enable` + gates the body. Partially applied with `{ config, prefix }` by each tree's `mkDefaultMixinModule` aggregator helper and threaded to leaves; not called directly from the lib. See [mixin-pattern](mixin-pattern.md). |
 | `modules/nonNull.nix` | `lib.mkIf (value != null) value`, so a null option is left unset rather than set to null. |
 | `hyprland/mkLuaCall.nix` | Builds hyprland-style multi-arg lua callbacks. Used in `users/joker9944/hosts/HAL9000/default.nix` for hyprland `on = …`. |
-| `lookupDesktopFiles.nix` | Names of the `.desktop` files a package provides. Reads `desktopItems` when the package declares them; the fallback reads `share/applications`, which builds the package during evaluation. |
-| `requireDesktopFile.nix` | Asserts a package provides an entry and returns its ID, so a renamed entry fails the build. `name` defaults to the package name + `.desktop`, which is a guess — the assertion is what catches cases like `signal-desktop` → `signal.desktop`. Used by the hyprland binds, see [uwsm-session](uwsm-session.md). |
+| `lookupDesktopFiles.nix` | Names of the `.desktop` files a package *declares* through `desktopItems`. A package that installs its entries any other way — most of them — yields `[ ]`, since the rest is only readable by building it. |
+| `requireDesktopFile.nix` | Asserts a package provides an entry and returns its ID, so a renamed entry fails the build. `name` defaults to the package name + `.desktop`, which is a guess — the assertion is what catches cases like `signal-desktop` → `signal.desktop`. A declared entry is checked during evaluation; for anything else the returned ID carries a check derivation in its string context, which is why the function needs `pkgs` — see [/decisions/desktop-files-at-build-time](/decisions/desktop-files-at-build-time.md). Used by the hyprland binds, see [uwsm-session](uwsm-session.md). |
 | `disko/` | Disk-layout template renderer. `custom.lib.disko.mkDiskoLayout { config, template ? templates.version1 }` renders a disko `devices` set from per-host params; templates live under `custom.lib.disko.templates.*` and are curried `lib` args first, then `{ config }`. Called from each `hosts/<host>/disks.nix` (which also imports `inputs.disko.nixosModules.disko` itself). |
 | `obfuscation/` | XOR-based string obfuscation, exposed via the `obfuscate` app in `apps.nix`. Hand-written `default.nix`, not directory-loaded — splitting it would make its ASCII table public. |
 

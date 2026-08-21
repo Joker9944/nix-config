@@ -17,7 +17,7 @@ let
       }
       [
         libUtil.files.list
-        (lib.map (path: import path { inherit lib flakeLib; }))
+        (lib.map (path: import path { inherit lib pkgs flakeLib; }))
         lib.mergeAttrsList
       ];
 

@@ -1,9 +1,9 @@
 /**
-  Get the names of desktop files a package provides.
+  Get the names of the desktop files a package *declares*.
 
-  Reads `desktopItems` when the package declares them (the `copyDesktopItems` hook
-  convention), otherwise falls back to reading the package's applications directory,
-  which requires building the package.
+  Reads `desktopItems`, the `copyDesktopItems` hook convention. A package that installs
+  its entries any other way declares nothing and yields an empty list — the names it
+  ships are only readable by building it, which evaluation must not do.
 
   # Type
 
@@ -14,8 +14,8 @@
   # Example
 
   ```nix
-  lookupDesktopFiles pkgs.firefox
-  => [ "firefox.desktop" ]
+  lookupDesktopFiles pkgs.signal-desktop
+  => [ "signal.desktop" ]
   ```
 */
 { lib, ... }:
@@ -24,7 +24,4 @@ let
   # `copyDesktopItems` accepts a bare item as well as a list
   items = lib.toList (package.desktopItems or [ ]);
 in
-if items != [ ] then
-  lib.map (item: item.name or (lib.baseNameOf (toString item))) items
-else
-  lib.attrNames (lib.readDir "${package}/share/applications")
+lib.map (item: item.name or (lib.baseNameOf (toString item))) items

@@ -12,6 +12,7 @@ blueglassblock
 breezedark
 centerbox
 checkperm
+crudini
 crypted
 Dawt
 displayp
@@ -43,6 +44,8 @@ listchars
 lume
 menubutton
 messagedialog
+mimeapps
+mimeinfo
 mountpoint
 neww
 nextl
@@ -71,6 +74,7 @@ swapp
 switchc
 thinkpad
 trivago
+umpv
 ungated
 UWSM
 uwunicorn

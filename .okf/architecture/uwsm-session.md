@@ -9,6 +9,8 @@ generated:
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
+  - by: claude-code/claude-opus-5
+    at: 2026-08-21T00:00:00Z
 ---
 
 # The compositor is a systemd unit

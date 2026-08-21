@@ -26,12 +26,12 @@ mkHyprlandModule {
     settings.opener.open = [
       {
         desc = "Open";
-        run = "xdg-open \"$1\"";
+        run = "xdg-open %s1";
         for = "linux";
       }
       {
         desc = "Open with";
-        run = "clear; ${lib.getExe pkgs-unstable.File-MimeInfo} --ask \"$1\"";
+        run = "clear; ${lib.getExe pkgs-unstable.File-MimeInfo} --ask %s1";
         block = true;
         for = "linux";
       }

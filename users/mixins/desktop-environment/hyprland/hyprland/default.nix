@@ -1,6 +1,7 @@
 { mkDefaultHyprlandModule, ... }:
 {
   lib,
+  pkgs,
   config,
   osConfig,
   custom,
@@ -65,7 +66,8 @@ mkDefaultHyprlandModule { dir = ./.; } {
           elems
         ];
 
-      mkAppEntryCommand = args: cfg.mkAppCommand { elems = [ (custom.lib.requireDesktopFile args) ]; };
+      mkAppEntryCommand =
+        args: cfg.mkAppCommand { elems = [ (custom.lib.requireDesktopFile ({ inherit pkgs; } // args)) ]; };
     };
 
     wayland = {

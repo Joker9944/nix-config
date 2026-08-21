@@ -96,19 +96,17 @@ in
 
         entries =
           let
-            _1passwordDesktopPath = "${pkgs._1password-gui}/share/applications/1password.desktop";
+            desktopFile = "share/applications/1password.desktop";
+            silent = pkgs.runCommandLocal "1password-silent-desktop-entry" { } ''
+              install -Dm444 "${pkgs._1password-gui}/${desktopFile}" "$out/${desktopFile}"
+              substituteInPlace "$out/${desktopFile}" \
+                --replace-fail "1password %U" "1password --silent %U"
+            '';
           in
           if cfg.autostart.silent then
-            [
-              (pkgs.writeTextFile {
-                name = builtins.baseNameOf _1passwordDesktopPath;
-                text = lib.strings.replaceString "1password %U" "1password --silent %U" (
-                  lib.strings.readFile _1passwordDesktopPath
-                );
-              })
-            ]
+            [ "${silent}/${desktopFile}" ]
           else
-            [ _1passwordDesktopPath ];
+            [ "${pkgs._1password-gui}/${desktopFile}" ];
       };
     };
   };
