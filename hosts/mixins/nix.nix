@@ -2,6 +2,8 @@
 { lib, ... }:
 mkMixinModule "nix" {
   nix.settings = {
+    allow-import-from-derivation = false;
+
     experimental-features = [
       "nix-command"
       "flakes"

@@ -5,7 +5,7 @@ description: nix-setup uses nixbuild/nix-quick-install-action plus nix-community
 tags: [decision, ci, nix, cache]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-16T00:00:00Z
+  at: 2026-08-21T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -19,7 +19,8 @@ through `nix-community/cache-nix-action`, an `actions/cache` fork. Neither Deter
 is used — a vendor choice, not a defect in the tooling.
 
 The composite takes no inputs. `nix_conf` carries `keep-outputs` and `keep-env-derivations`, which
-is what makes a restored store useful rather than a pile of unreferenced paths; the action appends
+is what makes a restored store useful rather than a pile of unreferenced paths, plus
+`allow-import-from-derivation = false`, the CI half of [no-ifd](no-ifd.md); the action appends
 `extra-experimental-features = nix-command flakes` and `accept-flake-config = true` itself, so
 neither is restated.
 
