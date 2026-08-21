@@ -5,7 +5,7 @@ description: Every `default.nix` in a mixin category directory calls `mkDefaultM
 tags: [architecture, modules, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-19T00:00:00Z
+  at: 2026-08-21T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -22,6 +22,10 @@ Every category `default.nix` under `hosts/mixins/` and `users/mixins/` is a one-
 ```
 
 Some directories pass a starter module (with its own `imports`, options, or config) as the second argument, merged with the auto-discovered files. See `users/mixins/default.nix` — it imports `sops-nix` and sets baseline `programs.git` config alongside auto-discovery.
+
+# `exclude` admits a value sibling
+
+An optional `exclude ? [ ]` list drops paths from the scan on top of `default.nix`. That is what lets an auto-discovering directory also hold a sibling that is a **value** rather than a module — otherwise it would be imported as one and fail. `modules/home/tidy/` keeps `timer.nix` (shared option block and timer-unit builder) out this way, and its two service modules `import ./timer.nix { inherit lib; }` themselves. Without it, a value sibling forces the whole directory onto a hand-written `imports` list, the form `tmux/`, `waybar/` and `rofi/` take.
 
 # `importApply` variant
 
