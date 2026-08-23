@@ -1,11 +1,11 @@
 ---
 type: Architecture Pattern
 title: Module layout — folders and files/
-description: On-disk layout for any nix module in the repo — single file for trivial modules, `<name>/default.nix` folder once more than one file is involved, `files/` subdir for non-nix payloads, and shell bodies over 400 characters extracted to `files/<name>.sh`.
+description: On-disk layout for any nix module in the repo — single file for trivial modules, `<name>/default.nix` folder once more than one file is involved, `files/` subdir for non-nix payloads, shell bodies over 400 characters extracted to `files/<name>.sh`, and a python payload taking `writePython3Bin` rather than a shell wrapper.
 tags: [architecture, modules, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-22T00:00:00Z
+  at: 2026-08-23T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -27,7 +27,7 @@ Same rule everywhere: the two branches below decide the shape.
 
 The constraint: such a module may only touch options that exist in both trees. Types are less restricted than they look — the module-arg `lib` carries `hm` only inside the home-manager tree, but `inputs.home-manager.lib.hm.{types,generators}` reaches both, so `fontType` is reusable (`hosts/mixins/desktop-environment/hyprland/regreet.nix` does the same with `toHyprconf`). What is *not* reusable is anything declared inline in a home-manager module rather than exported — `gtk.iconTheme` and `gtk.cursorTheme` have no `hm.types` equivalent and need a local submodule.
 
-Such a module also has to *own* any third-party module it needs (`modules/global/theme/` is the sole importer of nix-schemes' `scheme` and `icons` modules), because importing the same non-path module value from two places declares its options twice.
+Such a module also has to *own* any third-party module it needs (`modules/global/theme/` is the sole importer of nix-schemes' `scheme`, `cursors` and `icons` modules), because importing the same non-path module value from two places declares its options twice.
 
 What it cannot own is tree-specific wiring, so each tree gets a thin glue module beside it: `modules/{home,nixos}/theme.nix` import the nix-schemes renderers for their own tree (`gtk`/`librewolf`, `regreet`) and translate `custom.theme` into their options. Four constraints follow from that split:
 
@@ -97,6 +97,19 @@ back into a nix string — not the form to copy.
 
 The hook lints the file standalone, with no knowledge that the wrapper sets `errexit` — so a bare
 `cd` needs an explicit `|| exit` that would be redundant inline.
+
+## A python payload is not a shell body
+
+An app whose work is python takes no wrapper at all. `pkgs.writers.writePython3Bin` reads the file
+with `readFile`, so the hooks still reach it, and covers what `writeShellApplication` was wanted
+for: `libraries` for imports, and `makeWrapperArgs` — undocumented but passed straight through
+(`build-support/writers/scripts.nix:97`) — for the rest. `--prefix PATH` for a tool reached through
+`subprocess`, `--add-flags` to prefill an argument the caller does not choose. Both cursor apps in
+`apps/nix-schemes/apps/default.nix` are the worked example.
+
+The writer supplies the interpreter line, so such a file carries **no shebang** of its own; it would
+land on line 2 and fail the writer's flake8 as `E265`. A script a derivation runs as
+`python3 <path>` instead — `mkCursorTheme/build.py`, `mkIconTheme/recolour.py` — keeps one.
 
 # `git` is ambient, not a `runtimeInput`
 

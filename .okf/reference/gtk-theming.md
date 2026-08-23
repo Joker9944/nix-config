@@ -144,6 +144,10 @@ attribute at all. Rewriting the one declaration covers every form; rewriting ele
 A pack that uses no `ColorScheme-*` classes is simply left alone; Adwaita is 90% symbolic and needs
 nothing.
 
+Cursors reach none of this either — XCursor is pre-baked pixmaps with no stylesheet to rewrite, so
+`schemes.cursors` compiles a theme from SVG instead. See
+[/reference/cursor-theming.md](/reference/cursor-theming.md).
+
 # Related
 
 * [/reference/base24.md](/reference/base24.md) — which palette slot each of these colours comes from.

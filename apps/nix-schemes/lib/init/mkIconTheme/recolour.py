@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """Point an icon theme's ColorScheme stylesheets at a scheme's colours.
 
-Icon packs written for Plasma carry a `<style>` element whose `.ColorScheme-*` rules
-set `color:`, and draw their elements with `fill="currentColor"`. Plasma swaps those
-declarations for the live colour scheme before rasterising; GTK has no equivalent hook,
-so they are rewritten here instead. Only the declarations change — never an element.
+Icon packs written for Plasma carry a `<style>` element whose `.ColorScheme-*`
+rules set `color:`, and draw their elements with `fill="currentColor"`. Plasma
+swaps those declarations for the live colour scheme before rasterising; GTK has
+no equivalent hook, so they are rewritten here instead. Only the declarations
+change — never an element.
 
-`*-symbolic.svg` is skipped. GTK recolours those itself, keyed on the filename, by
-wrapping them in a stylesheet using `!important`, so anything written here is discarded.
+`*-symbolic.svg` is skipped. GTK recolours those itself, keyed on the filename,
+by wrapping them in a stylesheet using `!important`, so anything written here
+is discarded.
 
 Usage: recolour.py <icons-tree> <colours.json>
 """
@@ -43,7 +45,7 @@ def svg_files(tree):
 
 
 def classes_in_document(path):
-    """Classes a `class=` attribute actually references, plus literal-paint count.
+    """Classes a `class=` attribute references, plus literal-paint count.
 
     Parsed rather than matched, so a `ColorScheme-` string in a comment or in
     Inkscape metadata is not mistaken for a class.
@@ -59,9 +61,9 @@ def classes_in_document(path):
         if not names:
             continue
         used.update(names)
-        # Any of `fill=`, `stroke=`, `style="fill:…"` and `style="stroke:…"` may carry the
-        # `currentColor` that picks the rule up, and a `style` declaration outranks the
-        # presentation attribute of the same name.
+        # Any of `fill=`, `stroke=`, `style="fill:…"` and `style="stroke:…"`
+        # may carry the `currentColor` that picks the rule up, and a `style`
+        # declaration outranks the presentation attribute of the same name.
         inline = {
             prop: value.strip()
             for prop, value in PAINT_DECL.findall(element.get("style") or "")
@@ -74,7 +76,7 @@ def classes_in_document(path):
 
 
 def rewrite_rules(body, colours, seen):
-    """Replace `color:` in every `.ColorScheme-*` rule; leave other CSS alone."""
+    """Replace `color:` in every `.ColorScheme-*` rule; leave the rest."""
     defined = set()
 
     def rule(match):
@@ -87,7 +89,9 @@ def rewrite_rules(body, colours, seen):
         for name in names:
             seen[name] += 1
         if not COLOR_DECL.search(declarations):
-            declarations = f"{declarations.rstrip().rstrip(';')};color:{colour};"
+            declarations = (
+                f"{declarations.rstrip().rstrip(';')};color:{colour};"
+            )
             return f"{selector}{{{declarations}}}"
         return f"{selector}{{{COLOR_DECL.sub(rf'\1{colour}', declarations)}}}"
 
@@ -95,7 +99,9 @@ def rewrite_rules(body, colours, seen):
 
 
 def stylesheet(names, colours):
-    return "".join(f".{name} {{ color:{colours[name]}; }}" for name in sorted(names))
+    return "".join(
+        f".{name} {{ color:{colours[name]}; }}" for name in sorted(names)
+    )
 
 
 def recolour(path, colours, stats):
@@ -123,18 +129,25 @@ def recolour(path, colours, stats):
             stats["class"][name] += 1
         first = STYLE_SPAN.search(result)
         if first:
-            # A class is used but no rule declares it; extend the existing sheet.
+            # A class is used but no rule declares it; extend the existing
+            # sheet.
             result = result[: first.end(2)] + rules + result[first.end(2) :]
             stats["rules-appended"] += 1
         else:
-            # No stylesheet at all: under Plasma the engine supplies one, under GTK
-            # nothing does, so these render at the CSS initial colour until injected.
+            # No stylesheet at all: under Plasma the engine supplies one, under
+            # GTK nothing does, so these render at the CSS initial colour until
+            # injected.
             opening = SVG_OPEN.search(result)
             if not opening or opening.group(1):
                 stats["unstyleable"] += 1
                 return False
-            injected = f'<defs><style id="current-color-scheme" type="text/css">{rules}</style></defs>'
-            result = result[: opening.end()] + injected + result[opening.end() :]
+            injected = (
+                '<defs><style id="current-color-scheme" '
+                f'type="text/css">{rules}</style></defs>'
+            )
+            result = (
+                result[: opening.end()] + injected + result[opening.end() :]
+            )
             stats["stylesheets-injected"] += 1
 
     if result == source:
@@ -153,8 +166,8 @@ def main():
     with open(colour_file, encoding="utf-8") as handle:
         colours = json.load(handle)
 
-    # Validate the whole tree before writing anything, so an unmapped class cannot
-    # leave a half-recoloured theme behind.
+    # Validate the whole tree before writing anything, so an unmapped class
+    # cannot leave a half-recoloured theme behind.
     unknown = {}
     total = 0
     for path in svg_files(tree):
@@ -163,15 +176,20 @@ def main():
             used, _ = classes_in_document(path)
         except ET.ParseError as error:
             sys.exit(
-                f"recolour: {os.path.relpath(path, tree)} is not well-formed XML: {error}"
+                f"recolour: {os.path.relpath(path, tree)} is not "
+                f"well-formed XML: {error}"
             )
         for name in used - set(colours):
             unknown.setdefault(name, os.path.relpath(path, tree))
     if unknown:
         listing = "\n".join(
-            f"  {name}  (e.g. {where})" for name, where in sorted(unknown.items())
+            f"  {name}  (e.g. {where})"
+            for name, where in sorted(unknown.items())
         )
-        sys.exit(f"recolour: {len(unknown)} unmapped ColorScheme class(es):\n{listing}")
+        sys.exit(
+            f"recolour: {len(unknown)} unmapped ColorScheme "
+            f"class(es):\n{listing}"
+        )
 
     stats = Counter()
     stats["class"] = Counter()

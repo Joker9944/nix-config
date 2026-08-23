@@ -22,6 +22,7 @@ flake.lib.modules.mkDefaultModule
     # the only importer in either tree, so `schemes` is declared exactly once.
     imports = [
       inputs.nix-schemes.nixosModules.scheme
+      inputs.nix-schemes.nixosModules.cursors
       inputs.nix-schemes.nixosModules.icons
     ];
 
@@ -32,33 +33,8 @@ flake.lib.modules.mkDefaultModule
         # The module-arg `lib` carries `hm` only inside the home-manager tree; the flake
         # input exposes it to both. GTK's icon/cursor types are not exported the same way.
         inherit (inputs.home-manager.lib.hm.types) fontType;
-
-        namedPackageType = types.submodule {
-          options = {
-            name = mkOption {
-              type = types.str;
-              description = ''
-                Name of the theme.
-              '';
-            };
-
-            package = mkOption {
-              type = types.package;
-              description = ''
-                Package providing the theme.
-              '';
-            };
-          };
-        };
       in
       {
-        cursor = mkOption {
-          type = namedPackageType;
-          description = ''
-            Cursor theme of the active theme.
-          '';
-        };
-
         accent = mkOption {
           type = types.nullOr types.str;
           default = null;

@@ -5,14 +5,7 @@
   ...
 }:
 mkThemeModule "uwunicorn" {
-  custom.theme = {
-    cursor = {
-      name = "breeze_cursors";
-      package = pkgs.kdePackages.breeze;
-    };
-
-    gtk.accent = "purple";
-  };
+  custom.theme.gtk.accent = "purple";
 
   schemes = {
     source.scheme = {

@@ -1,0 +1,4 @@
+# flake8 is the linter, and nixpkgs' `writers.writePython3Bin` runs it on its default 79
+# columns from a sandbox no project config can reach. Wrapping at 79 here is what keeps the
+# two in agreement without an ignore list at either end.
+line-length = 79

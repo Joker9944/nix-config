@@ -68,7 +68,7 @@ mkHyprlandModule {
         lib.optional (theme.fonts.interface.package != null) theme.fonts.interface.package
         ++ lib.optional (theme.fonts.terminal.package != null) theme.fonts.terminal.package
         ++ [
-          theme.cursor.package
+          config.schemes.cursors.package
           config.schemes.icons.package
         ];
 
@@ -79,7 +79,7 @@ mkHyprlandModule {
         documentText = lib.mkDefault theme.fonts.document;
         monospaceText = lib.mkDefault theme.fonts.monospace;
 
-        cursorTheme = lib.mkDefault theme.cursor;
+        cursorTheme = lib.mkDefault { inherit (config.schemes.cursors) name package; };
         iconTheme = lib.mkDefault { inherit (config.schemes.icons) name package; };
 
         qtCompat = {

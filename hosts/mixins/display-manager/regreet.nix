@@ -7,7 +7,7 @@ mkMixinModule "regreet" {
     font = config.custom.theme.fonts.interface;
 
     iconTheme = { inherit (config.schemes.icons) name package; };
-    cursorTheme = config.custom.theme.cursor;
+    cursorTheme = { inherit (config.schemes.cursors) name package; };
 
     settings.GTK.application_prefer_dark_theme = true;
   };

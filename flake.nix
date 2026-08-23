@@ -180,7 +180,10 @@
                 shfmt.enable = true;
 
                 # Python
-                ruff.enable = true;
+                flake8 = {
+                  enable = true;
+                  settings.extendIgnore = [ "E203" ];
+                };
                 ruff-format.enable = true;
               };
             };

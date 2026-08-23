@@ -2,11 +2,19 @@
 { config, ... }:
 let
   cfg = config.mixins.desktopEnvironment.hyprland.style;
+
+  cursorSize = 24;
 in
 mkHyprlandModule {
   home.sessionVariables = {
-    XCURSOR_THEME = config.custom.theme.cursor.name;
-    XCURSOR_SIZE = 16;
+    XCURSOR_THEME = config.schemes.cursors.name;
+    XCURSOR_SIZE = cursorSize;
+
+    HYPRCURSOR_THEME = config.schemes.cursors.name;
+    # hyprcursor renders an SVG into a size*size box, and Breeze draws a nominal 24 on a
+    # 32-unit canvas that 90 of its 91 shapes use the whole of. Scaling the request is the
+    # only way to match XCursor, since cropping the canvas would clip the artwork.
+    HYPRCURSOR_SIZE = cursorSize * 32 / 24;
   };
 
   wayland.windowManager.hyprland.settings =

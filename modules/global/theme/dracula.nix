@@ -6,11 +6,6 @@
 }:
 mkThemeModule "dracula" {
   custom.theme = {
-    cursor = {
-      name = "Dracula-cursors";
-      package = pkgs.dracula-theme;
-    };
-
     accent = "#815CD6";
 
     gtk.accent = "purple";

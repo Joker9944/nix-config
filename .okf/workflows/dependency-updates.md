@@ -19,6 +19,7 @@ verified:
 | every `flake.lock` | `.github/workflows/nix-flake-update.yaml` | daily 03:00 | automerged PR `ci/nix-flake-update` |
 | `pkgs/*.nix` versions | `.github/workflows/nix-packages-update.yaml` | Tue/Sat 03:30 | automerged PR |
 | `apps/nix-schemes/vendor/schemes/` | `.github/workflows/nix-schemes-update.yaml` | monthly, 1st 04:00 | automerged PR `ci/nix-schemes-update` |
+| `apps/nix-schemes/vendor/cursors/` | `nix run .#update-cursor-templates` | manual | committed by hand |
 | `nixpkgs` + `home-manager` release | manual | May and November | [release-upgrade](release-upgrade.md) |
 
 Renovate runs as the hosted Mend app; its config is `.github/renovate.json5` and covers actions
@@ -40,6 +41,10 @@ than bumping a pin, so it runs the sub-flake's own app from `apps/nix-schemes` a
 month where upstream changed nothing — see
 [decisions/vendored-schemes](/decisions/vendored-schemes.md) for why that tree is refreshed on a
 schedule instead of checked during evaluation.
+
+The cursor templates get no such workflow. Their `breeze` input is pinned to a tag rather than a
+branch, so nothing moves until someone bumps it, and `checks.cursorIdentity` fails when one is
+bumped without re-running the app — [reference/cursor-theming](/reference/cursor-theming.md).
 
 `.github/workflows/nix-flake-check.yaml` runs `nix flake check` on every PR to `main`, and again on
 the push that merges it — the second run is a cache seed, not a gate

@@ -115,6 +115,23 @@
         "type": "github"
       }
     },
+    "breeze": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1785728541,
+        "narHash": "sha256-H9WORZU5XbgHLlxw+u83TJ7K9dyCPMYutjPoC1t0hNY=",
+        "owner": "KDE",
+        "repo": "breeze",
+        "rev": "8f5f92db32cf485f2fbe19b59ccb2f4f46e69096",
+        "type": "github"
+      },
+      "original": {
+        "owner": "KDE",
+        "ref": "v6.7.4",
+        "repo": "breeze",
+        "type": "github"
+      }
+    },
     "claude-okf-skills": {
       "flake": false,
       "locked": {
@@ -798,6 +815,7 @@
     "nix-schemes": {
       "inputs": {
         "adw-colors": "adw-colors",
+        "breeze": "breeze",
         "flake-utils": "flake-utils_3",
         "nix-math": "nix-math_2",
         "nixpkgs": [

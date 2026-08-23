@@ -1,11 +1,11 @@
 ---
 type: Playbook
 title: Formatting and cspell
-description: What the pre-commit hooks enforce (nixfmt, shfmt, ruff, …), why cspell is deliberately NOT a hook (editor + on-demand only), and how to whitelist technical words.
+description: What the pre-commit hooks enforce (nixfmt, shfmt, flake8, ruff-format, …), why python is formatted at 79 columns, why cspell is deliberately NOT a hook (editor + on-demand only), and how to whitelist technical words.
 tags: [workflow, formatting, spellcheck, pre-commit]
 generated:
-  by: claude-code/claude-opus-4-8
-  at: 2026-07-29T00:00:00Z
+  by: claude-code/claude-opus-5
+  at: 2026-08-23T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -20,10 +20,24 @@ Defined in `flake.nix#checks.<system>.preCommitHooks.hooks`:
 | Files | `trim-trailing-whitespace`, `end-of-file-fixer`, `fix-byte-order-marker`, `mixed-line-endings` (LF) |
 | Nix | `deadnix`, `nil`, `nixfmt`, `statix` |
 | Shell | `shellcheck`, `shfmt` |
-| Python | `ruff`, `ruff-format` |
+| Python | `flake8`, `ruff-format` |
 | Links | `rewrite-pr-links` (`.nix` and `.md`) |
 
 Run everything at once: `nix fmt` (aliased to `pre-commit run --all-files`). Individual hooks fire automatically on `git commit`.
+
+## Python is linted by flake8 at 79 columns
+
+flake8 rather than `ruff` as the linter, because nixpkgs' `writers.writePython3Bin` hardcodes
+flake8 as its build-time check and runs it in a sandbox no project config can reach — so its
+defaults are the only ones that can ever be satisfied. `ruff.toml` therefore sets
+`line-length = 79` to match, and `ruff-format` stays as the formatter, flake8 having none.
+
+That leaves exactly one rule the two cannot both satisfy: a black-style formatter puts space
+around a slice colon when either side is an expression, and `E203` rejects it. It is turned off
+in `settings.extendIgnore`. Nothing else needs an exception, which is the point — a
+`writePython3Bin` call needs no `flakeIgnore` at all.
+
+Neither tool rewraps prose, so an over-long docstring or comment is a manual fix.
 
 # cspell is NOT a hook
 

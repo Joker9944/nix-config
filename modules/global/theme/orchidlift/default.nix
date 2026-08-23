@@ -8,21 +8,15 @@
 let
   libSchemes = inputs.nix-schemes.lib.libSchemes;
 
-  defaultCursor = {
-    name = "breeze_cursors";
-    package = pkgs.kdePackages.breeze;
-  };
-
   mkOrchidliftTheme =
     variant:
     {
       accent,
       palette,
-      cursor ? defaultCursor,
     }:
     mkThemeModule "orchidlift-${variant}" {
       custom.theme = {
-        inherit accent cursor;
+        inherit accent;
 
         gtk.accent = "purple";
       };

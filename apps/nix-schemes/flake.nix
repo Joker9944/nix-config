@@ -25,6 +25,12 @@
       url = "github:lassekongo83/adw-colors/main"; # cSpell:ignore lassekongo
       flake = false;
     };
+    # Pinned to a tag rather than a branch: `cursors/Breeze/src/svg` has taken three commits
+    # since July 2024, and the alternative is re-resolving a 44 MB tarball nightly.
+    breeze = {
+      url = "github:KDE/breeze/v6.7.4";
+      flake = false;
+    };
   };
 
   outputs =
@@ -52,6 +58,14 @@
           checks = {
             libTests = pkgs.callPackage ./tests/lib {
               inherit libUtil;
+              flake = self;
+            };
+
+            cursorIdentity = pkgs.callPackage ./tests/cursors/identity.nix {
+              inherit (inputs) breeze;
+            };
+
+            cursorSlotLeak = pkgs.callPackage ./tests/cursors/slot-leak.nix {
               flake = self;
             };
           };
@@ -102,6 +116,7 @@
           default = self.nixosModules.scheme;
 
           scheme = import ./modules/global/scheme.nix self;
+          cursors = import ./modules/global/cursors.nix self;
           icons = import ./modules/global/icons.nix self;
           regreet = import ./modules/nixos/regreet.nix self;
         };
@@ -110,6 +125,7 @@
           default = self.homeModules.scheme;
 
           scheme = import ./modules/global/scheme.nix self;
+          cursors = import ./modules/global/cursors.nix self;
           icons = import ./modules/global/icons.nix self;
           gtk = import ./modules/home/gtk.nix self;
           kitty = import ./modules/home/kitty.nix self;

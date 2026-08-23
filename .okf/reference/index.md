@@ -7,3 +7,4 @@ is awkward to reach mid-task.
 
 * [base24](base24.md) — the five ANSI slots where base16 and base24 disagree, plus which vocabulary each consumer follows.
 * [gtk-theming](gtk-theming.md) — why adw-gtk3 is mandatory rather than a convenience, and how a GTK4 theme actually gets applied.
+* [cursor-theming](cursor-theming.md) — why a cursor theme is compiled from SVG rather than recoloured, and the nine slots Breeze reduces to.

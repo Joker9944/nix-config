@@ -37,7 +37,7 @@ Inside `apps/util-lib` it reads `libSelf.mkLibNamespace` instead, since that tre
 
 Each flake ties the fixed point exactly once, in its own `flake.nix`. The args thread down unchanged, so a leaf at any depth sees the whole tree — `lib/modules/mkMixinModule.nix` reaches a sibling as `libSelf.modules.mkConditionalModule`.
 
-`apps/nix-schemes/lib/init/` is the one deliberate second fixed point. `init` is a lib *constructor* (`pkgs -> libSchemes`), not a namespace: it re-loads its own directory with `pkgs` in scope and merges the result into the **root**, so `mkGtkThemeCss` is a top-level member of the returned lib rather than living under `.init`. It holds only what genuinely builds a derivation; everything reachable without `pkgs` — `generateScheme` included — sits in `lib/` proper.
+`apps/nix-schemes/lib/init/` is the one deliberate second fixed point. `init` is a lib *constructor* (`pkgs -> libSchemes`), not a namespace: it re-loads its own directory with `pkgs` in scope and merges the result into the **root**, so `mkGtkThemeCss`, `mkIconTheme` and `mkCursorTheme` are top-level members of the returned lib rather than living under `.init`. It holds only what genuinely builds a derivation; everything reachable without `pkgs` — `generateScheme` included — sits in `lib/` proper.
 
 # Argument convention
 
