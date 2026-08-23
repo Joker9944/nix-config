@@ -1,12 +1,12 @@
 ---
 type: Reference
 title: GTK theming and adw-gtk3
-description: Why the stock GTK stylesheets cannot be recoloured and adw-gtk3 is therefore mandatory, which toolkits actually need it, and why `gtk.gtk4.theme` is the wrong lever for GTK4.
+description: Why the stock GTK stylesheets cannot be recoloured and adw-gtk3 is therefore mandatory, which toolkits actually need it, why `gtk.gtk4.theme` is the wrong lever for GTK4, and how icon themes are recoloured through Plasma's ColorScheme classes instead.
 resource: https://github.com/lassekongo83/adw-gtk3
 tags: [reference, gtk, libadwaita, adw-gtk3, nix-schemes, theming]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-20T00:00:00Z
+  at: 2026-08-22T00:00:00Z
 ---
 
 # Why the theme is mandatory
@@ -99,6 +99,50 @@ Two GTK constructs cannot be written literally in SCSS, which is why adw-colors'
 
 `currentColor` is the only value that must stay a runtime CSS function; everything else is
 precomputed, so GTK's `mix()` never appears and cannot collide with sass's.
+
+# Icons are a separate mechanism
+
+None of the above reaches icons, and the two toolkits disagree about how they are recoloured.
+
+GTK recolours an icon only when its **filename** ends `-symbolic.svg`, `-symbolic-{ltr,rtl}.svg` or
+`.symbolic.png`. GTK3 wraps the file in a generated stylesheet — `rect,circle,path,p { fill: <fg>
+!important }` plus `.success` / `.warning` / `.error` (`gtkicontheme.c:1669-1672`); GTK4 hands the
+colours to `GtkSymbolicPaintable` instead, five of them since 4.22 added the accent. Either way the
+`!important` fill lands on every shape, so an icon needs no classes at all to follow the foreground —
+which is why a pack's `ColorScheme-*` symbolic icons recolour correctly under GTK anyway, and why
+rewriting them here would be discarded. The four-class requirement in the GTK3 API docs applies only
+to the non-foreground colours. GTK4 states the same contract outright: under
+`GTK_SVG_TRADITIONAL_SYMBOLIC`, which both symbolic load paths enable, "fill and stroke attributes
+are ignored" and the default is the foreground colour (`gtksvg.h:102-106`).
+
+Plasma instead reads a `<style>` element holding `.ColorScheme-*` rules that set `color:`, against
+elements drawn `fill="currentColor"`, and swaps those declarations for the live `KColorScheme`. Under
+GTK nothing supplies that stylesheet, so the file renders at whatever the pack baked in.
+
+`schemes.icons` closes the gap, rewriting the declarations at build time through
+`libSchemes.mkIconTheme { scheme, base }`. Class-agnostic, because the package is needed in both
+trees — `programs.regreet.iconTheme` on the system side, `gtk.iconTheme` on the user side — and
+`nullOr` + `readOnly` like `schemes.scheme`, so it is simply `null` when no scheme is configured.
+`base` and `name` move together: a pack ships several variant directories and the right one cannot
+be derived from the package.
+Only declarations. A classed element picks the colour up through any of `fill="currentColor"`,
+`stroke="currentColor"`, `style="fill:currentColor"` or `style="stroke:currentColor"` — the `style`
+forms are the *more* common in Colloid — and a `<g>` wrapper's children inherit `color` with no paint
+attribute at all. Rewriting the one declaration covers every form; rewriting elements would not.
+
+* Sixteen classes map to slots: the eleven Plasma documents, plus `Negative`/`Positive`/`NeutralText`
+  and `Accent`, which the docs omit but every surveyed pack uses — the first three outrank all but
+  `Text` and `Highlight`. An **unmapped** class fails the build; that is how a new upstream role
+  surfaces.
+* `*-symbolic.svg` is skipped: GTK's `!important` wrapper would discard the work.
+* The whole `share/icons` tree is copied and directory names are left unchanged, because a variant
+  may reach into a sibling by *relative* symlink (Colloid-Dark does, for six directories). The store
+  path is what distinguishes the result.
+* `dontFixup` — nothing in the tree is an executable — with `dontDropIconThemeCache` alongside it,
+  since gtk3 registers that as its own post-install phase and it would delete the generated caches.
+
+A pack that uses no `ColorScheme-*` classes is simply left alone; Adwaita is 90% symbolic and needs
+nothing.
 
 # Related
 

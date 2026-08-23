@@ -2,6 +2,11 @@
 
 An index of bundle changes, not a narrative. One line each: what changed and the concept that holds the detail, in the form `CLAUDE.md` rule 3 sets. Rationale lives in the commit message, tied to the diff, or in a [decision](/decisions/index.md) — not here.
 
+## 2026-08-22
+- `schemes.icons` exposes the recoloured pack as a readOnly option to both trees; `custom.theme.icons` dropped, since the theme module configures `schemes.*` rather than re-exporting it — [reference/gtk-theming](/reference/gtk-theming.md)
+- `mkIconTheme` recolours a pack's Plasma `ColorScheme-*` stylesheets, since GTK recolours only by filename suffix — [reference/gtk-theming](/reference/gtk-theming.md)
+- corrected: a nix-schemes library module *may* read a transformer-added key, through `requireKey` — [architecture/module-layout](/architecture/module-layout.md)
+
 ## 2026-08-21
 - `exclude` keeps a value sibling out of an auto-discovered module directory, as `modules/home/tidy/` does with `timer.nix` — [architecture/auto-discovery](/architecture/auto-discovery.md)
 - IFD is disabled machine-wide and in the CI `nix_conf`, and how to get past it when a third-party flake needs it — [decisions/no-ifd](/decisions/no-ifd.md)

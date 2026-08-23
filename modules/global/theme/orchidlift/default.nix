@@ -13,22 +13,16 @@ let
     package = pkgs.kdePackages.breeze;
   };
 
-  defaultIcons = {
-    name = "Colloid-Dark";
-    package = pkgs.colloid-icon-theme;
-  };
-
   mkOrchidliftTheme =
     variant:
     {
       accent,
       palette,
       cursor ? defaultCursor,
-      icons ? defaultIcons,
     }:
     mkThemeModule "orchidlift-${variant}" {
       custom.theme = {
-        inherit accent cursor icons;
+        inherit accent cursor;
 
         gtk.accent = "purple";
       };
@@ -41,6 +35,11 @@ let
           variant = "dark";
 
           palette = lib.mapAttrs (_: hex: libSchemes.color.mkColor (libSchemes.color.fromHex hex)) palette;
+        };
+
+        icons = {
+          name = "Tela-circle-dark";
+          base = pkgs.tela-circle-icon-theme;
         };
 
         transformers = [

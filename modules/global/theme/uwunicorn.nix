@@ -11,11 +11,6 @@ mkThemeModule "uwunicorn" {
       package = pkgs.kdePackages.breeze;
     };
 
-    icons = {
-      name = "Colloid-Dark";
-      package = pkgs.colloid-icon-theme;
-    };
-
     gtk.accent = "purple";
   };
 
@@ -23,6 +18,11 @@ mkThemeModule "uwunicorn" {
     source.scheme = {
       system = "base16";
       slug = "uwunicorn";
+    };
+
+    icons = {
+      name = "Colloid-Dark";
+      base = pkgs.colloid-icon-theme;
     };
 
     transformers =

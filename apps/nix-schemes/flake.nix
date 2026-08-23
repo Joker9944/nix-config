@@ -102,6 +102,7 @@
           default = self.nixosModules.scheme;
 
           scheme = import ./modules/global/scheme.nix self;
+          icons = import ./modules/global/icons.nix self;
           regreet = import ./modules/nixos/regreet.nix self;
         };
 
@@ -109,6 +110,7 @@
           default = self.homeModules.scheme;
 
           scheme = import ./modules/global/scheme.nix self;
+          icons = import ./modules/global/icons.nix self;
           gtk = import ./modules/home/gtk.nix self;
           kitty = import ./modules/home/kitty.nix self;
           librewolf = import ./modules/home/librewolf self;

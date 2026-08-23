@@ -18,9 +18,12 @@ flake.lib.modules.mkDefaultModule
     };
   }
   {
-    # `nixosModules.scheme` and `homeModules.scheme` are the same class-agnostic file; this
-    # module is the only importer in either tree, so `schemes` is declared exactly once.
-    imports = [ inputs.nix-schemes.nixosModules.scheme ];
+    # `nixosModules.*` and `homeModules.*` are the same class-agnostic files; this module is
+    # the only importer in either tree, so `schemes` is declared exactly once.
+    imports = [
+      inputs.nix-schemes.nixosModules.scheme
+      inputs.nix-schemes.nixosModules.icons
+    ];
 
     options.custom.theme =
       let
@@ -49,13 +52,6 @@ flake.lib.modules.mkDefaultModule
         };
       in
       {
-        icons = mkOption {
-          type = namedPackageType;
-          description = ''
-            Icon pack of the active theme.
-          '';
-        };
-
         cursor = mkOption {
           type = namedPackageType;
           description = ''

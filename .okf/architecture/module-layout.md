@@ -5,7 +5,7 @@ description: On-disk layout for any nix module in the repo — single file for t
 tags: [architecture, modules, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-21T00:00:00Z
+  at: 2026-08-22T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -27,7 +27,7 @@ Same rule everywhere: the two branches below decide the shape.
 
 The constraint: such a module may only touch options that exist in both trees. Types are less restricted than they look — the module-arg `lib` carries `hm` only inside the home-manager tree, but `inputs.home-manager.lib.hm.{types,generators}` reaches both, so `fontType` is reusable (`hosts/mixins/desktop-environment/hyprland/regreet.nix` does the same with `toHyprconf`). What is *not* reusable is anything declared inline in a home-manager module rather than exported — `gtk.iconTheme` and `gtk.cursorTheme` have no `hm.types` equivalent and need a local submodule.
 
-Such a module also has to *own* any third-party module it needs (`modules/global/theme/` is the sole importer of nix-schemes' `scheme` module), because importing the same non-path module value from two places declares its options twice.
+Such a module also has to *own* any third-party module it needs (`modules/global/theme/` is the sole importer of nix-schemes' `scheme` and `icons` modules), because importing the same non-path module value from two places declares its options twice.
 
 What it cannot own is tree-specific wiring, so each tree gets a thin glue module beside it: `modules/{home,nixos}/theme.nix` import the nix-schemes renderers for their own tree (`gtk`/`librewolf`, `regreet`) and translate `custom.theme` into their options. Four constraints follow from that split:
 
@@ -36,7 +36,7 @@ What it cannot own is tree-specific wiring, so each tree gets a thin glue module
 * `modules/home/theme.nix` claims `monospace` and `emoji` — the generics whose name is itself a classification — leaving `sansSerif` to `users/mixins/fonts.nix` as a content decision. Nothing sets `serif`.
 * That binding sits in the home glue rather than the shared module deliberately: naming a font obliges the tree to install it, and the theme's Nerd Font is ~220 MiB the NixOS closure has no use for — nothing system-side resolves a generic, since regreet names its font outright.
 
-nix-schemes' contract forces that split: **a scheme carries no accent at origin** — a consumer adds one via `schemes.transformers` — so a nix-schemes *library* module must never read a transformer-added field, while a consumer may read what it supplied. `modules/global/theme/` is the consumer and contributes the accent transformer, resolving `schemes.scheme.accent` in both trees with no renderer module enabled.
+nix-schemes' contract forces that split: **a scheme carries no accent at origin** — a consumer adds one via `schemes.transformers`. `modules/global/theme/` is that consumer, and contributes the accent transformer from a class-agnostic position so `schemes.scheme.accent` resolves in both trees with no renderer module enabled. Anything reading it back — library modules included — goes through `requireKey`, per [custom-lib](custom-lib.md).
 
 Cross-tree data flows one way: `mkHomeConfiguration` builds from the NixOS configuration and passes `osConfig`, so home reads the host and never the reverse — see [entry-points](entry-points.md).
 

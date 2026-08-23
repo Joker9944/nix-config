@@ -11,11 +11,6 @@ mkThemeModule "dracula" {
       package = pkgs.dracula-theme;
     };
 
-    icons = {
-      name = "Dracula";
-      package = pkgs.dracula-icon-theme;
-    };
-
     accent = "#815CD6";
 
     gtk.accent = "purple";
@@ -25,6 +20,11 @@ mkThemeModule "dracula" {
     source.scheme = {
       system = "base24";
       slug = "dracula";
+    };
+
+    icons = {
+      name = "Dracula";
+      base = pkgs.dracula-icon-theme;
     };
 
     transformers =

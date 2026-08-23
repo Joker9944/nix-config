@@ -69,7 +69,7 @@ mkHyprlandModule {
         ++ lib.optional (theme.fonts.terminal.package != null) theme.fonts.terminal.package
         ++ [
           theme.cursor.package
-          theme.icons.package
+          config.schemes.icons.package
         ];
 
       custom.easyGtk = {
@@ -80,7 +80,7 @@ mkHyprlandModule {
         monospaceText = lib.mkDefault theme.fonts.monospace;
 
         cursorTheme = lib.mkDefault theme.cursor;
-        iconTheme = lib.mkDefault theme.icons;
+        iconTheme = lib.mkDefault { inherit (config.schemes.icons) name package; };
 
         qtCompat = {
           qt5DecorationsPackage = pkgs-unstable.qadwaitadecorations;
