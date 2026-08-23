@@ -112,25 +112,39 @@
           ))
         ];
 
-        nixosModules = {
-          default = self.nixosModules.scheme;
+        nixosModules =
+          let
+            modules = {
+              scheme = import ./modules/global/scheme.nix self;
+              cursors = import ./modules/global/cursors.nix self;
+              icons = import ./modules/global/icons.nix self;
+              regreet = import ./modules/nixos/regreet.nix self;
+            };
+          in
+          {
+            default = {
+              imports = lib.attrValues modules;
+            };
+          }
+          // modules;
 
-          scheme = import ./modules/global/scheme.nix self;
-          cursors = import ./modules/global/cursors.nix self;
-          icons = import ./modules/global/icons.nix self;
-          regreet = import ./modules/nixos/regreet.nix self;
-        };
-
-        homeModules = {
-          default = self.homeModules.scheme;
-
-          scheme = import ./modules/global/scheme.nix self;
-          cursors = import ./modules/global/cursors.nix self;
-          icons = import ./modules/global/icons.nix self;
-          gtk = import ./modules/home/gtk.nix self;
-          kitty = import ./modules/home/kitty.nix self;
-          librewolf = import ./modules/home/librewolf self;
-          vicinae = import ./modules/home/vicinae.nix self;
-        };
+        homeModules =
+          let
+            modules = {
+              scheme = import ./modules/global/scheme.nix self;
+              cursors = import ./modules/global/cursors.nix self;
+              icons = import ./modules/global/icons.nix self;
+              gtk = import ./modules/home/gtk.nix self;
+              kitty = import ./modules/home/kitty.nix self;
+              librewolf = import ./modules/home/librewolf self;
+              vicinae = import ./modules/home/vicinae.nix self;
+            };
+          in
+          {
+            default = {
+              imports = lib.attrValues modules;
+            };
+          }
+          // modules;
       };
 }

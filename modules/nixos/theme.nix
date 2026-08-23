@@ -6,7 +6,7 @@ _:
   ...
 }:
 {
-  imports = [ inputs.nix-schemes.nixosModules.regreet ];
+  imports = [ inputs.nix-schemes.nixosModules.default ];
 
   config =
     let

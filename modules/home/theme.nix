@@ -6,12 +6,7 @@ _:
   ...
 }:
 {
-  imports = with inputs.nix-schemes.homeModules; [
-    gtk
-    kitty
-    librewolf
-    vicinae
-  ];
+  imports = [ inputs.nix-schemes.homeModules.default ];
 
   config =
     let

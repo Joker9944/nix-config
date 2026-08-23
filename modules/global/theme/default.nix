@@ -18,14 +18,6 @@ flake.lib.modules.mkDefaultModule
     };
   }
   {
-    # `nixosModules.*` and `homeModules.*` are the same class-agnostic files; this module is
-    # the only importer in either tree, so `schemes` is declared exactly once.
-    imports = [
-      inputs.nix-schemes.nixosModules.scheme
-      inputs.nix-schemes.nixosModules.cursors
-      inputs.nix-schemes.nixosModules.icons
-    ];
-
     options.custom.theme =
       let
         inherit (lib) mkOption types;
@@ -42,6 +34,16 @@ flake.lib.modules.mkDefaultModule
           description = ''
             Accent color of the active theme. When null the accent is derived from the scheme
             palette using `gtk.accent` as the selector.
+          '';
+        };
+
+        altColor = mkOption {
+          type = types.nullOr types.str;
+          default = null;
+          example = "#78AEB4";
+          description = ''
+            Second accent of the active theme, for consumers that draw two accents against
+            each other. When null it is a hue rotation of `accent`.
           '';
         };
 
@@ -143,13 +145,21 @@ flake.lib.modules.mkDefaultModule
         # Resolved against the in-progress scheme the transformer is handed, not
         # `config.schemes.scheme`, which this transformer is itself an input to.
         schemes.transformers = [
-          (scheme: libSchemes: {
-            accent =
-              if cfg.accent != null then
-                libSchemes.color.mkColor (libSchemes.color.fromHex cfg.accent)
-              else
-                (libSchemes.gtk.mkAccentsFromPalette scheme.palette).${cfg.gtk.accent};
-          })
+          (
+            scheme: libSchemes:
+            {
+              accent =
+                if cfg.accent != null then
+                  libSchemes.color.mkColor (libSchemes.color.fromHex cfg.accent)
+                else
+                  (libSchemes.gtk.mkAccentsFromPalette scheme.palette).${cfg.gtk.accent};
+            }
+            # Absent rather than derived, so the one rotation that stands in for it lives
+            # with the consumer that needs it.
+            // lib.optionalAttrs (cfg.altColor != null) {
+              altColor = libSchemes.color.mkColor (libSchemes.color.fromHex cfg.altColor);
+            }
+          )
         ];
       };
   }

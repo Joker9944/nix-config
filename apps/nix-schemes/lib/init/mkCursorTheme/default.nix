@@ -22,7 +22,9 @@
 
   # Arguments
 
-  - `scheme`: Color scheme with a palette and an `accent` supplied by a transformer
+  - `scheme`: Color scheme with a palette and an `accent` supplied by a transformer. An
+    optional `altColor` key takes over the `accentAlt` slot, which is otherwise a hue
+    rotation of the accent.
   - `slots`: Colors overriding the defaults derived from the scheme
 
   # Example
@@ -66,7 +68,11 @@ let
     ];
 
     inherit accent;
-    accentAlt = palette.base0C;
+
+    # Breeze pairs its accent with a second hue a long way round the wheel rather than
+    # opposite it — 154°, not 180°. A triad turn is the same idea and lands on teal for
+    # the purple accents here, which is Breeze's own accent hue with the roles swapped.
+    accentAlt = scheme.altColor or (accent.rotateHue (-120));
 
     negative = palette.base08;
     positive = palette.base0B;

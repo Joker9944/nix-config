@@ -22,6 +22,7 @@
     adjust = <function>;
     lighten = <function>;
     darken = <function>;
+    rotateHue = <function>;
     red = 255;
     green = 85;
     blue = 0;
@@ -30,16 +31,22 @@
 */
 { libSelf, ... }:
 dec: with libSelf.color; {
+  # values
   inherit dec;
+  red = red dec;
+  green = green dec;
+  blue = blue dec;
+
+  # formatters
   hex = toHex dec;
   rgb = toRgb dec;
   rgba = toRgba dec;
   xrgb = toXrgb dec;
+
+  # manipulators
   mix = mix dec;
   adjust = adjust dec;
   lighten = lighten dec;
   darken = darken dec;
-  red = red dec;
-  green = green dec;
-  blue = blue dec;
+  rotateHue = rotateHue dec;
 }

@@ -2,6 +2,11 @@
 
 An index of bundle changes, not a narrative. One line each: what changed and the concept that holds the detail, in the form `CLAUDE.md` rule 3 sets. Rationale lives in the commit message, tied to the diff, or in a [decision](/decisions/index.md) — not here.
 
+## 2026-08-24
+- `toHsl`, `fromHsl` and `rotateHue` join the color lib; `accentAlt` is the accent turned −120° rather than a fixed palette slot — [reference/cursor-theming](/reference/cursor-theming.md)
+- `custom.theme.altColor` sets a second accent theme-wide, reaching the scheme only when configured — [reference/cursor-theming](/reference/cursor-theming.md)
+- corrected: on a dark scheme `fill` is `base00` and `outline` is `base06`, not the reverse — [reference/cursor-theming](/reference/cursor-theming.md)
+
 ## 2026-08-23
 - New concept: cursor themes are compiled from Breeze's SVGs into XCursor, `cursors_scalable` and hyprcursor, because the format has no recolouring hook — [reference/cursor-theming](/reference/cursor-theming.md)
 - `schemes.cursors` replaces `custom.theme.cursor`, which is gone; `name` is derived rather than configured — [reference/cursor-theming](/reference/cursor-theming.md)

@@ -6,7 +6,7 @@ resource: https://github.com/KDE/breeze/tree/master/cursors
 tags: [reference, cursors, xcursor, hyprcursor, nix-schemes, theming]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-23T00:00:00Z
+  at: 2026-08-24T00:00:00Z
 ---
 
 # The format has no hook
@@ -24,15 +24,21 @@ no classes.
 
 | slot | Breeze literal | default |
 |---|---|---|
-| `fill` | implicit black, `#0d0d0d` | `base06`, swapped with `outline` on a light scheme |
-| `outline` | `#fff` | `base00` |
+| `fill` | implicit black, `#0d0d0d` | `base00`, swapped with `outline` on a light scheme |
+| `outline` | `#fff` | `base06` |
 | `shadow` | implicit black under a `filter`, `#0a0a0a`/`#070707`/`#0c0c0c` | black |
 | `accent` | `#46a7ac` | `scheme.accent` |
-| `accentAlt` | `#d4497f` | `base0C` |
+| `accentAlt` | `#d4497f` | `custom.theme.altColor`, else `accent` turned −120° |
 | `negative` | `#ed1515` | `base08` |
 | `positive` | `#11d116`, `#18c087` | `base0B` |
 | `info` | `#3daee9` | `base0D` |
 | `neutral` | `#f67400` | `base09` |
+
+`accentAlt` is turned rather than picked, so it cannot land on the accent itself the way a
+fixed palette slot does when `gtk.accent` selects that slot. A triad turn and not the
+complement, because Breeze's own pair sits 154° apart, and because inverting RGB — which is
+what `calcInverse` does — drags lightness across with the hue and lands every purple accent
+here in a dark olive.
 
 # Most of the paint is not written down
 
