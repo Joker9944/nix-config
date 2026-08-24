@@ -59,4 +59,32 @@ in
       0
     ];
   };
+
+  testRotateHueFractionalAngle = {
+    expr =
+      (libSchemes.color.rotateHue [
+        217
+        83
+        107
+      ] 47.5).dec;
+    expected = [
+      217
+      165
+      83
+    ];
+  };
+
+  testRotateHueFractionalBackwards = {
+    expr =
+      (libSchemes.color.rotateHue [
+        61
+        148
+        97
+      ] (-317.3)).dec;
+    expected = [
+      61
+      137
+      148
+    ];
+  };
 }

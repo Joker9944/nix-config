@@ -38,7 +38,7 @@ jobs:
 
           for flake_dir in "${flake_dirs[@]}"; do
             echo "Updating flake in: $flake_dir"
-            nix flake update --flake "$flake_dir" --commit-lock-file --option commit-lock-file-summary "flake: update $flake_dir/flake.lock"
+            nix flake update --flake "$flake_dir" --commit-lock-file --option commit-lock-file-summary "chore(deps): $flake_dir/flake.lock maintenance"
           done
 
       - name: Create Pull Request
