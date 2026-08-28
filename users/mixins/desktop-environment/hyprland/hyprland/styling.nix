@@ -29,7 +29,7 @@ mkHyprlandModule {
           gaps_out = 10;
 
           "col.active_border" = "rgba(${scheme.accent.rgba 0.93})";
-          "col.inactive_border" = "rgba(${scheme.background.dark.rgba 0.66})";
+          "col.inactive_border" = "rgba(${scheme.named.background.dark.rgba 0.66})";
 
           layout = "dwindle";
         };
@@ -46,7 +46,7 @@ mkHyprlandModule {
             xray = true;
           };
 
-          shadow.color = "rgba(${scheme.background.darker.rgba 0.93})";
+          shadow.color = "rgba(${scheme.named.background.darker.rgba 0.93})";
         };
 
         dwindle.preserve_split = true;

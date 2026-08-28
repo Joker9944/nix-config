@@ -5,7 +5,7 @@ description: On-disk layout for any nix module in the repo — single file for t
 tags: [architecture, modules, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-23T00:00:00Z
+  at: 2026-08-24T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -36,7 +36,7 @@ What it cannot own is tree-specific wiring, so each tree gets a thin glue module
 * `modules/home/theme.nix` claims `monospace` and `emoji` — the generics whose name is itself a classification — leaving `sansSerif` to `users/mixins/fonts.nix` as a content decision. Nothing sets `serif`.
 * That binding sits in the home glue rather than the shared module deliberately: naming a font obliges the tree to install it, and the theme's Nerd Font is ~220 MiB the NixOS closure has no use for — nothing system-side resolves a generic, since regreet names its font outright.
 
-nix-schemes' contract forces that split: **a scheme carries no accent at origin** — a consumer adds one via `schemes.transformers`. `modules/global/theme/` is that consumer, and contributes the accent transformer from a class-agnostic position so `schemes.scheme.accent` resolves in both trees with no renderer module enabled. Anything reading it back — library modules included — goes through `requireKey`, per [custom-lib](custom-lib.md).
+nix-schemes' contract forces that split: the scheme carries the accent, but only `modules/global/theme/` knows what it should be. It sets `schemes.accent` from a class-agnostic position, so `schemes.scheme.accent` resolves in both trees with no renderer module enabled; the glue modules translate the GTK-only half of `custom.theme.gtk` into `schemes.{gtk,regreet}`.
 
 Cross-tree data flows one way: `mkHomeConfiguration` builds from the NixOS configuration and passes `osConfig`, so home reads the host and never the reverse — see [entry-points](entry-points.md).
 

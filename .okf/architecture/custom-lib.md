@@ -5,7 +5,7 @@ description: Three libs — `lib/` for module-system helpers, `apps/util-lib` fo
 tags: [architecture, lib, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-21T00:00:00Z
+  at: 2026-08-24T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -17,7 +17,7 @@ verified:
 |---|---|---|
 | `lib/` | `flake.lib` | Helpers that only mean something to a module evaluation |
 | `apps/util-lib/lib/` | `lib.libUtil` | General-purpose Nix helpers — `strings`, `lists`, `files`, `numbers` |
-| `apps/nix-schemes/lib/` | `lib.libSchemes` | `color` (construction, conversion, WCAG metrics), `gtk`, `transformers`, plus `generateScheme`, `requireKey`, `types` and `init` at the root |
+| `apps/nix-schemes/lib/` | `lib.libSchemes` | `color` (construction, conversion, WCAG metrics), `gtk`, `views`, plus `generateScheme`, `mkScheme`, `types` and `init` at the root |
 
 [/decisions/util-lib-split.md](/decisions/util-lib-split.md) has the boundary and the reasoning. All three load the same way, name themselves the same way, and nest under `lib.<name>` so a consumer's `inherit` reads the same as the tree's own arg — matching `inputs.nix-math.lib.math`.
 
@@ -41,7 +41,7 @@ Each flake ties the fixed point exactly once, in its own `flake.nix`. The args t
 
 # Argument convention
 
-A lib is injected into its own files as **`libSelf`**; a foreign lib arrives under its own name — `libUtil`, `libSchemes`, `libMath`. That holds in *every* position, not just module arguments: a callback parameter takes the name too, so the transformer protocol at `apps/nix-schemes/lib/color/mkScheme.nix` is `prevScheme: libSchemes: attrset`. `flake` is the flake self; `self` names nothing here. Why it works that way is in [decisions/util-lib-split](/decisions/util-lib-split.md).
+A lib is injected into its own files as **`libSelf`**; a foreign lib arrives under its own name — `libUtil`, `libSchemes`, `libMath`. That holds in *every* position, not just module arguments. `flake` is the flake self; `self` names nothing here. Why it works that way is in [decisions/util-lib-split](/decisions/util-lib-split.md).
 
 Consumers outside `lib/`:
 
@@ -74,16 +74,11 @@ Notable helpers with non-obvious use:
 
 # Scheme keys
 
-A scheme guarantees only `system`, `name`, `author`, `variant` and `palette`; the type is freeform
-(`apps/nix-schemes/lib/types.nix`), so `accent`, `ansi` and `named`'s colour words exist only when a
-transformer added them. `schemes.transformers` is the *only* place they may come from — `mkScheme`
-keeps a closed argument pattern because each transformer is `recursiveUpdate`-merged over the scheme,
-so a key set at construction is silently clobbered by any later transformer touching the same
-subtree.
-
-Read them with `libSchemes.requireKey scheme path` (a bare string is a one-element path), which names
-the scheme, the path, and what was available at the level that failed. Reading one directly gets you
-`attribute 'accent' missing` and no hint about the transformer that was supposed to supply it.
+A scheme is total: `meta`, `palette`, `accent`, `named`, `status` and `ansi` are computed for every
+scheme, so a consumer reads one directly and the type declares them all
+(`apps/nix-schemes/lib/types.nix`). `mkScheme` is the only constructor; the views under `lib/views/`
+are pure `palette -> attrs` functions it calls. Why it is shaped that way, and where a colour that is
+*not* app-independent belongs instead, is in [/decisions/scheme-model](/decisions/scheme-model.md).
 
 # Doc-strings
 

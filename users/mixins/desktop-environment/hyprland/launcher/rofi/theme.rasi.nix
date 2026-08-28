@@ -14,12 +14,12 @@ in
   # cSpell:words rasi mainbox inputbar listview
   "*" = {
     font = "${font.name} ${toString font.size}";
-    text-color = mkLiteral "rgb(${scheme.foreground.normal.rgb})";
+    text-color = mkLiteral "rgb(${scheme.named.foreground.normal.rgb})";
     background-color = mkLiteral "transparent";
   };
 
   window = {
-    background-color = mkLiteral "rgba(${scheme.background.normal.rgba opacity.active})";
+    background-color = mkLiteral "rgba(${scheme.named.background.normal.rgba opacity.active})";
     border = mkLiteral "${toString border.size}px";
     border-radius = mkLiteral "${toString border.corners.rounding}px";
     border-color = mkLiteral "rgba(${scheme.accent.rgba 0.93})";
@@ -39,13 +39,13 @@ in
 
     font = "${font.name} Bold ${toString font.size}";
 
-    background-color = mkLiteral "rgb(${scheme.background.light.rgb})";
+    background-color = mkLiteral "rgb(${scheme.named.background.light.rgb})";
 
     padding = mkLiteral "5px";
 
     border = mkLiteral "1px";
     border-radius = mkLiteral "${toString border.corners.rounding}px";
-    border-color = mkLiteral "rgb(${scheme.background.lighter.rgb})";
+    border-color = mkLiteral "rgb(${scheme.named.background.lighter.rgb})";
   };
 
   prompt = {
@@ -82,11 +82,11 @@ in
   };
 
   "element normal.active, element selected.active" = {
-    text-color = mkLiteral "rgb(${scheme.info.rgb})";
+    text-color = mkLiteral "rgb(${scheme.status.info.rgb})";
   };
 
   "element normal.urgent, element selected.urgent" = {
-    text-color = mkLiteral "rgb(${scheme.error.rgb})";
+    text-color = mkLiteral "rgb(${scheme.status.error.rgb})";
   };
 
   element-icon = {

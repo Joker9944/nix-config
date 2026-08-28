@@ -47,6 +47,16 @@ let
     ]
   ) schemeSystems;
 
+  # A stated slug must agree with the filename, since `generateScheme` prefers the attr and
+  # every consumer keys off the result.
+  mismatchedSlugs = lib.concatMap (
+    schemeSystem:
+    lib.pipe (slugsOf schemeSystem) [
+      (lib.filter (schemeSlug: (libSchemes.generateScheme schemeSystem schemeSlug).slug != schemeSlug))
+      (lib.map (schemeSlug: "${schemeSystem}/${schemeSlug}"))
+    ]
+  ) schemeSystems;
+
   gruvbox = libSchemes.generateScheme "base16" "gruvbox-dark-hard";
 in
 {
@@ -62,8 +72,25 @@ in
   };
 
   testGenerateSchemePalette = {
-    expr = gruvbox.palette.base00.hex;
-    expected = "1D2021";
+    expr = gruvbox.palette.base00;
+    expected = "#1d2021";
+  };
+
+  # Carries no slug attr, so it falls back to the filename
+  testGenerateSchemeSlugFromFilename = {
+    expr = gruvbox.slug;
+    expected = "gruvbox-dark-hard";
+  };
+
+  # States a slug the name does not reduce to
+  testGenerateSchemeSlugFromAttr = {
+    expr = (libSchemes.generateScheme "base16" "brushtrees").slug;
+    expected = "brushtrees";
+  };
+
+  testGenerateSchemeAllVendoredSlugsMatchTheirFilename = {
+    expr = mismatchedSlugs;
+    expected = [ ];
   };
 
   testGenerateSchemeAllVendoredSchemesAreComplete = {

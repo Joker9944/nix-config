@@ -1,40 +1,28 @@
 { mkThemeModule, ... }:
-{
-  inputs,
-  pkgs,
-  ...
-}:
+{ pkgs, ... }:
 mkThemeModule "dracula" {
   custom.theme = {
     accent = "#815CD6";
 
-    gtk.accent = "purple";
+    gtk = {
+      accent = "purple";
+      uniformAccents = true;
+    };
   };
 
   schemes = {
-    source.scheme = {
+    source.tinted = {
       system = "base24";
       slug = "dracula";
     };
+
+    # Dracula ships an ANSI black distinct from its background; the scheme parks it in
+    # base01, where the spec puts base00.
+    overrides.ansi."0" = "base01";
 
     icons = {
       name = "Dracula";
       base = pkgs.dracula-icon-theme;
     };
-
-    transformers =
-      let
-        # Dracula ships an ANSI black distinct from its background; the scheme parks it in
-        # base01, where the spec puts base00. Every other slot derives from the spec.
-        draculaAnsi = scheme: _: {
-          ansi."0" = scheme.palette.base01;
-        };
-        schemeTransformers = inputs.nix-schemes.lib.libSchemes.transformers;
-      in
-      [
-        schemeTransformers.named
-        schemeTransformers.ansi
-        draculaAnsi
-      ];
   };
 }

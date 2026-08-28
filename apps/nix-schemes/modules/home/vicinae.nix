@@ -28,37 +28,34 @@ in
         '';
       };
 
-      theme = mkOption {
+      settings = mkOption {
         inherit (tomlFormat) type;
         default = { };
         description = ''
-          Additional theme settings added to the generated theme.
+          Theme settings merged over the generated theme. The output lands in
+          `programs.vicinae.themes`, so this is the override channel — there are no
+          per-color options.
         '';
       };
     };
 
   config =
     let
-      inherit (cfg.scheme) palette;
-
-      slug = lib.toLower (builtins.replaceStrings [ " " ] [ "-" ] cfg.scheme.name);
+      inherit (cfg.scheme) palette accent;
 
       hex = color: "#${color.hex}";
-
-      # base24 adds brighter accents and deeper backgrounds over base16.
-      pick = extended: fallback: hex (if cfg.scheme.system == "base24" then extended else fallback);
 
       theme = {
         meta = {
           version = 1;
-          inherit (cfg.scheme) name variant;
-          description = cfg.scheme.author;
-          inherits = "vicinae-${cfg.scheme.variant}";
+          inherit (cfg.scheme.meta) name variant;
+          description = cfg.scheme.meta.author;
+          inherits = "vicinae-${cfg.scheme.meta.variant}";
         };
 
         colors = {
           core = {
-            accent = hex (libSchemes.requireKey cfg.scheme "accent");
+            accent = hex accent;
             accent_foreground = hex palette.base00;
             background = hex palette.base00;
             foreground = hex palette.base05;
@@ -74,7 +71,7 @@ in
             cyan = hex palette.base0C;
             blue = hex palette.base0D;
             magenta = hex palette.base0E;
-            purple = pick palette.base17 palette.base0E;
+            purple = hex palette.base17;
           };
 
           main_window = {
@@ -90,8 +87,8 @@ in
             default = "colors.core.foreground";
             muted = hex palette.base04;
             placeholder = hex palette.base03;
-            danger = pick palette.base12 palette.base08;
-            success = pick palette.base14 palette.base0B;
+            danger = hex palette.base12;
+            success = hex palette.base14;
 
             selection = {
               background = "colors.core.accent";
@@ -99,15 +96,15 @@ in
             };
 
             links = {
-              default = pick palette.base16 palette.base0D;
-              visited = pick palette.base17 palette.base0E;
+              default = hex palette.base16;
+              visited = hex palette.base17;
             };
           };
 
           input = {
             border = "colors.core.border";
             border_focus = "colors.core.accent";
-            border_error = pick palette.base12 palette.base08; # references only resolve into core and accents
+            border_error = hex palette.base12; # references only resolve into core and accents
           };
 
           button.primary = {
@@ -149,11 +146,11 @@ in
     lib.mkIf cfg.enable {
       programs.vicinae = {
         settings = {
-          theme.${cfg.scheme.variant}.name = lib.mkDefault slug;
+          theme.${cfg.scheme.meta.variant}.name = lib.mkDefault cfg.scheme.meta.slug;
           providers.theme.entrypoints.set.enabled = lib.mkDefault false;
         };
 
-        themes.${slug} = lib.recursiveUpdate theme cfg.theme;
+        themes.${cfg.scheme.meta.slug} = lib.recursiveUpdate theme cfg.settings;
       };
     };
 }

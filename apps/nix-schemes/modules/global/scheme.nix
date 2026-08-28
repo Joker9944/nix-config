@@ -4,17 +4,29 @@ flake:
   config,
   ...
 }:
+let
+  libSchemes = flake.lib.libSchemes;
+in
 {
   options.schemes =
     let
-      inherit (lib) mkOption types;
-      customTypes = flake.lib.libSchemes.types;
+      inherit (lib) mkOption types literalExpression;
+      customTypes = libSchemes.types;
+
+      colorRef = mkOption {
+        type = types.attrsOf types.str;
+        default = { };
+        description = ''
+          Colors keyed by the path they replace. A value either names a palette slot or
+          is a hex string.
+        '';
+      };
     in
     {
       source = mkOption {
         type = types.nullOr (
           types.attrTag {
-            scheme = mkOption {
+            tinted = mkOption {
               type = types.submodule {
                 options = {
                   system = mkOption {
@@ -42,10 +54,45 @@ flake:
               '';
             };
 
-            override = mkOption {
-              type = customTypes.scheme;
+            custom = mkOption {
+              type = types.submodule {
+                options = {
+                  name = mkOption {
+                    type = types.str;
+                    description = ''
+                      The scheme name.
+                    '';
+                  };
+
+                  author = mkOption {
+                    type = types.str;
+                    description = ''
+                      The author of the scheme.
+                    '';
+                  };
+
+                  variant = mkOption {
+                    type = types.enum [
+                      "light"
+                      "dark"
+                    ];
+                    description = ''
+                      The scheme shade system.
+                    '';
+                  };
+
+                  palette = mkOption {
+                    type = types.attrsOf types.str;
+                    example = literalExpression ''{ base00 = "#1E1823"; }'';
+                    description = ''
+                      The scheme color palette as hex strings. Sixteen slots are upcast
+                      to twenty-four; supply all twenty-four to control them yourself.
+                    '';
+                  };
+                };
+              };
               description = ''
-                Provides a custom scheme directly, bypassing all sources.
+                Provides a scheme written out in place of one from tinted-theming.
               '';
             };
           }
@@ -56,23 +103,45 @@ flake:
         '';
       };
 
-      transformers = mkOption {
-        type = types.listOf customTypes.transformer;
-        default = [ ];
+      accent = mkOption {
+        type = types.str;
+        default = "base0D";
+        example = "#B478AE";
         description = ''
-          Functions that modify the scheme before it becomes available as `schemes.scheme`.
-          Common uses include adding custom colors, converting base16 to base24, or
-          adding accent colors from other modules like `schemes.gtk.accentTransformer`.
-          Some built-in transformers are available in `libSchemes.transformers`.
+          The color consumers reach for when they need one that is not a background or a
+          foreground. Either a palette slot name or a hex string.
         '';
+      };
+
+      interpolation.lightenWeight = mkOption {
+        type = types.float;
+        default = 0.2;
+        description = ''
+          How far the bright accents a base16 source lacks are lightened towards white.
+        '';
+      };
+
+      overrides = {
+        palette = colorRef;
+        status = colorRef;
+        ansi = colorRef;
+
+        named = mkOption {
+          type = types.attrsOf (types.attrsOf types.str);
+          default = { };
+          example = literalExpression ''{ background.dark = "base01"; }'';
+          description = ''
+            Colors replacing what the `named` view derived, keyed by color word and
+            variant. A value either names a palette slot or is a hex string.
+          '';
+        };
       };
 
       scheme = mkOption {
         type = types.nullOr customTypes.scheme;
         readOnly = true;
         description = ''
-          The final computed scheme after applying all transformers.
-          This is the scheme that other modules should use for theming.
+          The scheme every other module reads. Every view is present for every scheme.
         '';
       };
     };
@@ -81,21 +150,26 @@ flake:
     let
       cfg = config.schemes;
 
-      tintedThemingScheme = flake.schemes.${cfg.source.scheme.system}.${cfg.source.scheme.slug};
-
-      scheme =
+      source =
         if cfg.source == null then
           null
-        else if cfg.source ? scheme then
-          tintedThemingScheme
+        else if cfg.source ? tinted then
+          libSchemes.generateScheme cfg.source.tinted.system cfg.source.tinted.slug
         else
-          cfg.source.override;
+          cfg.source.custom;
 
-      transformedScheme = lib.foldl (
-        scheme: transformer: scheme.transform transformer
-      ) scheme cfg.transformers;
+      scheme =
+        if source == null then
+          null
+        else
+          libSchemes.mkScheme {
+            inherit source;
+            inherit (cfg) accent overrides;
+            inherit (cfg.interpolation) lightenWeight;
+          };
+
     in
     {
-      schemes.scheme = if scheme == null then null else transformedScheme;
+      schemes.scheme = scheme;
     };
 }

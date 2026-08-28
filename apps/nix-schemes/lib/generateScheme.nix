@@ -1,10 +1,11 @@
 /**
-  Generate a color scheme from the vendored tinted-theming schemes.
+  Load a vendored tinted-theming scheme as a source: metadata plus a palette of hex
+  strings. Pass it to `mkScheme` to get a scheme.
 
   # Type
 
   ```
-  generateScheme :: string -> string -> scheme
+  generateScheme :: string -> string -> source
   ```
 
   # Arguments
@@ -21,30 +22,16 @@
     name = "Gruvbox dark, hard";
     author = "...";
     variant = "dark";
-    palette = { base00 = <color>; base01 = <color>; ... };
-    transform = <function>;
+    slug = "gruvbox-dark-hard";
+    palette = { base00 = "#1D2021"; ... };
   }
   ```
 */
-{
-  lib,
-  libSelf,
-  ...
-}:
+{ lib, ... }:
 schemeSystem: schemeSlug:
 let
-  scheme = import (../vendor/schemes + "/${schemeSystem}/${schemeSlug}.nix");
+  scheme = import (lib.path.append ../vendor/schemes "${schemeSystem}/${schemeSlug}.nix");
 in
-libSelf.color.mkScheme {
-  inherit (scheme)
-    system
-    name
-    author
-    variant
-    ;
-
-  palette = lib.pipe scheme.palette [
-    (lib.mapAttrs (_: hex: libSelf.color.fromHex hex))
-    (lib.mapAttrs (_: dec: libSelf.color.mkColor dec))
-  ];
-}
+# Upstream states a slug only where the name does not reduce to the filename, and never
+# disagrees with it. Taking the attr first keeps upstream authoritative all the same.
+scheme // { slug = scheme.slug or schemeSlug; }

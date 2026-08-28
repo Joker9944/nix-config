@@ -80,9 +80,9 @@ let
   // lib.mapAttrs' (name: lib.nameValuePair "accent_${name}") accents;
 in
 pkgs.stdenv.mkDerivation (finalAttrs: {
-  name = "adw-${scheme.name}";
+  name = "adw-${scheme.meta.name}";
 
-  inherit (scheme) variant;
+  inherit (scheme.meta) variant;
 
   src = ./scss;
   dontUnpack = true;

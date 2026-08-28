@@ -1,7 +1,6 @@
 _:
 {
   inputs,
-  lib,
   config,
   ...
 }:
@@ -16,9 +15,7 @@ _:
       schemes.regreet = {
         inherit (cfg.gtk) accent;
 
-        # Only override when the theme names a color: `mkAccentsFromColor` collapses all
-        # nine accents onto it, which a palette-derived theme must keep distinct.
-        overrides.accent = lib.mkIf (cfg.accent != null) (_: config.schemes.scheme.accent);
+        accents.mode = if cfg.gtk.uniformAccents then "uniform" else "palette";
       };
     };
 }

@@ -12,7 +12,7 @@ let
 
   # Nine reds a human can still tell apart, all with green == blue so that every blend
   # between them keeps the property `slot-leak.py` asserts on.
-  slots = {
+  colors = {
     fill = red "FF5050";
     outline = red "4A0000";
     shadow = red "990000";
@@ -24,14 +24,14 @@ let
     neutral = red "6B1010";
   };
 
-  # Every slot is overridden, so the scheme supplies nothing but its shape — and the
-  # `accent` key `mkCursorTheme` requires of one.
-  scheme = flake.schemes.base16.dracula // {
-    name = "SlotLeak";
-    inherit (slots) accent;
+  # Every slot is supplied here, so the scheme contributes nothing but the theme name.
+  scheme = libSchemes.mkScheme {
+    source = flake.schemes.base16.dracula // {
+      name = "SlotLeak";
+    };
   };
 
-  theme = libSchemes.mkCursorTheme { inherit scheme slots; };
+  theme = libSchemes.mkCursorTheme { inherit scheme colors; };
 in
 runCommand "cursor-slot-leak"
   {

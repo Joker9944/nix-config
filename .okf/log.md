@@ -2,7 +2,18 @@
 
 An index of bundle changes, not a narrative. One line each: what changed and the concept that holds the detail, in the form `CLAUDE.md` rule 3 sets. Rationale lives in the commit message, tied to the diff, or in a [decision](/decisions/index.md) — not here.
 
+## 2026-08-28
+- `meta.slug` is the vendored slug for a tinted source and `libUtil.strings.slugify` of the name for a custom one — [decisions/scheme-model](/decisions/scheme-model.md)
+- `overrides.palette` applies before the upcast, so a derived slot follows the slot it comes from — [decisions/scheme-model](/decisions/scheme-model.md)
+
 ## 2026-08-24
+- New decision: the scheme is a total derived model; `schemes.transformers`, `scheme.transform`, `accentTransformer` and `requireKey` are gone — [decisions/scheme-model](/decisions/scheme-model.md)
+- Per-scheme deviation is `schemes.overrides.<view>.<path>`, a palette slot name or a hex string — [decisions/scheme-model](/decisions/scheme-model.md)
+- Sources are `schemes.source.tinted` / `.custom`; `generateScheme` returns a source, `mkScheme` builds the scheme — [architecture/custom-lib](/architecture/custom-lib.md)
+- base16 upcasts to base24 unconditionally, so no consumer branches on `meta.system` — [reference/base24](/reference/base24.md)
+- `named`, `status` and `ansi` are views under `lib/views/`, always present; the colour words carry `normal`/`bright` — [reference/base24](/reference/base24.md)
+- `schemes.accent` carries the accent; `custom.theme.gtk.accent` is the GNOME selector only, and `uniformAccents` collapses the nine — [architecture/module-layout](/architecture/module-layout.md)
+- Cursor slots are declared options with derived defaults, replacing the untyped `slots` attrset; `custom.theme.altColor` is gone — [reference/cursor-theming](/reference/cursor-theming.md)
 - `toHsl`, `fromHsl` and `rotateHue` join the color lib; `accentAlt` is the accent turned −120° rather than a fixed palette slot — [reference/cursor-theming](/reference/cursor-theming.md)
 - `custom.theme.altColor` sets a second accent theme-wide, reaching the scheme only when configured — [reference/cursor-theming](/reference/cursor-theming.md)
 - corrected: on a dark scheme `fill` is `base00` and `outline` is `base06`, not the reverse — [reference/cursor-theming](/reference/cursor-theming.md)

@@ -19,8 +19,8 @@ Breeze is drawn in — so `schemes.cursors` compiles a theme rather than recolou
 
 # Slots
 
-All 91 Breeze SVGs together use nine roles. There are no `style=` attributes, no `stroke` and
-no classes.
+All 91 Breeze SVGs together use nine roles, declared as `schemes.cursors.colors.*` with the defaults
+below. There are no `style=` attributes, no `stroke` and no classes.
 
 | slot | Breeze literal | default |
 |---|---|---|
@@ -28,7 +28,7 @@ no classes.
 | `outline` | `#fff` | `base06` |
 | `shadow` | implicit black under a `filter`, `#0a0a0a`/`#070707`/`#0c0c0c` | black |
 | `accent` | `#46a7ac` | `scheme.accent` |
-| `accentAlt` | `#d4497f` | `custom.theme.altColor`, else `accent` turned −120° |
+| `accentAlt` | `#d4497f` | `accent` turned −120° |
 | `negative` | `#ed1515` | `base08` |
 | `positive` | `#11d116`, `#18c087` | `base0B` |
 | `info` | `#3daee9` | `base0D` |

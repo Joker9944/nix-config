@@ -16,7 +16,6 @@ in
         mkPackageOption
         mkOption
         types
-        literalExpression
         ;
       customTypes = libSchemes.types;
     in
@@ -51,12 +50,15 @@ in
         '';
       };
 
-      overrides.accent = mkOption {
-        type = types.nullOr (types.functionTo customTypes.color);
-        default = null;
-        example = literalExpression "libSchemes: libSchemes.color.mkColor [ 0 127 255 ]";
+      accents.mode = mkOption {
+        type = types.enum [
+          "palette"
+          "uniform"
+        ];
+        default = "palette";
         description = ''
-          Custom accent color to override accent colors derived from scheme.
+          Where the nine accent colors come from: `palette` spreads the scheme palette
+          across them, `uniform` collapses them onto `schemes.scheme.accent`.
         '';
       };
     };
@@ -65,11 +67,10 @@ in
     let
       cfg = config.schemes.regreet;
 
-      accents =
-        if cfg.overrides.accent == null then
-          libSchemes.gtk.mkAccentsFromPalette cfg.scheme.palette
-        else
-          libSchemes.gtk.mkAccentsFromColor (cfg.overrides.accent libSchemes);
+      accents = libSchemes.gtk.mkAccents {
+        inherit (cfg) scheme;
+        inherit (cfg.accents) mode;
+      };
 
       themeCss = libSchemes.mkGtkThemeCss {
         inherit (cfg) scheme accent;
@@ -81,7 +82,7 @@ in
         enable = lib.mkDefault true;
 
         theme = {
-          name = if cfg.scheme.variant == "light" then "adw-gtk3" else "adw-gtk3-dark";
+          name = if cfg.scheme.meta.variant == "light" then "adw-gtk3" else "adw-gtk3-dark";
           inherit (cfg.theme) package;
         };
 

@@ -21,7 +21,7 @@
 
   # Arguments
 
-  - `scheme`: Color scheme with a palette and an `accent` supplied by a transformer
+  - `scheme`: Color scheme the pack is recoloured against
   - `base`: Icon theme package to recolour
 
   # Example
@@ -33,19 +33,13 @@
   }
   ```
 */
-{
-  libSelf,
-  pkgs,
-  ...
-}:
+{ pkgs, ... }:
 {
   scheme,
   base,
 }:
 let
-  inherit (scheme) palette;
-
-  accent = libSelf.requireKey scheme "accent";
+  inherit (scheme) palette accent;
 
   hex = color: "#${color.hex}";
 
@@ -76,7 +70,7 @@ let
   };
 in
 pkgs.stdenvNoCC.mkDerivation {
-  name = "${base.pname or base.name}-${scheme.name}";
+  name = "${base.pname or base.name}-${scheme.meta.slug}";
 
   dontUnpack = true;
 

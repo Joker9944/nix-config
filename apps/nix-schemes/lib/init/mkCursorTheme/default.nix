@@ -17,72 +17,37 @@
   # Type
 
   ```
-  mkCursorTheme :: { scheme, slots? } -> derivation
+  mkCursorTheme :: { scheme, colors } -> derivation
   ```
 
   # Arguments
 
-  - `scheme`: Color scheme with a palette and an `accent` supplied by a transformer. An
-    optional `altColor` key takes over the `accentAlt` slot, which is otherwise a hue
-    rotation of the accent.
-  - `slots`: Colors overriding the defaults derived from the scheme
+  - `scheme`: Color scheme the theme is named after
+  - `colors`: The nine paint slots, all of them — `schemes.cursors.colors` declares them
+    and derives their defaults
 
   # Example
 
   ```nix
   mkCursorTheme {
     inherit scheme;
-    slots.accentAlt = libSchemes.color.mkColor [ 0 127 255 ];
+    inherit (config.schemes.cursors) colors;
   }
   ```
 */
 {
-  libSelf,
   lib,
   pkgs,
   ...
 }:
 {
   scheme,
-  slots ? { },
+  colors,
 }:
 let
-  inherit (scheme) palette;
+  paints = lib.mapAttrs (_: color: "#${color.hex}") colors;
 
-  accent = libSelf.requireKey scheme "accent";
-
-  hex = color: "#${color.hex}";
-
-  # The cursor is drawn as a body inside an outline, so the two take opposite ends of the
-  # palette and swap with the variant — that is the whole of what Breeze_Light would add.
-  # The rest are Breeze's own semantics, which already line up with base24 slots.
-  defaults = {
-    fill = if scheme.variant == "dark" then palette.base00 else palette.base06;
-    outline = if scheme.variant == "dark" then palette.base06 else palette.base00;
-
-    # Drawn under a blur at 20% opacity, where a palette colour reads as dirt.
-    shadow = libSelf.color.mkColor [
-      0
-      0
-      0
-    ];
-
-    inherit accent;
-
-    # Breeze pairs its accent with a second hue a long way round the wheel rather than
-    # opposite it — 154°, not 180°. A triad turn is the same idea and lands on teal for
-    # the purple accents here, which is Breeze's own accent hue with the roles swapped.
-    accentAlt = scheme.altColor or (accent.rotateHue (-120));
-
-    negative = palette.base08;
-    positive = palette.base0B;
-    info = palette.base0D;
-    neutral = palette.base09;
-  };
-
-  colors = lib.mapAttrs (_: hex) (defaults // slots);
-
-  themeName = "Breeze-${builtins.replaceStrings [ " " ] [ "-" ] scheme.name}";
+  themeName = "Breeze-${scheme.meta.slug}";
 in
 pkgs.stdenvNoCC.mkDerivation {
   name = themeName;
@@ -108,7 +73,7 @@ pkgs.stdenvNoCC.mkDerivation {
 
     python3 ${./build.py} \
       ${../../../vendor/cursors/breeze} \
-      ${pkgs.writers.writeJSON "colors.json" colors} \
+      ${pkgs.writers.writeJSON "colors.json" paints} \
       ${themeName} \
       theme
 
@@ -125,7 +90,7 @@ pkgs.stdenvNoCC.mkDerivation {
   '';
 
   meta = {
-    description = "Breeze cursors recoloured for ${scheme.name}";
+    description = "Breeze cursors recoloured for ${scheme.meta.name}";
     license = lib.licenses.lgpl3Plus;
   };
 }

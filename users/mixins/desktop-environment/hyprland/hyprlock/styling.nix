@@ -34,12 +34,12 @@ mkHyprlandModule {
         size = "20%, 5%";
         outline_thickness = border.size;
 
-        inner_color = "rgba(${scheme.background.normal.rgba 0.93})";
+        inner_color = "rgba(${scheme.named.background.normal.rgba 0.93})";
         outer_color = "rgba(${scheme.accent.rgba 0.93})";
-        check_color = "rgba(${scheme.info.rgba 0.93})";
-        fail_color = "rgba(${scheme.error.rgba 0.93})";
+        check_color = "rgba(${scheme.status.info.rgba 0.93})";
+        fail_color = "rgba(${scheme.status.error.rgba 0.93})";
 
-        font_color = "rgb(${scheme.foreground.normal.rgb})";
+        font_color = "rgb(${scheme.named.foreground.normal.rgb})";
         font_family = fonts.interface.name;
 
         dots_spacing = 0.3;
@@ -60,7 +60,7 @@ mkHyprlandModule {
               path = "${custom.assets.the-seer}";
 
               border_size = border.size;
-              border_color = "rgba(${scheme.background.normal.rgba 0.93})";
+              border_color = "rgba(${scheme.named.background.normal.rgba 0.93})";
 
               size = "150";
               position = "0, 130";

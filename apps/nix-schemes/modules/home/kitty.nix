@@ -29,15 +29,9 @@ in
 
   config =
     let
-      inherit (cfg.scheme) palette;
-
-      accent = libSchemes.requireKey cfg.scheme "accent";
-      ansi = libSchemes.requireKey cfg.scheme "ansi";
+      inherit (cfg.scheme) palette accent ansi;
 
       hex = color: "#${color.hex}";
-
-      # base24 adds deeper backgrounds over base16; base10 falls back to base00 per spec.
-      pick = extended: fallback: hex (if cfg.scheme.system == "base24" then extended else fallback);
 
       settings = {
         foreground = hex palette.base05;
@@ -58,7 +52,7 @@ in
         active_tab_background = hex accent;
         inactive_tab_foreground = hex palette.base04;
         inactive_tab_background = hex palette.base01;
-        tab_bar_background = pick palette.base10 palette.base00;
+        tab_bar_background = hex palette.base10;
 
         mark1_foreground = hex palette.base00;
         mark1_background = hex palette.base0D;

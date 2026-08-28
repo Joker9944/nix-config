@@ -1,14 +1,16 @@
 { mkThemeModule, ... }:
-{
-  inputs,
-  pkgs,
-  ...
-}:
+{ pkgs, ... }:
 mkThemeModule "uwunicorn" {
-  custom.theme.gtk.accent = "purple";
+  custom.theme = {
+    # The palette slot `gtk.accent` selects, named directly now that it no longer doubles
+    # as the accent selector.
+    accent = "base0E";
+
+    gtk.accent = "purple";
+  };
 
   schemes = {
-    source.scheme = {
+    source.tinted = {
       system = "base16";
       slug = "uwunicorn";
     };
@@ -17,15 +19,5 @@ mkThemeModule "uwunicorn" {
       name = "Colloid-Dark";
       base = pkgs.colloid-icon-theme;
     };
-
-    transformers =
-      let
-        schemeTransformers = inputs.nix-schemes.lib.libSchemes.transformers;
-      in
-      [
-        (schemeTransformers.interpolateBase24 { })
-        schemeTransformers.named
-        schemeTransformers.ansi
-      ];
   };
 }

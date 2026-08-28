@@ -28,42 +28,41 @@ flake.lib.modules.mkDefaultModule
       in
       {
         accent = mkOption {
-          type = types.nullOr types.str;
-          default = null;
+          type = types.str;
+          default = "base0D";
           example = "#B478AE";
           description = ''
-            Accent color of the active theme. When null the accent is derived from the scheme
-            palette using `gtk.accent` as the selector.
+            Accent color of the active theme, either a palette slot name or a hex string.
           '';
         };
 
-        altColor = mkOption {
-          type = types.nullOr types.str;
-          default = null;
-          example = "#78AEB4";
-          description = ''
-            Second accent of the active theme, for consumers that draw two accents against
-            each other. When null it is a hue rotation of `accent`.
-          '';
-        };
+        gtk = {
+          accent = mkOption {
+            type = types.enum [
+              "blue"
+              "teal"
+              "green"
+              "yellow"
+              "orange"
+              "red"
+              "pink"
+              "purple"
+              "slate"
+            ];
+            default = "blue";
+            description = ''
+              The GTK accent color based on the GTK 4 accent system.
+            '';
+          };
 
-        gtk.accent = mkOption {
-          type = types.enum [
-            "blue"
-            "teal"
-            "green"
-            "yellow"
-            "orange"
-            "red"
-            "pink"
-            "purple"
-            "slate"
-          ];
-          default = "blue";
-          description = ''
-            The GTK accent color based on the GTK 4 accent system. Doubles as the palette
-            selector when `accent` is null.
-          '';
+          uniformAccents = mkOption {
+            type = types.bool;
+            default = false;
+            description = ''
+              Collapse all nine GTK accents onto `accent`. A theme naming one color wants
+              this; a theme drawing its accents from the palette must not.
+            '';
+          };
         };
 
         fonts = {
@@ -141,25 +140,6 @@ flake.lib.modules.mkDefaultModule
           };
         };
 
-        # A scheme carries no accent of its own, so the theme adds one for its consumers.
-        # Resolved against the in-progress scheme the transformer is handed, not
-        # `config.schemes.scheme`, which this transformer is itself an input to.
-        schemes.transformers = [
-          (
-            scheme: libSchemes:
-            {
-              accent =
-                if cfg.accent != null then
-                  libSchemes.color.mkColor (libSchemes.color.fromHex cfg.accent)
-                else
-                  (libSchemes.gtk.mkAccentsFromPalette scheme.palette).${cfg.gtk.accent};
-            }
-            # Absent rather than derived, so the one rotation that stands in for it lives
-            # with the consumer that needs it.
-            // lib.optionalAttrs (cfg.altColor != null) {
-              altColor = libSchemes.color.mkColor (libSchemes.color.fromHex cfg.altColor);
-            }
-          )
-        ];
+        schemes.accent = cfg.accent;
       };
   }

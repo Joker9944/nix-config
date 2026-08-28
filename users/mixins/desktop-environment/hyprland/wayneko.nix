@@ -16,7 +16,7 @@ mkHyprlandModule {
           "--background-colour"
           "0x${scheme.accent.hex}"
           "--outline-colour"
-          "0x${scheme.background.normal.hex}"
+          "0x${scheme.named.background.normal.hex}"
         ];
       };
     };

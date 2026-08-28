@@ -6,7 +6,7 @@ resource: https://github.com/tinted-theming/base24/blob/main/styling.md
 tags: [reference, colour, base16, base24, nix-schemes, theming]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-19T00:00:00Z
+  at: 2026-08-24T00:00:00Z
 sources:
   - id: base24-styling
     resource: https://raw.githubusercontent.com/tinted-theming/base24/refs/heads/main/styling.md
@@ -78,9 +78,8 @@ The spec states the base16 slot each new slot falls back to:
 `base10`,`base11`→`base00` · `base12`→`base08` · `base13`→`base0A` · `base14`→`base0B` ·
 `base15`→`base0C` · `base16`→`base0D` · `base17`→`base0E`
 
-Under base16 the bright ANSI numbers therefore repeat their dull counterparts — `9` renders as
-`base08`, `11` as `base0A`, and so on. `transformers/interpolateBase24.nix` synthesises the missing
-slots when a base16 scheme needs real brights.
+This repo does not fall back: `color/upcastPalette.nix` synthesises the missing slots for every
+base16 source, so the brights are always real and no consumer branches on the system.
 
 # Semantic guidance
 
@@ -102,28 +101,28 @@ This repo maps status colours to the conventional UI hues instead:
 
 `base0F` is "Dark Red or Brown" in the same spec's slot table, close enough to `error`'s red to be
 unreadable as a distinct state. The spec's guidance is aimed at text-editor syntax highlighting,
-where that reads fine; for UI chrome it does not. `transformers/named.nix` and both adw-gtk3 CSS
+where that reads fine; for UI chrome it does not. `views/status.nix` and both adw-gtk3 CSS
 templates use the table above.
 
 # Which slots each consumer reads
 
 | File | Reads |
 |---|---|
-| `apps/nix-schemes/lib/transformers/ansi.nix` | The table above, verbatim — `"0" = base00`, `"3" = base0A`, `"7" = base05`, `"8" = base03` |
-| `apps/nix-schemes/lib/transformers/named.nix` | Same table, exposed as colour words × `dull`/`bright`, plus the semantic names |
-| `apps/nix-schemes/lib/gtk/mkAccentsFromPalette.nix` | Nine GTK4 accents — `yellow = base0A`, `orange = base09` |
+| `apps/nix-schemes/lib/views/ansi.nix` | The table above, verbatim — `"0" = base00`, `"3" = base0A`, `"7" = base05`, `"8" = base03` |
+| `apps/nix-schemes/lib/views/named.nix` | Same table, exposed as colour words × `normal`/`bright` |
+| `apps/nix-schemes/lib/gtk/mkAccents.nix` | Nine GTK4 accents — `yellow = base0A`, `orange = base09` |
 | `apps/nix-schemes/lib/init/mkGtkThemeCss/` | Surfaces from `base00`/`base01`, text from `base05`, the semantic table above; each `*_fg_color` picks whichever of `base00` / `base05` scores higher on `color.contrastRatio` against its fill |
-| `apps/nix-schemes/modules/home/vicinae.nix` | Palette slots directly, base24 extras behind its `pick` helper |
+| `apps/nix-schemes/modules/home/vicinae.nix` | Palette slots directly, extended slots included |
 | `apps/nix-schemes/modules/home/kitty.nix` | The scheme's `ansi` for `color0`–`color15`, palette slots for chrome |
 
-`modules/global/theme/dracula.nix` overrides ANSI `0` to `base01`: Dracula ships an ANSI black
+`modules/global/theme/dracula.nix` sets `schemes.overrides.ansi."0" = "base01"`: Dracula ships an ANSI black
 distinct from its background, and the upstream scheme parks it there. That is a theme deviation, not
 a spec disagreement — every other slot derives from the table.
 
 # Related
 
-* [/architecture/custom-lib.md](/architecture/custom-lib.md) — how `libSchemes` and its transformers
-  load.
+* [/architecture/custom-lib.md](/architecture/custom-lib.md) — how `libSchemes` and its views load.
+* [/decisions/scheme-model.md](/decisions/scheme-model.md) — why every view is always present.
 * [/reference/gtk-theming.md](/reference/gtk-theming.md) — why the GTK consumers above need adw-gtk3
   for these slots to reach anything.
 

@@ -18,7 +18,6 @@ in
         mkPackageOption
         mkOption
         types
-        literalExpression
         ;
       customTypes = libSchemes.types;
     in
@@ -53,22 +52,15 @@ in
         '';
       };
 
-      overrides.accent = mkOption {
-        type = types.nullOr (types.functionTo customTypes.color);
-        default = null;
-        example = literalExpression "libSchemes: libSchemes.color.mkColor [ 0 127 255 ]";
+      accents.mode = mkOption {
+        type = types.enum [
+          "palette"
+          "uniform"
+        ];
+        default = "palette";
         description = ''
-          Custom accent color to override accent colors derived from scheme.
-        '';
-      };
-
-      accentTransformer = mkOption {
-        type = customTypes.transformer;
-        readOnly = true;
-        description = ''
-          A transformer that adds the selected GTK accent color to schemes.
-          Add this to `schemes.transformers` to make the accent color available
-          in `schemes.scheme.accent` for use by other modules.
+          Where the nine accent colors come from: `palette` spreads the scheme palette
+          across them, `uniform` collapses them onto `schemes.scheme.accent`.
         '';
       };
     };
@@ -77,16 +69,12 @@ in
     let
       cfg = config.schemes.gtk;
 
-      mkAccents =
-        scheme:
-        if cfg.overrides.accent == null then
-          libSchemes.gtk.mkAccentsFromPalette scheme.palette
-        else
-          libSchemes.gtk.mkAccentsFromColor (cfg.overrides.accent libSchemes);
+      accents = libSchemes.gtk.mkAccents {
+        inherit (cfg) scheme;
+        inherit (cfg.accents) mode;
+      };
 
-      accents = mkAccents cfg.scheme;
-
-      themeName = if cfg.scheme.variant == "light" then "adw-gtk3" else "adw-gtk3-dark";
+      themeName = if cfg.scheme.meta.variant == "light" then "adw-gtk3" else "adw-gtk3-dark";
 
       themeCss = libSchemes.mkGtkThemeCss {
         inherit (cfg) scheme accent;
@@ -94,14 +82,10 @@ in
       };
     in
     lib.mkIf cfg.enable {
-      schemes.gtk.accentTransformer = scheme: _: {
-        accent = (mkAccents scheme).${cfg.accent};
-      };
-
       gtk = {
         enable = lib.mkDefault true;
 
-        colorScheme = cfg.scheme.variant;
+        colorScheme = cfg.scheme.meta.variant;
 
         theme = {
           name = themeName;
