@@ -5,7 +5,7 @@ description: Every `default.nix` in a mixin category directory calls `mkDefaultM
 tags: [architecture, modules, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-21T00:00:00Z
+  at: 2026-08-28T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -25,7 +25,7 @@ Some directories pass a starter module (with its own `imports`, options, or conf
 
 # `exclude` admits a value sibling
 
-An optional `exclude ? [ ]` list drops paths from the scan on top of `default.nix`. That is what lets an auto-discovering directory also hold a sibling that is a **value** rather than a module — otherwise it would be imported as one and fail. `modules/home/tidy/` keeps `timer.nix` (shared option block and timer-unit builder) out this way, and its two service modules `import ./timer.nix { inherit lib; }` themselves. Without it, a value sibling forces the whole directory onto a hand-written `imports` list, the form `tmux/`, `waybar/` and `rofi/` take.
+An optional `exclude ? [ ]` list drops paths from the scan on top of `default.nix`. That is what lets an auto-discovering directory also hold a sibling that is a **value** rather than a module — otherwise it would be imported as one and fail. `modules/home/tidy/` keeps `timer.nix` (shared option block and timer-unit builder) out this way, and its two service modules `import ./timer.nix { inherit lib; }` themselves. Without it, a value sibling forces the whole directory onto a hand-written `imports` list, the form `tmux/`, `waybar/` and `rofi/` take. `modules/theme/` uses it for the other case: `nixos.nix` and `home.nix` are real modules, but must reach only the tree `mkClassModule` selects them for, not both.
 
 # `importApply` variant
 
@@ -42,7 +42,7 @@ For the mechanics of the fixed-point wrapper, read those files; the OKF-worthy f
 
 # The sub-flakes are the exception
 
-`apps/nix-schemes/` does **not** auto-discover: its `flake.nix` lists every module by hand under `nixosModules` / `homeModules`. A new file in `modules/home/` needs two registrations to reach a config — the export in `apps/nix-schemes/flake.nix`, then an entry in this repo's `modules/home/theme.nix` `imports`. Neither failure is loud; the module simply never loads and its options report as nonexistent.
+`apps/nix-schemes/` does **not** auto-discover: its `flake.nix` lists every module by hand under `nixosModules` / `homeModules`. A new file in `modules/home/` needs two registrations to reach a config — the export in `apps/nix-schemes/flake.nix`, then an entry in this repo's `modules/theme/home.nix` `imports`. Neither failure is loud; the module simply never loads and its options report as nonexistent.
 
 # Related
 

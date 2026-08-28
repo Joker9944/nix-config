@@ -115,7 +115,7 @@ templates use the table above.
 | `apps/nix-schemes/modules/home/vicinae.nix` | Palette slots directly, extended slots included |
 | `apps/nix-schemes/modules/home/kitty.nix` | The scheme's `ansi` for `color0`–`color15`, palette slots for chrome |
 
-`modules/global/theme/dracula.nix` sets `schemes.overrides.ansi."0" = "base01"`: Dracula ships an ANSI black
+`modules/theme/dracula.nix` sets `schemes.overrides.ansi."0" = "base01"`: Dracula ships an ANSI black
 distinct from its background, and the upstream scheme parks it there. That is a theme deviation, not
 a spec disagreement — every other slot derives from the table.
 

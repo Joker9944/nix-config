@@ -3,6 +3,9 @@
 An index of bundle changes, not a narrative. One line each: what changed and the concept that holds the detail, in the form `CLAUDE.md` rule 3 sets. Rationale lives in the commit message, tied to the diff, or in a [decision](/decisions/index.md) — not here.
 
 ## 2026-08-28
+- The theme is one directory, `modules/theme/`, dispatching to `nixos.nix` / `home.nix` on `_class`; `modules/global/` is gone — [architecture/module-layout](/architecture/module-layout.md), [decisions/dual-class-modules](/decisions/dual-class-modules.md)
+- A theme is picked by `custom.themes.<name>.enable`, declared by a local `mkThemeModule`; themes left the `mixins.` namespace — [architecture/module-layout](/architecture/module-layout.md), [architecture/mixin-pattern](/architecture/mixin-pattern.md)
+- `exclude` also keeps a class-branch file out of auto-discovery, not just a value sibling — [architecture/auto-discovery](/architecture/auto-discovery.md)
 - `mkClassModule` selects a module by the evaluation's `_class`; a class with no key is a no-op and a key naming no class throws — [architecture/custom-lib](/architecture/custom-lib.md)
 - New decision: a dual-class module is a class-agnostic core plus one glue module per tree; `_class` selects at eval time and the dendritic pattern is not adopted — [decisions/dual-class-modules](/decisions/dual-class-modules.md)
 - corrected: nix-schemes' shared modules are imported by the per-tree glue via `<class>Modules.default`, not by `modules/global/theme/` — [architecture/module-layout](/architecture/module-layout.md)

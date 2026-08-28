@@ -61,7 +61,7 @@ the caller's problem.
   model is wrong. One can be added later; removing one that themes depend on cannot.
 * **`schemes.accent` defaults to `base0D`, not to the GTK accent selector.** `custom.theme.gtk.accent`
   used to double as the palette selector; a theme that wants that slot now names it
-  (`modules/global/theme/uwunicorn.nix` sets `accent = "base0E"`).
+  (`modules/theme/uwunicorn.nix` sets `accent = "base0E"`).
 
 # Related
 

@@ -1,7 +1,7 @@
 ---
 type: Decision
 title: Dual-class modules
-description: A module loaded into both trees keeps its shared core in `modules/global/` and one glue module per tree; the module system's `_class` argument makes that split a choice rather than a constraint, and the dendritic pattern is not adopted.
+description: A module loaded into both trees lives in one feature directory under `modules/` and selects its tree-specific half on the `_class` module argument; the dendritic pattern is not adopted.
 tags: [decision, modules, convention]
 generated:
   by: claude-code/claude-opus-5
@@ -10,11 +10,12 @@ generated:
 
 # The rule
 
-A feature that configures both trees is three modules: a class-agnostic core under `modules/global/`,
-exported under its own key in both `nixosModules` and `homeModules`, plus a glue module in each of
-`modules/nixos/` and `modules/home/`. The theme is the only instance;
-[/architecture/module-layout](/architecture/module-layout.md) has the constraints the core is subject
-to and what each glue module owns.
+A feature that configures both trees is **one directory** under `modules/`, exported under its own
+key in both `nixosModules` and `homeModules`. Its `default.nix` carries what the trees share and
+dispatches to a per-tree branch file on `_class`; `mkDefaultModule`'s `exclude` keeps those branch
+files out of leaf auto-discovery. `modules/theme/` is the only instance —
+[/architecture/module-layout](/architecture/module-layout.md) has the constraints the shared body is
+subject to and what each branch owns.
 
 # `_class` is a module argument
 
@@ -63,6 +64,8 @@ bodies. Four reasons it is not adopted:
 
 # Trade-off accepted
 
-Reading the theme means opening three directories. `_class` would collapse them; the split is kept
-because it names each tree's contribution at the flake output rather than inside a conditional.
-`apps/nix-schemes` splits the same way, so the two move together.
+Dispatch is invisible from the flake output: `nixosModules.theme` and `homeModules.theme` are the
+same value, and only the module's own body says the trees get different halves. The split that made
+it visible cost three directories to read instead of one. `apps/nix-schemes` still splits across
+`modules/{global,home,nixos}/` — it publishes two module bundles rather than one dual-class module,
+so it has nothing to dispatch inside, and it cannot reach `flake.lib` regardless.

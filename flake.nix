@@ -212,7 +212,7 @@
             flake = self;
           };
 
-          theme = lib.modules.importApply ./modules/global/theme {
+          theme = lib.modules.importApply ./modules/theme {
             inherit (inputs.util-lib.lib) libUtil;
             flake = self;
           };
@@ -224,7 +224,7 @@
             flake = self;
           };
 
-          theme = lib.modules.importApply ./modules/global/theme {
+          theme = lib.modules.importApply ./modules/theme {
             inherit (inputs.util-lib.lib) libUtil;
             flake = self;
           };

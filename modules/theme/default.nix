@@ -10,11 +10,17 @@ flake.lib.modules.mkDefaultModule
   {
     dir = ./.;
 
+    exclude = [
+      ./nixos.nix
+      ./home.nix
+    ];
+
     args = moduleArgs // {
-      mkThemeModule = flake.lib.modules.mkMixinModule {
-        inherit config;
-        prefix = [ "theme" ];
-      };
+      mkThemeModule =
+        name: module:
+        lib.recursiveUpdate {
+          options.custom.themes.${name}.enable = lib.mkEnableOption "${name} theme";
+        } (flake.lib.modules.mkConditionalModule (lib.mkIf config.custom.themes.${name}.enable) module);
     };
   }
   {

@@ -27,7 +27,7 @@ time; `inputs.schemes` stays an input solely to be that source. Its two globs ar
 * **A pure-Nix YAML parser** — [SenchoPens/fromYaml](https://github.com/SenchoPens/fromYaml) hard-fails
   on 4 of the 533 files: a `description: |` block scalar, and space-indented comments. Both are its
   own documented TODOs, and its header disclaims reliability. One of the four is the Dracula scheme
-  `modules/global/theme/dracula.nix` selects.
+  `modules/theme/dracula.nix` selects.
 * **A scheme-specific parser** — parses all 533 correctly, but is another parser to own for data a
   scheduled job can convert once a month instead.
 

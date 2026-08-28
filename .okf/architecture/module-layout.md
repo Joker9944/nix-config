@@ -17,30 +17,68 @@ Applies to **any nix module in this repo**, not only mixins:
 
 * Home-manager mixins under `users/mixins/`.
 * NixOS mixins under `hosts/mixins/`.
-* Flake-level modules under `modules/nixos/`, `modules/home/` and `modules/global/`.
+* Flake-level modules under `modules/`.
 
 Same rule everywhere: the two branches below decide the shape.
 
-# `modules/global/` is class-agnostic
+# `modules/` — class bundles and features
 
-`modules/nixos/` and `modules/home/` are exported as `nixosModules.default` / `homeModules.default` and loaded into one tree each. `modules/global/` holds modules loaded into **both**, exported under their own key in each set (`{nixos,home}Modules.theme`) — the builders splat `lib.attrValues`, so each tree includes it exactly once and the two evaluations stay independent.
+`modules/nixos/` and `modules/home/` are auto-bundled into `nixosModules.default` /
+`homeModules.default` and loaded into one tree each. Any other directory under `modules/` is a
+**feature** exported under its own key in *both* sets — `modules/theme/` is
+`{nixos,home}Modules.theme`. The builders splat `lib.attrValues`, so every key reaches its tree
+exactly once and the two evaluations stay independent.
 
-The constraint: such a module may only touch options that exist in both trees. Types are less restricted than they look — the module-arg `lib` carries `hm` only inside the home-manager tree, but `inputs.home-manager.lib.hm.{types,generators}` reaches both, so `fontType` is reusable (`hosts/mixins/desktop-environment/hyprland/regreet.nix` does the same with `toHyprconf`). What is *not* reusable is anything declared inline in a home-manager module rather than exported — `gtk.iconTheme` and `gtk.cursorTheme` have no `hm.types` equivalent and need a local submodule.
+A feature directory holds one module value that both trees load, so it selects its own tree-specific
+half with `custom.lib.modules.mkClassModule` on the `_class` module argument — see
+[/decisions/dual-class-modules](/decisions/dual-class-modules.md). `modules/theme/` is the worked
+example: `default.nix` carries what both trees share and dispatches to `nixos.nix` or `home.nix`,
+which `mkDefaultModule`'s `exclude` keeps out of leaf auto-discovery.
 
-What such a module must *not* do is import a third-party module that both trees also reach another way: importing the same non-path module value from two places declares its options twice. nix-schemes' class-agnostic `scheme`, `cursors` and `icons` ride along in both `nixosModules.default` and `homeModules.default`, so the glue modules below are their only importers and `modules/global/theme/` imports nothing.
+Everything outside those two branch files may only touch options that exist in both trees. Types are
+less restricted than they look — the module-arg `lib` carries `hm` only inside the home-manager tree,
+but `inputs.home-manager.lib.hm.{types,generators}` reaches both, so `fontType` is reusable
+(`hosts/mixins/desktop-environment/hyprland/regreet.nix` does the same with `toHyprconf`). What is
+*not* reusable is anything declared inline in a home-manager module rather than exported —
+`gtk.iconTheme` and `gtk.cursorTheme` have no `hm.types` equivalent and need a local submodule.
 
-What it cannot own is tree-specific wiring, so each tree gets a thin glue module beside it: `modules/{home,nixos}/theme.nix` import the nix-schemes renderers for their own tree (`gtk`/`librewolf`, `regreet`) and translate `custom.theme` into their options. Four constraints follow from that split:
+Nor may it import a third-party module that both trees also reach another way: importing the same
+non-path module value from two places declares its options twice. nix-schemes' class-agnostic
+`scheme`, `cursors` and `icons` ride along in both `nixosModules.default` and `homeModules.default`,
+so the branch files are their only importers and `modules/theme/default.nix` imports nothing.
+
+# The theme's two branch files
+
+`modules/theme/{nixos,home}.nix` import the nix-schemes renderers for their own tree
+(`gtk`/`librewolf`, `regreet`) and translate `custom.theme` into their options. Four constraints
+follow from being separate modules:
 
 * Splitting an option's definitions across modules splits their merge order too. `programs.regreet.extraCss` is concatenated, so the fragment meant to win needs `lib.mkAfter`.
 * `fonts.fontconfig.defaultFonts.*` concatenates rather than conflicts, so each generic needs exactly one owner.
-* `modules/home/theme.nix` claims `monospace` and `emoji` — the generics whose name is itself a classification — leaving `sansSerif` to `users/mixins/fonts.nix` as a content decision. Nothing sets `serif`.
-* That binding sits in the home glue rather than the shared module deliberately: naming a font obliges the tree to install it, and the theme's Nerd Font is ~220 MiB the NixOS closure has no use for — nothing system-side resolves a generic, since regreet names its font outright.
+* `home.nix` claims `monospace` and `emoji` — the generics whose name is itself a classification — leaving `sansSerif` to `users/mixins/fonts.nix` as a content decision. Nothing sets `serif`.
+* That binding sits in the home branch rather than the shared body deliberately: naming a font obliges the tree to install it, and the theme's Nerd Font is ~220 MiB the NixOS closure has no use for — nothing system-side resolves a generic, since regreet names its font outright.
 
-nix-schemes' contract forces that split: the scheme carries the accent, but only `modules/global/theme/` knows what it should be. It sets `schemes.accent` from a class-agnostic position, so `schemes.scheme.accent` resolves in both trees with no renderer module enabled; the glue modules translate the GTK-only half of `custom.theme.gtk` into `schemes.{gtk,regreet}`.
+nix-schemes' contract forces that split: the scheme carries the accent, but only
+`modules/theme/default.nix` knows what it should be. It sets `schemes.accent` from a class-agnostic
+position, so `schemes.scheme.accent` resolves in both trees with no renderer module enabled; the
+branch files translate the GTK-only half of `custom.theme.gtk` into `schemes.{gtk,regreet}`.
 
-Cross-tree data flows one way: `mkHomeConfiguration` builds from the NixOS configuration and passes `osConfig`, so home reads the host and never the reverse — see [entry-points](entry-points.md).
+# Picking a theme
 
-Why the split is three modules rather than one branching on `_class`, and why the dendritic pattern is not adopted, is in [/decisions/dual-class-modules](/decisions/dual-class-modules.md).
+A theme is selected by `custom.themes.<name>.enable`, declared per leaf by a local `mkThemeModule` in
+`modules/theme/default.nix` — deliberately *not* `mkMixinModule`, since a theme is a
+mutually-exclusive selection rather than an à-la-carte capability. `hosts/profiles/desktop.nix` holds
+the selection and `users/joker9944/default.nix` mirrors it with
+`custom.themes = osConfig.custom.themes`.
+
+There is **no assertion** on that exclusivity, and adding one would be dead code: every theme defines
+`schemes.source`, a single `attrTag`, so two enabled themes already fail the module merge with an
+error naming both files — and a merge error precedes assertion checking. Enabling *none* is the weak
+spot: the failure is a `schemes.librewolf.scheme` type error on `null`, several modules away from the
+cause, which is why the selection sits in the profile rather than per-host.
+
+Cross-tree data flows one way: `mkHomeConfiguration` builds from the NixOS configuration and passes
+`osConfig`, so home reads the host and never the reverse — see [entry-points](entry-points.md).
 
 # Single file for trivial modules
 

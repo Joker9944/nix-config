@@ -2,9 +2,7 @@
 { pkgs, ... }:
 mkThemeModule "uwunicorn" {
   custom.theme = {
-    # The palette slot `gtk.accent` selects, named directly now that it no longer doubles
-    # as the accent selector.
-    accent = "base0E";
+    accent = "base0E"; # magenta normal
 
     gtk.accent = "purple";
   };

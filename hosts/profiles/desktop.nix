@@ -1,14 +1,14 @@
 {
   imports = [ ./base.nix ];
 
+  custom.themes.orchidlift-lume.enable = true;
+
   mixins = {
     boot.loader.limine.enable = true;
 
     fonts.enable = true;
 
     networking.networkmanager.enable = true;
-
-    theme.orchidlift-lume.enable = true;
 
     programs = {
       _1password.enable = true;
