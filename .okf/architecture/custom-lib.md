@@ -5,7 +5,7 @@ description: Three libs — `lib/` for module-system helpers, `apps/util-lib` fo
 tags: [architecture, lib, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-24T00:00:00Z
+  at: 2026-08-28T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -62,6 +62,7 @@ Notable helpers with non-obvious use:
 | `configuration/mkHomeConfiguration.nix` | Assembles a standalone home-manager config. See [entry-points](entry-points.md). |
 | `modules/mkDefaultModule.nix` | Auto-imports sibling files. See [auto-discovery](auto-discovery.md). |
 | `modules/mkConditionalModule.nix` | Conditional module composition. |
+| `modules/mkClassModule.nix` | Selects a module by the loading evaluation's `_class`. A class with no key is a no-op; a key naming no class throws. See [/decisions/dual-class-modules](/decisions/dual-class-modules.md). |
 | `modules/mkMixinModule.nix` | Per-mixin builder: declares `mixins.<prefix>.<name>.enable` + gates the body. Partially applied with `{ config, prefix }` by each tree's `mkDefaultMixinModule` aggregator helper and threaded to leaves; not called directly from the lib. See [mixin-pattern](mixin-pattern.md). |
 | `modules/nonNull.nix` | `lib.mkIf (value != null) value`, so a null option is left unset rather than set to null. |
 | `hyprland/mkLuaCall.nix` | Builds hyprland-style multi-arg lua callbacks. Used in `users/joker9944/hosts/HAL9000/default.nix` for hyprland `on = …`. |

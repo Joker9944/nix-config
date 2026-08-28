@@ -5,7 +5,7 @@ description: On-disk layout for any nix module in the repo — single file for t
 tags: [architecture, modules, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-24T00:00:00Z
+  at: 2026-08-28T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -27,7 +27,7 @@ Same rule everywhere: the two branches below decide the shape.
 
 The constraint: such a module may only touch options that exist in both trees. Types are less restricted than they look — the module-arg `lib` carries `hm` only inside the home-manager tree, but `inputs.home-manager.lib.hm.{types,generators}` reaches both, so `fontType` is reusable (`hosts/mixins/desktop-environment/hyprland/regreet.nix` does the same with `toHyprconf`). What is *not* reusable is anything declared inline in a home-manager module rather than exported — `gtk.iconTheme` and `gtk.cursorTheme` have no `hm.types` equivalent and need a local submodule.
 
-Such a module also has to *own* any third-party module it needs (`modules/global/theme/` is the sole importer of nix-schemes' `scheme`, `cursors` and `icons` modules), because importing the same non-path module value from two places declares its options twice.
+What such a module must *not* do is import a third-party module that both trees also reach another way: importing the same non-path module value from two places declares its options twice. nix-schemes' class-agnostic `scheme`, `cursors` and `icons` ride along in both `nixosModules.default` and `homeModules.default`, so the glue modules below are their only importers and `modules/global/theme/` imports nothing.
 
 What it cannot own is tree-specific wiring, so each tree gets a thin glue module beside it: `modules/{home,nixos}/theme.nix` import the nix-schemes renderers for their own tree (`gtk`/`librewolf`, `regreet`) and translate `custom.theme` into their options. Four constraints follow from that split:
 
@@ -39,6 +39,8 @@ What it cannot own is tree-specific wiring, so each tree gets a thin glue module
 nix-schemes' contract forces that split: the scheme carries the accent, but only `modules/global/theme/` knows what it should be. It sets `schemes.accent` from a class-agnostic position, so `schemes.scheme.accent` resolves in both trees with no renderer module enabled; the glue modules translate the GTK-only half of `custom.theme.gtk` into `schemes.{gtk,regreet}`.
 
 Cross-tree data flows one way: `mkHomeConfiguration` builds from the NixOS configuration and passes `osConfig`, so home reads the host and never the reverse — see [entry-points](entry-points.md).
+
+Why the split is three modules rather than one branching on `_class`, and why the dendritic pattern is not adopted, is in [/decisions/dual-class-modules](/decisions/dual-class-modules.md).
 
 # Single file for trivial modules
 

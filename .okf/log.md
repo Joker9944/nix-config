@@ -3,6 +3,9 @@
 An index of bundle changes, not a narrative. One line each: what changed and the concept that holds the detail, in the form `CLAUDE.md` rule 3 sets. Rationale lives in the commit message, tied to the diff, or in a [decision](/decisions/index.md) — not here.
 
 ## 2026-08-28
+- `mkClassModule` selects a module by the evaluation's `_class`; a class with no key is a no-op and a key naming no class throws — [architecture/custom-lib](/architecture/custom-lib.md)
+- New decision: a dual-class module is a class-agnostic core plus one glue module per tree; `_class` selects at eval time and the dendritic pattern is not adopted — [decisions/dual-class-modules](/decisions/dual-class-modules.md)
+- corrected: nix-schemes' shared modules are imported by the per-tree glue via `<class>Modules.default`, not by `modules/global/theme/` — [architecture/module-layout](/architecture/module-layout.md)
 - `meta.slug` is the vendored slug for a tinted source and `libUtil.strings.slugify` of the name for a custom one — [decisions/scheme-model](/decisions/scheme-model.md)
 - `overrides.palette` applies before the upcast, so a derived slot follows the slot it comes from — [decisions/scheme-model](/decisions/scheme-model.md)
 
