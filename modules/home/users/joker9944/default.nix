@@ -1,0 +1,70 @@
+args:
+{
+  lib,
+  pkgs,
+  config,
+  osConfig,
+  ...
+}:
+let
+  hostModule = lib.path.append ./hosts osConfig.networking.hostName;
+in
+{
+  imports = [
+    (lib.modules.importApply ./config args)
+  ]
+  ++ lib.optional (builtins.pathExists hostModule) (lib.modules.importApply hostModule args);
+
+  custom.themes = osConfig.custom.themes;
+
+  mixins = {
+    inherit (osConfig.mixins) desktopEnvironment;
+    programs.steam.enable = osConfig.mixins.programs.steam.enable;
+  };
+
+  sops = {
+    defaultSopsFile = ./secrets.yaml;
+    age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
+  };
+
+  home.packages = with pkgs; [
+    imagemagick
+    tree
+    trash-cli
+
+    meld
+
+    libreoffice
+    hunspell
+    hunspellDicts.en_US
+    hunspellDicts.de_CH
+    papers
+
+    joplin-desktop
+    inkscape
+    audacity
+
+    minio-client
+  ];
+
+  programs = {
+    freelens.enable = true;
+    saber.enable = true;
+
+    scrcpy = {
+      enable = true;
+      args = [
+        "--render-driver=opengl" # cSpell:ignore opengl
+        "--video-codec=h265"
+        "--keyboard=uhid"
+      ];
+    };
+
+    git.settings.user = {
+      email = "9194199+Joker9944@users.noreply.github.com";
+      name = "Joker9944";
+    };
+  };
+
+  home.stateVersion = "24.05";
+}

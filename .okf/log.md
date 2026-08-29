@@ -2,6 +2,10 @@
 
 An index of bundle changes, not a narrative. One line each: what changed and the concept that holds the detail, in the form `CLAUDE.md` rule 3 sets. Rationale lives in the commit message, tied to the diff, or in a [decision](/decisions/index.md) — not here.
 
+## 2026-08-31
+
+- `specialArgs` dissolved: modules take `flake`/`inputs`/`libUtil`/`libMath` as static `importApply` args, leaving `osConfig` the only `extraSpecialArg` — [architecture/entry-points](/architecture/entry-points.md)
+
 ## 2026-08-28
 - The theme is one directory, `modules/theme/`, dispatching to `nixos.nix` / `home.nix` on `_class`; `modules/global/` is gone — [architecture/module-layout](/architecture/module-layout.md), [decisions/dual-class-modules](/decisions/dual-class-modules.md)
 - A theme is picked by `custom.themes.<name>.enable`, declared by a local `mkThemeModule`; themes left the `mixins.` namespace — [architecture/module-layout](/architecture/module-layout.md), [architecture/mixin-pattern](/architecture/mixin-pattern.md)

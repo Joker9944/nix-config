@@ -30,7 +30,7 @@ Configuration values that differ per host or per user do **not** get lifted into
 
 # Trade-off accepted
 
-* **Some duplication is possible** across hosts when both want the same non-default tweak. The convention is to accept it until a genuine third case appears, then promote the pattern into a helper or into the mixin's default block. The disk layout is such a helper (`custom.lib.disko`) rather than a mixin — a *parametrized template* is a function, not an `enable` flag; see [architecture/custom-lib](/architecture/custom-lib.md).
+* **Some duplication is possible** across hosts when both want the same non-default tweak. The convention is to accept it until a genuine third case appears, then promote the pattern into a helper or into the mixin's default block. The disk layout is such a helper (`flake.lib.disko`) rather than a mixin — a *parametrized template* is a function, not an `enable` flag; see [architecture/custom-lib](/architecture/custom-lib.md).
 
 # Related
 

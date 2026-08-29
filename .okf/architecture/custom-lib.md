@@ -5,7 +5,7 @@ description: Three libs — `lib/` for module-system helpers, `apps/util-lib` fo
 tags: [architecture, lib, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-28T00:00:00Z
+  at: 2026-08-31T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -45,12 +45,7 @@ A lib is injected into its own files as **`libSelf`**; a foreign lib arrives und
 
 Consumers outside `lib/`:
 
-| Where | Flake lib | libUtil |
-|---|---|---|
-| `hosts/`, `users/` mixin trees | `custom.lib` | `custom.libUtil` |
-| `modules/`, `pkgs/` | `flake.lib` | `libUtil` (a direct arg) |
-
-`custom.lib` is set by `mkNixosConfiguration` / `mkHomeConfiguration` in `specialArgs`; `custom.libUtil` rides along in the `custom` set built in `flake.nix`. `modules/` and `pkgs/` get `libUtil` passed in directly at their `importApply` / `import` site — this repo exports no `libUtil` flake output.
+Every tree reaches both the same way: as static `importApply` arguments. `flake.nix#moduleArgs` binds `flake`, `inputs`, `libUtil` and `libMath`, and `mkModules` / `mkDefaultModule` thread that set down through each directory. `pkgs/` gets `libUtil` at its `import` site — this repo exports no `libUtil` flake output.
 
 # What lives there
 
@@ -68,7 +63,7 @@ Notable helpers with non-obvious use:
 | `hyprland/mkLuaCall.nix` | Builds hyprland-style multi-arg lua callbacks. Used in `users/joker9944/hosts/HAL9000/default.nix` for hyprland `on = …`. |
 | `lookupDesktopFiles.nix` | Names of the `.desktop` files a package *declares* through `desktopItems`. A package that installs its entries any other way — most of them — yields `[ ]`, since the rest is only readable by building it. |
 | `requireDesktopFile.nix` | Asserts a package provides an entry and returns its ID, so a renamed entry fails the build. `name` defaults to the package name + `.desktop`, which is a guess — the assertion is what catches cases like `signal-desktop` → `signal.desktop`. A declared entry is checked during evaluation; for anything else the returned ID carries a check derivation in its string context, which is why the function needs `pkgs` — see [/decisions/desktop-files-at-build-time](/decisions/desktop-files-at-build-time.md). Used by the hyprland binds, see [uwsm-session](uwsm-session.md). |
-| `disko/` | Disk-layout template renderer. `custom.lib.disko.mkDiskoLayout { config, template ? templates.version1 }` renders a disko `devices` set from per-host params; templates live under `custom.lib.disko.templates.*` and are curried `lib` args first, then `{ config }`. Called from each `hosts/<host>/disks.nix` (which also imports `inputs.disko.nixosModules.disko` itself). |
+| `disko/` | Disk-layout template renderer. `flake.lib.disko.mkDiskoLayout { config, template ? templates.version1 }` renders a disko `devices` set from per-host params; templates live under `flake.lib.disko.templates.*` and are curried `lib` args first, then `{ config }`. Called from each `hosts/<host>/disks.nix` (which also imports `inputs.disko.nixosModules.disko` itself). |
 | `obfuscation/` | XOR-based string obfuscation, exposed via the `obfuscate` app in `apps.nix`. Hand-written `default.nix`, not directory-loaded — splitting it would make its ASCII table public. |
 
 `libUtil` holds the rest, in four namespaces: `strings` (`indent`, `indentLines`, `mkCommand`, `mkIndentPrefix`), `lists` (`first`, `last`), `files` (`list` — the directory scanner behind `mkDefaultModule`, `pkgs/default.nix` and the test runners), `numbers` (`clamp`, `toStringFloat`). Names are self-descriptive; open `apps/util-lib/lib/` when you need one.
@@ -116,4 +111,4 @@ Each lib tests itself, with the same runner: pure `lib.runTests` suites in a `te
 # Related
 
 * [auto-discovery](auto-discovery.md) — the same pattern applied to mixin categories.
-* [entry-points](entry-points.md) — where `custom.lib` gets injected.
+* [entry-points](entry-points.md) — the constructors that assemble the trees these args reach.

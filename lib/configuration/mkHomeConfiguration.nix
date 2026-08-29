@@ -1,12 +1,11 @@
 /**
   Build a standalone home-manager configuration for a user.
-  Inherits pkgs and specialArgs from the associated NixOS configuration.
+  Inherits pkgs from the associated NixOS configuration and exposes it as `osConfig`.
 
   # Type
 
   ```
   mkHomeConfiguration :: { nixosConfigurations :: nixosConfiguration } -> {
-    context :: path?,
     username :: string,
     additionalModules :: [module]?,
     ...
@@ -19,8 +18,7 @@
   - `nixosConfigurations`: The NixOS configuration to inherit from
 
   Second argument:
-  - `context`: Base path for user modules (default: flake root)
-  - `username`: User name, used to find modules at `users/<username>`
+  - `username`: User name, selecting `homeModules.users-<username>`
   - `additionalModules`: Extra modules to include
 
   # Example
@@ -34,42 +32,45 @@
 {
   flake,
   lib,
+  inputs,
   ...
 }:
 {
   nixosConfigurations,
 }:
 {
-  context ? ../..,
   username,
   additionalModules ? [ ],
   ...
-}@args:
+}:
 let
-  inherit (nixosConfigurations._module) specialArgs;
-  inherit (specialArgs) inputs;
-
   osConfig = nixosConfigurations.config;
-
-  commonModulePath = ../../users/mixins;
-  userModulePath = lib.path.append context "users/${username}";
 in
 inputs.home-manager.lib.homeManagerConfiguration {
   inherit (nixosConfigurations) pkgs;
 
-  extraSpecialArgs = {
-    inherit inputs osConfig;
-
-    custom = lib.recursiveUpdate specialArgs.custom {
-      config = args;
-    };
-  }
-  // (lib.mapAttrs (name: _: nixosConfigurations._module.args.${name}) osConfig.custom.pkgs);
+  # osConfig is a lazy reference to the paired NixOS configuration and is read in
+  # import position, so it cannot be an inline module arg.
+  extraSpecialArgs = { inherit osConfig; };
 
   modules = [
-    commonModulePath
-    userModulePath
+    flake.homeModules.mixins
+    flake.homeModules.theme # TODO
+    flake.homeModules."users-${username}"
+    {
+      _module.args = lib.mapAttrs (
+        name: _: nixosConfigurations._module.args.${name}
+      ) osConfig.custom.pkgs;
+
+      home = {
+        inherit username;
+        homeDirectory = "/home/${username}";
+      };
+    }
   ]
-  ++ (lib.attrValues flake.homeModules)
+  ++ (lib.pipe flake.homeModules [
+    (lib.filterAttrs (name: _: lib.hasPrefix "public-" name))
+    lib.attrValues
+  ])
   ++ additionalModules;
 }

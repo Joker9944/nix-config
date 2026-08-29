@@ -5,7 +5,7 @@ description: Every `default.nix` in a mixin category directory calls `mkDefaultM
 tags: [architecture, modules, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-28T00:00:00Z
+  at: 2026-08-31T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -13,12 +13,12 @@ verified:
 
 # What it does
 
-`custom.lib.modules.mkDefaultModule { dir = ./.; } { … }` extends a module's `imports` list with every sibling `.nix` file in `dir`, excluding `default.nix` itself. Registration is by filesystem presence — dropping a new file into the right category directory is enough; no manual list to update. Implementation in `lib/modules/mkDefaultModule.nix`.
+`flake.lib.modules.mkDefaultModule { dir = ./.; } { … }` extends a module's `imports` list with every sibling `.nix` file in `dir`, excluding `default.nix` itself. Registration is by filesystem presence — dropping a new file into the right category directory is enough; no manual list to update. Implementation in `lib/modules/mkDefaultModule.nix`.
 
 Every category `default.nix` under `hosts/mixins/` and `users/mixins/` is a one-liner:
 
 ```nix
-{ custom, ... }: custom.lib.modules.mkDefaultModule { dir = ./.; } { }
+{ flake, ... }@args: flake.lib.modules.mkDefaultModule { dir = ./.; inherit args; } { }
 ```
 
 Some directories pass a starter module (with its own `imports`, options, or config) as the second argument, merged with the auto-discovered files. See `users/mixins/default.nix` — it imports `sops-nix` and sets baseline `programs.git` config alongside auto-discovery.

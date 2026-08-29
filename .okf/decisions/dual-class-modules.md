@@ -5,7 +5,7 @@ description: A module loaded into both trees lives in one feature directory unde
 tags: [decision, modules, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-28T00:00:00Z
+  at: 2026-08-31T00:00:00Z
 ---
 
 # The rule
@@ -37,7 +37,7 @@ One module value in both output keys then selects its own glue, which is what ma
 split a choice. `mkDefaultModule`'s `exclude` keeps such branch files out of leaf auto-discovery —
 see [/architecture/auto-discovery](/architecture/auto-discovery.md).
 
-`custom.lib.modules.mkClassModule` is that branch as a helper: it takes `_class` and a module per
+`flake.lib.modules.mkClassModule` is that branch as a helper: it takes `_class` and a module per
 class, keyed by the class name the module system uses (`homeManager`, not `home`). A class with no
 key is a no-op, so a module configuring one tree needs no empty branch for the other; a key naming
 no class throws, which is what still catches a typo once the no-op removes the missing-key signal.
@@ -53,9 +53,8 @@ bodies. Four reasons it is not adopted:
 * Two of its named anti-patterns are this repo's architecture. It rejects `enable` options that
   gate an import, which is [/decisions/enable-flag-mixins](/decisions/enable-flag-mixins.md) and the
   structural exclusivity argument in [/architecture/mixin-pattern](/architecture/mixin-pattern.md);
-  it rejects `specialArgs` pass-through, which is how both constructors in
-  [/architecture/entry-points](/architecture/entry-points.md) thread `custom.*`, `inputs` and
-  `osConfig`.
+  it rejects `specialArgs` pass-through, and `osConfig` is exactly that in
+  [/architecture/entry-points](/architecture/entry-points.md).
 * `import-tree`, its auto-import half, is `mkDefaultModule` here, which also threads `args` through
   `importApply`.
 * It cannot be piloted on one module: flake-parts replaces the flake's output builder wholesale.

@@ -1,11 +1,11 @@
 ---
 type: Decision
 title: Standalone home-manager
-description: Home-manager is built as a separate flake output (`homeConfigurations`) and invoked directly, not imported as a NixOS module. But it still inherits pkgs + specialArgs from the paired NixOS config.
+description: Home-manager is built as a separate flake output (`homeConfigurations`) and invoked directly, not imported as a NixOS module. But it still inherits pkgs and osConfig from the paired NixOS config.
 tags: [decision, home-manager, architecture]
 generated:
   by: process:okf-migrate
-  at: 2026-07-17T00:00:00Z
+  at: 2026-08-31T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -15,7 +15,7 @@ verified:
 
 `flake.nix` exposes both `nixosConfigurations.<host>` and `homeConfigurations.<user>@<host>`. Users activate the environment with `home-manager switch --flake .#<user>@<host>`, not through `nixos-rebuild`.
 
-The two are still coupled: `mkHomeConfiguration` accepts the built `nixosConfigurations.<host>` as its first argument and inherits both `pkgs` and `specialArgs` from it. That's how `custom.lib`, `custom.assets`, and the overlays stay in sync across both trees, and how `osConfig` is available inside home-manager modules.
+The two are still coupled: `mkHomeConfiguration` accepts the built `nixosConfigurations.<host>` as its first argument and inherits `pkgs` from it, so the overlays stay in sync across both trees. It also passes the built config as `osConfig`, the constructor's only `extraSpecialArg`.
 
 # Why
 

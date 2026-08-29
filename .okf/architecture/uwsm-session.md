@@ -33,8 +33,8 @@ Both live in `users/mixins/desktop-environment/hyprland/hyprland/default.nix`, a
 UWSM off they degrade to something that still works.
 
 * `mkAppCommand` takes command elements and prefixes `uwsm-app --`. Ungated it is plain
-  `custom.libUtil.strings.mkCommand`, so the command runs unwrapped.
-* `mkAppEntryCommand` takes `custom.lib.requireDesktopFile`'s argument set and yields the entry ID
+  `libUtil.strings.mkCommand`, so the command runs unwrapped.
+* `mkAppEntryCommand` takes `flake.lib.requireDesktopFile`'s argument set and yields the entry ID
   wrapped by `mkAppCommand`. Ungated it yields `lib.getExe package`. It cannot share the other's
   fallback: an entry ID is executable *only* because uwsm resolves it, so degrading to a bare
   `mkCommand` would emit `hl.dsp.exec_cmd("librewolf.desktop")` and break the bind.
@@ -56,7 +56,7 @@ every keypress.
 
 Given an entry ID, `uwsm app` adds `SourcePath=`, a unit description from `Name`/`GenericName`,
 `Path=` as working directory, and the packaged `Exec` line. Reach for it through
-`cfg.mkAppEntryCommand`, which routes through `custom.lib.requireDesktopFile` so a renamed entry
+`cfg.mkAppEntryCommand`, which routes through `flake.lib.requireDesktopFile` so a renamed entry
 fails the build instead of producing a bind that silently does nothing — see
 [custom-lib](custom-lib.md).
 

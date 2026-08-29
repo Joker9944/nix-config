@@ -5,7 +5,7 @@ description: The 3-step process for adding either a home-manager or a NixOS mixi
 tags: [workflow, modules, home-manager, nixos]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-16T00:00:00Z
+  at: 2026-08-31T00:00:00Z
 ---
 
 # Trigger
@@ -49,7 +49,7 @@ See [rebuild](rebuild.md).
 # Anti-patterns
 
 * Exposing multiple options beyond `enable`. See [decisions/enable-flag-mixins](/decisions/enable-flag-mixins.md) — if the mixin needs a knob, put it in `hosts/<host>/default.nix` or `users/<user>/hosts/<host>/default.nix` as a plain override.
-* Wrapping a *parametrized template* as a mixin. If the thing is really a function from per-host params to config (a disk layout, say), it belongs in `custom.lib`, not a mixin — see [architecture/custom-lib](/architecture/custom-lib.md) (`disko`).
+* Wrapping a *parametrized template* as a mixin. If the thing is really a function from per-host params to config (a disk layout, say), it belongs in `flake.lib`, not a mixin — see [architecture/custom-lib](/architecture/custom-lib.md) (`disko`).
 * Hand-rolling a plugin's config generation when upstream ships a home-manager module — check first. Import via `imports = [ inputs.<flake>.homeManagerModules.default ]` inside `mkMixinModule` (imports stay structural; precedent: `users/mixins/desktop-environment/kde-plasma.nix`). Especially worth it for plugins that "autobuild" config into their own directory, which fails on the read-only store. Example: `users/mixins/programs/tmux/` (tmux-which-key).
 
 # Related

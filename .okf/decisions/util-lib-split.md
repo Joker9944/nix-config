@@ -5,7 +5,7 @@ description: General-purpose Nix helpers live in the standalone `apps/util-lib` 
 tags: [decision, lib, architecture]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-15T00:00:00Z
+  at: 2026-08-31T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -61,7 +61,7 @@ that shape; `libUtil` and `libSchemes` follow it.
 
 # Consequences
 
-* A lib reaches consumers as a plain argument (`custom.libUtil` in the mixin trees, a direct
+* A lib reaches consumers as a plain argument (`libUtil` in every tree, a direct
   `libUtil` arg in `modules/`, `pkgs/` and the test runners), not as a flake output of this
   repo.
 * Each flake locks separately. `apps/util-lib` follows the root's `nixpkgs` and `flake-utils`;

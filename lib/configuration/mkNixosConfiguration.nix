@@ -6,7 +6,6 @@
 
   ```
   mkNixosConfiguration :: {
-    context :: path?,
     system :: string,
     hostname :: string,
     usernames :: [string],
@@ -17,11 +16,10 @@
 
   # Arguments
 
-  - `context`: Base path for host/user modules (default: flake root)
   - `system`: System architecture (e.g., "x86_64-linux")
-  - `hostname`: Host name, used to find modules at `hosts/<hostname>`
-  - `profile`: Role profile, resolved to `hosts/profiles/<profile>.nix` (optional)
-  - `usernames`: List of users, modules loaded from `users/<username>/nixos`
+  - `hostname`: Host name, selecting `nixosModules.hosts-<hostname>`
+  - `profile`: Role profile, selecting `nixosModules.profiles-<profile>` (optional)
+  - `usernames`: List of users, selecting `nixosModules.users-<username>`
   - `additionalModules`: Extra modules to include
 
   # Example
@@ -38,44 +36,23 @@
   flake,
   lib,
   inputs,
-  libSelf,
-  custom,
   ...
 }:
 {
-  context ? ../..,
   system,
   hostname,
   profile ? null,
   usernames,
   additionalModules ? [ ],
   ...
-}@args:
-let
-  mixinsModulePath = ../../hosts/mixins;
-  hostModulePath = lib.path.append context "hosts/${hostname}";
-  profileModulePaths = lib.optional (profile != null) (
-    lib.path.append context "hosts/profiles/${profile}.nix"
-  );
-  userModulePaths = lib.map (username: lib.path.append context "users/${username}/nixos") usernames;
-in
+}:
 lib.nixosSystem {
   inherit system;
 
-  specialArgs = {
-    inherit inputs;
-
-    custom = custom // {
-      lib = libSelf;
-      config = args;
-
-      assets = inputs.nix-assets.packages.${system};
-    };
-  };
-
   modules = [
-    mixinsModulePath
-    hostModulePath
+    flake.nixosModules.mixins
+    flake.nixosModules.theme # TODO
+    flake.nixosModules."hosts-${hostname}"
     {
       # Setup function args
       nixpkgs = {
@@ -92,8 +69,11 @@ lib.nixosSystem {
       };
     })
   ]
-  ++ profileModulePaths
-  ++ (lib.attrValues flake.nixosModules)
-  ++ userModulePaths
+  ++ (lib.optional (profile != null) flake.nixosModules."profiles-${profile}")
+  ++ (lib.pipe flake.nixosModules [
+    (lib.filterAttrs (name: _: lib.hasPrefix "public-" name))
+    lib.attrValues
+  ])
+  ++ (lib.map (username: flake.nixosModules."users-${username}") usernames)
   ++ additionalModules;
 }

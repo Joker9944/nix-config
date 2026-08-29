@@ -90,6 +90,14 @@
     inputs@{ self, nixpkgs, ... }:
     let
       inherit (nixpkgs) lib;
+
+      moduleArgs = {
+        inherit inputs;
+        flake = self;
+
+        inherit (inputs.util-lib.lib) libUtil;
+        libMath = inputs.nix-math.lib.math;
+      };
     in
     lib.recursiveUpdate
       (inputs.flake-utils.lib.eachDefaultSystem (
@@ -206,29 +214,49 @@
       {
         overlays = import ./overlays.nix { flake = self; };
 
-        nixosModules = {
-          default = lib.modules.importApply ./modules/nixos {
-            inherit (inputs.util-lib.lib) libUtil;
-            flake = self;
+        nixosModules =
+          (self.lib.modules.mkModules {
+            prefix = "hosts";
+            dir = ./modules/nixos/hosts;
+            args = moduleArgs;
+          })
+          // (self.lib.modules.mkModules {
+            prefix = "profiles";
+            dir = ./modules/nixos/profiles;
+            args = moduleArgs;
+          })
+          // (self.lib.modules.mkModules {
+            prefix = "public";
+            dir = ./modules/nixos/public;
+            args = moduleArgs;
+          })
+          // (self.lib.modules.mkModules {
+            prefix = "users";
+            dir = ./modules/nixos/users;
+            args = moduleArgs;
+          })
+          // {
+            mixins = lib.modules.importApply ./modules/nixos/mixins moduleArgs;
+
+            theme = lib.modules.importApply ./modules/theme moduleArgs;
           };
 
-          theme = lib.modules.importApply ./modules/theme {
-            inherit (inputs.util-lib.lib) libUtil;
-            flake = self;
-          };
-        };
+        homeModules =
+          (self.lib.modules.mkModules {
+            prefix = "users";
+            dir = ./modules/home/users;
+            args = moduleArgs;
+          })
+          // (self.lib.modules.mkModules {
+            prefix = "public";
+            dir = ./modules/home/public;
+            args = moduleArgs;
+          })
+          // {
+            mixins = lib.modules.importApply ./modules/home/mixins moduleArgs;
 
-        homeModules = {
-          default = lib.modules.importApply ./modules/home {
-            inherit (inputs.util-lib.lib) libUtil;
-            flake = self;
+            theme = lib.modules.importApply ./modules/theme moduleArgs;
           };
-
-          theme = lib.modules.importApply ./modules/theme {
-            inherit (inputs.util-lib.lib) libUtil;
-            flake = self;
-          };
-        };
 
         lib = lib.fix (
           libSelf:
@@ -237,11 +265,6 @@
             inherit (inputs.util-lib.lib) libUtil;
 
             flake = self;
-
-            custom = {
-              libMath = inputs.nix-math.lib.math;
-              inherit (inputs.util-lib.lib) libUtil;
-            };
           }
         );
 
@@ -253,14 +276,12 @@
                 hostname = "HAL9000";
                 profile = "hyprland-desktop";
                 usernames = [ "joker9944" ];
-                resolution = "2560x1440";
               }
               {
                 system = "x86_64-linux";
                 hostname = "wintermute";
                 profile = "hyprland-desktop";
                 usernames = [ "joker9944" ];
-                resolution = "3840x2160";
               }
             ]
             [

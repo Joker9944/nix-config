@@ -1,7 +1,6 @@
-{ flake, ... }:
+{ inputs, flake, ... }:
 {
   _class,
-  inputs,
   config,
   ...
 }:

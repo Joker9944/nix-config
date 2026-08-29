@@ -25,7 +25,7 @@ This changes the shape of `settings` from the hyprlang form most wiki examples u
 * Rules and bindings sit at the **top level** of `settings` — `bind`, `window_rule`,
   `layer_rule`, `on`, `define_submap`.
 
-`custom.lib.hyprland.mkLuaCall` builds the `_args` multi-argument form; `lib.generators.mkLuaInline`
+`flake.lib.hyprland.mkLuaCall` builds the `_args` multi-argument form; `lib.generators.mkLuaInline`
 emits a raw lua expression. See [custom-lib](custom-lib.md).
 
 `window_rule` is a list that merges across every module in the tree —

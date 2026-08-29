@@ -1,1 +1,0 @@
-{ mkDefaultFlakeModule, ... }: mkDefaultFlakeModule { dir = ./.; } { }

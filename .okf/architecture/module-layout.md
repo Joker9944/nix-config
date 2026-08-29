@@ -30,7 +30,7 @@ Same rule everywhere: the two branches below decide the shape.
 exactly once and the two evaluations stay independent.
 
 A feature directory holds one module value that both trees load, so it selects its own tree-specific
-half with `custom.lib.modules.mkClassModule` on the `_class` module argument — see
+half with `flake.lib.modules.mkClassModule` on the `_class` module argument — see
 [/decisions/dual-class-modules](/decisions/dual-class-modules.md). `modules/theme/` is the worked
 example: `default.nix` carries what both trees share and dispatches to `nixos.nix` or `home.nix`,
 which `mkDefaultModule`'s `exclude` keeps out of leaf auto-discovery.
@@ -167,7 +167,7 @@ unit's PATH is minimal; a service that shells out to `git` must pin it.
 
 Module files and directories are **kebab-case**; the mixin **option** they declare is **camelCase**. The filename is the kebab-case of the option name — `systemdBoot` ↔ `systemd-boot.nix`, `windowsSupport` ↔ `windows-support.nix`; single-word names coincide (`limine`). Digit escape: an option can't start with a digit, so `1password.nix` declares `_1password`.
 
-`lib/` is the exception: a lib file is named for the **function it exports, in camelCase** — `mkDiskoLayout.nix` → `custom.lib.disko.mkDiskoLayout`, `mkNixosConfiguration.nix`, etc. Namespace subdirs stay lowercase and are the attribute path (`configuration/`, `disko/`, `hyprland/`, `modules/`, `obfuscation/`).
+`lib/` is the exception: a lib file is named for the **function it exports, in camelCase** — `mkDiskoLayout.nix` → `flake.lib.disko.mkDiskoLayout`, `mkNixosConfiguration.nix`, etc. Namespace subdirs stay lowercase and are the attribute path (`configuration/`, `disko/`, `hyprland/`, `modules/`, `obfuscation/`).
 
 # Related
 

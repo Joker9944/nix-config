@@ -1,6 +1,5 @@
-{ flake, ... }@moduleArgs:
+{ inputs, flake, ... }@moduleArgs:
 {
-  inputs,
   lib,
   config,
   pkgs,

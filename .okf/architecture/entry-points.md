@@ -5,7 +5,7 @@ description: The two constructors called from flake.nix that assemble every host
 tags: [architecture, flake, entry-point]
 generated:
   by: claude-code/claude-opus-4-8
-  at: 2026-07-29T00:00:00Z
+  at: 2026-08-31T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -22,16 +22,14 @@ Defined in `lib/configuration/mkNixosConfiguration.nix`. Assembles a `nixosSyste
 
 Also injects every module in `flake.nixosModules.*` (source: `modules/nixos/`) and the flake's overlays.
 
-`specialArgs` provides:
-
-* `inputs` — the flake inputs.
-* `custom.lib` — the loaded `lib/` (see [custom-lib](custom-lib.md)).
-* `custom.config` — the host record itself (`system`, `hostname`, `profile`, `usernames`, `resolution`, …).
-* `custom.assets` — packages from the `nix-assets` flake input.
+Neither constructor sets `specialArgs`. Modules receive `flake`, `inputs`, `libUtil` and `libMath` as
+static `importApply` arguments bound in `flake.nix#moduleArgs` — see [custom-lib](custom-lib.md).
+Static args resolve in `imports` position, which `mkDefaultModule` and the mixin aggregators depend
+on; `_module.args` would not.
 
 # `mkHomeConfiguration`
 
-Defined in `lib/configuration/mkHomeConfiguration.nix`. Builds a **standalone** home-manager configuration — home-manager is not a NixOS module here (see [decisions/standalone-home-manager](/decisions/standalone-home-manager.md)). Inherits `pkgs` and `specialArgs` from the paired NixOS configuration, so both trees stay in lockstep.
+Defined in `lib/configuration/mkHomeConfiguration.nix`. Builds a **standalone** home-manager configuration — home-manager is not a NixOS module here (see [decisions/standalone-home-manager](/decisions/standalone-home-manager.md)). Inherits `pkgs` from the paired NixOS configuration, so both trees stay in lockstep.
 
 Sources:
 
@@ -39,11 +37,13 @@ Sources:
 2. `users/<username>/` — user-owned modules (`default.nix`, `config/`, `hosts/<hostname>/`, `nixos/`). Auto-loaded.
 3. Every module in `flake.homeModules.*` (source: `modules/home/`).
 
-Also exposes `osConfig` in `extraSpecialArgs`, so home-manager modules can read the paired NixOS config. Used, for example, by `users/joker9944/default.nix` to inherit `osConfig.mixins.desktopEnvironment` and by `users/joker9944/hosts/HAL9000/default.nix` to read `osConfig.programs.steam.package`.
+`osConfig` is the sole `extraSpecialArg` — a lazy reference to the paired NixOS config, and the one
+value a static arg cannot carry, since `users/joker9944/default.nix` reads it in `imports` position to
+pick its per-host module. Used, for example, by `users/joker9944/default.nix` to inherit `osConfig.mixins.desktopEnvironment` and by `users/joker9944/hosts/HAL9000/default.nix` to read `osConfig.programs.steam.package`.
 
 # How they're called
 
-`flake.nix` pipes a list of host records through `lib.map` and `lib.listToAttrs`. `nixosConfigurations` is keyed by `hostname`. `homeConfigurations` is keyed by `<username>@<hostname>` and passes the already-built `nixosConfigurations.<hostname>` as the first argument to `mkHomeConfiguration` — that's how the home-manager side inherits `pkgs` and `specialArgs` from the paired system. See `flake.nix#nixosConfigurations` and `flake.nix#homeConfigurations` for the concrete record shape.
+`flake.nix` pipes a list of host records through `lib.map` and `lib.listToAttrs`. `nixosConfigurations` is keyed by `hostname`. `homeConfigurations` is keyed by `<username>@<hostname>` and passes the already-built `nixosConfigurations.<hostname>` as the first argument to `mkHomeConfiguration` — that's how the home-manager side inherits `pkgs` and `osConfig` from the paired system. See `flake.nix#nixosConfigurations` and `flake.nix#homeConfigurations` for the concrete record shape.
 
 # Related
 
