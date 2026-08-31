@@ -12,6 +12,7 @@ _: {
       claude-code.enable = true;
       direnv.enable = true;
       discord.enable = true;
+      eza.enable = true;
       fish.enable = true;
       gnome-text-editor.enable = true;
       jetbrains.enable = true;
