@@ -31,7 +31,6 @@ _: {
       starship.enable = true;
       systemctl-tui.enable = true;
       telegram.enable = true;
-      tmux.enable = true;
       vlc.enable = true;
       vscodium.enable = true;
       wiremix.enable = true;
