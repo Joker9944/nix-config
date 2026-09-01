@@ -19,7 +19,7 @@ mkOrchidliftTheme "mono" {
     base0D = "9186C0";
     base0E = "A97FC0";
     base0F = "6B5379";
-    base10 = "190C0D";
+    base10 = "16111E";
     base11 = "0A0710";
     base12 = "CB8294";
     base13 = "C5BC97";

@@ -19,7 +19,7 @@ mkOrchidliftTheme "rose" {
     base0D = "9A8AC8";
     base0E = "C87FB8";
     base0F = "7C4F62";
-    base10 = "190C0D";
+    base10 = "1A131E";
     base11 = "0D0709";
     base12 = "D47E8C";
     base13 = "D1C18E";

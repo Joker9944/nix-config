@@ -19,7 +19,7 @@ mkOrchidliftTheme "ink" {
     base0D = "9B8AD4";
     base0E = "C083C8";
     base0F = "7A5170";
-    base10 = "190C0D";
+    base10 = "120E19";
     base11 = "080510";
     base12 = "D17E8B";
     base13 = "CEC591";

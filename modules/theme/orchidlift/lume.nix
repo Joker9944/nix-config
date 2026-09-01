@@ -19,7 +19,7 @@ mkOrchidliftTheme "lume" {
     base0D = "9481E0";
     base0E = "C86ED0";
     base0F = "86477E";
-    base10 = "190C0D";
+    base10 = "171021";
     base11 = "0A0614";
     base12 = "E1798C";
     base13 = "DCCF87";
