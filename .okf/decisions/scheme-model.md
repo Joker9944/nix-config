@@ -45,8 +45,10 @@ Each renderer module has exactly one, decided by where its output lands:
 
 A derivation has no downstream merge point, so the module must own its slots; where one exists it
 *is* the channel, and mirroring its keys as options would be duplicated surface. Owning them stops
-being *declaring* them somewhere past a dozen or so — `schemes.vscode` writes 365 workbench keys,
-so its `colors` is one free-form option and `tokenColors` an appended list.
+being *declaring* them once the slots outrun the descriptions, not at a fixed count —
+`schemes.librewolf` declares all 38 theme keys because each one names a nameable piece of chrome,
+while `schemes.vscode` writes 365 workbench keys that nobody would enumerate, so its `colors` is one
+free-form option and `tokenColors` an appended list.
 
 # What this replaced
 

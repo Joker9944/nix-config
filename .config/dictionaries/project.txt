@@ -44,6 +44,7 @@ killp
 killw
 krank
 lastp
+leafname
 linenumbers
 listchars
 lume
@@ -70,6 +71,8 @@ rotatew
 selectl
 selectnl
 selectp
+sideload
+sideloaded
 signingkey
 splitw
 startswith
@@ -91,6 +94,7 @@ vmoptions
 vscodevim
 vsplit
 Weaveworks
+webextension
 wxmaxima
 xalign
 xcrun

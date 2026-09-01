@@ -8,5 +8,8 @@ builtins.toJSON {
   version = "1.0.0";
   inherit (scheme.meta) name author;
   browser_specific_settings.gecko.id = addonId;
-  theme.colors = builtins.mapAttrs (_: color: "rgb(${color.rgb})") colors;
+  theme = {
+    colors = builtins.mapAttrs (_: color: "rgb(${color.rgb})") colors;
+    properties.color_scheme = scheme.meta.variant;
+  };
 }

@@ -4,6 +4,8 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 
 ## 2026-09-01
 
+- New reference: an installed Firefox theme never updates — sideload change detection is mtime-or-path and Nix pins both — [reference/firefox-theming](/reference/firefox-theming.md)
+- `schemes.librewolf` declares all 38 theme colour keys and sets `color_scheme` from `meta.variant` — [reference/firefox-theming](/reference/firefox-theming.md), [decisions/scheme-model](/decisions/scheme-model.md)
 - `schemes.vscode` generates a VS Code theme extension from the scheme; the vscodium mixin dropped its pinned Dracula theme — [reference/base24](/reference/base24.md), [decisions/scheme-model](/decisions/scheme-model.md)
 - The vscode theme's slot assignments follow tinted-vscode's `base24.mustache` rather than the editor-role column — [reference/base24](/reference/base24.md)
 - `inputs.tinted-vscode` is read from the input rather than vendored, and a test pins the theme's delta against it — [decisions/vendored-schemes](/decisions/vendored-schemes.md)
