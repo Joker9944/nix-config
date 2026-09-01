@@ -14,10 +14,13 @@ verified:
 
 # The theme lives in extension storage
 
-`schemes.librewolf` installs [FirefoxColor](https://addons.mozilla.org/firefox/addon/firefox-color/)
-through `programs.librewolf.policies.ExtensionSettings` — `force_installed` against an AMO
-`install_url`, the pattern the 1Password mixin already uses — and writes the palette into its
-`storage.local` through `programs.librewolf.profiles.<name>.extensions.settings`.
+`schemes.firefox`, `schemes.librewolf` and `schemes.floorp` are one template generated per variant
+(`modules/home/firefox.nix`, see [/architecture/custom-lib.md](/architecture/custom-lib.md)). Each
+installs [FirefoxColor](https://addons.mozilla.org/firefox/addon/firefox-color/) through
+`programs.<variant>.policies.ExtensionSettings` — `force_installed` against an AMO `install_url`, the
+pattern the 1Password mixin already uses — and writes the palette into its `storage.local` through
+`programs.<variant>.profiles.<name>.extensions.settings`. Being AMO-signed is what lets the same
+template serve stock Firefox; the xpi it replaced needed LibreWolf's disabled signature checking.
 
 The extension's `init()` runs at every browser start: with `firstRunDone` set it reads `theme` from
 storage and calls `browser.theme.update()`. Home-manager rewrites that file on every activation, so

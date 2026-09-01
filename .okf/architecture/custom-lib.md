@@ -17,7 +17,7 @@ verified:
 |---|---|---|
 | `lib/` | `flake.lib` | Helpers that only mean something to a module evaluation |
 | `apps/util-lib/lib/` | `lib.libUtil` | General-purpose Nix helpers — `strings`, `lists`, `files`, `numbers` |
-| `apps/nix-schemes/lib/` | `lib.libSchemes` | `color` (construction, conversion, WCAG metrics), `gtk`, `views`, plus `generateScheme`, `mkScheme`, `types` and `init` at the root |
+| `apps/nix-schemes/lib/` | `lib.libSchemes` | `color` (construction, conversion, WCAG metrics), `gtk`, `views`, `modules`, plus `generateScheme`, `mkScheme`, `types` and `init` at the root |
 
 [/decisions/util-lib-split.md](/decisions/util-lib-split.md) has the boundary and the reasoning. All three load the same way, name themselves the same way, and nest under `lib.<name>` so a consumer's `inherit` reads the same as the tree's own arg — matching `inputs.nix-math.lib.math`.
 
@@ -65,6 +65,13 @@ Notable helpers with non-obvious use:
 | `requireDesktopFile.nix` | Asserts a package provides an entry and returns its ID, so a renamed entry fails the build. `name` defaults to the package name + `.desktop`, which is a guess — the assertion is what catches cases like `signal-desktop` → `signal.desktop`. A declared entry is checked during evaluation; for anything else the returned ID carries a check derivation in its string context, which is why the function needs `pkgs` — see [/decisions/desktop-files-at-build-time](/decisions/desktop-files-at-build-time.md). Used by the hyprland binds, see [uwsm-session](uwsm-session.md). |
 | `disko/` | Disk-layout template renderer. `flake.lib.disko.mkDiskoLayout { config, template ? templates.version1 }` renders a disko `devices` set from per-host params; templates live under `flake.lib.disko.templates.*` and are curried `lib` args first, then `{ config }`. Called from each `hosts/<host>/disks.nix` (which also imports `inputs.disko.nixosModules.disko` itself). |
 | `obfuscation/` | XOR-based string obfuscation, exposed via the `obfuscate` app in `apps.nix`. Hand-written `default.nix`, not directory-loaded — splitting it would make its ASCII table public. |
+
+`libSchemes.modules` holds one member, `mkVariantModules variants path`. It `importApply`s the same
+template once per key of `variants`, passing the key and its value as `variant` and `displayName`, so
+a module declaring `schemes.${variant}` and writing to `programs.${variant}` becomes a family with
+one `enable` each — `schemes.firefox`/`librewolf`/`floorp` from `modules/home/firefox.nix`, four
+editors from `modules/home/vscode/`. The variant map is both the list and the label source. It closes
+over `flake`, which is why callers pass only two arguments.
 
 `libUtil` holds the rest, in four namespaces: `strings` (`indent`, `indentLines`, `mkCommand`, `mkIndentPrefix`), `lists` (`first`, `last`), `files` (`list` — the directory scanner behind `mkDefaultModule`, `pkgs/default.nix` and the test runners), `numbers` (`clamp`, `toStringFloat`). Names are self-descriptive; open `apps/util-lib/lib/` when you need one.
 

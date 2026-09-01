@@ -1,4 +1,8 @@
-flake:
+{
+  flake,
+  variant,
+  displayName,
+}:
 {
   lib,
   config,
@@ -10,12 +14,12 @@ let
   addonId = "FirefoxColor@mozilla.com";
 in
 {
-  options.schemes.librewolf =
+  options.schemes.${variant} =
     let
       inherit (lib) mkEnableOption mkOption types;
       customTypes = libSchemes.types;
 
-      cfg = config.schemes.librewolf;
+      cfg = config.schemes.${variant};
 
       mkColorOption =
         default: slot:
@@ -28,13 +32,13 @@ in
         };
     in
     {
-      enable = mkEnableOption "librewolf theming based on custom theme";
+      enable = mkEnableOption "${displayName} theming based on a scheme";
 
       scheme = mkOption {
         type = customTypes.scheme;
         default = config.schemes.scheme;
         description = ''
-          Color scheme used to theme librewolf.
+          Color scheme used to customize ${displayName}.
         '';
       };
 
@@ -42,7 +46,7 @@ in
         type = types.listOf types.str;
         default = [ ];
         description = ''
-          librewolf profiles where the theme should be installed to.
+          ${displayName} profiles where the theme should be installed to.
         '';
       };
 
@@ -102,10 +106,10 @@ in
 
   config =
     let
-      cfg = config.schemes.librewolf;
+      cfg = config.schemes.${variant};
     in
     lib.mkIf cfg.enable {
-      programs.librewolf = {
+      programs.${variant} = {
         enable = lib.mkDefault true;
 
         policies.ExtensionSettings.${addonId} = {

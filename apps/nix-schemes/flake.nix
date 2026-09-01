@@ -137,16 +137,27 @@
 
         homeModules =
           let
+            inherit (self.lib.libSchemes.modules) mkVariantModules;
+
             modules = {
               scheme = import ./modules/global/scheme.nix self;
               cursors = import ./modules/global/cursors.nix self;
               icons = import ./modules/global/icons.nix self;
               gtk = import ./modules/home/gtk.nix self;
               kitty = import ./modules/home/kitty.nix self;
-              librewolf = import ./modules/home/librewolf.nix self;
               vicinae = import ./modules/home/vicinae.nix self;
-              vscode = import ./modules/home/vscode self;
-            };
+            }
+            // mkVariantModules {
+              firefox = "Firefox";
+              librewolf = "LibreWolf";
+              floorp = "Floorp";
+            } ./modules/home/firefox.nix
+            // mkVariantModules {
+              vscode = "VS Code";
+              vscodium = "VSCodium";
+              cursor = "Cursor";
+              windsurf = "Windsurf";
+            } ./modules/home/vscode;
           in
           {
             default = {

@@ -1,5 +1,9 @@
 # https://code.visualstudio.com/api/references/theme-color
-flake:
+{
+  flake,
+  variant,
+  displayName,
+}:
 {
   lib,
   config,
@@ -7,13 +11,13 @@ flake:
   ...
 }:
 let
-  cfg = config.schemes.vscode;
+  cfg = config.schemes.${variant};
   libSchemes = flake.lib.libSchemes;
 
   jsonFormat = pkgs.formats.json { };
 in
 {
-  options.schemes.vscode =
+  options.schemes.${variant} =
     let
       inherit (lib)
         literalExpression
@@ -24,29 +28,13 @@ in
       customTypes = libSchemes.types;
     in
     {
-      enable = mkEnableOption "VS Code theming based on a scheme";
+      enable = mkEnableOption "${displayName} theming based on a scheme";
 
       scheme = mkOption {
         type = customTypes.scheme;
         default = config.schemes.scheme;
         description = ''
-          Color scheme used to customize VS Code.
-        '';
-      };
-
-      variants = mkOption {
-        type = types.listOf (
-          types.enum [
-            "vscode"
-            "vscodium"
-            "cursor"
-            "windsurf"
-          ]
-        );
-        default = [ "vscode" ];
-        description = ''
-          Editors the theme is installed into. Each is a separate home-manager module
-          carrying its own `programs.<variant>.profiles` tree.
+          Color scheme used to customize ${displayName}.
         '';
       };
 
@@ -82,15 +70,15 @@ in
         type = types.package;
         readOnly = true;
         description = ''
-          The generated theme extension. Reach for it to theme an editor `variants` does
-          not name.
+          The generated theme extension. Reach for it to theme an editor that has no
+          module of its own.
         '';
       };
     };
 
   config =
     let
-      inherit (cfg.scheme.meta) name slug variant;
+      inherit (cfg.scheme.meta) name slug;
 
       publisher = "nix-schemes";
       extensionId = "${publisher}.${slug}";
@@ -117,7 +105,7 @@ in
         contributes.themes = [
           {
             label = name;
-            uiTheme = if variant == "light" then "vs" else "vs-dark";
+            uiTheme = if cfg.scheme.meta.variant == "light" then "vs" else "vs-dark";
             path = "./themes/${themeFileName}";
           }
         ];
@@ -143,13 +131,11 @@ in
           '';
     in
     lib.mkIf cfg.enable {
-      schemes.vscode.package = themePackage;
+      schemes.${variant}.package = themePackage;
 
-      programs = lib.genAttrs cfg.variants (_: {
-        profiles = lib.genAttrs cfg.profiles (_: {
-          extensions = [ themePackage ];
-          userSettings."workbench.colorTheme" = lib.mkDefault name;
-        });
+      programs.${variant}.profiles = lib.genAttrs cfg.profiles (_: {
+        extensions = [ themePackage ];
+        userSettings."workbench.colorTheme" = lib.mkDefault name;
       });
     };
 }

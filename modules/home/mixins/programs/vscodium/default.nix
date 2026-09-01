@@ -305,9 +305,8 @@ mkMixinModule "vscodium" {
     {
       home.shellAliases.code = "codium";
 
-      schemes.vscode = {
+      schemes.vscodium = {
         enable = true;
-        variants = [ "vscodium" ];
         profiles = lib.attrNames vscodiumProfiles;
       };
 

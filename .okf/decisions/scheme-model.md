@@ -53,6 +53,9 @@ Declaring stops paying once the slots outrun the descriptions — `schemes.vscod
 workbench keys that nobody would enumerate, so its `colors` is one free-form option and
 `tokenColors` an appended list.
 
+Both rows name a family rather than a module: `mkVariantModules` generates three browsers and four
+editors from one template each, so the channel is chosen once and inherited by every variant.
+
 # What this replaced
 
 `schemes.transformers` (an ordered list of `scheme -> libSchemes -> attrs` folded with

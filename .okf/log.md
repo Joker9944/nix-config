@@ -4,6 +4,8 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 
 ## 2026-09-01
 
+- `mkVariantModules` generates one scheme module per browser and per editor, each with its own `enable` — [architecture/custom-lib](/architecture/custom-lib.md), [decisions/scheme-model](/decisions/scheme-model.md)
+
 - New reference: an installed Firefox theme never updates — sideload change detection is mtime-or-path and Nix pins both — [reference/firefox-theming](/reference/firefox-theming.md)
 - `schemes.librewolf` renders through the FirefoxColor extension's `storage.local` instead of a static theme xpi — [reference/firefox-theming](/reference/firefox-theming.md), [decisions/scheme-model](/decisions/scheme-model.md)
 - `schemes.vscode` generates a VS Code theme extension from the scheme; the vscodium mixin dropped its pinned Dracula theme — [reference/base24](/reference/base24.md), [decisions/scheme-model](/decisions/scheme-model.md)
