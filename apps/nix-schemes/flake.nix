@@ -143,7 +143,7 @@
               icons = import ./modules/global/icons.nix self;
               gtk = import ./modules/home/gtk.nix self;
               kitty = import ./modules/home/kitty.nix self;
-              librewolf = import ./modules/home/librewolf self;
+              librewolf = import ./modules/home/librewolf.nix self;
               vicinae = import ./modules/home/vicinae.nix self;
               vscode = import ./modules/home/vscode self;
             };

@@ -8,4 +8,4 @@ is awkward to reach mid-task.
 * [base24](base24.md) — the five ANSI slots where base16 and base24 disagree, plus which vocabulary each consumer follows.
 * [gtk-theming](gtk-theming.md) — why adw-gtk3 is mandatory rather than a convenience, and how a GTK4 theme actually gets applied.
 * [cursor-theming](cursor-theming.md) — why a cursor theme is compiled from SVG rather than recoloured, and the nine slots Breeze reduces to.
-* [firefox-theming](firefox-theming.md) — why the librewolf theme is an unsigned static WebExtension, and why an installed one never updates.
+* [firefox-theming](firefox-theming.md) — how the librewolf theme reaches the browser through the FirefoxColor extension's storage, and what that costs the profile.
