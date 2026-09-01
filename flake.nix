@@ -56,6 +56,10 @@
       url = "github:nix-community/plasma-manager/trunk";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    spicetify-nix = {
+      url = "github:Gerg-L/spicetify-nix/master"; # cSpell:ignore Gerg-L
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
 
     # helpers
     pre-commit-hooks = {

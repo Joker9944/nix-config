@@ -42,13 +42,15 @@ Each renderer module has exactly one, decided by where its output lands:
 | a derivation, few slots — `schemes.cursors` | `colors`, one declared option per slot |
 | a derivation, many slots — `schemes.vscode` | `colors`, one free-form `attrsOf str` merged over the generated set |
 | a mergeable option — `schemes.vicinae`, `schemes.kitty` | `settings`, or the app's own option |
-| a mergeable option over a foreign vocabulary — `schemes.librewolf` | `colors`, one declared option per slot |
+| a mergeable option over a foreign vocabulary — `schemes.librewolf`, `schemes.spicetify` | `colors`, one declared option per slot |
 
 A derivation has no downstream merge point, so the module must own its slots; where one exists it
 *is* the channel, and mirroring its keys as options would be duplicated surface — unless the keys
 are a closed vocabulary somebody else owns. `schemes.librewolf` writes into a free-form attrset yet
 declares all 37 of them, because [FirefoxColor](/reference/firefox-theming.md) drops an unknown key
 in silence and substitutes its own default for a missing one; typed options make both an eval error.
+`schemes.spicetify` declares its 18 for the same reason — spicetify's `BaseColorList` is the closed
+set, and an omitted key falls back to spicetify's stock dark rather than to the theme.
 Declaring stops paying once the slots outrun the descriptions — `schemes.vscode` writes 365
 workbench keys that nobody would enumerate, so its `colors` is one free-form option and
 `tokenColors` an appended list.

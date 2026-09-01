@@ -145,6 +145,7 @@
               icons = import ./modules/global/icons.nix self;
               gtk = import ./modules/home/gtk.nix self;
               kitty = import ./modules/home/kitty.nix self;
+              spicetify = import ./modules/home/spicetify.nix self;
               vicinae = import ./modules/home/vicinae.nix self;
             }
             // mkVariantModules {

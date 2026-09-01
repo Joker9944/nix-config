@@ -328,7 +328,7 @@
     },
     "flake-utils_4": {
       "inputs": {
-        "systems": "systems_5"
+        "systems": "systems_6"
       },
       "locked": {
         "lastModified": 1731533236,
@@ -1038,6 +1038,7 @@
         "plasma-manager": "plasma-manager",
         "pre-commit-hooks": "pre-commit-hooks_3",
         "sops-nix": "sops-nix",
+        "spicetify-nix": "spicetify-nix",
         "util-lib": "util-lib",
         "yas": "yas"
       }
@@ -1077,6 +1078,28 @@
         "owner": "Mic92",
         "ref": "master",
         "repo": "sops-nix",
+        "type": "github"
+      }
+    },
+    "spicetify-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs-unstable"
+        ],
+        "systems": "systems_5"
+      },
+      "locked": {
+        "lastModified": 1788263070,
+        "narHash": "sha256-Mw163zYcjr59hB2JMC1iKU1Y69SNKZ2r/haXZ07UWQY=",
+        "owner": "Gerg-L",
+        "repo": "spicetify-nix",
+        "rev": "27ff19b00338052e8a504e1d1a34efad82c4bb26",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Gerg-L",
+        "ref": "master",
+        "repo": "spicetify-nix",
         "type": "github"
       }
     },
@@ -1141,6 +1164,21 @@
       }
     },
     "systems_5": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
+    "systems_6": {
       "locked": {
         "lastModified": 1681028828,
         "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",

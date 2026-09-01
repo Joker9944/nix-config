@@ -68,12 +68,14 @@ respawn
 respawnp
 resvg
 rotatew
+seekbar
 selectl
 selectnl
 selectp
 sideload
 sideloaded
 signingkey
+spicetify
 splitw
 startswith
 subdirs
@@ -81,6 +83,7 @@ subvolumes
 suspendc
 swapp
 switchc
+tabbar
 thinkpad
 tobytes
 trivago
