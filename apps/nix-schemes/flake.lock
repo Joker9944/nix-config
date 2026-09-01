@@ -129,6 +129,7 @@
         "nix-math": "nix-math",
         "nixpkgs": "nixpkgs",
         "schemes": "schemes",
+        "tinted-vscode": "tinted-vscode",
         "util-lib": "util-lib"
       }
     },
@@ -161,6 +162,23 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "tinted-vscode": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1786844835,
+        "narHash": "sha256-o0sNp+nG6bDUc7nNohIGzJGKZ5nO1mKNwcfRCiQahyk=",
+        "owner": "tinted-theming",
+        "repo": "tinted-vscode",
+        "rev": "31880d742a98473cc1ce77aa3308db1103c83e27",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tinted-theming",
+        "ref": "main",
+        "repo": "tinted-vscode",
         "type": "github"
       }
     },

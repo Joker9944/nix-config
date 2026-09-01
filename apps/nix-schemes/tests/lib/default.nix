@@ -3,6 +3,7 @@
   pkgs,
   flake,
   libUtil,
+  tinted-vscode,
   ...
 }:
 let
@@ -18,7 +19,7 @@ let
       }
       [
         libUtil.files.list
-        (lib.map (path: import path { inherit lib libSchemes; }))
+        (lib.map (path: import path { inherit lib libSchemes tinted-vscode; }))
         lib.mergeAttrsList
       ];
 

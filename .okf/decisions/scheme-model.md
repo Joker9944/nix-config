@@ -5,7 +5,7 @@ description: Every view a consumer reads is computed for every scheme; user inpu
 tags: [decision, nix-schemes, api, colour]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-28T00:00:00Z
+  at: 2026-09-01T00:00:00Z
 ---
 
 # The rule
@@ -39,11 +39,14 @@ Each renderer module has exactly one, decided by where its output lands:
 
 | Output | Channel |
 |---|---|
-| a derivation — `schemes.cursors`, `schemes.librewolf` | `colors`, one declared option per slot |
+| a derivation, few slots — `schemes.cursors`, `schemes.librewolf` | `colors`, one declared option per slot |
+| a derivation, many slots — `schemes.vscode` | `colors`, one free-form `attrsOf str` merged over the generated set |
 | a mergeable option — `schemes.vicinae`, `schemes.kitty` | `settings`, or the app's own option |
 
 A derivation has no downstream merge point, so the module must own its slots; where one exists it
-*is* the channel, and mirroring its keys as options would be duplicated surface.
+*is* the channel, and mirroring its keys as options would be duplicated surface. Owning them stops
+being *declaring* them somewhere past a dozen or so — `schemes.vscode` writes 365 workbench keys,
+so its `colors` is one free-form option and `tokenColors` an appended list.
 
 # What this replaced
 

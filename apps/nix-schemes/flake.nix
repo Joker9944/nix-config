@@ -25,6 +25,12 @@
       url = "github:lassekongo83/adw-colors/main"; # cSpell:ignore lassekongo
       flake = false;
     };
+    # Read only by tests/lib/vscodeThemeDrift.nix: the vscode theme is derived from this
+    # template, and the test fails when upstream moves away from what we generate.
+    tinted-vscode = {
+      url = "github:tinted-theming/tinted-vscode/main";
+      flake = false;
+    };
     # Pinned to a tag rather than a branch: `cursors/Breeze/src/svg` has taken three commits
     # since July 2024, and the alternative is re-resolving a 44 MB tarball nightly.
     breeze = {
@@ -58,6 +64,7 @@
           checks = {
             libTests = pkgs.callPackage ./tests/lib {
               inherit libUtil;
+              inherit (inputs) tinted-vscode;
               flake = self;
             };
 
@@ -138,6 +145,7 @@
               kitty = import ./modules/home/kitty.nix self;
               librewolf = import ./modules/home/librewolf self;
               vicinae = import ./modules/home/vicinae.nix self;
+              vscode = import ./modules/home/vscode self;
             };
           in
           {

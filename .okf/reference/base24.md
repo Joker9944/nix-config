@@ -6,7 +6,7 @@ resource: https://github.com/tinted-theming/base24/blob/main/styling.md
 tags: [reference, colour, base16, base24, nix-schemes, theming]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-24T00:00:00Z
+  at: 2026-09-01T00:00:00Z
 sources:
   - id: base24-styling
     resource: https://raw.githubusercontent.com/tinted-theming/base24/refs/heads/main/styling.md
@@ -14,6 +14,9 @@ sources:
   - id: base16-styling
     resource: https://raw.githubusercontent.com/tinted-theming/home/main/styling.md
     title: tinted-theming base16 styling guidelines
+  - id: tinted-vscode
+    resource: https://raw.githubusercontent.com/tinted-theming/tinted-vscode/main/templates/base24.mustache
+    title: tinted-vscode base24 template
 ---
 
 # Which spec
@@ -114,6 +117,7 @@ templates use the table above.
 | `apps/nix-schemes/lib/init/mkGtkThemeCss/` | Surfaces from `base00`/`base01`, text from `base05`, the semantic table above; each `*_fg_color` picks whichever of `base00` / `base05` scores higher on `color.contrastRatio` against its fill |
 | `apps/nix-schemes/modules/home/vicinae.nix` | Palette slots directly, extended slots included |
 | `apps/nix-schemes/modules/home/kitty.nix` | The scheme's `ansi` for `color0`–`color15`, palette slots for chrome |
+| `apps/nix-schemes/modules/home/vscode/` | tinted-vscode's `base24.mustache`,[^tinted-vscode] not the editor-role column — `base11` deepest chrome, `base10` above it, `base00` the editor, `base01` selection, `base02` at alpha for hover; `status` for diagnostics. That template's terminal block follows the out-of-date fork, so `colors.nix` reads `ansi` there |
 
 `modules/theme/dracula.nix` sets `schemes.overrides.ansi."0" = "base01"`: Dracula ships an ANSI black
 distinct from its background, and the upstream scheme parks it there. That is a theme deviation, not
@@ -128,3 +132,4 @@ a spec disagreement — every other slot derives from the table.
 
 [^base24-styling]: base24 styling specification (tinted-theming, v0.1.3)
 [^base16-styling]: tinted-theming base16 styling guidelines
+[^tinted-vscode]: tinted-vscode base24 template

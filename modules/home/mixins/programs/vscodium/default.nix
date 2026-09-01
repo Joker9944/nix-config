@@ -58,14 +58,6 @@ mkMixinModule "vscodium" {
           ];
         }
         {
-          # styling
-          extensions = [
-            open-vsx-release.dracula-theme.theme-dracula
-          ];
-
-          userSettings."workbench.colorTheme" = "Dracula Theme";
-        }
-        {
           # spell checking
           extensions = [
             open-vsx-release.streetsidesoftware.code-spell-checker
@@ -188,134 +180,142 @@ mkMixinModule "vscodium" {
           mergeProfiles (commonProfiles ++ profiles)
         else
           mergeProfiles (commonProfiles ++ [ profiles ]);
-    in
-    {
-      home.shellAliases.code = "codium";
 
-      programs.vscodium = {
-        enable = true;
-        package = vscodiumPackage;
+      vscodiumProfiles = {
+        default = mkProfile {
+          enableUpdateCheck = false;
+          enableExtensionUpdateCheck = false;
+        };
 
-        profiles = {
-          default = mkProfile {
-            enableUpdateCheck = false;
-            enableExtensionUpdateCheck = false;
-          };
+        nix = mkProfile [
+          {
+            extensions = [
+              open-vsx-release.jnoortheen.nix-ide # cSpell:words jnoortheen
+            ];
 
-          nix = mkProfile [
-            {
-              extensions = [
-                open-vsx-release.jnoortheen.nix-ide # cSpell:words jnoortheen
-              ];
-
-              userSettings = {
-                "nix.enableLanguageServer" = true;
-                "nix.formatterPath" = lib.getExe pkgs-unstable.nixfmt;
-                "nix.serverPath" = lib.getExe pkgs-unstable.nil;
-                "nix.serverSettings".nil = {
-                  formatting.command = [ (lib.getExe pkgs-unstable.nixfmt) ];
-                  nix = {
-                    maxMemoryMB = 8192;
-                    flake = {
-                      autoArchive = true;
-                      autoEvalInputs = true;
-                    };
+            userSettings = {
+              "nix.enableLanguageServer" = true;
+              "nix.formatterPath" = lib.getExe pkgs-unstable.nixfmt;
+              "nix.serverPath" = lib.getExe pkgs-unstable.nil;
+              "nix.serverSettings".nil = {
+                formatting.command = [ (lib.getExe pkgs-unstable.nixfmt) ];
+                nix = {
+                  maxMemoryMB = 8192;
+                  flake = {
+                    autoArchive = true;
+                    autoEvalInputs = true;
                   };
                 };
-                "[nix]" = {
-                  "editor.tabSize" = 2;
-                  "editor.defaultFormatter" = "jnoortheen.nix-ide";
-                  "editor.formatOnSave" = true;
-                  "editor.formatOnType" = true;
-                  "editor.selectionHighlight" = false;
-                  "editor.tabCompletion" = "onlySnippets";
-                  "editor.wordBasedSuggestions" = "off";
-                };
               };
-            }
-          ];
-
-          notes = mkProfile [
-            {
-              extensions = [
-                open-vsx-release.foam.foam-vscode
-                open-vsx-release.yzhang.markdown-all-in-one # cSpell:words yzhang
-              ];
-            }
-          ];
-
-          quarto = mkProfile [
-            {
-              extensions = [
-                open-vsx-release.quarto.quarto
-              ];
-
-              userSettings = {
-                "quarto.path" = lib.getExe pkgs-unstable.quarto;
-              };
-            }
-          ];
-
-          k8s = mkProfile [
-            {
-              extensions = [
-                open-vsx-release.ms-kubernetes-tools.vscode-kubernetes-tools
-                open-vsx-release.weaveworks.vscode-gitops-tools
-                open-vsx-release.grafana.grafana-alloy
-              ];
-
-              userSettings = {
-                "vs-kubernetes" = {
-                  "vs-kubernetes.crd-code-completion" = "enabled";
-                  "vs-kubernetes.kubectl-path" = lib.getExe pkgs-unstable.kubectl;
-                  "vs-kubernetes.helm-path" = lib.getExe pkgs-unstable.kubernetes-helm;
-                };
-              };
-            }
-            {
-              extensions = [
-                open-vsx-release.redhat.vscode-yaml
-              ];
-
-              userSettings = {
-                "redhat.telemetry.enabled" = false;
-                "[yaml]" = {
-                  "editor.defaultFormatter" = "redhat.vscode-yaml";
-                };
-              };
-            }
-          ];
-
-          pbmn = mkProfile {
-            extensions = [
-              open-vsx-release.redhat.vscode-extension-bpmn-editor
-            ];
-
-            userSettings = {
-              "redhat.telemetry.enabled" = false;
-            };
-          };
-
-          flutter = mkProfile {
-            extensions = with open-vsx-release; [
-              dart-code.flutter
-              dart-code.dart-code
-            ];
-
-            userSettings = {
-              "debug.internalConsoleOptions" = "openOnSessionStart";
-
-              "[dart]" = {
+              "[nix]" = {
+                "editor.tabSize" = 2;
+                "editor.defaultFormatter" = "jnoortheen.nix-ide";
                 "editor.formatOnSave" = true;
                 "editor.formatOnType" = true;
-                "editor.rulers" = [ 80 ];
                 "editor.selectionHighlight" = false;
                 "editor.tabCompletion" = "onlySnippets";
                 "editor.wordBasedSuggestions" = "off";
               };
             };
+          }
+        ];
+
+        notes = mkProfile [
+          {
+            extensions = [
+              open-vsx-release.foam.foam-vscode
+              open-vsx-release.yzhang.markdown-all-in-one # cSpell:words yzhang
+            ];
+          }
+        ];
+
+        quarto = mkProfile [
+          {
+            extensions = [
+              open-vsx-release.quarto.quarto
+            ];
+
+            userSettings = {
+              "quarto.path" = lib.getExe pkgs-unstable.quarto;
+            };
+          }
+        ];
+
+        k8s = mkProfile [
+          {
+            extensions = [
+              open-vsx-release.ms-kubernetes-tools.vscode-kubernetes-tools
+              open-vsx-release.weaveworks.vscode-gitops-tools
+              open-vsx-release.grafana.grafana-alloy
+            ];
+
+            userSettings = {
+              "vs-kubernetes" = {
+                "vs-kubernetes.crd-code-completion" = "enabled";
+                "vs-kubernetes.kubectl-path" = lib.getExe pkgs-unstable.kubectl;
+                "vs-kubernetes.helm-path" = lib.getExe pkgs-unstable.kubernetes-helm;
+              };
+            };
+          }
+          {
+            extensions = [
+              open-vsx-release.redhat.vscode-yaml
+            ];
+
+            userSettings = {
+              "redhat.telemetry.enabled" = false;
+              "[yaml]" = {
+                "editor.defaultFormatter" = "redhat.vscode-yaml";
+              };
+            };
+          }
+        ];
+
+        pbmn = mkProfile {
+          extensions = [
+            open-vsx-release.redhat.vscode-extension-bpmn-editor
+          ];
+
+          userSettings = {
+            "redhat.telemetry.enabled" = false;
           };
         };
+
+        flutter = mkProfile {
+          extensions = with open-vsx-release; [
+            dart-code.flutter
+            dart-code.dart-code
+          ];
+
+          userSettings = {
+            "debug.internalConsoleOptions" = "openOnSessionStart";
+
+            "[dart]" = {
+              "editor.formatOnSave" = true;
+              "editor.formatOnType" = true;
+              "editor.rulers" = [ 80 ];
+              "editor.selectionHighlight" = false;
+              "editor.tabCompletion" = "onlySnippets";
+              "editor.wordBasedSuggestions" = "off";
+            };
+          };
+        };
+      };
+    in
+    {
+      home.shellAliases.code = "codium";
+
+      schemes.vscode = {
+        enable = true;
+        variants = [ "vscodium" ];
+        profiles = lib.attrNames vscodiumProfiles;
+      };
+
+      programs.vscodium = {
+        enable = true;
+        package = vscodiumPackage;
+
+        profiles = vscodiumProfiles;
       };
     };
 }

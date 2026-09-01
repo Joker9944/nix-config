@@ -2,6 +2,12 @@
 
 An index of bundle changes, not a narrative. One line each: what changed and the concept that holds the detail, in the form `CLAUDE.md` rule 3 sets. Rationale lives in the commit message, tied to the diff, or in a [decision](/decisions/index.md) — not here.
 
+## 2026-09-01
+
+- `schemes.vscode` generates a VS Code theme extension from the scheme; the vscodium mixin dropped its pinned Dracula theme — [reference/base24](/reference/base24.md), [decisions/scheme-model](/decisions/scheme-model.md)
+- The vscode theme's slot assignments follow tinted-vscode's `base24.mustache` rather than the editor-role column — [reference/base24](/reference/base24.md)
+- `inputs.tinted-vscode` is read from the input rather than vendored, and a test pins the theme's delta against it — [decisions/vendored-schemes](/decisions/vendored-schemes.md)
+
 ## 2026-08-31
 
 - `specialArgs` dissolved: modules take `flake`/`inputs`/`libUtil`/`libMath` as static `importApply` args, leaving `osConfig` the only `extraSpecialArg` — [architecture/entry-points](/architecture/entry-points.md)

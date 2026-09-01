@@ -5,7 +5,7 @@ description: The 533 upstream scheme files are converted to Nix and committed un
 tags: [decision, nix-schemes, ifd, vendoring]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-21T00:00:00Z
+  at: 2026-09-01T00:00:00Z
 ---
 
 # The rule
@@ -71,7 +71,16 @@ every failure reportable.
 * **A generated tree that must not be hand-edited.** Nothing enforces this; the next monthly run
   silently reverts any hand-edit.
 
+# Where the rule stops
+
+`inputs.tinted-vscode` is read straight from the input, not vendored: `replaceStrings` fills its
+`base24.mustache` and `builtins.fromJSON` parses the result, both builtins, so the parsing problem
+that forces vendoring never arises. It is test data — `tests/lib/vscodeThemeDrift.nix` pins the
+delta between it and the hand-written theme — so nothing in a build path reads it.
+
 # Related
 
 * [/architecture/custom-lib.md](/architecture/custom-lib.md) — why `generateScheme` sits in `lib/`
   while `mkGtkThemeCss` stays under `init`.
+* [/reference/base24.md](/reference/base24.md) — the template that input carries, and the slots the
+  vscode theme takes from it.
