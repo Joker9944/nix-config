@@ -4,6 +4,8 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 
 ## 2026-09-01
 
+- `schemes.vesktop` anchors 18 of Discord's primitive ramp steps and interpolates the rest, delivered as a Vencord theme file — [reference/discord-theming](/reference/discord-theming.md), [decisions/scheme-model](/decisions/scheme-model.md)
+- New reference: Discord's colour is primitive HSL ramps under semantic tokens, and only the ramps survive alpha — [reference/discord-theming](/reference/discord-theming.md)
 - `schemes.spicetify` recolours Spotify through spicetify-nix's `customColorScheme`; the spotify mixin owns the input and drops the `programs.spotify` shim — [decisions/scheme-model](/decisions/scheme-model.md)
 - `mkVariantModules` generates one scheme module per browser and per editor, each with its own `enable` — [architecture/custom-lib](/architecture/custom-lib.md), [decisions/scheme-model](/decisions/scheme-model.md)
 

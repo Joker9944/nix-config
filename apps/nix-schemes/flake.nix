@@ -146,6 +146,7 @@
               gtk = import ./modules/home/gtk.nix self;
               kitty = import ./modules/home/kitty.nix self;
               spicetify = import ./modules/home/spicetify.nix self;
+              vesktop = import ./modules/home/vesktop self;
               vicinae = import ./modules/home/vicinae.nix self;
             }
             // mkVariantModules {

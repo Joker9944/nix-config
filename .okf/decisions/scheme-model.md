@@ -42,7 +42,7 @@ Each renderer module has exactly one, decided by where its output lands:
 | a derivation, few slots — `schemes.cursors` | `colors`, one declared option per slot |
 | a derivation, many slots — `schemes.vscode` | `colors`, one free-form `attrsOf str` merged over the generated set |
 | a mergeable option — `schemes.vicinae`, `schemes.kitty` | `settings`, or the app's own option |
-| a mergeable option over a foreign vocabulary — `schemes.librewolf`, `schemes.spicetify` | `colors`, one declared option per slot |
+| a mergeable option over a foreign vocabulary — `schemes.librewolf`, `schemes.spicetify`, `schemes.vesktop` | `colors`, one declared option per slot |
 
 A derivation has no downstream merge point, so the module must own its slots; where one exists it
 *is* the channel, and mirroring its keys as options would be duplicated surface — unless the keys
@@ -51,9 +51,13 @@ declares all 37 of them, because [FirefoxColor](/reference/firefox-theming.md) d
 in silence and substitutes its own default for a missing one; typed options make both an eval error.
 `schemes.spicetify` declares its 18 for the same reason — spicetify's `BaseColorList` is the closed
 set, and an omitted key falls back to spicetify's stock dark rather than to the theme.
+`schemes.vesktop` declares 18 for a different reason: its merge point is `types.lines` CSS, so
+overriding through the channel means writing rules that redefine what the module just emitted. A
+mergeable *text* channel is not a usable override channel.
 Declaring stops paying once the slots outrun the descriptions — `schemes.vscode` writes 365
 workbench keys that nobody would enumerate, so its `colors` is one free-form option and
-`tokenColors` an appended list.
+`tokenColors` an appended list. `schemes.vesktop` sits under that line by anchoring 18 of Discord's
+~290 ramp steps and interpolating the rest, which are not options.
 
 Both rows name a family rather than a module: `mkVariantModules` generates three browsers and four
 editors from one template each, so the channel is chosen once and inherited by every variant.

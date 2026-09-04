@@ -1,5 +1,6 @@
 abbrs
 Activatable
+amoled
 appname
 ARGB
 asciidoctor
@@ -17,9 +18,12 @@ crudini
 crypted
 Dawt
 displayp
+dontuse
 drun
 dualboot
 envrc
+equibop
+equicord
 esac
 evals
 frontmatter
@@ -91,6 +95,7 @@ umpv
 ungated
 UWSM
 uwunicorn
+vencord
 vfat
 vmoption
 vmoptions
