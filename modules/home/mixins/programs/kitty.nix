@@ -1,12 +1,14 @@
 { mkMixinModule, ... }:
-_:
+{ config, ... }:
 mkMixinModule "kitty" {
   programs.kitty = {
     enable = true;
 
-    enableGitIntegration = true;
+    enableGitIntegration = config.programs.git.enable;
 
-    keybindings."ctrl+shift+t" = "new_tab_with_cwd";
+    settings.enabled_layouts = "splits:split_axis=auto,stack";
+
+    keybindings."ctrl+shift+d" = "new_window_with_cwd";
   };
 
   xdg.terminal-exec = {
