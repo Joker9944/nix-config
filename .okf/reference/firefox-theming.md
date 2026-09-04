@@ -6,16 +6,16 @@ resource: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions
 tags: [reference, firefox, librewolf, webextension, nix-schemes, theming]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-01T00:00:00Z
+  at: 2026-09-04T00:00:00Z
 verified:
-  - by: human:joker9944
-    at: 2026-09-01T00:00:00Z
+  - by: claude-code/claude-fable-5
+    at: 2026-09-04T00:00:00Z
 ---
 
 # The theme lives in extension storage
 
 `schemes.firefox`, `schemes.librewolf` and `schemes.floorp` are one template generated per variant
-(`modules/home/firefox.nix`, see [/architecture/custom-lib.md](/architecture/custom-lib.md)). Each
+(`apps/nix-schemes/modules/home/firefox.nix`, see [/architecture/custom-lib.md](/architecture/custom-lib.md)). Each
 installs [FirefoxColor](https://addons.mozilla.org/firefox/addon/firefox-color/) through
 `programs.<variant>.policies.ExtensionSettings` — `force_installed` against an AMO `install_url`, the
 pattern the 1Password mixin already uses — and writes the palette into its `storage.local` through

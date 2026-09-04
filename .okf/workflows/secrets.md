@@ -5,7 +5,7 @@ description: Per-user encrypted secrets.yaml files, decrypted at activation via 
 tags: [workflow, secrets, sops]
 generated:
   by: process:okf-migrate
-  at: 2026-07-17T00:00:00Z
+  at: 2026-09-04T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -13,9 +13,9 @@ verified:
 
 # Layout
 
-Each user owns `users/<username>/secrets.yaml`, encrypted with age. Both the NixOS and home-manager sides read from the same file:
+Each user owns `modules/home/users/<username>/secrets.yaml`, encrypted with age. Both the NixOS and home-manager sides read from the same file:
 
-* Home-manager side (`users/joker9944/default.nix`):
+* Home-manager side (`modules/home/users/joker9944/default.nix`):
   ```nix
   sops = {
     defaultSopsFile = ./secrets.yaml;
@@ -29,7 +29,7 @@ Each user owns `users/<username>/secrets.yaml`, encrypted with age. Both the Nix
 
 1. Ensure `~/.config/sops/age/keys.txt` exists on your machine.
 2. Ensure the recipients list in `.sops.yaml` includes your age public key.
-3. `sops users/joker9944/secrets.yaml` — opens the encrypted file in your editor; sops re-encrypts on save.
+3. `sops modules/home/users/joker9944/secrets.yaml` — opens the encrypted file in your editor; sops re-encrypts on save.
 4. Reference the secret in a module via `config.sops.secrets.<name>.path`.
 
 # What must not be committed

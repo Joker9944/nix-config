@@ -24,7 +24,7 @@ The durable knowledge about this repository lives here — the "why" behind the 
 
 # Workflows
 
-* [workflows/](workflows/) — How to rebuild, add a mixin, look up a home-manager option, handle secrets, and satisfy the formatter/spellchecker.
+* [workflows/](workflows/) — How to rebuild, add a mixin, handle secrets, and satisfy the formatter/spellchecker.
 
 # Decisions
 

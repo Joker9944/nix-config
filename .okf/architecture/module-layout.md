@@ -5,7 +5,7 @@ description: On-disk layout for any nix module in the repo — single file for t
 tags: [architecture, modules, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-28T00:00:00Z
+  at: 2026-09-04T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -15,60 +15,65 @@ verified:
 
 Applies to **any nix module in this repo**, not only mixins:
 
-* Home-manager mixins under `users/mixins/`.
-* NixOS mixins under `hosts/mixins/`.
-* Flake-level modules under `modules/`.
+* Home-manager mixins under `modules/home/mixins/`.
+* NixOS mixins under `modules/nixos/mixins/`.
+* Every other module directory under `modules/`.
 
 Same rule everywhere: the two branches below decide the shape.
 
-# `modules/` — class bundles and features
+# `modules/` — class trees and features
 
-`modules/nixos/` and `modules/home/` are auto-bundled into `nixosModules.default` /
-`homeModules.default` and loaded into one tree each. Any other directory under `modules/` is a
-**feature** exported under its own key in *both* sets — `modules/theme/` is
-`{nixos,home}Modules.theme`. The builders splat `lib.attrValues`, so every key reaches its tree
-exactly once and the two evaluations stay independent.
+`modules/nixos/` and `modules/home/` each hold one tree's modules, in subtrees the flake exports
+under distinct keys: `mixins` (one aggregated module via `importApply`), plus `mkModules`-collected
+flat keys — `hosts-*` / `profiles-*` / `users-*` / `public-*` on the NixOS side, `users-*` /
+`public-*` on the home side (see
+[auto-discovery](auto-discovery.md#the-flake-level-collector-mkmodules)). The
+[entry-point](entry-points.md) constructors select the per-host and per-user keys and inject every
+`public-*` module wholesale.
 
-A feature directory holds one module value that both trees load, so it selects its own tree-specific
-half with `flake.lib.modules.mkClassModule` on the `_class` module argument — see
-[/decisions/dual-class-modules](/decisions/dual-class-modules.md). `modules/theme/` is the worked
-example: `default.nix` carries what both trees share and dispatches to `nixos.nix` or `home.nix`,
-which `mkDefaultModule`'s `exclude` keeps out of leaf auto-discovery.
+Any other directory under `modules/` is a **feature** exported under its own key in *both* sets —
+`modules/theme/` is `{nixos,home}Modules.theme`. A feature is one module value both trees load, so
+its tree-specific half selects itself with `flake.lib.modules.mkClassModule` on the `_class` module
+argument — see [/decisions/dual-class-modules](/decisions/dual-class-modules.md). `modules/theme/`
+is the worked example: `default.nix` carries what both trees share; the auto-discovered sibling
+`compat.nix` holds the per-tree halves behind `mkClassModule`.
 
-Everything outside those two branch files may only touch options that exist in both trees. Types are
-less restricted than they look — the module-arg `lib` carries `hm` only inside the home-manager tree,
-but `inputs.home-manager.lib.hm.{types,generators}` reaches both, so `fontType` is reusable
-(`hosts/mixins/desktop-environment/hyprland/regreet.nix` does the same with `toHyprconf`). What is
-*not* reusable is anything declared inline in a home-manager module rather than exported —
-`gtk.iconTheme` and `gtk.cursorTheme` have no `hm.types` equivalent and need a local submodule.
+Everything outside `compat.nix`'s class branches may only touch options that exist in both trees.
+Types are less restricted than they look — the module-arg `lib` carries `hm` only inside the
+home-manager tree, but `inputs.home-manager.lib.hm.{types,generators}` reaches both, so `fontType`
+is reusable (`modules/nixos/mixins/desktop-environment/hyprland/regreet.nix` does the same with
+`toHyprconf`). What is *not* reusable is anything declared inline in a home-manager module rather
+than exported — `gtk.iconTheme` and `gtk.cursorTheme` have no `hm.types` equivalent and need a local
+submodule.
 
 Nor may it import a third-party module that both trees also reach another way: importing the same
 non-path module value from two places declares its options twice. nix-schemes' class-agnostic
-`scheme`, `cursors` and `icons` ride along in both `nixosModules.default` and `homeModules.default`,
-so the branch files are their only importers and `modules/theme/default.nix` imports nothing.
+`scheme`, `cursors` and `icons` ride along in both of its `<class>Modules.default` bundles, which
+`compat.nix` imports one of per class branch — their only importers here — and
+`modules/theme/default.nix` imports nothing.
 
-# The theme's two branch files
+# The theme's per-tree halves (`compat.nix`)
 
-`modules/theme/{nixos,home}.nix` import the nix-schemes renderers for their own tree
-(`gtk`/`librewolf`, `regreet`) and translate `custom.theme` into their options. Four constraints
-follow from being separate modules:
+Each `mkClassModule` branch of `modules/theme/compat.nix` imports the matching nix-schemes bundle
+(`<class>Modules.default`) and translates `custom.theme` into `schemes.*` options. Constraints that
+follow from the halves being modules separate from everything else that writes the same options:
 
-* Splitting an option's definitions across modules splits their merge order too. `programs.regreet.extraCss` is concatenated, so the fragment meant to win needs `lib.mkAfter`.
+* Splitting an option's definitions across modules splits their merge order too. `programs.regreet.extraCss` is concatenated, so the fragment meant to win carries `lib.mkAfter` (`modules/nixos/mixins/desktop-environment/hyprland/regreet.nix`).
 * `fonts.fontconfig.defaultFonts.*` concatenates rather than conflicts, so each generic needs exactly one owner.
-* `home.nix` claims `monospace` and `emoji` — the generics whose name is itself a classification — leaving `sansSerif` to `users/mixins/fonts.nix` as a content decision. Nothing sets `serif`.
+* The `homeManager` branch claims `monospace` and `emoji` — the generics whose name is itself a classification — leaving `sansSerif` to `modules/home/mixins/fonts.nix` as a content decision. Nothing sets `serif`.
 * That binding sits in the home branch rather than the shared body deliberately: naming a font obliges the tree to install it, and the theme's Nerd Font is ~220 MiB the NixOS closure has no use for — nothing system-side resolves a generic, since regreet names its font outright.
 
 nix-schemes' contract forces that split: the scheme carries the accent, but only
 `modules/theme/default.nix` knows what it should be. It sets `schemes.accent` from a class-agnostic
 position, so `schemes.scheme.accent` resolves in both trees with no renderer module enabled; the
-branch files translate the GTK-only half of `custom.theme.gtk` into `schemes.{gtk,regreet}`.
+class branches translate the GTK-only half of `custom.theme.gtk` into `schemes.{gtk,regreet}`.
 
 # Picking a theme
 
 A theme is selected by `custom.themes.<name>.enable`, declared per leaf by a local `mkThemeModule` in
 `modules/theme/default.nix` — deliberately *not* `mkMixinModule`, since a theme is a
-mutually-exclusive selection rather than an à-la-carte capability. `hosts/profiles/desktop.nix` holds
-the selection and `users/joker9944/default.nix` mirrors it with
+mutually-exclusive selection rather than an à-la-carte capability. `modules/nixos/profiles/desktop.nix`
+holds the selection and `modules/home/users/joker9944/default.nix` mirrors it with
 `custom.themes = osConfig.custom.themes`.
 
 There is **no assertion** on that exclusivity, and adding one would be dead code: every theme defines
@@ -82,7 +87,7 @@ Cross-tree data flows one way: `mkHomeConfiguration` builds from the NixOS confi
 
 # Single file for trivial modules
 
-A module that fits comfortably in one small `.nix` file lives directly in its parent directory (e.g., `hosts/mixins/services/maintenance.nix`, `users/mixins/programs/direnv.nix`). Nothing to expand until a second file shows up.
+A module that fits comfortably in one small `.nix` file lives directly in its parent directory (e.g., `modules/nixos/mixins/services/maintenance.nix`, `modules/home/mixins/programs/direnv.nix`). Nothing to expand until a second file shows up.
 
 # Folder with `default.nix` when more than one file
 
@@ -95,9 +100,9 @@ As soon as a module needs more than a single `.nix` file, expand it into a folde
 └── …
 ```
 
-[auto-discovery](auto-discovery.md) picks up `<name>/default.nix` as the module entry point. How a sibling is reached depends on what it is: a sibling **module** is auto-discovered when `default.nix` calls a `mkDefault*Module { dir = ./.; }` loader (`users/mixins/desktop-environment/hyprland/hyprlock/` picks up `styling.nix` this way), while a sibling that is a **value** — a settings or stylesheet fragment — is named explicitly, as `import ./settings.main.nix args`. Only `tmux/`, `waybar/` and `rofi/` take the second form. Either way the parent category directory stays free of fragment files.
+[auto-discovery](auto-discovery.md) picks up `<name>/default.nix` as the module entry point. How a sibling is reached depends on what it is: a sibling **module** is auto-discovered when `default.nix` calls a `mkDefault*Module { dir = ./.; }` loader (`modules/home/mixins/desktop-environment/hyprland/hyprlock/` picks up `styling.nix` this way), while a sibling that is a **value** — a settings or stylesheet fragment — is named explicitly, as `import ./theme.rasi.nix args`. Only `rofi/` takes the second form. Either way the parent category directory stays free of fragment files.
 
-Real examples: `users/mixins/programs/vscodium/`, `users/mixins/desktop-environment/hyprland/*/`, `users/mixins/pwas/*/`.
+Real examples: `modules/home/mixins/programs/vscodium/`, `modules/home/mixins/desktop-environment/hyprland/*/`, `modules/home/mixins/pwas/*/`.
 
 # `files/` subdir for non-nix payloads
 
@@ -111,9 +116,9 @@ Non-nix files (patches, markdown context, dotfiles, static config) go in a `file
     └── some.patch     # referenced as ./files/some.patch
 ```
 
-Keeps nix code separate from its data payload. Example: `users/mixins/programs/claude-code/files/CLAUDE.md`, consumed by `programs.claude-code.context`.
+Keeps nix code separate from its data payload. Example: `modules/home/mixins/programs/claude-code/files/CLAUDE.md`, consumed by `programs.claude-code.context`.
 
-One exception: `users/mixins/programs/vscodium/openssh-no-checkperm.patch` sits at the module root rather than under `files/` — an inconsistency to avoid copying, not a template.
+One exception: `modules/home/mixins/programs/vscodium/openssh-no-checkperm.patch` sits at the module root rather than under `files/` — an inconsistency to avoid copying, not a template.
 
 # Shell bodies longer than 400 characters
 

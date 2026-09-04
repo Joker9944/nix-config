@@ -5,7 +5,7 @@ description: Home-manager is built as a separate flake output (`homeConfiguratio
 tags: [decision, home-manager, architecture]
 generated:
   by: process:okf-migrate
-  at: 2026-08-31T00:00:00Z
+  at: 2026-09-04T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -26,7 +26,7 @@ The two are still coupled: `mkHomeConfiguration` accepts the built `nixosConfigu
 # Trade-off accepted
 
 * **Two rebuild commands** instead of one — you need to remember to run both after touching shared concerns.
-* **Cross-tree state has to be threaded manually.** For example, `users/joker9944/default.nix` re-exports `mixins.desktopEnvironment` from `osConfig` so a DE choice made system-side reaches the user-side; that's an explicit hand-off, not automatic.
+* **Cross-tree state has to be threaded manually.** For example, `modules/home/users/joker9944/default.nix` re-exports `mixins.desktopEnvironment` from `osConfig` so a DE choice made system-side reaches the user-side; that's an explicit hand-off, not automatic.
 
 # Related
 

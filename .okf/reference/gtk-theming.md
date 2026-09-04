@@ -151,5 +151,5 @@ Cursors reach none of this either — XCursor is pre-baked pixmaps with no style
 # Related
 
 * [/reference/base24.md](/reference/base24.md) — which palette slot each of these colours comes from.
-* [/workflows/lookup-hm-option.md](/workflows/lookup-hm-option.md) — checking option shape against the
-  pinned revision, which is how the `mkGtkSettings` behaviour above was established.
+* The `home-manager-options` skill (`.claude/skills/home-manager-options/SKILL.md`) — checking option
+  shape against the pinned revision, which is how the `mkGtkSettings` behaviour above was established.

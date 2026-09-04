@@ -5,15 +5,15 @@ description: A module loaded into both trees lives in one feature directory unde
 tags: [decision, modules, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-31T00:00:00Z
+  at: 2026-09-04T00:00:00Z
 ---
 
 # The rule
 
 A feature that configures both trees is **one directory** under `modules/`, exported under its own
-key in both `nixosModules` and `homeModules`. Its `default.nix` carries what the trees share and
-dispatches to a per-tree branch file on `_class`; `mkDefaultModule`'s `exclude` keeps those branch
-files out of leaf auto-discovery. `modules/theme/` is the only instance —
+key in both `nixosModules` and `homeModules`. Its `default.nix` carries what the trees share; the
+tree-specific halves sit in one auto-discovered sibling (`modules/theme/compat.nix`) that dispatches
+on `_class` via `mkClassModule`. `modules/theme/` is the only instance —
 [/architecture/module-layout](/architecture/module-layout.md) has the constraints the shared body is
 subject to and what each branch owns.
 
@@ -34,8 +34,7 @@ without the recursion that reading `config` there would cause:
 ```
 
 One module value in both output keys then selects its own glue, which is what makes the three-way
-split a choice. `mkDefaultModule`'s `exclude` keeps such branch files out of leaf auto-discovery —
-see [/architecture/auto-discovery](/architecture/auto-discovery.md).
+split a choice.
 
 `flake.lib.modules.mkClassModule` is that branch as a helper: it takes `_class` and a module per
 class, keyed by the class name the module system uses (`homeManager`, not `home`). A class with no

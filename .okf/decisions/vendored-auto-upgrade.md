@@ -5,7 +5,7 @@ description: The local services.home-manager.autoUpgrade module displaces the up
 tags: [decision, home-manager, systemd, updates]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-12T00:00:00Z
+  at: 2026-09-04T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -13,7 +13,7 @@ verified:
 
 # The rule
 
-`modules/home/custom-auto-upgrade/` declares `services.home-manager.autoUpgrade` itself and unloads
+`modules/home/public/custom/auto-upgrade/` declares `services.home-manager.autoUpgrade` itself and unloads
 upstream's implementation with `disabledModules = [ "services/home-manager-auto-upgrade.nix" ]`.
 Both exist in the pinned revision; the local one wins deliberately.
 
@@ -22,7 +22,7 @@ Both exist in the pinned revision; the local one wins deliberately.
 Upstream's module resolves the configuration from a **directory on disk** — it hard-fails when
 `$FLAKE_DIR/flake.nix` is absent, then `cd`s there and runs `home-manager switch --flake .`. This
 repo upgrades from a remote ref (`flake = "github:Joker9944/nix-config"`, set once in
-`hosts/mixins/services/maintenance.nix` and inherited by the home-manager side), so no checkout
+`modules/nixos/mixins/services/maintenance.nix` and inherited by the home-manager side), so no checkout
 exists on the machine to point `flakeDir` at. Passing `--flake <uri>` through `flags` does not help:
 the existence check runs first.
 

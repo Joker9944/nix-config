@@ -6,6 +6,9 @@ tags: [decision, nix-schemes, api, colour]
 generated:
   by: claude-code/claude-opus-5
   at: 2026-09-01T00:00:00Z
+verified:
+  - by: claude-code/claude-fable-5
+    at: 2026-09-04T00:00:00Z
 ---
 
 # The rule

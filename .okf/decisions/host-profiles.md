@@ -5,15 +5,15 @@ description: Hosts select exactly one high-level profile via a `profile` string;
 tags: [decision, profiles, hosts]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-16T00:00:00Z
+  at: 2026-09-04T00:00:00Z
 verified:
-  - by: human:joker9944
-    at: 2026-08-16T00:00:00Z
+  - by: claude-code/claude-fable-5
+    at: 2026-09-04T00:00:00Z
 ---
 
 # Decision
 
-A host selects **one** profile, named by a `profile` string in its flake record and resolved by `mkNixosConfiguration` to `hosts/profiles/<profile>.nix` (see [architecture/profiles](/architecture/profiles.md)). Profiles are **high-level roles shared by a class of machines**; a profile that would serve a single host is forbidden — that config is a host delta.
+A host selects **one** profile, named by a `profile` string in its flake record and resolved by `mkNixosConfiguration` to `nixosModules."profiles-<profile>"` (from `modules/nixos/profiles/`; see [architecture/profiles](/architecture/profiles.md)). Profiles are **high-level roles shared by a class of machines**; a profile that would serve a single host is forbidden — that config is a host delta.
 
 # Rejected: a profile *list* per host
 

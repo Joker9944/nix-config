@@ -5,15 +5,15 @@ description: A profile is a reusable host role — a named set of mixin enables 
 tags: [architecture, profiles, hosts, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-16T00:00:00Z
+  at: 2026-09-04T00:00:00Z
 verified:
-  - by: human:joker9944
-    at: 2026-08-16T00:00:00Z
+  - by: claude-code/claude-fable-5
+    at: 2026-09-04T00:00:00Z
 ---
 
 # What a profile is
 
-A profile is a **role**: a named bundle of mixin `enable`s that a *class* of machines shares. It lives as a plain NixOS module under `hosts/profiles/*.nix` and does two things, no more:
+A profile is a **role**: a named bundle of mixin `enable`s that a *class* of machines shares. It lives as a plain NixOS module under `modules/nixos/profiles/*.nix` and does two things, no more:
 
 * flips `mixins.<category>.<name>.enable` for the capabilities that define the role;
 * occasionally sets a non-mixin default universal to the role (e.g. `console.useXkbConfig = true` in `desktop` — a tty↔xkb concern every graphical host wants).
@@ -22,7 +22,7 @@ A profile never sets arbitrary upstream options or per-machine values. **Profile
 
 # Selection: the flake is the registry
 
-Each host record in `flake.nix#nixosConfigurations` carries a `profile` string. `mkNixosConfiguration` resolves it to `hosts/profiles/<profile>.nix` and adds it to the module list next to the host module — same site, same `context` as `hostname` (see [entry-points](entry-points.md)). So the flake host list answers "what machine is this and what role does it play" at a glance; you never open a host file to learn its role.
+Each host record in `flake.nix#nixosConfigurations` carries a `profile` string. `mkNixosConfiguration` resolves it to `nixosModules."profiles-<profile>"` and adds it to the module list next to the host module — same site, same `context` as `hostname` (see [entry-points](entry-points.md)). So the flake host list answers "what machine is this and what role does it play" at a glance; you never open a host file to learn its role.
 
 `profile` is optional (`profile ? null`); a host with no role omits it.
 
@@ -34,11 +34,11 @@ Each host record in `flake.nix#nixosConfigurations` carries a `profile` string. 
 
 A host selects **exactly one** profile — a string, not a list. Roles a machine plays *in addition* (a k8s node that is also a NAS) are **not** a second profile; those capabilities are mixins the host enables directly. Rationale and the rejected alternatives (a profile list; builder-injected `base`) live in [decisions/host-profiles](/decisions/host-profiles.md).
 
-Layering happens *inside* the profile tree via `imports`, and only for genuine **specialization** (IS-A): `hyprland-desktop` imports `desktop` imports `base` — each *is a* refinement of the one before. A linear chain, not a grab-bag.
+Layering happens *inside* the profile tree via `imports` of the flake keys (`imports = [ flake.nixosModules.profiles-desktop ]`), and only for genuine **specialization** (IS-A): `hyprland-desktop` imports `desktop` imports `base` — each *is a* refinement of the one before. A linear chain, not a grab-bag.
 
 # Profiles are high-level — never per-machine
 
-**A profile must serve a class of machines, never exactly one.** The moment a profile would be selected by a single host it is not a role — it is that host's config in a profile costume, and it belongs in `hosts/<host>/mixins.nix` (enable deltas) or `hosts/<host>/default.nix` (arbitrary quirks) instead.
+**A profile must serve a class of machines, never exactly one.** The moment a profile would be selected by a single host it is not a role — it is that host's config in a profile costume, and it belongs in `modules/nixos/hosts/<host>/mixins.nix` (enable deltas) or `modules/nixos/hosts/<host>/default.nix` (arbitrary quirks) instead.
 
 This is the guard against the failure mode where every machine grows a bespoke `foo-host` profile and the profile layer becomes a second, worse copy of the host layer. The test is concrete: *would a second, hypothetical machine select this profile unchanged?* If no, it is a host delta. Prefer a few broad roles refined by a short `imports` chain over many narrow ones.
 
@@ -46,9 +46,9 @@ This is the guard against the failure mode where every machine grows a bespoke `
 
 | Layer | Answers | Lives in | Example |
 |---|---|---|---|
-| Profile | "what role does this *class* of machine play?" | `hosts/profiles/*.nix` | `desktop` enables `fonts`, `pipewire`, `networkmanager`, the limine loader, … |
-| Mixin | "what single capability?" | `hosts/mixins/**` | `programs.steam`, `hardware.nvidia` |
-| Host delta | "what is unique to *this* machine?" | `hosts/<host>/{mixins,default}.nix` | HAL9000's `nvidia`+`steam`+`docker`; wintermute's `openssh`; per-host limine branding colour |
+| Profile | "what role does this *class* of machine play?" | `modules/nixos/profiles/*.nix` | `desktop` enables `fonts`, `pipewire`, `networkmanager`, the limine loader, … |
+| Mixin | "what single capability?" | `modules/nixos/mixins/**` | `programs.steam`, `hardware.nvidia` |
+| Host delta | "what is unique to *this* machine?" | `modules/nixos/hosts/<host>/{mixins,default}.nix` | HAL9000's `nvidia`+`steam`+`docker`; wintermute's `openssh`; per-host limine branding colour |
 
 # Current profiles
 

@@ -5,7 +5,7 @@ description: The hyprland tree emits `hyprland.lua`, not `hyprland.conf`. Docume
 tags: [architecture, hyprland, home-manager, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-16T00:00:00Z
+  at: 2026-09-04T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -13,7 +13,7 @@ verified:
 
 # configType = "lua"
 
-`users/mixins/desktop-environment/hyprland/hyprland/default.nix` sets
+`modules/home/mixins/desktop-environment/hyprland/hyprland/default.nix` sets
 `wayland.windowManager.hyprland.configType = "lua"`, so home-manager writes
 `$XDG_CONFIG_HOME/hypr/hyprland.lua` instead of `hyprland.conf`. Every attribute under
 `settings` becomes an `hl.<name>(…)` call; list values emit one call per element.
@@ -117,6 +117,6 @@ is **not** a usable reference for rule effects: its `HL.WindowRuleSpec` declares
   whose namespace carries more than an `enable`.
 * [decisions/release-policy](/decisions/release-policy.md) — why hyprland tracks upstream
   while nixpkgs and home-manager are pinned to a release.
-* [workflows/lookup-hm-option](/workflows/lookup-hm-option.md) — covers the home-manager
-  side (`configType`, `settings`). It does **not** cover Hyprland's own key vocabulary,
-  which is upstream's and moves independently.
+* The `home-manager-options` skill (`.claude/skills/home-manager-options/SKILL.md`) covers the
+  home-manager side (`configType`, `settings`). It does **not** cover Hyprland's own key
+  vocabulary, which is upstream's and moves independently.

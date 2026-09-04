@@ -5,7 +5,7 @@ description: Hyprland runs under UWSM, so anything long-running a bind or rofi l
 tags: [architecture, hyprland, uwsm, systemd, rofi, vicinae]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-19T00:00:00Z
+  at: 2026-09-04T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -15,7 +15,7 @@ verified:
 
 # The compositor is a systemd unit
 
-`programs.hyprland.withUWSM = true` (`hosts/mixins/desktop-environment/hyprland/default.nix`) puts
+`programs.hyprland.withUWSM = true` (`modules/nixos/mixins/desktop-environment/hyprland/default.nix`) puts
 the compositor in `wayland-wm@hyprland.desktop.service` under `session.slice`, and gives
 applications `app-graphical.slice`.
 
@@ -28,7 +28,7 @@ home-manager systemd user service. Binds and rofi are the two paths that need he
 
 # `mkAppCommand` and `mkAppEntryCommand`
 
-Both live in `users/mixins/desktop-environment/hyprland/hyprland/default.nix`, alongside the other
+Both live in `modules/home/mixins/desktop-environment/hyprland/hyprland/default.nix`, alongside the other
 `withUWSM`-conditional wiring, and both are gated on `osConfig.programs.hyprland.withUWSM` — with
 UWSM off they degrade to something that still works.
 
@@ -105,7 +105,7 @@ vicinae needs no equivalent of those hooks: it detects UWSM and prefixes `uwsm-a
 its launches already land in `app-graphical.slice`. Its journal logs the command it built, which is
 the quickest way to check.
 
-`Terminal=true` entries depend on `xdg-terminals.list` (set in `users/mixins/programs/kitty.nix`).
+`Terminal=true` entries depend on `xdg-terminals.list` (set in `modules/home/mixins/programs/kitty.nix`).
 Without it vicinae can resolve the terminal to kitty's `kitty +open %U` URL-launcher entry and
 append `-e <cmd>`, which errors instead of running anything. With it, vicinae passes
 `--class <entry-id>`, so a vicinae-launched `btop` has class `btop.desktop` where the bind's

@@ -5,13 +5,13 @@ description: '`allow-import-from-derivation = false` is set machine-wide by the 
 tags: [decision, ifd, nix, ci]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-21T00:00:00Z
+  at: 2026-09-04T00:00:00Z
 ---
 
 # The rule
 
 Nothing in this tree reads a derivation during evaluation, and two places enforce it rather than
-trust discipline: `hosts/mixins/nix.nix` for the machines, and the `nix_conf` of
+trust discipline: `modules/nixos/mixins/nix.nix` for the machines, and the `nix_conf` of
 [ci-nix-installer](ci-nix-installer.md) for CI. CI is the gate — a runner never reads a host's
 `/etc/nix/nix.conf`, so the machine setting only buys local feedback.
 
@@ -25,5 +25,5 @@ without trusted-user status because the decision is made client-side during eval
 # Related
 
 * [vendored-schemes](vendored-schemes.md) — YAML converted by a scheduled job instead of a `runCommand`.
-* [desktop-files-at-build-time](desktop-files-at-build-time.md) — desktop-entry facts moved into derivations.
+* [desktop-files-at-build-time](desktop-files-at-build-time.md) — desktop-entry facts live in derivations, never in evaluation.
 * [/reference/gtk-theming](/reference/gtk-theming.md) — generated CSS is `@import`ed by store path, never read back.

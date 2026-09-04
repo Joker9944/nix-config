@@ -5,7 +5,7 @@ description: Three libs — `lib/` for module-system helpers, `apps/util-lib` fo
 tags: [architecture, lib, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-31T00:00:00Z
+  at: 2026-09-04T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -56,21 +56,22 @@ Notable helpers with non-obvious use:
 | `configuration/mkNixosConfiguration.nix` | Assembles a `nixosSystem`. See [entry-points](entry-points.md). |
 | `configuration/mkHomeConfiguration.nix` | Assembles a standalone home-manager config. See [entry-points](entry-points.md). |
 | `modules/mkDefaultModule.nix` | Auto-imports sibling files. See [auto-discovery](auto-discovery.md). |
+| `modules/mkModules.nix` | Collects a directory tree into a flat keyed module set (`hosts-*`, `public-*`, …) for the flake outputs. See [auto-discovery](auto-discovery.md#the-flake-level-collector-mkmodules). |
 | `modules/mkConditionalModule.nix` | Conditional module composition. |
 | `modules/mkClassModule.nix` | Selects a module by the loading evaluation's `_class`. A class with no key is a no-op; a key naming no class throws. See [/decisions/dual-class-modules](/decisions/dual-class-modules.md). |
 | `modules/mkMixinModule.nix` | Per-mixin builder: declares `mixins.<prefix>.<name>.enable` + gates the body. Partially applied with `{ config, prefix }` by each tree's `mkDefaultMixinModule` aggregator helper and threaded to leaves; not called directly from the lib. See [mixin-pattern](mixin-pattern.md). |
 | `modules/nonNull.nix` | `lib.mkIf (value != null) value`, so a null option is left unset rather than set to null. |
-| `hyprland/mkLuaCall.nix` | Builds hyprland-style multi-arg lua callbacks. Used in `users/joker9944/hosts/HAL9000/default.nix` for hyprland `on = …`. |
+| `hyprland/mkLuaCall.nix` | Builds hyprland-style multi-arg lua callbacks. Used in `modules/home/users/joker9944/hosts/HAL9000/default.nix` for hyprland `on = …`. |
 | `lookupDesktopFiles.nix` | Names of the `.desktop` files a package *declares* through `desktopItems`. A package that installs its entries any other way — most of them — yields `[ ]`, since the rest is only readable by building it. |
 | `requireDesktopFile.nix` | Asserts a package provides an entry and returns its ID, so a renamed entry fails the build. `name` defaults to the package name + `.desktop`, which is a guess — the assertion is what catches cases like `signal-desktop` → `signal.desktop`. A declared entry is checked during evaluation; for anything else the returned ID carries a check derivation in its string context, which is why the function needs `pkgs` — see [/decisions/desktop-files-at-build-time](/decisions/desktop-files-at-build-time.md). Used by the hyprland binds, see [uwsm-session](uwsm-session.md). |
-| `disko/` | Disk-layout template renderer. `flake.lib.disko.mkDiskoLayout { config, template ? templates.version1 }` renders a disko `devices` set from per-host params; templates live under `flake.lib.disko.templates.*` and are curried `lib` args first, then `{ config }`. Called from each `hosts/<host>/disks.nix` (which also imports `inputs.disko.nixosModules.disko` itself). |
+| `disko/` | Disk-layout template renderer. `flake.lib.disko.mkDiskoLayout { config, template ? templates.version1 }` renders a disko `devices` set from per-host params; templates live under `flake.lib.disko.templates.*` and are curried `lib` args first, then `{ config }`. Called from each `modules/nixos/hosts/<host>/disks.nix` (which also imports `inputs.disko.nixosModules.disko` itself). |
 | `obfuscation/` | XOR-based string obfuscation, exposed via the `obfuscate` app in `apps.nix`. Hand-written `default.nix`, not directory-loaded — splitting it would make its ASCII table public. |
 
 `libSchemes.modules` holds one member, `mkVariantModules variants path`. It `importApply`s the same
 template once per key of `variants`, passing the key and its value as `variant` and `displayName`, so
 a module declaring `schemes.${variant}` and writing to `programs.${variant}` becomes a family with
-one `enable` each — `schemes.firefox`/`librewolf`/`floorp` from `modules/home/firefox.nix`, four
-editors from `modules/home/vscode/`. The variant map is both the list and the label source. It closes
+one `enable` each — `schemes.firefox`/`librewolf`/`floorp` from `apps/nix-schemes/modules/home/firefox.nix`, four
+editors from `apps/nix-schemes/modules/home/vscode/`. The variant map is both the list and the label source. It closes
 over `flake`, which is why callers pass only two arguments.
 
 `libUtil` holds the rest, in four namespaces: `strings` (`indent`, `indentLines`, `mkCommand`, `mkIndentPrefix`), `lists` (`first`, `last`), `files` (`list` — the directory scanner behind `mkDefaultModule`, `pkgs/default.nix` and the test runners), `numbers` (`clamp`, `toStringFloat`). Names are self-descriptive; open `apps/util-lib/lib/` when you need one.
@@ -98,7 +99,7 @@ Public functions in both libs carry an [RFC 145](https://github.com/NixOS/rfcs/b
 
       # Arguments
 
-      - `hostname`: used to find modules at `hosts/<hostname>`
+      - `hostname`: Host name, selecting `nixosModules.hosts-<hostname>`
 
       # Example
 

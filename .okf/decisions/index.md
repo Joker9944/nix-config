@@ -17,4 +17,4 @@ Load-bearing choices behind the shape of the repo. Consult before proposing stru
 * [vendored-schemes](vendored-schemes.md) — Upstream schemes are converted to Nix and committed; a monthly job refreshes them, nothing checks them at eval time.
 * [desktop-files-at-build-time](desktop-files-at-build-time.md) — Desktop-file contents are read by derivations, never during evaluation; `[Added Associations]` is not reproduced.
 * [no-ifd](no-ifd.md) — `allow-import-from-derivation = false` on the machines and in CI; evaluation never builds.
-* [dual-class-modules](dual-class-modules.md) — A module for both trees is a class-agnostic core plus one glue module per tree; `_class` makes that a choice, and the dendritic pattern is not adopted.
+* [dual-class-modules](dual-class-modules.md) — A module for both trees is one feature directory whose tree-specific halves dispatch on `_class`; the dendritic pattern is not adopted.

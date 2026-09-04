@@ -33,7 +33,7 @@ The one exception: if you find yourself repeatedly wanting to remind future-you 
 
 ## Companion tooling
 
-* **Nix option lookup skills** under `.claude/skills/` — `home-manager-options` for the `users/` tree, `nixos-options` for the `hosts/` tree. Use the one matching the tree you're editing before writing any `programs.*` / `services.*` / `hardware.*` / `wayland.*` attribute. Both drive binaries from this repo's dev shell (on `PATH` via `direnv`; `nix develop` if not) and are pinned to this flake's revision — prefer them over the `nix` MCP server, which is not. Details in [`/workflows/lookup-hm-option.md`](.okf/workflows/lookup-hm-option.md) and [`/workflows/lookup-nixos-option.md`](.okf/workflows/lookup-nixos-option.md).
+* **Nix option lookup skills** under `.claude/skills/` — `home-manager-options` for the `modules/home/` tree, `nixos-options` for the `modules/nixos/` tree. Use the one matching the tree you're editing before writing any `programs.*` / `services.*` / `hardware.*` / `wayland.*` attribute. Both drive binaries from this repo's dev shell (on `PATH` via `direnv`; `nix develop` if not) and are pinned to this flake's revision — prefer them over the `nix` MCP server, which is not. Each skill's `SKILL.md` carries the full surface and trap tables.
 * **OKF validator**: `/okf:validate .okf --strict` — run before declaring bundle changes done.
 * **Bundle trimmer**: the `okf-trim` skill under `.claude/skills/` — an on-demand pass that enforces rules 2 and 3 across the whole bundle. Not part of routine write-back; invoke it when the bundle has drifted into excess detail.
 

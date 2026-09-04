@@ -9,7 +9,7 @@ An on-demand sweep that enforces `CLAUDE.md` rules 2 and 3 across the whole bund
 
 Read the two exemplars before you cut anything. They are the calibration — frozen pre-trim snapshots under this skill's `evals/fixtures/density/.okf/`, kept there precisely because the live bundle stops exhibiting the disease the moment a pass succeeds:
 
-* `evals/fixtures/density/.okf/workflows/lookup-hm-option.md` — well-formatted, tidy tables, and roughly two thirds of it is a second copy of `.claude/skills/home-manager-options/SKILL.md`. **This is the bloat.** (The live concept is what a correct trim left behind: a pointer.)
+* `evals/fixtures/density/.okf/workflows/lookup-hm-option.md` — well-formatted, tidy tables, and roughly two thirds of it is a second copy of `.claude/skills/home-manager-options/SKILL.md`. **This is the bloat.** (A correct trim first reduced the live concept to a pointer; the bundle has since dropped even that — the skill file is the sole authority.)
 * `evals/fixtures/density/.okf/architecture/module-layout.md`, the `modules/global/` section — a wall of unbroken prose where every clause is a constraint someone paid for: which tree owns which fontconfig generic, that `extraCss` concatenates so the winning fragment needs `lib.mkAfter`, that a ~220 MiB Nerd Font is why the binding sits in the home glue. **This is what you are protecting.**
 
 ## Scope

@@ -5,7 +5,7 @@ description: Nothing reads a package's `share/applications` during evaluation; m
 tags: [decision, ifd, xdg, desktop-entry]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-21T00:00:00Z
+  at: 2026-09-04T00:00:00Z
 ---
 
 # The rule
@@ -13,7 +13,7 @@ generated:
 A `.desktop` file's contents are only readable by building the package that ships it, so evaluation
 never looks. Two mechanisms cover what the tree needs:
 
-* **Mime types** — `modules/home/extensions/xdg-mime.nix` forwards each path in
+* **Mime types** — `modules/home/public/extension/xdg-mime.nix` forwards each path in
   `xdg.mimeApps.custom.apps.default` to home-manager's `xdg.mimeApps.defaultApplicationPackages`,
   which scrapes `MimeType=` with `crudini` in a `runCommand`. Base-file entries keep priority over
   the scraped ones, and packages are appended in list order, so the mixins' `lib.mkOrder` still

@@ -6,19 +6,19 @@ resource: https://github.com/Joker9944/nix-config/tree/main/apps/yas
 tags: [app, yas, ags, gjs, typescript, hyprland, gtk4]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-16T00:00:00Z
+  at: 2026-09-04T00:00:00Z
 ---
 
 # What it is
 
 A GTK4 desktop shell written in TypeScript, run on GJS through [AGS](https://aylur.github.io/ags/) v3
 (`ags` JS lib 3.1.x, JSX from `gnim`). It draws a bar and notification popups and is the statusbar
-the hyprland tree selects — `users/mixins/desktop-environment/hyprland/statusbar/default.nix` enables
-`yas` and disables `waybar` and `ashell`.
+the hyprland tree selects — `modules/home/mixins/desktop-environment/hyprland/statusbar/default.nix`
+enables `yas`.
 
 Every window is named `yas_<component>_<connector>` (`yas_bar_DP-2`, `yas_notifications_DP-2`), which
 is also the layer namespace hyprland sees — so one `layerrule` matching the `yas_` prefix covers the
-whole shell. The waybar mixin's `blur on, xray on` rule is the precedent; yas has none.
+whole shell (none is currently set).
 
 # Runtime shape
 
@@ -129,7 +129,7 @@ Three outputs matter:
 * `overlays.yas` — exists but is not applied by this repo; the module's `package` default reaches
   into the flake directly.
 
-The mixin at `users/mixins/desktop-environment/hyprland/statusbar/yas/` is thin on purpose: it imports
+The mixin at `modules/home/mixins/desktop-environment/hyprland/statusbar/yas/` is thin on purpose: it imports
 the home module and ties `systemd.enable` to `programs.yas.enable`.
 
 The unit lists `gtk-4.0/gtk.css` and `yas/config.json` under **`X-Restart-Triggers`**, so a theme or

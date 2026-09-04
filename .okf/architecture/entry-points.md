@@ -5,7 +5,7 @@ description: The two constructors called from flake.nix that assemble every host
 tags: [architecture, flake, entry-point]
 generated:
   by: claude-code/claude-opus-4-8
-  at: 2026-08-31T00:00:00Z
+  at: 2026-09-04T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -13,14 +13,13 @@ verified:
 
 # `mkNixosConfiguration`
 
-Defined in `lib/configuration/mkNixosConfiguration.nix`. Assembles a `nixosSystem` from four sources:
+Defined in `lib/configuration/mkNixosConfiguration.nix`. Assembles a `nixosSystem` by selecting keys of `flake.nixosModules` (populated by `mkModules` — see [auto-discovery](auto-discovery.md#the-flake-level-collector-mkmodules)):
 
-1. `hosts/mixins/` — the reusable NixOS mixin tree.
-2. `hosts/profiles/<profile>.nix` — the host's role, when the record sets a `profile` string (optional). See [profiles](profiles.md).
-3. `hosts/<hostname>/` — per-host modules (`default.nix`, `mixins.nix`, `disks.nix`, `hardware-configuration.nix`, …). Auto-loaded via `mkDefaultModule`.
-4. `users/<username>/nixos/` for each username in the host record — user-owned system-level tweaks. The module keeps a universal identity (account, ssh keys, `wheel`/`keys` groups) unconditional and gates its desktop-coupled extras — capability group memberships per owning mixin (`docker`/`gamemode`/`networkmanager`), the unfree-package allowlist and the `audiomenu` overlay on `mixins.programs.home-manager.enable` — so it imports cleanly on a graphical-free server.
-
-Also injects every module in `flake.nixosModules.*` (source: `modules/nixos/`) and the flake's overlays.
+1. `nixosModules.mixins` — the reusable NixOS mixin tree, `modules/nixos/mixins/`.
+2. `nixosModules."profiles-<profile>"` — the host's role, when the record sets a `profile` string (optional). See [profiles](profiles.md).
+3. `nixosModules."hosts-<hostname>"` — the per-host directory `modules/nixos/hosts/<hostname>/`, whose `default.nix` auto-loads its siblings (`mixins.nix`, `disks.nix`, `hardware-configuration.nix`, …) via `mkDefaultModule`.
+4. `nixosModules."users-<username>"` for each username in the host record — user-owned system-level tweaks, `modules/nixos/users/<username>/`. The module keeps a universal identity (account, ssh keys, `wheel`/`keys` groups) unconditional and gates its desktop-coupled extras — capability group memberships per owning mixin (`docker`/`gamemode`/`networkmanager`), the unfree-package allowlist and the `audiomenu` overlay on `mixins.programs.home-manager.enable` — so it imports cleanly on a graphical-free server.
+5. Every `public-*` key, `nixosModules.theme`, and inline wiring: the flake's overlays, `nixpkgs.hostPlatform` and the `custom.pkgs.pkgs-unstable` binding.
 
 Neither constructor sets `specialArgs`. Modules receive `flake`, `inputs`, `libUtil` and `libMath` as
 static `importApply` arguments bound in `flake.nix#moduleArgs` — see [custom-lib](custom-lib.md).
@@ -31,15 +30,18 @@ on; `_module.args` would not.
 
 Defined in `lib/configuration/mkHomeConfiguration.nix`. Builds a **standalone** home-manager configuration — home-manager is not a NixOS module here (see [decisions/standalone-home-manager](/decisions/standalone-home-manager.md)). Inherits `pkgs` from the paired NixOS configuration, so both trees stay in lockstep.
 
-Sources:
+Sources, again by `flake.homeModules` key:
 
-1. `users/mixins/` — the reusable home-manager mixin tree.
-2. `users/<username>/` — user-owned modules (`default.nix`, `config/`, `hosts/<hostname>/`, `nixos/`). Auto-loaded.
-3. Every module in `flake.homeModules.*` (source: `modules/home/`).
+1. `homeModules.mixins` — the reusable home-manager mixin tree, `modules/home/mixins/`.
+2. `homeModules."users-<username>"` — user-owned modules, `modules/home/users/<username>/` (`default.nix`, `config/`, `hosts/<hostname>/`).
+3. Every `public-*` key and `homeModules.theme`.
 
-`osConfig` is the sole `extraSpecialArg` — a lazy reference to the paired NixOS config, and the one
-value a static arg cannot carry, since `users/joker9944/default.nix` reads it in `imports` position to
-pick its per-host module. Used, for example, by `users/joker9944/default.nix` to inherit `osConfig.mixins.desktopEnvironment` and by `users/joker9944/hosts/HAL9000/default.nix` to read `osConfig.programs.steam.package`.
+The constructor takes no hostname: `osConfig` is the sole `extraSpecialArg` — a lazy reference to the
+paired NixOS config, and the one value a static arg cannot carry, since
+`modules/home/users/joker9944/default.nix` reads it in `imports` position to pick its per-host module
+(`./hosts/<osConfig.networking.hostName>`, imported only when that directory exists). Also used, for
+example, to inherit `osConfig.mixins.desktopEnvironment` and by
+`modules/home/users/joker9944/hosts/HAL9000/default.nix` to read `osConfig.programs.steam.package`.
 
 # How they're called
 

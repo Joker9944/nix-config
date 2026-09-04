@@ -5,10 +5,10 @@ The concepts here explain the shape of the repo — the ones a newcomer (human o
 # Structural patterns
 
 * [mixin-pattern](mixin-pattern.md) — Every reusable module is a binary-enable mixin under `options.mixins.<category>.<name>`. Hosts and users opt in from central `mixins.nix` files.
-* [profiles](profiles.md) — The role layer above mixins: a `hosts/profiles/*.nix` module bundles a class of machine's mixin enables, selected per host by the `profile` string in the flake record. High-level and shared — never per-machine.
+* [profiles](profiles.md) — The role layer above mixins: a `modules/nixos/profiles/*.nix` module bundles a class of machine's mixin enables, selected per host by the `profile` string in the flake record. High-level and shared — never per-machine.
 * [module-layout](module-layout.md) — Folder/`files/` conventions for how any nix module (mixin or otherwise) is arranged on disk once it grows beyond a single `.nix` file.
 * [comment-markers](comment-markers.md) — `TODO` / `WORKAROUND` / `HACK` / `UPGRADE` and what each promises about how long the code stays, plus the optional id that groups a marker across files.
-* [auto-discovery](auto-discovery.md) — `flake.lib.modules.mkDefaultModule` auto-imports every sibling `.nix` file in a directory, so dropping a file into `users/mixins/programs/` is enough to register it.
+* [auto-discovery](auto-discovery.md) — `flake.lib.modules.mkDefaultModule` auto-imports every sibling `.nix` file in a directory, so dropping a file into `modules/home/mixins/programs/` is enough to register it; `mkModules` does the flake-output equivalent.
 * [entry-points](entry-points.md) — `mkNixosConfiguration` and `mkHomeConfiguration` are the two constructors called from `flake.nix`. Understanding them explains how NixOS and home-manager configurations stay paired.
 * [custom-lib](custom-lib.md) — Three directory-loaded libs: `lib/` for module-system helpers (`flake.lib`), the `apps/util-lib` flake for general-purpose ones (`libUtil`), and `apps/nix-schemes` for colour schemes (`libSchemes`).
 * [packages](packages.md) — Flake packages live under `./pkgs`, auto-discovered by `pkgs/default.nix` (top-level `.nix` = a package, subdirs = shared support); `flake.nix` stays lean.

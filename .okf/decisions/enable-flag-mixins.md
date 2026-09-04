@@ -1,11 +1,11 @@
 ---
 type: Decision
 title: Mixins expose only `enable`
-description: Every mixin under hosts/mixins/ and users/mixins/ declares exactly one option (`enable = mkEnableOption "…"`). Any per-host or per-user knob lives outside the mixin as a plain override.
+description: Every mixin under modules/nixos/mixins/ and modules/home/mixins/ declares exactly one option (`enable = mkEnableOption "…"`). Any per-host or per-user knob lives outside the mixin as a plain override.
 tags: [decision, modules, convention]
 generated:
   by: claude-code/claude-opus-4-8
-  at: 2026-07-29T00:00:00Z
+  at: 2026-09-04T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -19,7 +19,7 @@ Mixin option namespace is capped at a boolean:
 options.mixins.<category>.<name> = { enable = mkEnableOption "…"; };
 ```
 
-Configuration values that differ per host or per user do **not** get lifted into `mkOption` declarations on the mixin. They go into `hosts/<host>/default.nix` (NixOS) or `users/<user>/hosts/<host>/default.nix` (home-manager) as direct assignments to the upstream option — `wayland.windowManager.hyprland.settings.monitor = […]`, `programs.git.settings.user = { … }`, etc.
+Configuration values that differ per host or per user do **not** get lifted into `mkOption` declarations on the mixin. They go into `modules/nixos/hosts/<host>/default.nix` (NixOS) or `modules/home/users/<user>/hosts/<host>/default.nix` (home-manager) as direct assignments to the upstream option — `wayland.windowManager.hyprland.settings.monitor = […]`, `programs.git.settings.user = { … }`, etc.
 
 # Why
 

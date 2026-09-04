@@ -9,11 +9,6 @@ flake.lib.modules.mkDefaultModule
   {
     dir = ./.;
 
-    exclude = [
-      ./nixos.nix
-      ./home.nix
-    ];
-
     args = moduleArgs // {
       mkThemeModule =
         name: module:

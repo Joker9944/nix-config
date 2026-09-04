@@ -48,8 +48,7 @@ Only two inputs are pinned to a release; everything else follows `nixpkgs`/unsta
 
    The dev shell's `hm-options` / `nixos-options` rebuild against the new pin on the next
    `direnv reload`. From here until the upgrade is done they are the only non-stale account of what
-   the options are — see [lookup-hm-option](lookup-hm-option.md) and
-   [lookup-nixos-option](lookup-nixos-option.md).
+   the options are — surface and traps in `.claude/skills/{home-manager-options,nixos-options}/SKILL.md`.
 2. `grep -rn 'UPGRADE(<new-release>)' .` — deterministic, and any older `UPGRADE(<older>)` tokens
    that are now ≤ the new release are also actionable.
 3. Work each hit: apply the change and remove the marker. The comment at the site says what to do.
