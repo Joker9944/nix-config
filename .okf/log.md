@@ -2,6 +2,10 @@
 
 An index of bundle changes, not a narrative. One line each: what changed and the concept that holds the detail, in the form `CLAUDE.md` rule 3 sets. Rationale lives in the commit message, tied to the diff, or in a [decision](/decisions/index.md) — not here.
 
+## 2026-09-05
+
+- `conform` gates commit messages at the commit-msg stage; types and scopes live in `.conform.yaml` — [workflows/formatting-and-cspell](/workflows/formatting-and-cspell.md)
+
 ## 2026-09-04
 
 - The module trees live under `modules/{home,nixos}/`; flake outputs are flat `mkModules` keys — [architecture/entry-points](/architecture/entry-points.md), [architecture/auto-discovery](/architecture/auto-discovery.md)

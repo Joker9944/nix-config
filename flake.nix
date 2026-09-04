@@ -193,6 +193,9 @@
                   settings.extendIgnore = [ "E203" ];
                 };
                 ruff-format.enable = true;
+
+                # Git
+                conform.enable = true;
               };
             };
 

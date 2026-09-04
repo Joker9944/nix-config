@@ -1,11 +1,11 @@
 ---
 type: Playbook
 title: Formatting and cspell
-description: What the pre-commit hooks enforce (nixfmt, shfmt, flake8, ruff-format, …), why python is formatted at 79 columns, why cspell is deliberately NOT a hook (editor + on-demand only), and how to whitelist technical words.
+description: What the pre-commit hooks enforce (nixfmt, shfmt, flake8, ruff-format, conform on commit messages, …), why python is formatted at 79 columns, why cspell is deliberately NOT a hook (editor + on-demand only), and how to whitelist technical words.
 tags: [workflow, formatting, spellcheck, pre-commit]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-23T00:00:00Z
+  at: 2026-09-05T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -22,8 +22,13 @@ Defined in `flake.nix#checks.<system>.preCommitHooks.hooks`:
 | Shell | `shellcheck`, `shfmt` |
 | Python | `flake8`, `ruff-format` |
 | Links | `rewrite-pr-links` (`.nix` and `.md`) |
+| Git | `conform` (commit messages) |
 
 Run everything at once: `nix fmt` (aliased to `pre-commit run --all-files`). Individual hooks fire automatically on `git commit`.
+
+## conform gates commit messages
+
+It runs at the **commit-msg** stage, so `nix fmt` and `nix flake check` never exercise it — only a real `git commit` does. Allowed types and scopes live in `.conform.yaml`; the scope list is closed and structural (the area of the repo, never the program), so an unlisted scope fails the commit. `Merge …` and `Revert "…"` messages aren't conventional commits and need `git commit --no-verify`.
 
 ## Python is linted by flake8 at 79 columns
 

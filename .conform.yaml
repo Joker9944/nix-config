@@ -1,0 +1,30 @@
+policies:
+  - type: commit
+    spec:
+      conventional:
+        types:
+          - build
+          - chore
+          - ci
+          - docs
+          - feat
+          - fix
+          - perf
+          - refactor
+          - revert
+          - style
+          - test
+        scopes:
+          - deps         # renovate, lockfile
+          - flake        # flake.nix, apps.nix, overlays.nix
+          - lib          # lib/
+          - pkgs         # pkgs/
+          - modules      # modules/*, non-mixin
+          - mixins       # modules/*/mixins/
+          - hosts        # modules/*/hosts/
+          - nix-schemes  # apps/nix-schemes
+          - util-lib     # apps/util-lib
+          - yas          # apps/yas
+          - okf          # .okf/
+          - skills       # .claude/skills/
+        descriptionLength: 72
