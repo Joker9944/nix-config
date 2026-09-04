@@ -14,6 +14,7 @@ _: {
       discord.enable = true;
       eza.enable = true;
       fish.enable = true;
+      git.enable = true;
       gnome-text-editor.enable = true;
       jetbrains.enable = true;
       jupyter.enable = true;

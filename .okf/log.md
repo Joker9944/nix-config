@@ -5,6 +5,7 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 ## 2026-09-05
 
 - `conform` gates commit messages at the commit-msg stage; types and scopes live in `.conform.yaml` — [workflows/formatting-and-cspell](/workflows/formatting-and-cspell.md)
+- A `pkgs/` subdir also holds a single package whose script lives under `files/`, not only input-hungry groups — [architecture/packages](/architecture/packages.md)
 
 ## 2026-09-04
 

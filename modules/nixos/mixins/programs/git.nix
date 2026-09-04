@@ -1,5 +1,4 @@
 { mkMixinModule, ... }:
-{ lib, ... }:
 mkMixinModule "git" {
-  programs.git.enable = lib.mkDefault true;
+  programs.git.enable = true;
 }

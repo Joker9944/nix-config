@@ -4,8 +4,8 @@ title: Packages — pkgs/ auto-discovery and a lean flake.nix
 description: How the flake's package set is assembled from ./pkgs, and the convention that flake.nix stays thin — package logic lives in pkgs/, not inline in the flake.
 tags: [architecture, flake, packages, convention]
 generated:
-  by: process:okf-migrate
-  at: 2026-07-23T00:00:00Z
+  by: claude-code/claude-opus-5
+  at: 2026-09-05T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -30,7 +30,9 @@ just calls `import ./pkgs { inherit lib pkgs inputs libUtil; flake = self; }` an
    `default.nix` must **return an attrset of packages**, which is merged into the set.
 
 So a file is one package; a subdirectory is a *group* of packages that needs flake-level
-context. The options-query tools use the subdir form precisely because they read flake inputs:
+context, **or** a single package whose script lives under `files/` — keeping it a real `.sh`
+that shellcheck and shfmt lint instead of a string inside a nix file. The options-query tools
+use the subdir form for the first reason, because they read flake inputs:
 
 ```
 pkgs/
