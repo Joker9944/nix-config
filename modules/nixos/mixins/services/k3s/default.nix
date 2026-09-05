@@ -10,8 +10,7 @@ mkMixinModule "k3s" {
   config = {
     sops = {
       age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-      defaultSopsFile = ../../../../secrets/k3s.yaml;
-      secrets."k3s/token" = { };
+      secrets."k3s/token".sopsFile = ./secrets/k3s.yaml;
     };
 
     services.k3s = {

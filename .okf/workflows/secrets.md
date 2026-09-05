@@ -36,22 +36,23 @@ Each user owns `modules/home/users/<username>/secrets.yaml`, encrypted with age.
 
 Some secrets must be decrypted at **system activation, before any login** — e.g. the k3s join token. These can't use the per-user age key (it lives in a user's home). Instead they're keyed to each host's **SSH host key**:
 
-* The `services.k3s` mixin (`modules/nixos/mixins/services/k3s.nix`) imports `inputs.sops-nix.nixosModules.sops` (the first and only NixOS-side sops-nix use) and sets:
+* The `services.k3s` mixin (`modules/nixos/mixins/services/k3s/default.nix`) imports `inputs.sops-nix.nixosModules.sops` (the first and only NixOS-side sops-nix use) and sets:
   ```nix
   sops = {
     age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];   # host key → age identity
-    defaultSopsFile = ../../../../secrets/k3s.yaml;
-    secrets."k3s/token" = { };                                # nested path k3s.token
+    secrets."k3s/token".sopsFile = ./secrets/k3s.yaml;        # nested path k3s.token
   };
   services.k3s.tokenFile = config.sops.secrets."k3s/token".path;
   ```
-* **Recipients** live in `.sops.yaml`. Each host's age recipient is derived from its `ssh_host_ed25519_key.pub` via `ssh-to-age`. The `secrets/k3s.yaml` creation rule lists all cluster hosts + `joker9944`, and must sit **above** the general `secrets/*.yaml` rule — sops applies the first matching rule.
-* **Bootstrap order** (chicken/egg): a host can only decrypt after its SSH host key exists. So at rollout you provision the host key, add its `ssh-to-age` recipient to `.sops.yaml`, re-encrypt `secrets/k3s.yaml`, then deploy. Until a host is added, the file is decryptable only by `joker9944`.
-* **Encryption needs no private key** — `sops -e -i secrets/k3s.yaml` encrypts to the recipient public keys in `.sops.yaml`. Only decryption (activation) needs a matching identity.
+  Per-secret `sopsFile` rather than `defaultSopsFile`, which is host-global: a mixin setting it would claim the default for every other NixOS secret on that host, and two mixins setting it would conflict.
+* The encrypted file lives inside the mixin at `modules/nixos/mixins/services/k3s/secrets/k3s.yaml` — see the `secrets/` exception in [module-layout](/architecture/module-layout.md).
+* **Recipients** live in `.sops.yaml`. Each host's age recipient is derived from its `ssh_host_ed25519_key.pub` via `ssh-to-age`. `path_regex` is unanchored, so the path matches both the dedicated `secrets/k3s\.yaml$` rule and the general `secrets/*.yaml` one; the dedicated rule must sit **above** the general one, since sops applies the first match. Keeping it separate is what confines the cluster hosts to this one file.
+* **Bootstrap order** (chicken/egg): a host can only decrypt after its SSH host key exists. So at rollout you provision the host key, append its `ssh-to-age` recipient to the dedicated rule, run `sops updatekeys modules/nixos/mixins/services/k3s/secrets/k3s.yaml`, then deploy. Until a host is added, the file is decryptable only by `joker9944`.
+* **Encryption needs no private key** — re-wrapping encrypts to the recipient public keys in `.sops.yaml`. Only decryption (activation) needs a matching identity.
 
 # What must not be committed
 
-* Unencrypted secret material of any kind. The pre-commit config's cspell `ignorePaths` includes `**/secrets.yaml` and `.sops.yaml` so those files don't get spellchecked, but that's a tolerance rule, not a safety guarantee — the safety comes from the files being sops-encrypted at rest.
+* Unencrypted secret material of any kind. cspell's `ignorePaths` (`.config/cspell.yaml`) lists `secrets.yaml` and `.sops.yaml`, which does *not* cover `k3s.yaml`; that is only a spellcheck tolerance either way — the safety comes from the files being sops-encrypted at rest.
 
 # Related
 
