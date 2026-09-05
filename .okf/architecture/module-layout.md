@@ -5,7 +5,7 @@ description: On-disk layout for any nix module in the repo — single file for t
 tags: [architecture, modules, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-04T00:00:00Z
+  at: 2026-09-05T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -119,6 +119,10 @@ Non-nix files (patches, markdown context, dotfiles, static config) go in a `file
 Keeps nix code separate from its data payload. Example: `modules/home/mixins/programs/claude-code/files/CLAUDE.md`, consumed by `programs.claude-code.context`.
 
 One exception: `modules/home/mixins/programs/vscodium/openssh-no-checkperm.patch` sits at the module root rather than under `files/` — an inconsistency to avoid copying, not a template.
+
+Sops-encrypted payloads are the one deliberate departure: they go in `secrets/`, not `files/`, because `.sops.yaml` `creation_rules` match on path and the repo's rules key off a `secrets/` parent directory. `modules/nixos/mixins/services/k3s/secrets/k3s.yaml` is the instance — see [secrets](/workflows/secrets.md).
+
+Either way the payload directory must sit inside a *leaf* module folder. A category aggregator imports **every** entry in its directory (`mkDefaultModule`, `lib/modules/mkDefaultModule.nix`), so a bare `secrets/` or `files/` dir beside a category's `.nix` files is imported as a module and eval fails on the missing `default.nix`.
 
 # Shell bodies longer than 400 characters
 
