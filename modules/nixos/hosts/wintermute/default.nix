@@ -12,8 +12,11 @@ flake.lib.modules.mkDefaultModule
 
     services.xserver.xkb.layout = "ch";
 
-    programs.regreet.hyprland.settings.windowrule = [
-      "match:initial_class apps\\.regreet, monitor eDP-1"
+    programs.regreet.hyprland.settings.window_rule = [
+      {
+        match.initial_class = "apps\\.regreet";
+        monitor = "eDP-1";
+      }
     ];
 
     services = {
