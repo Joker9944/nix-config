@@ -2,6 +2,7 @@
 /.cspellcache
 /.pre-commit-config.yaml
 /.direnv
+/seed
 
 .nx/installation
 .nx/cache

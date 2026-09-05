@@ -5,6 +5,8 @@ Playbooks for the concrete tasks that come up when working in this repo. Each on
 # Playbooks
 
 * [rebuild](rebuild.md) — Rebuild the NixOS system or home-manager environment.
+* [install-nixos](install-nixos.md) — Declare a new host and install it once, harvesting hardware facts from the live installer.
+* [nyx-bootstrap](nyx-bootstrap.md) — Order and per-host facts for rolling out the four cluster machines.
 * [add-mixin](add-mixin.md) — Add a new home-manager or NixOS mixin the correct way.
 * [develop-yas](develop-yas.md) — the edit-run-check loop for the [yas](/apps/yas.md) shell in `apps/yas`.
 * [secrets](secrets.md) — sops-nix layout, age keys, and how to add a new secret.

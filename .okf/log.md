@@ -4,6 +4,8 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 
 ## 2026-09-05
 
+- Install a new host once: harvest hardware facts from the live installer, seed the host key, then `nixos-anywhere` — [workflows/install-nixos](/workflows/install-nixos.md)
+- Rollout order and per-host `TODO` facts for the four cluster machines — [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md)
 - The k3s sops file moved into the mixin; per-secret `sopsFile`, since `defaultSopsFile` is host-global — [workflows/secrets](/workflows/secrets.md)
 - Sops payloads go in `secrets/`, not `files/`, and only inside a leaf module folder — [architecture/module-layout](/architecture/module-layout.md)
 - `conform` gates commit messages at the commit-msg stage; types and scopes live in `.conform.yaml` — [workflows/formatting-and-cspell](/workflows/formatting-and-cspell.md)
