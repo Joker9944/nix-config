@@ -7,6 +7,7 @@ Astal
 attrset
 audiomenu
 autobuild
+autologins
 aylur
 backtab
 blueglassblock
@@ -16,6 +17,7 @@ checkperm
 crudini
 crypted
 Dawt
+decryptable
 displayp
 drun
 dualboot
@@ -40,8 +42,13 @@ hyprcursor
 hyprcursors
 hyprwm
 imapnotify
+isInstaller
+kexec
+keylocation
+keystatus
 killp
 killw
+kipp
 krank
 lastp
 leafname
@@ -58,6 +65,7 @@ nextl
 noinherit
 orchidlift
 PAMFAIL
+passwordless
 pasteb
 pipefail
 pixbuf
@@ -68,6 +76,7 @@ respawn
 respawnp
 resvg
 rotatew
+runKexec
 seekbar
 selectl
 selectnl
@@ -89,6 +98,8 @@ tobytes
 trivago
 umpv
 ungated
+updatekeys
+urandom
 UWSM
 uwunicorn
 vfat

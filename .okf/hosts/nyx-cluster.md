@@ -33,9 +33,9 @@ Disks come from the `server-longhorn-v1` [disko template](/architecture/custom-l
 
 # Rollout state
 
-`hardware-configuration.nix` exists only for `tars`, and is a placeholder of typical-NUC guesses so the config evaluates before first boot. The other three generate theirs on the machine. Several `TODO` markers remain in-tree: the `vonarx.online/*` node labels ported from the Talos config, `mother`'s `hostId` and NFS export paths, and the OS SSD device names.
+None of the four is installed. `hardware-configuration.nix` exists only for `tars`, as a placeholder of typical-NUC guesses so the config evaluates before first boot, and no host is yet a recipient of the k3s token.
 
-Cluster secrets — the k3s join token — follow the system-level sops pattern in [workflows/secrets](/workflows/secrets.md); no host can decrypt until its SSH host key is provisioned and its `ssh-to-age` recipient is added to `.sops.yaml`.
+[workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md) carries the rollout order and the table of `TODO` facts each machine has to supply.
 
 # Related
 
