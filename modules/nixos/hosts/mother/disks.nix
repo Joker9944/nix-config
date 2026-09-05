@@ -1,5 +1,4 @@
 { inputs, flake, ... }:
-{ ... }:
 {
   imports = [ inputs.disko.nixosModules.disko ];
 
