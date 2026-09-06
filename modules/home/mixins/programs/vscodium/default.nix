@@ -10,7 +10,6 @@ mkMixinModule "vscodium" {
     let
       vscodiumPackage = pkgs-unstable.vscodium.fhsWithPackages (
         ps: with ps; [
-          sops # default -> used for git secret encryption
           fluxcd # k8s -> vscode-gitops-tools extension
           grafana-alloy # k8s -> grafana-alloy extension
           texliveFull # quarto -> quarto extension
@@ -158,6 +157,37 @@ mkMixinModule "vscodium" {
               lib.getExe' pkgs-unstable.haskellPackages.haskell-language-server "haskell-language-server-wrapper";
           };
         }
+        {
+          # lang nix
+          extensions = [
+            open-vsx-release.jnoortheen.nix-ide # cSpell:words jnoortheen
+          ];
+
+          userSettings = {
+            "nix.enableLanguageServer" = true;
+            "nix.formatterPath" = lib.getExe pkgs-unstable.nixfmt;
+            "nix.serverPath" = lib.getExe pkgs-unstable.nil;
+            "nix.serverSettings".nil = {
+              formatting.command = [ (lib.getExe pkgs-unstable.nixfmt) ];
+              nix = {
+                maxMemoryMB = 8192;
+                flake = {
+                  autoArchive = true;
+                  autoEvalInputs = true;
+                };
+              };
+            };
+            "[nix]" = {
+              "editor.tabSize" = 2;
+              "editor.defaultFormatter" = "jnoortheen.nix-ide";
+              "editor.formatOnSave" = true;
+              "editor.formatOnType" = true;
+              "editor.selectionHighlight" = false;
+              "editor.tabCompletion" = "onlySnippets";
+              "editor.wordBasedSuggestions" = "off";
+            };
+          };
+        }
       ];
 
       mergeProfiles =
@@ -186,39 +216,6 @@ mkMixinModule "vscodium" {
           enableUpdateCheck = false;
           enableExtensionUpdateCheck = false;
         };
-
-        nix = mkProfile [
-          {
-            extensions = [
-              open-vsx-release.jnoortheen.nix-ide # cSpell:words jnoortheen
-            ];
-
-            userSettings = {
-              "nix.enableLanguageServer" = true;
-              "nix.formatterPath" = lib.getExe pkgs-unstable.nixfmt;
-              "nix.serverPath" = lib.getExe pkgs-unstable.nil;
-              "nix.serverSettings".nil = {
-                formatting.command = [ (lib.getExe pkgs-unstable.nixfmt) ];
-                nix = {
-                  maxMemoryMB = 8192;
-                  flake = {
-                    autoArchive = true;
-                    autoEvalInputs = true;
-                  };
-                };
-              };
-              "[nix]" = {
-                "editor.tabSize" = 2;
-                "editor.defaultFormatter" = "jnoortheen.nix-ide";
-                "editor.formatOnSave" = true;
-                "editor.formatOnType" = true;
-                "editor.selectionHighlight" = false;
-                "editor.tabCompletion" = "onlySnippets";
-                "editor.wordBasedSuggestions" = "off";
-              };
-            };
-          }
-        ];
 
         notes = mkProfile [
           {
@@ -267,6 +264,15 @@ mkMixinModule "vscodium" {
               "[yaml]" = {
                 "editor.defaultFormatter" = "redhat.vscode-yaml";
               };
+            };
+          }
+          {
+            extensions = [
+              open-vsx-release.cuelangorg.vscode-cue
+            ];
+
+            userSettings = {
+              "cue.cueCommand" = lib.getExe pkgs-unstable.cue;
             };
           }
         ];

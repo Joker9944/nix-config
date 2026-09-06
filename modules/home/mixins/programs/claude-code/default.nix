@@ -63,9 +63,7 @@ mkMixinModule "claude-code" {
       };
 
       typescript = {
-        args = [
-          "--stdio"
-        ];
+        args = [ "--stdio" ];
         command = lib.getExe pkgs.typescript-language-server;
         extensionToLanguage = {
           ".js" = "javascript";
@@ -73,6 +71,11 @@ mkMixinModule "claude-code" {
           ".ts" = "typescript";
           ".tsx" = "typescriptreact";
         };
+      };
+
+      cue = {
+        command = lib.getExe pkgs.cuelsp;
+        extensionToLanguage.".cue" = "cue";
       };
     };
   };
