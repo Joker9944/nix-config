@@ -2,6 +2,10 @@
 
 An index of bundle changes, not a narrative. One line each: what changed and the concept that holds the detail, in the form `CLAUDE.md` rule 3 sets. Rationale lives in the commit message, tied to the diff, or in a [decision](/decisions/index.md) — not here.
 
+## 2026-09-07
+
+- The seed tree also carries the user's password hash; without it a new host is created locked — [workflows/install-nixos](/workflows/install-nixos.md)
+
 ## 2026-09-05
 
 - Install a new host once: harvest hardware facts from the live installer, seed the host key, then `nixos-anywhere` — [workflows/install-nixos](/workflows/install-nixos.md)

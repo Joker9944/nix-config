@@ -119,6 +119,7 @@
               buildInputs = [
                 self.packages.${system}.hm-options
                 self.packages.${system}.nixos-options
+                pkgs.mkpasswd
                 pkgs.python3
                 pkgs.sops
                 pkgs.ssh-to-age

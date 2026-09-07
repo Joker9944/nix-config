@@ -19,6 +19,8 @@ in
       home = "/home/${username}";
       homeMode = "750";
       description = "Felix von Arx";
+      # Supplied by the install seed, never committed — see .okf/workflows/install-nixos.md
+      hashedPasswordFile = "/etc/passwd-hash/${username}";
       extraGroups = [
         "wheel"
         "keys"

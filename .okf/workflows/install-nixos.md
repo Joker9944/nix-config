@@ -1,11 +1,11 @@
 ---
 type: Playbook
 title: Install NixOS on a new machine
-description: Declare a host, harvest its hardware facts from the live installer, seed its SSH host key for sops, then install once with nixos-anywhere.
+description: Declare a host, harvest its hardware facts from the live installer, seed its SSH host key and user password hash, then install once with nixos-anywhere.
 tags: [workflow, install, nixos, disko, sops]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-05T00:00:00Z
+  at: 2026-09-07T00:00:00Z
 ---
 
 # Trigger
@@ -18,7 +18,7 @@ The hardware facts a host needs — kernel modules, the OS disk's device name �
 
 * Target booted on the stock NixOS **minimal** ISO for the host's architecture. Nothing custom is needed: the ISO is only a runtime, and its channel need not match this flake's nixpkgs.
 * A password on the target. sshd already runs on the installer (`profiles/installation-device.nix` sets `services.openssh.enable` and `PermitRootLogin = "yes"`), but `nixos` and `root` both ship with *empty* passwords and sshd refuses those. The console autologins as `nixos` with passwordless sudo, so `passwd` on the console is the whole step — or drop a key into `~/.ssh/authorized_keys` instead.
-* `sops` and `ssh-to-age` on `PATH` — both are in the dev shell.
+* `sops`, `ssh-to-age` and `mkpasswd` on `PATH` — all three are in the dev shell.
 * The target's IP, from `ip -brief addr` on the console.
 
 # 1. Declare the host
@@ -41,7 +41,11 @@ ssh nixos@<ip> 'sudo nixos-generate-config --show-hardware-config --no-filesyste
 
 Then prepend `_:` to the generated file (step 1) and `git add` it — see the flake-visibility gotcha below.
 
-# 3. Seed the host key and its sops recipient
+# 3. Build the seed tree
+
+`seed/` is extracted into the target's root before its first activation. It carries what must already be on disk when NixOS runs: the host's SSH key, and the user's password hash. It holds private material, is gitignored, and should be deleted once the host is up.
+
+## Host key and sops recipient
 
 System secrets are decrypted at activation against the host's SSH host key, so that key must exist and be a known sops recipient *before* the first activation. Generating it up front is what collapses the chicken-and-egg into a single install; [secrets](secrets.md) covers the mechanism.
 
@@ -58,7 +62,17 @@ Append the printed `age1…` recipient to the matching creation rule in `.sops.y
 sops updatekeys modules/nixos/mixins/services/k3s/secrets/k3s.yaml
 ```
 
-`seed/` holds a private key and is gitignored — keep it out of the repo and delete it once the host is up.
+## User password
+
+`users.users.joker9944.hashedPasswordFile` reads `/etc/passwd-hash/joker9944`, which only the seed supplies — no hash is committed. Skip this and the account is created locked, which on a server mixin is unrecoverable remotely: sshd rejects both passwords and root, so nothing can `sudo` and only a console gets you back in.
+
+```bash
+install -d -m700 seed/etc/passwd-hash
+mkpasswd -m yescrypt > seed/etc/passwd-hash/joker9944
+chmod 600 seed/etc/passwd-hash/joker9944
+```
+
+`mkpasswd` prompts, so the password never reaches shell history.
 
 # 4. Install
 
@@ -85,6 +99,7 @@ ssh <name> systemctl --failed
 * **Untracked files are invisible to a git flake.** A freshly generated `hardware-configuration.nix` that is not `git add`-ed does not exist as far as `nix build` is concerned — the build silently uses the old tree, or fails on the missing import. `git add` before every install or rebuild.
 * **The outer module layer.** A stock `nixos-generate-config` file starts `{ config, lib, modulesPath, ... }:`, which `importApply` would feed the *static* args. Without a `_:` in front it fails with `attempt to call something which is not a function but a set`.
 * **`--vm-test` cannot validate these layouts.** disko's test harness hardcodes 4 GB disk images (`lib/tests.nix`, `emptyDiskImages`) with no knob to raise it, so any layout here fails partitioning in the VM regardless of correctness. Not a signal.
+* **`hashedPasswordFile` is an *initial* password here.** `users.mutableUsers` is `true`, and `update-users-groups.pl` overwrites an existing `/etc/shadow` entry only when it is `false`. So the seeded hash lands only at account creation, `passwd` afterwards wins permanently, and the file cannot repair a host that is already installed. A missing file is a warning, not a build failure.
 * **`nixos-anywhere --generate-hardware-config`** does the same harvest (its backend runs the identical `nixos-generate-config --show-hardware-config --no-filesystems`) and can write the file for you. It still needs the `_:` prepended and `git add`-ed before the build can see it, which is why step 2 does it explicitly.
 
 # Related

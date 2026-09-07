@@ -22,6 +22,7 @@ policies:
           - modules      # modules/*, non-mixin
           - mixins       # modules/*/mixins/
           - hosts        # modules/*/hosts/
+          - users        # modules/*/users/
           - nix-schemes  # apps/nix-schemes
           - util-lib     # apps/util-lib
           - yas          # apps/yas
