@@ -2,11 +2,8 @@
 let
   # kube-vip control-plane VIP, ARP mode. Reclaims the Talos L2 VIP so the k3s
   # registration endpoint (serverAddr on case/kipp/mother) stays 192.168.0.20:6443.
-  # TODO before deploy: pin the kube-vip version and set vip_interface to the
-  # NUC's wired interface name (see hardware-configuration.nix / `ip link`).
   vip = "192.168.0.20";
   kubeVipImage = "ghcr.io/kube-vip/kube-vip:v0.8.9";
-  vipInterface = "eth0";
 in
 flake.lib.modules.mkDefaultModule
   {
@@ -17,7 +14,9 @@ flake.lib.modules.mkDefaultModule
     networking.hostName = "tars";
 
     systemd.network.networks."10-lan" = {
-      matchConfig.Name = "en*";
+      # Not en*: the board's second onboard NIC (enp3s0) is unpopulated, and
+      # RequiredForOnline below would then wait on a link that never comes up.
+      matchConfig.Name = "enp2s0";
       address = [ "192.168.0.21/23" ];
       routes = [ { Gateway = "192.168.1.1"; } ];
       dns = [ "192.168.1.1" ];
@@ -26,6 +25,8 @@ flake.lib.modules.mkDefaultModule
 
     services.k3s = {
       clusterInit = true;
+      # The API cert must carry the VIP or joiners reject it on a SAN mismatch.
+      extraFlags = [ "--tls-san=${vip}" ];
       nodeLabel = [
         # TODO port the vonarx.online/* labels from the Talos node config.
         "vonarx.online/role=control-plane"
@@ -130,10 +131,11 @@ flake.lib.modules.mkDefaultModule
                         name = "port";
                         value = "6443";
                       }
-                      {
-                        name = "vip_interface";
-                        value = vipInterface;
-                      }
+                      # vip_interface is deliberately unset. This DaemonSet runs on
+                      # every control-plane node and the wired interface differs per
+                      # machine (enp2s0 on tars/case, eno1 on kipp), so no single
+                      # literal is correct. kube-vip then binds the default-route
+                      # interface, which on each node is the one holding the VIP subnet.
                       {
                         name = "vip_cidr";
                         value = "32";

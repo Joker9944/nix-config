@@ -5,7 +5,7 @@ description: Four headless x86_64-linux machines running k3s — tars/case/kipp 
 tags: [host, server, k3s, zfs, longhorn]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-05T00:00:00Z
+  at: 2026-09-07T00:00:00Z
 ---
 
 # Machines
@@ -17,13 +17,15 @@ generated:
 | kipp | 192.168.0.23/23 | server | — |
 | mother | 192.168.0.24/23 | agent | `zfs` + `nfs` mixins, `hostId`, `chronos` pool |
 
-All four select `profile = "server"` (see [profiles](/architecture/profiles.md)); their `mixins.nix` files hold only the role deltas. Static addressing is per host under `systemd.network.networks."10-lan"`, since the profile only turns systemd-networkd on.
+All four select `profile = "server"` (see [profiles](/architecture/profiles.md)); their `mixins.nix` files hold only the role deltas. Static addressing is per host under `systemd.network.networks."10-lan"`, since the profile only turns systemd-networkd on. `matchConfig.Name` names the exact interface rather than globbing `en*`: a glob also matches an unpopulated second onboard NIC, which then inherits `RequiredForOnline` and hangs `systemd-networkd-wait-online` for its full timeout before failing — and would take a duplicate copy of the static address the day anyone cables it.
 
 # The kube-vip endpoint
 
 `tars` bootstraps the cluster and deploys kube-vip as an auto-deploy manifest (`services.k3s.manifests.kube-vip.content`, a list of Kubernetes objects). It claims **192.168.0.20** in ARP mode — the address the Talos cluster used — so `case`/`kipp`/`mother` register against a `serverAddr` that survives losing `tars`.
 
-`vip_interface` and the kube-vip image tag are literals at the top of `modules/nixos/hosts/tars/default.nix`; both are marked `TODO` pending the real interface name from the machine.
+The kube-vip image tag is a literal at the top of `modules/nixos/hosts/tars/default.nix`. `vip_interface` is deliberately left unset: the DaemonSet is one object scheduled onto every control-plane node, and the wired interface is not named the same on each (`enp2s0` on tars and case, `eno1` on kipp), so no single literal is correct. kube-vip then binds the default-route interface, which on each node is the one holding the VIP's own subnet.
+
+Each server also passes `--tls-san=<vip>` through `services.k3s.extraFlags`. This is a guard, not the join mechanism: dynamiclistener already learns SANs from incoming requests, so a cert reissued while joiners are connecting picks the VIP up on its own. The flag is what makes it declarative — a cert regenerated before anything asks for the VIP (a cold bootstrap where the first server comes up alone) would otherwise omit it and lock the joiners out. The flag is per host, not in the k3s mixin — it is environment-specific, and `k3s agent` does not define it, so `mother` must not receive it.
 
 # Storage
 
