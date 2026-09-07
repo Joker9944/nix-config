@@ -18,6 +18,7 @@ Host-specific quirks (all in `modules/nixos/hosts/wintermute/default.nix`):
 * Firmware updates via `fwupd` are enabled.
 * Regreet window rule pinned to `eDP-1` (vs `DP-2` on HAL9000).
 * Blue limine boot branding (vs HAL9000's red).
+* Tailscale accepts subnet routes (`useRoutingFeatures = "client"` + `--accept-routes`), to reach the [nyx](nyx-cluster.md) kube-vip from off-LAN.
 * Swiss keymap: `services.xserver.xkb.layout = "ch";`
 
 # Host record & mixin selection

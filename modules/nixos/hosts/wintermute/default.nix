@@ -10,8 +10,6 @@ flake.lib.modules.mkDefaultModule
 
     boot.loader.limine.style.interface.brandingColor = "#0000FF"; # blue
 
-    services.xserver.xkb.layout = "ch";
-
     programs.regreet.hyprland.settings.window_rule = [
       {
         match.initial_class = "apps\\.regreet";
@@ -20,11 +18,18 @@ flake.lib.modules.mkDefaultModule
     ];
 
     services = {
+      xserver.xkb.layout = "ch";
+
       # Enable finger print reader service
       fprintd.enable = false;
 
       # Supports Linux Vendor Firmware Service (lvfs)
       fwupd.enable = true;
+
+      tailscale = {
+        useRoutingFeatures = "client";
+        extraSetFlags = [ "--accept-routes" ];
+      };
     };
 
     # This value determines the NixOS release from which the default

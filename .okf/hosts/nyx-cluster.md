@@ -17,7 +17,7 @@ generated:
 | kipp | 192.168.0.23/23 | server | — |
 | mother | 192.168.0.24/23 | agent | `zfs` + `nfs` mixins, `hostId`, `chronos` pool |
 
-All four select `profile = "server"` (see [profiles](/architecture/profiles.md)); their `mixins.nix` files hold only the role deltas. Static addressing is per host under `systemd.network.networks."10-lan"`, since the profile only turns systemd-networkd on. `matchConfig.Name` names the exact interface rather than globbing `en*`: a glob also matches an unpopulated second onboard NIC, which then inherits `RequiredForOnline` and hangs `systemd-networkd-wait-online` for its full timeout before failing — and would take a duplicate copy of the static address the day anyone cables it.
+All four select `profile = "server"` (see [profiles](/architecture/profiles.md)); their `mixins.nix` files hold only the role deltas. Static addressing is per host under `systemd.network.networks."10-lan"`, since the profile only turns systemd-networkd on. `tars` names its exact interface rather than globbing `en*`: the glob also matches its unpopulated second onboard NIC, which then inherits `RequiredForOnline` and hangs `systemd-networkd-wait-online` for its full timeout before failing — and would take a duplicate copy of the static address the day anyone cables it. The others have no second NIC and keep the glob.
 
 # The kube-vip endpoint
 
@@ -27,6 +27,14 @@ The kube-vip image tag is a literal at the top of `modules/nixos/hosts/tars/defa
 
 Each server also passes `--tls-san=<vip>` through `services.k3s.extraFlags`. This is a guard, not the join mechanism: dynamiclistener already learns SANs from incoming requests, so a cert reissued while joiners are connecting picks the VIP up on its own. The flag is what makes it declarative — a cert regenerated before anything asks for the VIP (a cold bootstrap where the first server comes up alone) would otherwise omit it and lock the joiners out. The flag is per host, not in the k3s mixin — it is environment-specific, and `k3s agent` does not define it, so `mother` must not receive it.
 
+# Remote access
+
+All three servers advertise `192.168.0.20/32` into the tailnet — `services.tailscale.useRoutingFeatures = "server"` for the forwarding sysctl, `extraSetFlags = [ "--advertise-routes=…" ]` for the `tailscaled-set.service` oneshot. Advertising from every server rather than one lets Tailscale's primary-router election fail the tailnet route over the same way kube-vip fails the VIP over at L2.
+
+Two halves are outside nix. The route must be **approved** in the Tailscale admin console (or by an ACL `autoApprovers` entry) before any client sees it; and `tailscale set` writes persistent prefs, so deleting the nix lines only removes the unit — unadvertising needs an explicit `tailscale set --advertise-routes=` on the node.
+
+Linux clients ignore subnet routes unless told otherwise, so [wintermute](wintermute.md) carries the matching `useRoutingFeatures = "client"` + `--accept-routes`. Phones and macOS accept by default.
+
 # Storage
 
 Disks come from the `server-longhorn-v1` [disko template](/architecture/custom-lib.md): no LUKS, an ESP, an **optional** dedicated plain-xfs `/var/lib/longhorn`, then btrfs `root`/`home`/`nix`. It is `size`-based rather than `end`-based like the desktop templates, and the 100 % btrfs partition auto-sorts last under disko's priority 9001. `mkDiskoLayout` carries `longhorn = null` in its size defaults, so the partition disappears once a dedicated Longhorn disc lands and the mount moves to a sibling disk block.
@@ -35,7 +43,7 @@ Disks come from the `server-longhorn-v1` [disko template](/architecture/custom-l
 
 # Rollout state
 
-None of the four is installed. `hardware-configuration.nix` exists only for `tars`, as a placeholder of typical-NUC guesses so the config evaluates before first boot, and no host is yet a recipient of the k3s token.
+`tars`, `case` and `kipp` are installed and running k3s. `mother` is not, and has no `hardware-configuration.nix` yet.
 
 [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md) carries the rollout order and the table of `TODO` facts each machine has to supply.
 

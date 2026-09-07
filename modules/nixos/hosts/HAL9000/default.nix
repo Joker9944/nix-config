@@ -7,9 +7,16 @@ flake.lib.modules.mkDefaultModule
   {
     boot.loader.limine.style.interface.brandingColor = "#FF0000";
 
-    services.xserver.xkb = {
-      layout = "de";
-      variant = "us";
+    services = {
+      xserver.xkb = {
+        layout = "de";
+        variant = "us";
+      };
+
+      tailscale = {
+        useRoutingFeatures = "client";
+        extraSetFlags = [ "--accept-routes" ];
+      };
     };
 
     programs.regreet.hyprland.settings.window_rule = [

@@ -17,6 +17,12 @@ flake.lib.modules.mkDefaultModule
       linkConfig.RequiredForOnline = "routable";
     };
 
+    # Subnet-route the kube-vip endpoint; see tars.
+    services.tailscale = {
+      useRoutingFeatures = "server";
+      extraSetFlags = [ "--advertise-routes=192.168.0.10/32,192.168.0.20/32" ];
+    };
+
     services.k3s = {
       serverAddr = "https://192.168.0.20:6443";
       # The API cert must carry the VIP or joiners reject it on a SAN mismatch.

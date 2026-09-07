@@ -53,13 +53,10 @@ Each is a `TODO` in-tree today:
 
 | Fact | Where | How |
 |---|---|---|
-| OS SSD device name | `hosts/<name>/disks.nix` | `lsblk` |
-
+| OS SSD device name | `hosts/mother/disks.nix` | `lsblk` |
 | `hostId` | `hosts/mother/default.nix` | `head -c4 /dev/urandom \| od -A none -t x4` |
 | NFS export paths | `hosts/mother/default.nix` | the `/export` entry is a placeholder |
 | `vonarx.online/*` labels | every host's `nodeLabel` | port from the Talos node config |
-
-`tars`'s committed `hardware-configuration.nix` is a placeholder of typical-NUC guesses. Overwrite it with a real harvest during its install rather than trusting it.
 
 # 4. mother — before first boot
 

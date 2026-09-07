@@ -4,8 +4,10 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 
 ## 2026-09-07
 
+- Servers advertise the VIP as a tailnet subnet route; approval and unadvertising sit outside nix — [hosts/nyx-cluster](/hosts/nyx-cluster.md), [hosts/wintermute](/hosts/wintermute.md)
+- `tars`, `case` and `kipp` are installed; the outstanding `TODO` facts are `mother`'s alone — [hosts/nyx-cluster](/hosts/nyx-cluster.md), [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md)
 - Servers pass `--tls-san` for the VIP per host; k3s does not reissue the cert when SANs change — [hosts/nyx-cluster](/hosts/nyx-cluster.md), [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md)
-- `matchConfig.Name` names one interface; an `en*` glob catches an uncabled NIC and hangs wait-online — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- `tars` names one interface; an `en*` glob catches its uncabled second NIC and hangs wait-online — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - kube-vip's `vip_interface` is unset on purpose; one DaemonSet spans nodes whose NICs differ in name — [hosts/nyx-cluster](/hosts/nyx-cluster.md), [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md)
 - The seed tree also carries the user's password hash; without it a new host is created locked — [workflows/install-nixos](/workflows/install-nixos.md)
 
