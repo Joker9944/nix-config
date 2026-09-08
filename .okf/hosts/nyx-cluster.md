@@ -5,7 +5,7 @@ description: Four headless x86_64-linux machines running k3s — tars/case/kipp 
 tags: [host, server, k3s, zfs, longhorn]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-08T00:00:00Z
+  at: 2026-09-09T00:00:00Z
 ---
 
 # Machines
@@ -29,6 +29,12 @@ Each server also passes `--tls-san=<vip>` through `services.k3s.extraFlags`. Thi
 
 `services.k3s.disable` is server-only for the same reason — `k3s agent` rejects `--disable` outright — but its value is identical on every server, so the mixin keeps it and gates it on `role == "server"` instead of repeating the list in three hosts. Server-only k3s settings belong in the mixin behind that gate when they are uniform, and on the host when the value varies.
 
+# GPU on mother
+
+A GTX 1660 SUPER, the only GPU in the cluster. `mother` takes the `nvidia` mixin without `nvidiaCuda`: Jellyfin wants NVENC/NVDEC, which the driver provides, so `cudaSupport` would rebuild the package set for nothing.
+
+`hardware.nvidia-container-toolkit.enable` runs a boot oneshot writing a CDI spec to `/run/cdi/nvidia-container-toolkit.json`, and that is the whole handoff path. k3s only registers an `nvidia` containerd runtime handler when it finds `nvidia-container-runtime` at an FHS location it scans; the toolkit installs no such binary anywhere on the host, so `runtimeClassName: nvidia` resolves to nothing. Workloads must request the device through CDI.
+
 # Remote access
 
 All three servers advertise `192.168.0.20/32` into the tailnet — `services.tailscale.useRoutingFeatures = "server"` for the forwarding sysctl, `extraSetFlags = [ "--advertise-routes=…" ]` for the `tailscaled-set.service` oneshot. Advertising from every server rather than one lets Tailscale's primary-router election fail the tailnet route over the same way kube-vip fails the VIP over at L2.
@@ -45,9 +51,7 @@ Disks come from the `server-longhorn-v1` [disko template](/architecture/custom-l
 
 # Rollout state
 
-`tars`, `case` and `kipp` are installed and running k3s. `mother` still runs TrueNAS; its `hardware-configuration.nix` was reconstructed from the running system rather than generated, so it needs confirming against `nixos-generate-config` from the installer.
-
-[workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md) carries the rollout order and the `TODO` facts still outstanding.
+All four are installed and running k3s; TrueNAS is gone. [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md) keeps the order and per-host facts for a rebuild from scratch.
 
 # Related
 
