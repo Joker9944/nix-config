@@ -9,6 +9,7 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 - mother boots legacy BIOS under TrueNAS; systemd-boot and the disko ESP need UEFI selected first — [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md)
 - Rebuilding another host: `--target-host`/`--build-host`, and why `sudo` elevation is required — [workflows/rebuild](/workflows/rebuild.md)
 - `k3s agent` rejects `--disable`; the mixin gates it on `role == "server"`, and where server-only settings live — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- Node labels reduced to `mother`'s `nfs-host`; capacity is node status, not a label, and `nodeLabel` only applies at registration — [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md)
 
 ## 2026-09-07
 

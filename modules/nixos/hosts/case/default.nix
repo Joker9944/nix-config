@@ -27,10 +27,6 @@ flake.lib.modules.mkDefaultModule
       serverAddr = "https://192.168.0.20:6443";
       # The API cert must carry the VIP or joiners reject it on a SAN mismatch.
       extraFlags = [ "--tls-san=192.168.0.20" ];
-      nodeLabel = [
-        # TODO port the vonarx.online/* labels from the Talos node config.
-        "vonarx.online/role=control-plane"
-      ];
     };
 
     system.stateVersion = "26.05";

@@ -35,10 +35,6 @@ flake.lib.modules.mkDefaultModule
       clusterInit = true;
       # The API cert must carry the VIP or joiners reject it on a SAN mismatch.
       extraFlags = [ "--tls-san=${vip}" ];
-      nodeLabel = [
-        # TODO port the vonarx.online/* labels from the Talos node config.
-        "vonarx.online/role=control-plane"
-      ];
       manifests.kube-vip.content = [
         {
           apiVersion = "v1";

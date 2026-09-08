@@ -33,10 +33,9 @@ flake.lib.modules.mkDefaultModule
       k3s = {
         role = "agent";
         serverAddr = "https://192.168.0.20:6443";
-        nodeLabel = [
-          # TODO port the vonarx.online/* labels from the Talos node config.
-          "vonarx.online/role=storage"
-        ];
+        # Capacity is not labelled: the kubelet already publishes cores and
+        # memory as node status, and a hand-kept copy only drifts.
+        nodeLabel = [ "vonarx.online/nfs-host=true" ];
       };
 
       # chronos is 8 CMR HDDs plus an Optane SLOG; periodic trim has nothing

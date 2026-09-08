@@ -47,9 +47,11 @@ kubectl -n kube-system delete secret k3s-serving
 systemctl restart k3s
 ```
 
-# 3. Facts to resolve on the machine
+# 3. Node labels
 
-One `TODO` is left in-tree: the `vonarx.online/*` values in every host's `nodeLabel`, to be ported from the Talos node config.
+Only `mother` carries one, `vonarx.online/nfs-host=true`. The Talos cluster also labelled CPU and memory capacity per node; those are not reproduced, because the kubelet already publishes both as node status and a hand-kept copy drifts from the hardware.
+
+`nodeLabel` is applied at **registration only**. Changing it and rebuilding leaves an already-joined node's labels untouched — reconcile with `kubectl label node <name> <key>-` / `<key>=<value>`, or delete the node and let it re-register.
 
 # 4. mother — before first boot
 
