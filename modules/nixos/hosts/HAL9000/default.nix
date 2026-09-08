@@ -7,6 +7,13 @@ flake.lib.modules.mkDefaultModule
   {
     boot.loader.limine.style.interface.brandingColor = "#FF0000";
 
+    hardware.nvidia = {
+      # Saves the whole VRAM across suspend, which fixes corruption and crashes
+      # on wake. Only meaningful on a machine that suspends.
+      powerManagement.enable = true;
+      nvidiaSettings = true;
+    };
+
     services = {
       xserver.xkb = {
         layout = "de";

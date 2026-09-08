@@ -2,7 +2,10 @@ _: {
   mixins = {
     boot.windowsSupport.enable = true;
 
-    hardware.nvidia.enable = true;
+    hardware = {
+      nvidia.enable = true;
+      nvidiaCuda.enable = true;
+    };
 
     programs = {
       ffmpeg.enable = true;

@@ -29,6 +29,16 @@ flake.lib.modules.mkDefaultModule
     # password prompt.
     boot.zfs.extraPools = [ "chronos" ];
 
+    hardware = {
+      # No X or console on the GPU, so nothing else keeps it initialised
+      # between transcodes.
+      nvidia.nvidiaPersistenced = true;
+
+      # Generates the CDI specs containerd needs to hand the GPU to a pod.
+      # Without it the driver works and containers still see no device.
+      nvidia-container-toolkit.enable = true;
+    };
+
     services = {
       k3s = {
         role = "agent";
