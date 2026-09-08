@@ -49,6 +49,10 @@ Disks come from the `server-longhorn-v1` [disko template](/architecture/custom-l
 
 `mother` additionally imports the pre-existing `chronos` pool through `boot.zfs.extraPools`: raidz2 over 8×SATA HDD plus a log vdev on an Intel Optane (`nvme1n1`). That pool is **never** disko-managed, and because the machine has two NVMe devices its `disks.nix` addresses the OS SSD by-id so a wipe cannot reach the Optane. [workflows/diagnose-disk-faults](/workflows/diagnose-disk-faults.md) covers what to do when a member faults.
 
+Longhorn's node prerequisites sit in the `k3s` mixin so every node gets them: `services.openiscsi`, and `boot.supportedFilesystems.nfs` for the `mount.nfs` that RWX volumes and pod-level NFS shares need. Either one missing fails at mount time, not at boot.
+
+`mother` exports `/chronos/media-data` over **NFSv4 only** — the `nfs` mixin opens 2049 and nothing else, so rpcbind's 111 is closed and `showmount` reports nothing on a server that is working fine. Clients must not fall back to v3.
+
 # Rollout state
 
 All four are installed and running k3s; TrueNAS is gone. [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md) keeps the order and per-host facts for a rebuild from scratch.

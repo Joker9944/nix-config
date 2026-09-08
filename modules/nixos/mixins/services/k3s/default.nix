@@ -31,6 +31,11 @@ mkMixinModule "k3s" {
       name = "iqn.2016-04.com.open-iscsi:${config.networking.hostName}";
     };
 
+    # Puts nfs-utils in system.fsPackages, which is where kubelet finds
+    # mount.nfs. Without it a node silently cannot mount Longhorn RWX volumes
+    # or any pod-level NFS share.
+    boot.supportedFilesystems.nfs = true;
+
     networking.firewall = {
       allowedTCPPorts = [
         6443

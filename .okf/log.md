@@ -4,6 +4,8 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 
 ## 2026-09-09
 
+- Longhorn node prerequisites (`openiscsi`, `mount.nfs`) belong to the `k3s` mixin — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- `mother` serves NFSv4 only; port 111 is closed, so `showmount` misreports a healthy server — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - All four nyx nodes installed; TrueNAS retired — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - `mother`'s label and taint are contracts k8s-config keys on; changing either fails silently — [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md)
 - `mother`'s GPU reaches pods through CDI, not a containerd `nvidia` runtime handler — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
