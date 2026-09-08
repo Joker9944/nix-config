@@ -23,11 +23,11 @@ jobs:
 
       - name: Setup nix
         id: nix-setup
-        uses: ./.github/composites/nix-setup
+        uses: Joker9944/nix-config/.github/composites/nix-setup@main
 
       - name: Git Identity
         id: git-identity
-        uses: ./.github/composites/git-identity
+        uses: Joker9944/nix-config/.github/composites/git-identity@main
 
       - name: Update Packages
         id: nix-update
@@ -36,7 +36,7 @@ jobs:
 
       - name: Create Pull Request
         id: update-pr
-        uses: ./.github/composites/update-pr
+        uses: Joker9944/nix-config/.github/composites/update-pr@main
 
         with:
           branch: ci/nix-packages-update
