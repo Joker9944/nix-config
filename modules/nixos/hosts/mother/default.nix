@@ -46,6 +46,7 @@ flake.lib.modules.mkDefaultModule
         # Capacity is not labelled: the kubelet already publishes cores and
         # memory as node status, and a hand-kept copy only drifts.
         nodeLabel = [ "vonarx.online/nfs-host=true" ];
+        nodeTaint = [ "vonarx.online/reserved=storage:NoSchedule" ];
       };
 
       # chronos is 8 CMR HDDs plus an Optane SLOG; periodic trim has nothing

@@ -47,11 +47,11 @@ kubectl -n kube-system delete secret k3s-serving
 systemctl restart k3s
 ```
 
-# 3. Node labels
+# 3. Node labels and taints
 
-Only `mother` carries one, `vonarx.online/nfs-host=true`. The Talos cluster also labelled CPU and memory capacity per node; those are not reproduced, because the kubelet already publishes both as node status and a hand-kept copy drifts from the hardware.
+Only `mother` carries either: the label `vonarx.online/nfs-host=true`, and the taint `vonarx.online/reserved=storage:NoSchedule` so only workloads that tolerate it land on the NAS. The Talos cluster also labelled CPU and memory capacity per node; those are not reproduced, because the kubelet already publishes both as node status and a hand-kept copy drifts from the hardware.
 
-`nodeLabel` is applied at **registration only**. Changing it and rebuilding leaves an already-joined node's labels untouched — reconcile with `kubectl label node <name> <key>-` / `<key>=<value>`, or delete the node and let it re-register.
+`nodeLabel` and `nodeTaint` are applied at **registration only**. Changing either and rebuilding leaves an already-joined node untouched — reconcile with `kubectl label node <name> <key>=<value>` / `kubectl taint node <name> <key>=<value>:<effect>`, or delete the node and let it re-register.
 
 # 4. mother — before first boot
 
