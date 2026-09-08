@@ -36,6 +36,22 @@ mkMixinModule "k3s" {
     # or any pod-level NFS share.
     boot.supportedFilesystems.nfs = true;
 
+    # HACK
+    # longhorn-manager probes the host with `nsenter <host ns> <tool>`, which
+    # keeps the *container's* PATH. None of the FHS directories in that PATH
+    # exist here, so the tools are unreachable however they are installed.
+    # /usr/bin is the one NixOS already populates (env), so the links go there.
+    # https://github.com/longhorn/longhorn/issues/2166
+    systemd.tmpfiles.rules =
+      map (name: "L+ /usr/bin/${name} - - - - /run/current-system/sw/bin/${name}")
+        [
+          "iscsiadm"
+          "mount"
+          "umount"
+          "mount.nfs"
+          "mount.nfs4"
+        ];
+
     networking.firewall = {
       allowedTCPPorts = [
         6443

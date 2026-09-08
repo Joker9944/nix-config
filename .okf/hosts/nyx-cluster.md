@@ -6,6 +6,10 @@ tags: [host, server, k3s, zfs, longhorn]
 generated:
   by: claude-code/claude-opus-5
   at: 2026-09-09T00:00:00Z
+sources:
+  - id: longhorn-2166
+    resource: https://github.com/longhorn/longhorn/issues/2166
+    title: "longhorn#2166 — NixOS support: nsenter cannot find host binaries"
 ---
 
 # Machines
@@ -49,7 +53,9 @@ Disks come from the `server-longhorn-v1` [disko template](/architecture/custom-l
 
 `mother` additionally imports the pre-existing `chronos` pool through `boot.zfs.extraPools`: raidz2 over 8×SATA HDD plus a log vdev on an Intel Optane (`nvme1n1`). That pool is **never** disko-managed, and because the machine has two NVMe devices its `disks.nix` addresses the OS SSD by-id so a wipe cannot reach the Optane. [workflows/diagnose-disk-faults](/workflows/diagnose-disk-faults.md) covers what to do when a member faults.
 
-Longhorn's node prerequisites sit in the `k3s` mixin so every node gets them: `services.openiscsi`, and `boot.supportedFilesystems.nfs` for the `mount.nfs` that RWX volumes and pod-level NFS shares need. Either one missing fails at mount time, not at boot.
+Longhorn's node prerequisites sit in the `k3s` mixin so every node gets them: `services.openiscsi`, and `boot.supportedFilesystems.nfs` for the `mount.nfs` that RWX volumes and pod-level NFS shares need.
+
+Installing them is not enough. longhorn-manager reaches host tools with `nsenter <host ns> <tool>`, which keeps the *container's* PATH — and no directory on that PATH exists here — while its RWX path hardcodes `/usr/bin` outright[^longhorn-2166]. The mixin therefore symlinks `iscsiadm`, `mount`, `umount` and the NFS mount helpers into `/usr/bin`, the one FHS directory NixOS already populates (`env`), which satisfies both. Without them the manager crashloops on `exit status 127` naming a tool that is in fact installed — and a PATH-only workaround, such as giving `iscsid` a private mount namespace with `BindPaths`, clears that crash while leaving RWX broken.
 
 `mother` exports `/chronos/media-data` over **NFSv4 only** — the `nfs` mixin opens 2049 and nothing else, so rpcbind's 111 is closed and `showmount` reports nothing on a server that is working fine. Clients must not fall back to v3.
 
