@@ -1,4 +1,5 @@
 { mkMixinModule, ... }:
+{ lib, ... }:
 mkMixinModule "zfs" {
   boot = {
     supportedFilesystems.zfs = true;
@@ -8,7 +9,7 @@ mkMixinModule "zfs" {
 
   services.zfs = {
     autoScrub.enable = true;
-    trim.enable = true;
+    trim.enable = lib.mkDefault true;
     # Host sets ZED_EMAIL_* under zed.settings for scrub/degraded alerts.
     zed.settings = { };
   };

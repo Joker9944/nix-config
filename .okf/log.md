@@ -2,6 +2,14 @@
 
 An index of bundle changes, not a narrative. One line each: what changed and the concept that holds the detail, in the form `CLAUDE.md` rule 3 sets. Rationale lives in the commit message, tied to the diff, or in a [decision](/decisions/index.md) — not here.
 
+## 2026-09-08
+
+- `chronos` holds no encrypted datasets and mounts at `/chronos/*`; TrueNAS's `/mnt` was altroot, not a stored mountpoint — [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md)
+- Only the `vonarx.online/*` labels are left to resolve on the machines — [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md), [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- mother boots legacy BIOS under TrueNAS; systemd-boot and the disko ESP need UEFI selected first — [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md)
+- Rebuilding another host: `--target-host`/`--build-host`, and why `sudo` elevation is required — [workflows/rebuild](/workflows/rebuild.md)
+- `k3s agent` rejects `--disable`; the mixin gates it on `role == "server"`, and where server-only settings live — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+
 ## 2026-09-07
 
 - Servers advertise the VIP as a tailnet subnet route; approval and unadvertising sit outside nix — [hosts/nyx-cluster](/hosts/nyx-cluster.md), [hosts/wintermute](/hosts/wintermute.md)
@@ -9,6 +17,8 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 - Servers pass `--tls-san` for the VIP per host; k3s does not reissue the cert when SANs change — [hosts/nyx-cluster](/hosts/nyx-cluster.md), [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md)
 - `tars` names one interface; an `en*` glob catches its uncabled second NIC and hangs wait-online — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - kube-vip's `vip_interface` is unset on purpose; one DaemonSet spans nodes whose NICs differ in name — [hosts/nyx-cluster](/hosts/nyx-cluster.md), [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md)
+- New playbook: the counter/SMART/link-speed ladder for telling a failing drive from a failing cable — [workflows/diagnose-disk-faults](/workflows/diagnose-disk-faults.md)
+- chronos is raidz2 + an Optane log vdev; the OS SSD is addressed by-id because mother has two NVMe devices — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - The seed tree also carries the user's password hash; without it a new host is created locked — [workflows/install-nixos](/workflows/install-nixos.md)
 
 ## 2026-09-05

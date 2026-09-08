@@ -28,7 +28,7 @@ flake.lib.modules.mkDefaultModule
     # way the VIP does at L2.
     services.tailscale = {
       useRoutingFeatures = "server";
-      extraSetFlags = [ "--advertise-routes=192.168.0.10/32,${vip}/32" ];
+      extraSetFlags = [ "--advertise-routes=${vip}/32" ];
     };
 
     services.k3s = {

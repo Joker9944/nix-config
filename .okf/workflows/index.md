@@ -12,5 +12,6 @@ Playbooks for the concrete tasks that come up when working in this repo. Each on
 * [secrets](secrets.md) — sops-nix layout, age keys, and how to add a new secret.
 * [release-upgrade](release-upgrade.md) — track deferred "do at next release" changes via `UPGRADE(<release>)` markers; the release-bump steps.
 * [track-upstream-blockers](track-upstream-blockers.md) — Find out whether the upstream bug a workaround waits on is still open, via `krank-tree`.
+* [diagnose-disk-faults](diagnose-disk-faults.md) — Tell a dying drive from a bad cable when ZFS faults a pool member.
 * [formatting-and-cspell](formatting-and-cspell.md) — What the pre-commit hooks enforce and how to whitelist technical words in the project dictionary.
 * [dependency-updates](dependency-updates.md) — Which driver keeps each class of dependency current, and on what cadence.

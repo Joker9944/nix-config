@@ -5,7 +5,7 @@ description: Order and per-host facts for rolling out tars, case, kipp and mothe
 tags: [workflow, install, k3s, cluster, nyx]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-07T00:00:00Z
+  at: 2026-09-08T00:00:00Z
 ---
 
 # Trigger
@@ -49,25 +49,23 @@ systemctl restart k3s
 
 # 3. Facts to resolve on the machine
 
-Each is a `TODO` in-tree today:
-
-| Fact | Where | How |
-|---|---|---|
-| OS SSD device name | `hosts/mother/disks.nix` | `lsblk` |
-| `hostId` | `hosts/mother/default.nix` | `head -c4 /dev/urandom \| od -A none -t x4` |
-| NFS export paths | `hosts/mother/default.nix` | the `/export` entry is a placeholder |
-| `vonarx.online/*` labels | every host's `nodeLabel` | port from the Talos node config |
+One `TODO` is left in-tree: the `vonarx.online/*` values in every host's `nodeLabel`, to be ported from the Talos node config.
 
 # 4. mother — before first boot
 
-`chronos` is a pre-existing 8×HDD pool, imported through `boot.zfs.extraPools` and never disko-managed. Import it read-only from the installer and check every encrypted dataset:
+`chronos` is pre-existing, imported through `boot.zfs.extraPools` and never disko-managed. Import it read-only from the installer, confirm it is intact, and export it again before installing:
 
 ```bash
 zpool import -o readonly=on chronos
-zfs list -o name,keylocation,keystatus -t filesystem,volume chronos
+zpool status chronos
+zpool export chronos
 ```
 
-Every `keylocation` must be a `file://…` path. A dataset left at `prompt` blocks the boot-time import service on `systemd-ask-password`, and `boot.zfs.passwordTimeout` defaults to `0` — it waits forever, on a headless machine. Export again (`zpool export chronos`) before installing.
+Nothing on `chronos` is encrypted. Any dataset added later must keep `keylocation` a `file://…` path: one left at `prompt` blocks the boot-time import on `systemd-ask-password`, and `boot.zfs.passwordTimeout` defaults to `0`, so a headless machine waits forever.
+
+The pool carries no local `mountpoint` anywhere, so it inherits the pool default and lands at `/chronos/*`. TrueNAS's `/mnt/chronos/*` was `altroot=/mnt` applied at import, not a stored property — the NFS export paths follow the default, not what `zfs list` showed under TrueNAS.
+
+TrueNAS boots the box in legacy BIOS mode, and the [server profile](/architecture/profiles.md) uses systemd-boot while the disko template lays down an `EF00` ESP — both UEFI-only. Switch *Boot mode select* to UEFI in BIOS setup before installing, over the X11SSH-F's IPMI console if the machine is already headless. `ls /sys/firmware/efi` from the installer confirms it took.
 
 # 5. Cluster checks
 

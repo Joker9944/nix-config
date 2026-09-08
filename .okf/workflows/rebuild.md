@@ -5,7 +5,7 @@ description: How to rebuild NixOS and home-manager from this flake, via nh or th
 tags: [workflow, build, nixos, home-manager]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-19T00:00:00Z
+  at: 2026-09-08T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -33,6 +33,22 @@ Common variants:
 
 * `nixos-rebuild boot --flake .` — build and activate on next reboot instead of now (safer for kernel/initrd changes).
 * `nixos-rebuild build --flake .` — build only, don't activate. Useful for smoke-testing before switching.
+
+## Another host
+
+`--target-host` picks where to activate, `--build-host` where to build. Pointing both at the target keeps the closure off the local link — evaluation stays local, and the result never has to be copied back.
+
+```bash
+nh os switch --target-host mother --build-host mother
+# or
+nixos-rebuild switch --flake .#mother --target-host mother --build-host mother --sudo --ask-sudo-password
+```
+
+`nh` derives the configuration name from `--target-host`.
+
+Elevation is required rather than optional: `modules/nixos/mixins/services/openssh.nix` sets `PermitRootLogin = "no"`, and `security.sudo.wheelNeedsPassword` is the NixOS default `true` on every host, so activation runs under `sudo` and prompts. `nh -e passwordless` wants NOPASSWD, which nothing here configures.
+
+`nixos-rebuild` is the **ng** rewrite, whose flag is `--sudo`. Most documentation still says `--use-remote-sudo`; that belongs to the classic implementation and is rejected.
 
 # Home-manager
 

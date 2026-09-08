@@ -5,7 +5,7 @@ description: Four headless x86_64-linux machines running k3s — tars/case/kipp 
 tags: [host, server, k3s, zfs, longhorn]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-07T00:00:00Z
+  at: 2026-09-08T00:00:00Z
 ---
 
 # Machines
@@ -27,6 +27,8 @@ The kube-vip image tag is a literal at the top of `modules/nixos/hosts/tars/defa
 
 Each server also passes `--tls-san=<vip>` through `services.k3s.extraFlags`. This is a guard, not the join mechanism: dynamiclistener already learns SANs from incoming requests, so a cert reissued while joiners are connecting picks the VIP up on its own. The flag is what makes it declarative — a cert regenerated before anything asks for the VIP (a cold bootstrap where the first server comes up alone) would otherwise omit it and lock the joiners out. The flag is per host, not in the k3s mixin — it is environment-specific, and `k3s agent` does not define it, so `mother` must not receive it.
 
+`services.k3s.disable` is server-only for the same reason — `k3s agent` rejects `--disable` outright — but its value is identical on every server, so the mixin keeps it and gates it on `role == "server"` instead of repeating the list in three hosts. Server-only k3s settings belong in the mixin behind that gate when they are uniform, and on the host when the value varies.
+
 # Remote access
 
 All three servers advertise `192.168.0.20/32` into the tailnet — `services.tailscale.useRoutingFeatures = "server"` for the forwarding sysctl, `extraSetFlags = [ "--advertise-routes=…" ]` for the `tailscaled-set.service` oneshot. Advertising from every server rather than one lets Tailscale's primary-router election fail the tailnet route over the same way kube-vip fails the VIP over at L2.
@@ -39,13 +41,13 @@ Linux clients ignore subnet routes unless told otherwise, so [wintermute](winter
 
 Disks come from the `server-longhorn-v1` [disko template](/architecture/custom-lib.md): no LUKS, an ESP, an **optional** dedicated plain-xfs `/var/lib/longhorn`, then btrfs `root`/`home`/`nix`. It is `size`-based rather than `end`-based like the desktop templates, and the 100 % btrfs partition auto-sorts last under disko's priority 9001. `mkDiskoLayout` carries `longhorn = null` in its size defaults, so the partition disappears once a dedicated Longhorn disc lands and the mount moves to a sibling disk block.
 
-`mother` additionally imports the pre-existing `chronos` pool (8×SATA HDD) through `boot.zfs.extraPools`. That pool is **never** disko-managed.
+`mother` additionally imports the pre-existing `chronos` pool through `boot.zfs.extraPools`: raidz2 over 8×SATA HDD plus a log vdev on an Intel Optane (`nvme1n1`). That pool is **never** disko-managed, and because the machine has two NVMe devices its `disks.nix` addresses the OS SSD by-id so a wipe cannot reach the Optane. [workflows/diagnose-disk-faults](/workflows/diagnose-disk-faults.md) covers what to do when a member faults.
 
 # Rollout state
 
-`tars`, `case` and `kipp` are installed and running k3s. `mother` is not, and has no `hardware-configuration.nix` yet.
+`tars`, `case` and `kipp` are installed and running k3s. `mother` still runs TrueNAS; its `hardware-configuration.nix` was reconstructed from the running system rather than generated, so it needs confirming against `nixos-generate-config` from the installer.
 
-[workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md) carries the rollout order and the table of `TODO` facts each machine has to supply.
+[workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md) carries the rollout order and the `TODO` facts still outstanding.
 
 # Related
 

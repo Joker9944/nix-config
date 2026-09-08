@@ -17,7 +17,8 @@ mkMixinModule "k3s" {
       enable = true;
       role = lib.mkDefault "server";
       tokenFile = config.sops.secrets."k3s/token".path;
-      disable = [
+      # `k3s agent` does not define --disable; passing it there is fatal.
+      disable = lib.optionals (config.services.k3s.role == "server") [
         "traefik"
         "servicelb"
         "local-storage"
