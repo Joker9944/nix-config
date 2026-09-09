@@ -2,6 +2,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 mkMixinModule "k3s" {
@@ -24,6 +25,12 @@ mkMixinModule "k3s" {
         "local-storage"
       ];
     };
+
+    # k3s LookPaths $PATH for nvidia-container-runtime[.cdi] and writes the
+    # matching containerd runtime handlers into its generated config. The
+    # toolkit installs those binaries on no path of its own, so without this
+    # the handlers never appear and runtimeClassName resolves to nothing.
+    systemd.services.k3s.path = lib.optional config.hardware.nvidia-container-toolkit.enable pkgs.nvidia-container-toolkit.tools;
 
     # Longhorn node prerequisites
     services.openiscsi = {

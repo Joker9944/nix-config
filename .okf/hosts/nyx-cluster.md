@@ -37,7 +37,9 @@ Each server also passes `--tls-san=<vip>` through `services.k3s.extraFlags`. Thi
 
 A GTX 1660 SUPER, the only GPU in the cluster. `mother` takes the `nvidia` mixin without `nvidiaCuda`: Jellyfin wants NVENC/NVDEC, which the driver provides, so `cudaSupport` would rebuild the package set for nothing.
 
-`hardware.nvidia-container-toolkit.enable` runs a boot oneshot writing a CDI spec to `/run/cdi/nvidia-container-toolkit.json`, and that is the whole handoff path. k3s only registers an `nvidia` containerd runtime handler when it finds `nvidia-container-runtime` at an FHS location it scans; the toolkit installs no such binary anywhere on the host, so `runtimeClassName: nvidia` resolves to nothing. Workloads must request the device through CDI.
+`hardware.nvidia-container-toolkit.enable` runs a boot oneshot writing a CDI spec to `/run/cdi/nvidia-container-toolkit.json`, declaring `nvidia.com/gpu=0` and `=all`. containerd 2.2, which k3s 1.35 bundles, enables CDI by default over `/var/run/cdi`, so a `cdi.k8s.io/<key>: nvidia.com/gpu=0` pod annotation claims the device with nothing else in place.
+
+For a runtime handler instead: k3s locates runtimes with `exec.LookPath`, so the `k3s` mixin puts `pkgs.nvidia-container-toolkit.tools` on the unit's `PATH` wherever the toolkit is enabled, and k3s emits `nvidia` and `nvidia-cdi` handlers into its generated containerd config. Use `nvidia-cdi` — plain `nvidia` runs in auto mode and falls back to legacy libnvidia-container, which has no FHS driver tree here. k3s creates no `RuntimeClass` object, so that resource is still yours to apply. Do not reach for `services.k3s.containerdConfigTemplate`: nixpkgs writes it to `config.toml.tmpl`, which k3s reads as the v2 generation and downgrades the whole containerd config off v3. The v3 drop-in dir is `/var/lib/rancher/k3s/agent/etc/containerd/config-v3.toml.d/`.
 
 # Remote access
 
