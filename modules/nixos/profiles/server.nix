@@ -5,7 +5,10 @@
   mixins = {
     boot.loader.systemdBoot.enable = true;
 
-    services.openssh.enable = true;
+    services = {
+      openssh.enable = true;
+      ntp.enable = true;
+    };
   };
 
   networking.useNetworkd = true;
