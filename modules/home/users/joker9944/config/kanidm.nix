@@ -2,7 +2,7 @@ _:
 { pkgs-unstable, ... }:
 {
   home.packages = with pkgs-unstable; [
-    kanidm_1_9
+    kanidm_1_11
     openldap
   ];
 
