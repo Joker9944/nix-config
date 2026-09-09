@@ -4,6 +4,7 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 
 ## 2026-09-09
 
+- ZED alerts `chronos` to Gotify natively; the app token is a `zed.rc` command substitution, since zed preserves only `TZ` in the zedlet environment — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - Longhorn node prerequisites (`openiscsi`, `mount.nfs`) belong to the `k3s` mixin — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - longhorn-manager needs host tools at FHS paths; `/usr/bin` symlinks, not the `iscsid` BindPaths workaround — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - `mother` serves NFSv4 only; port 111 is closed, so `showmount` misreports a healthy server — [hosts/nyx-cluster](/hosts/nyx-cluster.md)

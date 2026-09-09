@@ -1,6 +1,7 @@
 abbrs
 Activatable
 appname
+APPTOKEN
 ARGB
 asciidoctor
 Astal
@@ -87,6 +88,7 @@ signingkey
 spicetify
 splitw
 startswith
+STDPATH
 subdirs
 subvolumes
 suspendc
@@ -120,3 +122,4 @@ xrgb
 xwaylandprimary
 yand
 yoffset
+zedlet
