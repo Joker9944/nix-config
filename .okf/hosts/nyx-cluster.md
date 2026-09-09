@@ -63,6 +63,12 @@ Installing them is not enough. longhorn-manager reaches host tools with `nsenter
 
 `mother` exports `/chronos/media-data` over **NFSv4 only** — the `nfs` mixin opens 2049 and nothing else, so rpcbind's 111 is closed and `showmount` reports nothing on a server that is working fine. Clients must not fall back to v3.
 
+# Metrics exposure
+
+Prometheus runs in-cluster and scrapes all four nodes, so any *host* port it reads crosses the LAN and lands on an interface outside `trustedInterfaces` — only the scrape of the node Prometheus itself sits on arrives via `cni0`. Each such port needs its own hole in the `k3s` mixin: `9100` for node-exporter (a hostNetwork DaemonSet), `10249` for kube-proxy. `10250` was already open for the kubelet API, which makes the symptom misleading — cross-node kubelet targets stay up while node-exporter is never once scrapeable, so "kubelet works, therefore the firewall is fine" is the wrong inference.
+
+kube-proxy also binds its metrics to `127.0.0.1` by default, hence `--kube-proxy-arg=metrics-bind-address=0.0.0.0` in the mixin. That flag is ungated, unlike `--disable`: k3s tags it `(agent/flags)` and both subcommands accept it, and `extraFlags` lists from the mixin and from a host concatenate, so it coexists with the per-host `--tls-san`. kube-controller-manager (`10257`), kube-scheduler (`10259`) and etcd (`2381`) stay loopback-only; reaching those needs their own bind-address flags and `--etcd-expose-metrics`, not firewall changes.
+
 # Rollout state
 
 All four are installed and running k3s; TrueNAS is gone. [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md) keeps the order and per-host facts for a rebuild from scratch.

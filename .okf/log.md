@@ -4,6 +4,7 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 
 ## 2026-09-09
 
+- Host metrics ports need explicit firewall holes; kube-proxy also needs `metrics-bind-address=0.0.0.0`, and which control-plane metrics stay loopback-only — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - ZED alerts `chronos` to Gotify natively; the app token is a `zed.rc` command substitution, since zed preserves only `TZ` in the zedlet environment — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - Longhorn node prerequisites (`openiscsi`, `mount.nfs`) belong to the `k3s` mixin — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - longhorn-manager needs host tools at FHS paths; `/usr/bin` symlinks, not the `iscsid` BindPaths workaround — [hosts/nyx-cluster](/hosts/nyx-cluster.md)

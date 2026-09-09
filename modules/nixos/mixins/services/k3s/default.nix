@@ -24,6 +24,10 @@ mkMixinModule "k3s" {
         "servicelb"
         "local-storage"
       ];
+      # kube-proxy defaults its metrics to 127.0.0.1:10249, unreachable by a
+      # scraper on another node. Ungated: kube-proxy runs on every node and k3s
+      # tags --kube-proxy-arg (agent/flags), so servers accept it too.
+      extraFlags = [ "--kube-proxy-arg=metrics-bind-address=0.0.0.0" ];
     };
 
     # k3s LookPaths $PATH for nvidia-container-runtime[.cdi] and writes the
@@ -61,15 +65,20 @@ mkMixinModule "k3s" {
 
     networking.firewall = {
       allowedTCPPorts = [
-        6443
-        10250
-        2379
-        2380
+        6443 # kube-apiserver
+        10250 # kubelet API
+        2379 # etcd client
+        2380 # etcd peer
+        # Metrics. Both bind the host netns rather than a pod IP, so a scrape
+        # from the node Prometheus happens to run on is the only one arriving
+        # over a trusted interface; the other three cross the LAN.
+        9100 # node-exporter
+        10249 # kube-proxy
       ];
-      allowedUDPPorts = [ 8472 ];
+      allowedUDPPorts = [ 8472 ]; # flannel VXLAN
       trustedInterfaces = [
-        "cni0"
-        "flannel.1"
+        "cni0" # pod veth bridge
+        "flannel.1" # VXLAN overlay
       ];
     };
   };
