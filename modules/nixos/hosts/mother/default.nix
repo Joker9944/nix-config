@@ -40,6 +40,11 @@ flake.lib.modules.mkDefaultModule
     };
 
     services = {
+      tailscale = {
+        useRoutingFeatures = "server";
+        extraSetFlags = [ "--advertise-routes=192.168.0.128/25" ];
+      };
+
       k3s = {
         role = "agent";
         serverAddr = "https://192.168.0.20:6443";
