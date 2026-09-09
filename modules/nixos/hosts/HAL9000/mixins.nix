@@ -7,6 +7,8 @@ _: {
       nvidiaCuda.enable = true;
     };
 
+    networking.hosts.enable = true;
+
     programs = {
       ffmpeg.enable = true;
       steam = {
