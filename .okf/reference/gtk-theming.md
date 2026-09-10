@@ -1,12 +1,12 @@
 ---
 type: Reference
 title: GTK theming and adw-gtk3
-description: Why the stock GTK stylesheets cannot be recoloured and adw-gtk3 is therefore mandatory, which toolkits actually need it, why `gtk.gtk4.theme` is the wrong lever for GTK4, and how icon themes are recoloured through Plasma's ColorScheme classes instead.
+description: Why the stock GTK stylesheets cannot be recoloured and adw-gtk3 is therefore mandatory, which toolkits actually need it, why `gtk.gtk4.theme` is the wrong lever for GTK4, why Qt apps borrowing the GTK theme need GSettings schemas on `XDG_DATA_DIRS`, and how icon themes are recoloured through Plasma's ColorScheme classes instead.
 resource: https://github.com/lassekongo83/adw-gtk3
-tags: [reference, gtk, libadwaita, adw-gtk3, nix-schemes, theming]
+tags: [reference, gtk, qt, libadwaita, adw-gtk3, nix-schemes, theming]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-22T00:00:00Z
+  at: 2026-09-10T00:00:00Z
 ---
 
 # Why the theme is mandatory
@@ -99,6 +99,16 @@ Two GTK constructs cannot be written literally in SCSS, which is why adw-colors'
 
 `currentColor` is the only value that must stay a runtime CSS function; everything else is
 precomputed, so GTK's `mix()` never appears and cannot collide with sass's.
+
+# Qt apps borrow the GTK theme
+
+`modules/home/public/gnome/qt-compat.nix` sets `QT_QPA_PLATFORMTHEME=gtk3`, so Qt loads the `qgtk3`
+platform-theme plugin, which initialises GTK inside the app's own process. GTK then wants its own
+GSettings schemas, and nothing supplies them: `wrapGAppsHook` puts `share/gsettings-schemas/<name>`
+on `XDG_DATA_DIRS` for GTK apps, but a Qt app is wrapped by `wrapQtAppsHook` only, and no profile
+here carries a `gschemas.compiled`. The first `g_settings_new` — `org.gtk.Settings.FileChooser`,
+from any file dialog — then aborts the process with `No GSettings schemas are installed on the
+system`. Hence `xdg.systemDirs.data` in that module; `gsettings list-schemas` is the check.
 
 # Icons are a separate mechanism
 

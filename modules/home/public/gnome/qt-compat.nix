@@ -33,5 +33,8 @@ _:
           QT_WAYLAND_DECORATION = "adwaita";
         };
       };
+
+      # The gtk3 platform theme loads GTK in-process, which aborts without its GSettings schemas.
+      xdg.systemDirs.data = [ (pkgs.glib.getSchemaDataDirPath pkgs.gtk3) ];
     };
 }
