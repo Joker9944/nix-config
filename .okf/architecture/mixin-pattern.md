@@ -5,7 +5,7 @@ description: Every reusable module declares one `enable` flag under `options.mix
 tags: [architecture, modules, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-04T00:00:00Z
+  at: 2026-09-11T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -54,7 +54,7 @@ Themes are the same pick-one shape but sit outside both mixin trees, under `cust
 | NixOS mixins | `modules/nixos/mixins/{boot,desktop-environment,display-manager,hardware,networking,programs,services,virtualisation,…}/*.nix` | `modules/nixos/hosts/<hostname>/mixins.nix` |
 | Home-manager mixins | `modules/home/mixins/{programs,services,desktop-environment,pwas}/*.nix` | `modules/home/users/<username>/config/mixins.nix` |
 
-Canonical minimal example: `modules/home/mixins/programs/claude-code/default.nix`. Real-world opt-in files: `modules/nixos/hosts/HAL9000/mixins.nix` (NixOS side) and `modules/home/users/joker9944/config/mixins.nix` (home-manager side).
+Canonical minimal example: `modules/home/mixins/programs/mcp.nix`. Real-world opt-in files: `modules/nixos/hosts/HAL9000/mixins.nix` (NixOS side) and `modules/home/users/joker9944/config/mixins.nix` (home-manager side).
 
 On the NixOS side the bulk of a host's enables comes from its **[profile](profiles.md)** — a role selected by the `profile` string in the flake record — and `modules/nixos/hosts/<host>/mixins.nix` holds only the per-host deltas on top. The home-manager side has no profile layer, so its `mixins.nix` is the full enable list.
 

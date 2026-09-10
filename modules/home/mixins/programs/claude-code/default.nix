@@ -18,64 +18,74 @@ let
   };
 in
 mkMixinModule "claude-code" {
-  programs.claude-code = {
-    enable = true;
+  programs = {
+    claude-code = {
+      enable = true;
 
-    context = ./files/CLAUDE.md;
+      context = ./files/CLAUDE.md;
 
-    enableMcpIntegration = lib.mkDefault config.programs.mcp.enable;
+      enableMcpIntegration = lib.mkDefault config.programs.mcp.enable;
 
-    # Setting `settings` at all makes `~/.claude/settings.json` a read-only store symlink, so
-    # everything `/config` and `/model` would otherwise persist has to live here too.
-    settings = {
-      model = "opus";
-      effortLevel = "xhigh";
-      tui = "fullscreen";
-      skipAutoPermissionPrompt = true;
+      # Setting `settings` at all makes `~/.claude/settings.json` a read-only store symlink, so
+      # everything `/config` and `/model` would otherwise persist has to live here too.
+      settings = {
+        model = "opus";
+        effortLevel = "high";
+        tui = "fullscreen";
+        skipAutoPermissionPrompt = true;
 
-      statusLine = {
-        type = "command";
-        command = lib.getExe statusline;
-        # The reset countdowns are time-based; event-driven updates stall while the session idles.
-        refreshInterval = 60;
+        statusLine = {
+          type = "command";
+          command = lib.getExe statusline;
+          # The reset countdowns are time-based; event-driven updates stall while the session idles.
+          refreshInterval = 60;
+        };
+      };
+
+      plugins = [
+        "${inputs.claude-plugins-official}/plugins/skill-creator"
+        "${inputs.claude-plugins-official}/plugins/code-review"
+        "${inputs.claude-okf-skills}"
+      ];
+
+      lspServers = {
+        nix = {
+          command = lib.getExe pkgs.nil;
+          extensionToLanguage.".nix" = "nix";
+        };
+
+        haskell = {
+          command = lib.getExe' pkgs.haskellPackages.haskell-language-server "haskell-language-server-wrapper";
+          args = [ "--lsp" ];
+          extensionToLanguage = {
+            ".hs" = "haskell";
+            ".lhs" = "haskell";
+          };
+        };
+
+        typescript = {
+          args = [ "--stdio" ];
+          command = lib.getExe pkgs.typescript-language-server;
+          extensionToLanguage = {
+            ".js" = "javascript";
+            ".jsx" = "javascriptreact";
+            ".ts" = "typescript";
+            ".tsx" = "typescriptreact";
+          };
+        };
+
+        cue = {
+          command = lib.getExe pkgs.cuelsp;
+          extensionToLanguage.".cue" = "cue";
+        };
       };
     };
 
-    plugins = [
-      "${inputs.claude-plugins-official}/plugins/skill-creator"
-      "${inputs.claude-plugins-official}/plugins/code-review"
-      "${inputs.claude-okf-skills}"
-    ];
-
-    lspServers = {
-      nix = {
-        command = lib.getExe pkgs.nil;
-        extensionToLanguage.".nix" = "nix";
-      };
-
-      haskell = {
-        command = lib.getExe' pkgs.haskellPackages.haskell-language-server "haskell-language-server-wrapper";
-        args = [ "--lsp" ];
-        extensionToLanguage = {
-          ".hs" = "haskell";
-          ".lhs" = "haskell";
-        };
-      };
-
-      typescript = {
-        args = [ "--stdio" ];
-        command = lib.getExe pkgs.typescript-language-server;
-        extensionToLanguage = {
-          ".js" = "javascript";
-          ".jsx" = "javascriptreact";
-          ".ts" = "typescript";
-          ".tsx" = "typescriptreact";
-        };
-      };
-
-      cue = {
-        command = lib.getExe pkgs.cuelsp;
-        extensionToLanguage.".cue" = "cue";
+    uv = {
+      enable = true;
+      settings = {
+        python-downloads = "never";
+        python-preference = "only-system";
       };
     };
   };
