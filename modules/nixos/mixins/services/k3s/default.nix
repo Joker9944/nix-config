@@ -69,13 +69,14 @@ mkMixinModule "k3s" {
         10250 # kubelet API
         2379 # etcd client
         2380 # etcd peer
-        # Metrics. Both bind the host netns rather than a pod IP, so a scrape
-        # from the node Prometheus happens to run on is the only one arriving
-        # over a trusted interface; the other three cross the LAN.
         9100 # node-exporter
         10249 # kube-proxy
+        7946 # metallb peering
       ];
-      allowedUDPPorts = [ 8472 ]; # flannel VXLAN
+      allowedUDPPorts = [
+        8472 # flannel VXLAN
+        7946 # metallb gossip
+      ];
       trustedInterfaces = [
         "cni0" # pod veth bridge
         "flannel.1" # VXLAN overlay
