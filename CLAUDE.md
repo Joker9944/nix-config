@@ -4,11 +4,13 @@ This is the entry point. It tells you how to *behave* in this repository; the *k
 
 ## Before you start
 
-**Read [`.okf/index.md`](.okf/index.md) before acting on any task that involves more than one file, touches architecture, or where you'd otherwise rely on recall.**
+**Consult the bundle before acting on any task that involves more than one file, touches architecture, or where you'd otherwise rely on recall.**
 
-Follow links only to the concepts your task actually needs — progressive disclosure, not a full preload. Then proceed.
+Search first — `search_concepts` for the topic, `read_concept` on the hits, `get_neighbors` for what a concept links to. Read [`.okf/index.md`](.okf/index.md) when you need the map rather than an answer; it links categories, so a concept is three reads away. Pull only what the task needs — progressive disclosure, not a full preload.
 
-This is a gate, not a guideline. If you haven't opened the index, open it now. Do not rely on training-data recall about this repo's architecture, patterns, or decisions — that knowledge lives in the bundle, not in your weights.
+Those tools are the `okf` plugin's MCP server. If they aren't in your context it isn't running: read `.okf/` with Read and Grep instead.
+
+This is a gate, not a guideline. Do not rely on training-data recall about this repo's architecture, patterns, or decisions — that knowledge lives in the bundle, not in your weights.
 
 ## Behavioral contract
 

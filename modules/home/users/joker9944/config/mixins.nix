@@ -24,8 +24,8 @@ _: {
       mcp.enable = true;
       mpv.enable = true;
       neovim.enable = false;
-      nextcloud-client.enable = true;
       nh.enable = true;
+      opencloud-desktop.enable = true;
       pandoc.enable = true;
       papers.enable = true;
       signal.enable = true;

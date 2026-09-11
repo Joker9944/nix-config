@@ -60,6 +60,9 @@ let
       name = "signal";
       package = "signal-desktop";
     }
+    {
+      name = "opencloud-desktop";
+    }
   ];
 in
 {
