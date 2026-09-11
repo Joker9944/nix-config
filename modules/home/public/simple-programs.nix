@@ -8,19 +8,19 @@ _:
 let
   programs = [
     {
-      name = "gnome-text-editor";
+      package = "gnome-text-editor";
     }
     {
-      name = "loupe";
+      package = "loupe";
     }
     {
-      name = "nextcloud-client";
+      package = "nextcloud-client";
     }
     {
-      name = "papers";
+      package = "papers";
     }
     {
-      name = "spotify";
+      package = "spotify";
     }
     {
       name = "teamspeak";
@@ -31,10 +31,10 @@ let
       package = "telegram-desktop";
     }
     {
-      name = "wxmaxima";
+      package = "wxmaxima";
     }
     {
-      name = "xournalpp";
+      package = "xournalpp";
     }
     {
       name = "freelens";
@@ -45,23 +45,23 @@ let
       package = "zoom-us";
     }
     {
-      name = "saber";
+      package = "saber";
     }
     {
-      name = "zap";
+      package = "zap";
     }
     {
-      name = "systemctl-tui";
+      package = "systemctl-tui";
     }
     {
-      name = "grimblast";
+      package = "grimblast";
     }
     {
       name = "signal";
       package = "signal-desktop";
     }
     {
-      name = "opencloud-desktop";
+      package = "opencloud-desktop";
     }
   ];
 in
@@ -69,8 +69,8 @@ in
   options.programs = lib.pipe programs [
     (lib.map (
       {
-        name,
-        package ? name,
+        name ? package,
+        package,
       }:
       {
         inherit name;
@@ -90,8 +90,8 @@ in
   config.home.packages = lib.pipe programs [
     (lib.map (
       {
-        name,
-        ...
+        name ? package,
+        package,
       }:
       let
         cfg = config.programs.${name};
