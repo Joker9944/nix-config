@@ -44,6 +44,8 @@ in
     };
   };
 
+  programs.localsend.enable = true;
+
   # These serve the home-manager side, which reuses the system nixpkgs config and only exists on
   # graphical hosts, so both are gated on it — a server has no home-manager and needs neither.
   custom.nixpkgsCompat.allowUnfreePackages = lib.mkIf config.mixins.programs.home-manager.enable [
