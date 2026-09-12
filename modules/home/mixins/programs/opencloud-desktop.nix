@@ -14,7 +14,10 @@ mkMixinModule "opencloud-desktop" {
   xdg.userDirs = {
     enable = true;
 
-    extraConfig.NOTES = "${config.home.homeDirectory}/Notes";
+    extraConfig = {
+      GAMES = "${config.home.homeDirectory}/Games";
+      NOTES = "${config.home.homeDirectory}/Notes";
+    };
   };
 
   home =
@@ -27,6 +30,7 @@ mkMixinModule "opencloud-desktop" {
         config.xdg.userDirs.music
         config.xdg.userDirs.pictures
         config.xdg.userDirs.videos
+        config.xdg.userDirs.extraConfig.GAMES
         config.xdg.userDirs.extraConfig.NOTES
       ];
     in
