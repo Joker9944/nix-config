@@ -29,7 +29,7 @@ mkMixinModule "audiobookshelf" {
 
         desktopEntry = {
           categories = lib.toList "AudioVideo";
-          icon = ./icon.png;
+          icon = ./files/icon.png;
         };
       };
     };

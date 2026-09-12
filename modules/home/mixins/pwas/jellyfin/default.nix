@@ -29,9 +29,17 @@ mkMixinModule "jellyfin" {
 
         desktopEntry = {
           categories = lib.toList "AudioVideo";
-          icon = ./icon.png;
+          icon = ./files/icon.png;
         };
       };
     };
   };
+
+  wayland.windowManager.hyprland.settings.window_rule = [
+    {
+      name = "pwa-jellyfin-opaque";
+      match.initial_class = "FFPWA-${siteId}";
+      opaque = true;
+    }
+  ];
 }

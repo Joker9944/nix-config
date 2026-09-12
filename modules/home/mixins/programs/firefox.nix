@@ -16,11 +16,10 @@ mkMixinModule "firefox" {
       };
     };
 
-    firefoxpwa.package = lib.mkDefault (
-      pkgs.firefoxpwa.overrideAttrs (prev: {
-        libs = "${config.programs.firefox.finalPackage.libs}:${prev.libs}";
-      })
-    );
+    firefoxpwa.package = pkgs.wrapFirefox (pkgs.firefoxpwa-unwrapped.overrideAttrs (prev: {
+      passthru =
+        prev.passthru // lib.filterAttrs (name: _: lib.hasSuffix "Support" name) pkgs.firefox-unwrapped;
+    })) { };
   };
 
   xdg.mimeApps.custom.apps.default = [

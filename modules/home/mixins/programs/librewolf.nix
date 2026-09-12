@@ -42,9 +42,15 @@ mkMixinModule "librewolf" {
       };
     };
 
-    firefoxpwa.package = pkgs.firefoxpwa-unwrapped.override {
-      firefoxRuntime = pkgs.librewolf-unwrapped;
-    };
+    firefoxpwa.package = pkgs.wrapFirefox (
+      (pkgs.firefoxpwa-unwrapped.override {
+        firefoxRuntime = pkgs.librewolf-unwrapped;
+      }).overrideAttrs
+      (prev: {
+        passthru =
+          prev.passthru // lib.filterAttrs (name: _: lib.hasSuffix "Support" name) pkgs.librewolf-unwrapped;
+      })
+    ) { };
   };
 
   custom.browser-dispatcher.defaultBrowserCommand = "librewolf --name librewolf \"$URL\"";
