@@ -11,8 +11,14 @@ mkMixinModule "kitty" {
     keybindings."ctrl+shift+d" = "new_window_with_cwd";
   };
 
-  xdg.terminal-exec = {
-    enable = true;
-    settings.default = [ "kitty.desktop" ];
+  xdg = {
+    terminal-exec = {
+      enable = true;
+      settings.default = [ "kitty.desktop" ];
+    };
+
+    mimeApps.custom.apps.default = [
+      "${config.programs.kitty.package}/share/applications/kitty-open.desktop"
+    ];
   };
 }
