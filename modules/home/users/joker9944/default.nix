@@ -49,7 +49,7 @@ in
 
   programs = {
     freelens.enable = true;
-    saber.enable = true;
+    butterfly.enable = true;
 
     scrcpy = {
       enable = true;

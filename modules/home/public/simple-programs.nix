@@ -63,6 +63,9 @@ let
     {
       package = "opencloud-desktop";
     }
+    {
+      package = "butterfly";
+    }
   ];
 in
 {
