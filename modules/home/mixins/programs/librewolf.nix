@@ -46,10 +46,10 @@ mkMixinModule "librewolf" {
       (pkgs.firefoxpwa-unwrapped.override {
         firefoxRuntime = pkgs.librewolf-unwrapped;
       }).overrideAttrs
-      (prev: {
-        passthru =
-          prev.passthru // lib.filterAttrs (name: _: lib.hasSuffix "Support" name) pkgs.librewolf-unwrapped;
-      })
+        (prev: {
+          passthru =
+            prev.passthru // lib.filterAttrs (name: _: lib.hasSuffix "Support" name) pkgs.librewolf-unwrapped;
+        })
     ) { };
   };
 
