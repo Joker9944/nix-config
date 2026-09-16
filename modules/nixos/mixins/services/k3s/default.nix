@@ -5,6 +5,10 @@
   pkgs,
   ...
 }:
+let
+  nvidiaGpu = config.hardware.nvidia-container-toolkit.enable;
+  nfs = config.services.nfs.server.enable;
+in
 mkMixinModule "k3s" {
   imports = [ inputs.sops-nix.nixosModules.sops ];
 
@@ -28,13 +32,17 @@ mkMixinModule "k3s" {
       # scraper on another node. Ungated: kube-proxy runs on every node and k3s
       # tags --kube-proxy-arg (agent/flags), so servers accept it too.
       extraFlags = [ "--kube-proxy-arg=metrics-bind-address=0.0.0.0" ];
+
+      nodeLabel =
+        (lib.optional nvidiaGpu "nvidia.com/gpu.present=true")
+        ++ (lib.optional nfs "vonarx.online/nfs-host=true");
     };
 
     # k3s LookPaths $PATH for nvidia-container-runtime[.cdi] and writes the
     # matching containerd runtime handlers into its generated config. The
     # toolkit installs those binaries on no path of its own, so without this
     # the handlers never appear and runtimeClassName resolves to nothing.
-    systemd.services.k3s.path = lib.optional config.hardware.nvidia-container-toolkit.enable pkgs.nvidia-container-toolkit.tools;
+    systemd.services.k3s.path = lib.optional nvidiaGpu pkgs.nvidia-container-toolkit.tools;
 
     # Longhorn node prerequisites
     services.openiscsi = {

@@ -48,9 +48,6 @@ flake.lib.modules.mkDefaultModule
       k3s = {
         role = "agent";
         serverAddr = "https://192.168.0.20:6443";
-        # Capacity is not labelled: the kubelet already publishes cores and
-        # memory as node status, and a hand-kept copy only drifts.
-        nodeLabel = [ "vonarx.online/nfs-host=true" ];
         nodeTaint = [ "vonarx.online/reserved=storage:NoSchedule" ];
       };
 
