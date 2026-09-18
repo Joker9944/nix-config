@@ -2,6 +2,6 @@
 mkMixinModule "nfs" {
   services.nfs.server.enable = true;
 
-  # NFSv4 only needs 2049; exports themselves are a host delta.
-  networking.firewall.allowedTCPPorts = [ 2049 ];
+  # No firewall rule here. NFSv4 needs only 2049, but who may reach it is the
+  # same decision as who appears in the export ACL, and exports are a host delta.
 }

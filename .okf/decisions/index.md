@@ -18,3 +18,4 @@ Load-bearing choices behind the shape of the repo. Consult before proposing stru
 * [desktop-files-at-build-time](desktop-files-at-build-time.md) — Desktop-file contents are read by derivations, never during evaluation; `[Added Associations]` is not reproduced.
 * [no-ifd](no-ifd.md) — `allow-import-from-derivation = false` on the machines and in CI; evaluation never builds.
 * [dual-class-modules](dual-class-modules.md) — A module for both trees is one feature directory whose tree-specific halves dispatch on `_class`; the dendritic pattern is not adopted.
+* [firewall-source-scoping](firewall-source-scoping.md) — Cluster ports are scoped to their peers in `extraCommands`; the firewall stays on the iptables backend.

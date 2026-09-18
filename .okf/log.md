@@ -2,6 +2,15 @@
 
 An index of bundle changes, not a narrative. One line each: what changed and the concept that holds the detail, in the form `CLAUDE.md` rule 3 sets. Rationale lives in the commit message, tied to the diff, or in a [decision](/decisions/index.md) — not here.
 
+## 2026-09-16
+
+- Cluster ports are scoped to their peers via `extraCommands`, not opened to every source; `6443` and etcd are server-only and kube-proxy binds the node address — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- Why source scoping stays on the iptables backend, and why the pod CIDR is in the allow-set — [decisions/firewall-source-scoping](/decisions/firewall-source-scoping.md)
+- `flake.lib.network` holds `mkAllowFrom` and the `nyxNodes` address map — [architecture/custom-lib](/architecture/custom-lib.md)
+- `mother` owns its NFS firewall rule and export ACL; the `nfs` mixin opens no port — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- Corrected the per-host NIC names behind the unset `vip_interface` — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- tailscaled's `ts-input` accept preempts `nixos-fw`, so firewall rules never apply to tailnet traffic; bind addresses are the only control there — [decisions/firewall-source-scoping](/decisions/firewall-source-scoping.md)
+
 ## 2026-09-11
 
 - `modules/home/mixins/programs/mcp.nix` is the canonical minimal mixin; the claude-code one now carries package wrappers — [architecture/mixin-pattern](/architecture/mixin-pattern.md)

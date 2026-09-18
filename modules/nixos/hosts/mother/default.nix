@@ -54,12 +54,6 @@ flake.lib.modules.mkDefaultModule
       # chronos is 8 CMR HDDs plus an Optane SLOG; periodic trim has nothing
       # meaningful to reclaim. The btrfs root keeps services.fstrim.
       zfs.trim.enable = false;
-
-      # The path is the pool default: no dataset sets a local mountpoint, so an
-      # import without an altroot mounts at /chronos/* (TrueNAS used altroot=/mnt).
-      nfs.server.exports = ''
-        /chronos/media-data  192.168.0.0/23(sec=sys,rw,no_subtree_check)
-      '';
     };
 
     system.stateVersion = "26.05";

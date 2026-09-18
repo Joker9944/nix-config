@@ -5,7 +5,7 @@ description: Four headless x86_64-linux machines running k3s — tars/case/kipp 
 tags: [host, server, k3s, zfs, longhorn]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-09T00:00:00Z
+  at: 2026-09-16T00:00:00Z
 sources:
   - id: longhorn-2166
     resource: https://github.com/longhorn/longhorn/issues/2166
@@ -27,7 +27,7 @@ All four select `profile = "server"` (see [profiles](/architecture/profiles.md))
 
 `tars` bootstraps the cluster and deploys kube-vip as an auto-deploy manifest (`services.k3s.manifests.kube-vip.content`, a list of Kubernetes objects). It claims **192.168.0.20** in ARP mode — the address the Talos cluster used — so `case`/`kipp`/`mother` register against a `serverAddr` that survives losing `tars`.
 
-The kube-vip image tag is a literal at the top of `modules/nixos/hosts/tars/default.nix`. `vip_interface` is deliberately left unset: the DaemonSet is one object scheduled onto every control-plane node, and the wired interface is not named the same on each (`enp2s0` on tars and case, `eno1` on kipp), so no single literal is correct. kube-vip then binds the default-route interface, which on each node is the one holding the VIP's own subnet.
+The kube-vip image tag is a literal at the top of `modules/nixos/hosts/tars/default.nix`. `vip_interface` is deliberately left unset: the DaemonSet is one object scheduled onto every control-plane node, and the wired interface is not named the same on each (`enp2s0` on tars, an `en*` glob on case and kipp), so no single literal is correct. kube-vip then binds the default-route interface, which on each node is the one holding the VIP's own subnet.
 
 Each server also passes `--tls-san=<vip>` through `services.k3s.extraFlags`. This is a guard, not the join mechanism: dynamiclistener already learns SANs from incoming requests, so a cert reissued while joiners are connecting picks the VIP up on its own. The flag is what makes it declarative — a cert regenerated before anything asks for the VIP (a cold bootstrap where the first server comes up alone) would otherwise omit it and lock the joiners out. The flag is per host, not in the k3s mixin — it is environment-specific, and `k3s agent` does not define it, so `mother` must not receive it.
 
@@ -49,6 +49,8 @@ Two halves are outside nix. The route must be **approved** in the Tailscale admi
 
 Linux clients ignore subnet routes unless told otherwise, so [wintermute](wintermute.md) carries the matching `useRoutingFeatures = "client"` + `--accept-routes`. Phones and macOS accept by default.
 
+The tailnet is also the *only* way in to `6443`: the firewall scopes the API server to the node addresses plus the tailnet CGNAT range, so `kubectl` from a desktop on the cluster LAN is refused. [HAL9000](HAL9000.md) is on a different subnet entirely and only ever reached the cluster this way.
+
 # Storage
 
 Disks come from the `server-longhorn-v1` [disko template](/architecture/custom-lib.md): no LUKS, an ESP, an **optional** dedicated plain-xfs `/var/lib/longhorn`, then btrfs `root`/`home`/`nix`. It is `size`-based rather than `end`-based like the desktop templates, and the 100 % btrfs partition auto-sorts last under disko's priority 9001. `mkDiskoLayout` carries `longhorn = null` in its size defaults, so the partition disappears once a dedicated Longhorn disc lands and the mount moves to a sibling disk block.
@@ -61,13 +63,28 @@ Longhorn's node prerequisites sit in the `k3s` mixin so every node gets them: `s
 
 Installing them is not enough. longhorn-manager reaches host tools with `nsenter <host ns> <tool>`, which keeps the *container's* PATH — and no directory on that PATH exists here — while its RWX path hardcodes `/usr/bin` outright[^longhorn-2166]. The mixin therefore symlinks `iscsiadm`, `mount`, `umount` and the NFS mount helpers into `/usr/bin`, the one FHS directory NixOS already populates (`env`), which satisfies both. Without them the manager crashloops on `exit status 127` naming a tool that is in fact installed — and a PATH-only workaround, such as giving `iscsid` a private mount namespace with `BindPaths`, clears that crash while leaving RWX broken.
 
-`mother` exports `/chronos/media-data` over **NFSv4 only** — the `nfs` mixin opens 2049 and nothing else, so rpcbind's 111 is closed and `showmount` reports nothing on a server that is working fine. Clients must not fall back to v3.
+`mother` exports `/chronos/media-data` over **NFSv4 only** — the `nfs` mixin opens 2049 and nothing else, so rpcbind's 111 is closed and `showmount` reports nothing on a server that is working fine. Clients must not fall back to v3. Export ACL and firewall are both generated from the node list, so only the four nodes can mount it and neither list can drift from the other.
 
-# Metrics exposure
+# Firewall exposure
 
-Prometheus runs in-cluster and scrapes all four nodes, so any *host* port it reads crosses the LAN and lands on an interface outside `trustedInterfaces` — only the scrape of the node Prometheus itself sits on arrives via `cni0`. Each such port needs its own hole in the `k3s` mixin: `9100` for node-exporter (a hostNetwork DaemonSet), `10249` for kube-proxy. `10250` was already open for the kubelet API, which makes the symptom misleading — cross-node kubelet targets stay up while node-exporter is never once scrapeable, so "kubelet works, therefore the firewall is fine" is the wrong inference.
+Nothing the cluster needs goes in `allowedTCPPorts` — that opens a port to every source on every interface, and each of these has a known set of peers. The `k3s` mixin builds `networking.firewall.extraCommands` from `flake.lib.network.mkAllowFrom` instead, one `-m multiport` rule per source and protocol. `cni0` and `flannel.1` stay trusted interfaces, so pod-local traffic short-circuits ahead of all of it.
 
-kube-proxy also binds its metrics to `127.0.0.1` by default, hence `--kube-proxy-arg=metrics-bind-address=0.0.0.0` in the mixin. That flag is ungated, unlike `--disable`: k3s tags it `(agent/flags)` and both subcommands accept it, and `extraFlags` lists from the mixin and from a host concatenate, so it coexists with the per-host `--tls-san`. kube-controller-manager (`10257`), kube-scheduler (`10259`) and etcd (`2381`) stay loopback-only; reaching those needs their own bind-address flags and `--etcd-expose-metrics`, not firewall changes.
+| Ports | Sources |
+|---|---|
+| tcp 7946, udp 7946 + 8472 | nodes — metallb memberlist, flannel VXLAN |
+| tcp 10250, 9100, 10249 | nodes + `10.42.0.0/16` — kubelet API, node-exporter, kube-proxy |
+| tcp 6443, servers only | nodes + `100.64.0.0/10` |
+| tcp 2379 + 2380, servers only | nodes |
+
+The table governs the **LAN path only**. Nothing arriving on `tailscale0` is filtered by `networking.firewall` at all, so a wildcard-bound port answers any tailnet peer whatever the rules say — see [decisions/firewall-source-scoping](/decisions/firewall-source-scoping.md).
+
+The node addresses are `flake.lib.network.nyxNodes`, not a mixin option: every node needs the whole set rather than its own entry, and a host that enables the mixin without an entry there fails at eval. `mother` reads the same list for its NFS rule and export ACL. The `nfs` mixin itself opens nothing — who may reach 2049 is the same decision as who appears in the export ACL, and exports are a host delta.
+
+Prometheus runs in-cluster and scrapes all four nodes, so any *host* port it reads crosses the LAN and lands on an interface outside `trustedInterfaces` — only the scrape of the node Prometheus itself sits on arrives via `cni0`. Flannel's `ipMasq` SNATs those packets to the sending node's address, so the node set alone carries the scrapes; the pod CIDR entry is redundant insurance rather than load-bearing. `10250` is reachable for the kubelet API anyway, which makes the symptom misleading — cross-node kubelet targets stay up while node-exporter is never once scrapeable, so "kubelet works, therefore the firewall is fine" is the wrong inference.
+
+kube-proxy binds its metrics to `127.0.0.1` by default, hence `--kube-proxy-arg=metrics-bind-address=<node address>` in the mixin — the node address rather than `0.0.0.0` keeps the listener off `tailscale0` and every other interface. That flag is ungated, unlike `--disable`: k3s tags it `(agent/flags)` and both subcommands accept it, and `extraFlags` lists from the mixin and from a host concatenate, so it coexists with the per-host `--tls-san`. kube-controller-manager (`10257`), kube-scheduler (`10259`) and etcd (`2381`) stay loopback-only; reaching those needs their own bind-address flags and `--etcd-expose-metrics`, not firewall changes.
+
+Why `extraCommands` on the iptables backend rather than nftables' `extraInputRules` is in [decisions/firewall-source-scoping](/decisions/firewall-source-scoping.md).
 
 # Rollout state
 

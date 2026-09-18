@@ -137,7 +137,7 @@ flake.lib.modules.mkDefaultModule
                       }
                       # vip_interface is deliberately unset. This DaemonSet runs on
                       # every control-plane node and the wired interface differs per
-                      # machine (enp2s0 on tars/case, eno1 on kipp), so no single
+                      # machine (enp2s0 on tars, an en* glob on case and kipp), so no single
                       # literal is correct. kube-vip then binds the default-route
                       # interface, which on each node is the one holding the VIP subnet.
                       {
