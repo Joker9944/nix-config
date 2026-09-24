@@ -8,15 +8,22 @@ let
 in
 mkHyprlandModule {
   wayland.windowManager.hyprland.settings = {
+    workspace_rule = [
+      {
+        workspace = "name:gaming";
+        layout = "monocle";
+        decorate = false;
+      }
+    ];
+
     window_rule = lib.map (regex: {
       name = "gaming-${regex}";
       match.class = regex;
       content = "game";
-      float = true;
-      decorate = false;
       opaque = true;
       immediate = true;
       suppress_event = "";
+      workspace = "name:gaming";
     }) regexes;
 
     config = {
