@@ -24,11 +24,28 @@ mkMixinModule "vscodium" {
         ]
       );
 
-      vscodeExtensions =
-        inputs.nix-vscode-extensions.extensions.${pkgs-unstable.stdenv.hostPlatform.system}.forVSCodeVersion
-          pkgs-unstable.vscodium.vscodeVersion;
+      inherit (inputs.nix-vscode-extensions.extensions.${pkgs-unstable.stdenv.hostPlatform.system})
+        forVSCodeVersion
+        ;
+
+      vscodeExtensions = forVSCodeVersion pkgs-unstable.vscodium.vscodeVersion;
 
       inherit (vscodeExtensions) open-vsx-release;
+
+      # HACK open-vsx release 1.7.8 declares `engines.vscode = "^1.138.0"`, ahead of any
+      # released VS Code, so `forVSCodeVersion` drops the attribute entirely. Pin the last release
+      # this vscodium can actually load; drop this once upstream corrects the manifest.
+      intellij-idea-keybindings = pkgs-unstable.vscode-utils.buildVscodeMarketplaceExtension {
+        mktplcRef = {
+          publisher = "k--kato"; # cSpell:words k--kato
+          name = "intellij-idea-keybindings";
+          version = "1.7.7";
+        };
+        vsix = pkgs-unstable.fetchurl {
+          url = "https://open-vsx.org/api/k--kato/intellij-idea-keybindings/1.7.7/file/k--kato.intellij-idea-keybindings-1.7.7.vsix";
+          hash = "sha256-YJsL2vQWmpNfCzjpzHnlFDSqnmjaQVfRuRgOg5/Is+g=";
+        };
+      };
 
       commonProfiles = [
         {
@@ -50,10 +67,10 @@ mkMixinModule "vscodium" {
             "telemetry.feedback.enabled" = false;
           };
 
-          extensions = with open-vsx-release; [
-            k--kato.intellij-idea-keybindings # cSpell:words k--kato
-            editorconfig.editorconfig
-            mkhl.direnv
+          extensions = [
+            intellij-idea-keybindings
+            open-vsx-release.editorconfig.editorconfig
+            open-vsx-release.mkhl.direnv
           ];
         }
         {

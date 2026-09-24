@@ -5,7 +5,7 @@ description: How to rebuild NixOS and home-manager from this flake, via nh or th
 tags: [workflow, build, nixos, home-manager]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-08T00:00:00Z
+  at: 2026-09-24T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -70,7 +70,7 @@ The configuration key format is `<username>@<hostname>`; `nh` derives it from th
 
 # Checks and dry runs
 
-* `nix flake check` — runs the full `checks.<system>.*` set: pre-commit hooks (see [formatting-and-cspell](formatting-and-cspell.md)) and lib tests.
+* `nix flake check` — runs the full `checks.<system>.*` set: pre-commit hooks (see [formatting-and-cspell](formatting-and-cspell.md)), `libRests`, and `evalConfigurations`.
 * `nix run .#test-lib` — runs just the lib tests (`tests/lib/`).
 
 # Related

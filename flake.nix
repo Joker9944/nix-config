@@ -206,6 +206,18 @@
               inherit (inputs.util-lib.lib) libUtil;
               flake = self;
             };
+
+            evalConfigurations =
+              let
+                forSystem = lib.filterAttrs (_: cfg: cfg.pkgs.stdenv.hostPlatform.system == system);
+                drvPaths =
+                  lib.mapAttrsToList (name: drv: "${name} ${builtins.unsafeDiscardStringContext drv.drvPath}")
+                    (
+                      lib.mapAttrs (_: cfg: cfg.config.system.build.toplevel) (forSystem self.nixosConfigurations)
+                      // lib.mapAttrs (_: cfg: cfg.activationPackage) (forSystem self.homeConfigurations)
+                    );
+              in
+              pkgs.writeText "eval-configurations" (lib.concatLines drvPaths);
           };
 
           formatter =
