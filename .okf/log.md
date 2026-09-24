@@ -2,6 +2,10 @@
 
 An index of bundle changes, not a narrative. One line each: what changed and the concept that holds the detail, in the form `CLAUDE.md` rule 3 sets. Rationale lives in the commit message, tied to the diff, or in a [decision](/decisions/index.md) — not here.
 
+## 2026-09-20
+
+- `layer_rule` cannot override a layer surface's input region; `hyprctl keyword` is registered but refuses under the lua parser — [architecture/hyprland-lua-config](/architecture/hyprland-lua-config.md)
+
 ## 2026-09-16
 
 - Cluster ports are scoped to their peers via `extraCommands`, not opened to every source; `6443` and etcd are server-only and kube-proxy binds the node address — [hosts/nyx-cluster](/hosts/nyx-cluster.md)

@@ -5,7 +5,7 @@ description: The hyprland tree emits `hyprland.lua`, not `hyprland.conf`. Docume
 tags: [architecture, hyprland, home-manager, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-04T00:00:00Z
+  at: 2026-09-20T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -34,6 +34,10 @@ emits a raw lua expression. See [custom-lib](custom-lib.md).
 the repo convention, and re-declaring an existing name updates that rule rather than
 registering a second one.
 
+`layer_rule` effects are render and stacking only. A layer surface's input region is set by
+the client, and Hyprland has no rule that overrides it — a layer-shell panel that swallows
+clicks has to be fixed in the client (for wayneko, `--follow-pointer false`).
+
 Global window translucency comes from `mixins.desktopEnvironment.hyprland.style.opacity`,
 which feeds `decoration.active_opacity` / `inactive_opacity` — so *every* window is
 translucent by default and exempting one is a per-window rule, not a style change.
@@ -58,10 +62,10 @@ hyprctl getprop "address:$ADDR" <effect>               # it applied to a live wi
 
 # Runtime control is `eval`, not `keyword`
 
-`hyprctl keyword` **does not exist** under the lua config manager — the command is not
-registered and returns `unknown request`. Effectively every wiki example and every recalled
-snippet reaches for it, so this is the trap: it is not a syntax problem to work around, the
-verb is gone. The replacements are `hyprctl eval` / `hyprctl repl`, which evaluate lua
+`hyprctl keyword` **does not work** under the lua config manager — it is still registered,
+but refuses with `keyword can't work with non-legacy parsers. Use eval.` Effectively every
+wiki example and every recalled snippet reaches for it, so this is the trap: it is not a
+syntax problem to work around, the verb is inert. The replacements are `hyprctl eval` / `hyprctl repl`, which evaluate lua
 against the live config, and `hyprctl dispatch`, which under lua is a thin wrapper for
 `hl.dispatch(…)`.
 
