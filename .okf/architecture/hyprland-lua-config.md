@@ -49,7 +49,9 @@ Every bind interpolates `binds.mods`
 modifier string. Every bind passes `description`; a future cheatsheet reads it. Flags spell the
 scheme's dedicated-key behavior: `locked = true` for chords that must work on the lock screen,
 `repeating = true` for analog hold actions. Anything long-running a bind starts goes through
-`cfg.mkAppCommand` / `cfg.mkAppEntryCommand` — see [uwsm-session](uwsm-session.md).
+`cfg.mkAppCommand` / `cfg.mkAppEntryCommand` — see [uwsm-session](uwsm-session.md). App summon
+workspaces don't hand-write the bind/workspace_rule/window_rule triple: they compose through
+`cfg.mkAppWorkspace`, with `silent` reserved for autostarted apps.
 
 # Rule keys are validated at runtime, not at build time
 

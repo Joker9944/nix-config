@@ -1,4 +1,4 @@
-{ mkMixinModule, flake, ... }:
+{ mkMixinModule, ... }:
 {
   lib,
   config,
@@ -9,7 +9,6 @@ mkMixinModule "telegram" {
     let
       inherit (config.programs.telegram) package;
       cfg = config.mixins.desktopEnvironment.hyprland;
-      workspace = "telegram";
     in
     {
       programs.telegram.enable = true;
@@ -18,48 +17,28 @@ mkMixinModule "telegram" {
         "${package}/share/applications/org.telegram.desktop.desktop"
       ];
 
-      wayland.windowManager.hyprland.settings = {
-        bind =
-          let
-            inherit (config.mixins.desktopEnvironment.hyprland.binds) mods;
-            inherit (flake.lib.hyprland) mkLuaCall;
-            inherit (lib.generators) mkLuaInline;
-          in
-          [
-            (mkLuaCall [
-              "${mods.app} + T"
-              (mkLuaInline "hl.dsp.workspace.toggle_special(\"${workspace}\")")
-              { description = "toggle telegram special workspace"; }
-            ])
+      wayland.windowManager.hyprland.settings = lib.mkMerge [
+        (cfg.mkAppWorkspace {
+          id = "telegram";
+          class = "org.telegram.desktop";
+          launch = cfg.mkAppEntryCommand {
+            inherit package;
+            name = "org.telegram.desktop.desktop";
+          };
+          silent = true;
+        })
+        {
+          window_rule = [
+            {
+              name = "telegram-media";
+              match = {
+                class = "org.telegram.desktop";
+                title = "Media viewer";
+              };
+              content = "photo";
+            }
           ];
-
-        workspace_rule = [
-          {
-            workspace = "special:${workspace}";
-            layout = "scrolling";
-            on_created_empty = cfg.mkAppEntryCommand {
-              inherit package;
-              name = "org.telegram.desktop.desktop";
-            };
-          }
-        ];
-
-        window_rule = [
-          {
-            name = "telegram";
-            match.class = "org.telegram.desktop";
-            workspace = "special:${workspace} silent";
-          }
-          {
-            name = "telegram-media";
-            match = {
-              class = "org.telegram.desktop";
-              title = "Media viewer";
-            };
-            content = "photo";
-            float = true;
-          }
-        ];
-      };
+        }
+      ];
     };
 }

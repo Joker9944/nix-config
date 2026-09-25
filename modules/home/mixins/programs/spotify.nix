@@ -1,11 +1,9 @@
 {
   mkMixinModule,
-  flake,
   inputs,
   ...
 }:
 {
-  lib,
   config,
   pkgs-unstable,
   ...
@@ -25,39 +23,12 @@ mkMixinModule "spotify" {
   wayland.windowManager.hyprland.settings =
     let
       cfg = config.mixins.desktopEnvironment.hyprland;
-      workspace = "spotify";
     in
-    {
-      bind =
-        let
-          inherit (config.mixins.desktopEnvironment.hyprland.binds) mods;
-          inherit (flake.lib.hyprland) mkLuaCall;
-          inherit (lib.generators) mkLuaInline;
-        in
-        [
-          (mkLuaCall [
-            "${mods.app} + S"
-            (mkLuaInline "hl.dsp.workspace.toggle_special(\"${workspace}\")")
-            { description = "toggle spotify special workspace"; }
-          ])
-        ];
-
-      workspace_rule = [
-        {
-          workspace = "special:${workspace}";
-          layout = "scrolling";
-          on_created_empty = cfg.mkAppEntryCommand {
-            package = config.programs.spicetify.spotifyPackage;
-          };
-        }
-      ];
-
-      window_rule = [
-        {
-          name = "spotify";
-          match.class = "Spotify";
-          workspace = "special:${workspace}";
-        }
-      ];
+    cfg.mkAppWorkspace {
+      id = "spotify";
+      class = "Spotify";
+      launch = cfg.mkAppEntryCommand {
+        package = config.programs.spicetify.spotifyPackage;
+      };
     };
 }

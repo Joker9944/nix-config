@@ -45,6 +45,47 @@ mkDefaultHyprlandModule { dir = ./.; } {
           where an entry ID would not be executable.
         '';
       };
+
+      mkAppWorkspace = mkOption {
+        type = types.functionTo types.attrs;
+        default =
+          {
+            id,
+            # the scheme keys app-tier letters to the app's initial; deviations override
+            key ? lib.toUpper (lib.substring 0 1 id),
+            class,
+            launch,
+            # only for autostarted apps, so login assignment doesn't summon the workspace
+            silent ? false,
+          }:
+          {
+            bind = [
+              (flake.lib.hyprland.mkLuaCall [
+                "${cfg.binds.mods.app} + ${key}"
+                (lib.generators.mkLuaInline "hl.dsp.workspace.toggle_special(\"${id}\")")
+                { description = "toggle ${id} special workspace"; }
+              ])
+            ];
+            workspace_rule = [
+              {
+                workspace = "special:${id}";
+                layout = "scrolling";
+                on_created_empty = launch;
+              }
+            ];
+            window_rule = [
+              {
+                name = id;
+                match.class = class;
+                workspace = "special:${id}${lib.optionalString silent " silent"}";
+              }
+            ];
+          };
+        description = ''
+          Compose the app-tier summon pattern for one app: the toggle bind, the special
+          workspace's scrolling rule with its launch fallback, and the window assignment.
+        '';
+      };
     };
 
   config = {

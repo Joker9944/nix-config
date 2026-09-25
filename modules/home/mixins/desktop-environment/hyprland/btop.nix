@@ -1,4 +1,4 @@
-{ mkHyprlandModule, flake, ... }:
+{ mkHyprlandModule, ... }:
 {
   lib,
   config,
@@ -20,38 +20,15 @@ mkHyprlandModule {
         pkgs-unstable.btop;
   };
 
-  wayland.windowManager.hyprland.settings = {
-    bind =
-      let
-        inherit (cfg.binds) mods;
-        inherit (flake.lib.hyprland) mkLuaCall;
-        inherit (lib.generators) mkLuaInline;
-      in
-      [
-        (mkLuaCall [
-          "${mods.app} + B"
-          (mkLuaInline "hl.dsp.workspace.toggle_special(\"${id}\")")
-          { description = "toggle btop special workspace"; }
-        ])
-      ];
-
-    workspace_rule = [
-      {
-        workspace = "special:${id}";
-        layout = "scrolling";
-        on_created_empty = cfg.terminal.mkRunCommand {
-          inherit id;
-          command = "btop";
-        };
-      }
-    ];
-
-    window_rule = cfg.terminal.mkWindowRules { inherit id; } ++ [
-      {
-        name = "btop-special";
-        match.class = id;
-        workspace = "special:${id} silent";
-      }
-    ];
-  };
+  wayland.windowManager.hyprland.settings = lib.mkMerge [
+    (cfg.mkAppWorkspace {
+      inherit id;
+      class = id;
+      launch = cfg.terminal.mkRunCommand {
+        inherit id;
+        command = "btop";
+      };
+    })
+    { window_rule = cfg.terminal.mkWindowRules { inherit id; }; }
+  ];
 }
