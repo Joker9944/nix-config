@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "printf 'OKF bundle concepts (the CLAUDE.md gate applies — read the relevant ones before acting):\\n'; git -C \"${CLAUDE_PROJECT_DIR:-.}\" ls-files .okf 2>/dev/null || true",
+            "statusMessage": "Loading OKF bundle map"
+          }
+        ]
+      }
+    ]
+  }
+}
