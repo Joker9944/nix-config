@@ -36,6 +36,11 @@ mkHyprlandModule {
         { description = "exit current hyprland session"; }
       ])
       (mkLuaCall [
+        "${mods.main} + F"
+        (mkLuaInline "hl.dsp.window.fullscreen()")
+        { description = "toggle fullscreen of active window"; }
+      ])
+      (mkLuaCall [
         "${mods.main} + V"
         (mkLuaInline "hl.dsp.window.float({ action = \"toggle\" })")
         { description = "toggle floating mode of active window"; }
