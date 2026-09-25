@@ -43,7 +43,7 @@ them, none hard-codes. The tiers mean:
 |---|---|---|
 | main | `SUPER + key` | The desktop's home row: window/workspace focus, session control, everyday launches |
 | variant | `SUPER + SHIFT + key` | The stronger/move/reverse form of the same key's main action — never unrelated |
-| app | `SUPER + CTRL + key` | Summon/dismiss a background app (special-workspace toggles) |
+| app | `SUPER + CTRL + key` | Summon/dismiss the background app whose initial is `key` (special-workspace toggles) |
 
 `SUPER + ALT` is deliberately unassigned headroom, not a tier — Alt thereby appears nowhere in the
 scheme. The long tail of rare actions goes through the launcher (see the first composition rule),
@@ -51,7 +51,7 @@ so three tiers cover everything a chord should hold.
 
 The variant row is the standards' Shift rule, not a free tier: `SUPER + n` focuses workspace *n*,
 so `SUPER + SHIFT + n` moves the window there, and any future focus/move pair composes the same
-way. (The option's attr for this tier is named `workspace`, after that dominant use.)
+way.
 
 # Composition rules
 
@@ -68,8 +68,10 @@ A new bind passes all of these:
    focus left on `SUPER + H`, move left on `SUPER + SHIFT + H`. One-letter-one-meaning then
    reserves the four letters for direction across all Super tiers; arrows may duplicate a vim
    chord, never replace it.
-4. **One letter, one meaning.** A letter keeps its mnemonic across every Super tier; tiers change
-   scope, not meaning. A letter meaning "terminal" on main cannot mean "telegram" on app.
+4. **One letter, one meaning — per namespace.** Within the action tiers (main and its Shift
+   variant) a letter keeps one mnemonic. The app tier is its own namespace: its letters read as
+   app initials, so telegram's T and terminal's T never meet. `H`/`J`/`K`/`L` stay reserved for
+   direction in every tier, the app tier included.
 5. **Shift is the variant.** `SUPER + SHIFT + key` exists only as the stronger form of
    `SUPER + key`, never as an unrelated slot.
 6. **Dedicated-key behavior.** An action on a dedicated key works on the lock screen (audio,

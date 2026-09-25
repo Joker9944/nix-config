@@ -22,6 +22,7 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 - Alt-as-Meta: the `ESC`-prefix encoding makes Alt the TUI world's one free modifier — [reference/shortcut-standards](/reference/shortcut-standards.md)
 - TUI layer owns Alt-as-Meta; the bare-Alt rule gains the Meta rationale — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
 - Prefer the WM's window management over apps' built-in tabs/splits/layouts — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
+- Rule 4 scoped to the action tiers — the app tier keys letters to app initials; `variant` replaces the `workspace` attr name — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
 
 ## 2026-09-16
 
