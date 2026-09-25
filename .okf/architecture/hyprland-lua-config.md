@@ -117,6 +117,8 @@ is **not** a usable reference for rule effects: its `HL.WindowRuleSpec` declares
 * [custom-lib](custom-lib.md) — `mkLuaCall`, for the `_args` multi-argument lua form.
 * [uwsm-session](uwsm-session.md) — where a bind's `exec_cmd` process ends up, and why long-running
   ones go through `cfg.mkAppCommand`.
+* [shortcut-scheme](shortcut-scheme.md) — the modifier layers and tier semantics a `bind` entry
+  composes from.
 * [mixin-pattern](mixin-pattern.md) — the hyprland tree is the one hand-rolled fan-out
   whose namespace carries more than an `enable`.
 * [decisions/release-policy](/decisions/release-policy.md) — why hyprland tracks upstream

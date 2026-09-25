@@ -9,10 +9,19 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 ## 2026-09-24
 
 - `checks.evalConfigurations` forces every host and home `drvPath` with the context discarded, gating the evaluation both trees previously escaped — [workflows/rebuild](/workflows/rebuild.md)
+- New concept: modifier semantics across shortcut standards (CUA, GNOME/KDE/macOS HIG, i3, terminals) — [reference/shortcut-standards](/reference/shortcut-standards.md)
+- New concept: modifier layers, Super-tier semantics, and the composition rules for keybindings — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
 
 ## 2026-09-20
 
 - `layer_rule` cannot override a layer surface's input region; `hyprctl keyword` is registered but refuses under the lua parser — [architecture/hyprland-lua-config](/architecture/hyprland-lua-config.md)
+- Vim-style direction rule: `H`/`J`/`K`/`L` reserved for directional actions across Super tiers — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
+- Launch discipline scoped as Hyprland-specific; dedicated-key flags reworded as portable requirements with Hyprland spelling — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
+- Utility tier dropped (`SUPER + CTRL` is unassigned headroom); "earn the chord" — the launcher absorbs rare actions — leads the composition rules — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
+- App tier moved to `SUPER + CTRL`; `SUPER + ALT` is the unassigned headroom, so Alt leaves the scheme — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
+- Alt-as-Meta: the `ESC`-prefix encoding makes Alt the TUI world's one free modifier — [reference/shortcut-standards](/reference/shortcut-standards.md)
+- TUI layer owns Alt-as-Meta; the bare-Alt rule gains the Meta rationale — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
+- Prefer the WM's window management over apps' built-in tabs/splits/layouts — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
 
 ## 2026-09-16
 

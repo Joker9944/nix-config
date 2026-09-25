@@ -117,4 +117,5 @@ append `-e <cmd>`, which errors instead of running anything. With it, vicinae pa
 # Related
 
 * [hyprland-lua-config](hyprland-lua-config.md) — the config surface these binds are written in.
+* [shortcut-scheme](shortcut-scheme.md) — which chords a bind may claim in the first place.
 * [custom-lib](custom-lib.md) — `mkCommand`, `lookupDesktopFiles`, `requireDesktopFile`.
