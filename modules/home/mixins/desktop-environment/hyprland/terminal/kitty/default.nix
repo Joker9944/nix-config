@@ -64,10 +64,18 @@ mkDefaultHyprlandModule { dir = ./.; } {
         (mkLuaCall [
           "${mods.main} + T"
           (mkLuaInline "hl.dsp.exec_cmd(\"${terminalCommand}\")")
+          { description = "open a terminal"; }
+        ])
+        (mkLuaCall [
+          "${mods.variant} + T"
+          # focused kitty: same-cwd OS window via its remote-control socket; otherwise plain terminal
+          (mkLuaInline "hl.dsp.exec_cmd(\"pid=$(hyprctl activewindow | sed -n 's/^[[:space:]]*pid: //p'); kitten @ --to unix:@kitty-$pid launch --type=os-window --cwd=current || ${terminalCommand}\")")
+          { description = "open a terminal at the focused terminal's cwd"; }
         ])
         (mkLuaCall [
           "${mods.main} + SPACE"
           (mkLuaInline "hl.dsp.exec_cmd(\"${quickAccessCommand}\")")
+          { description = "toggle the quick-access terminal"; }
         ])
       ];
 

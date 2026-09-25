@@ -37,6 +37,7 @@ mkMixinModule "spotify" {
           (mkLuaCall [
             "${mods.app} + S"
             (mkLuaInline "hl.dsp.workspace.toggle_special(\"${workspace}\")")
+            { description = "toggle spotify special workspace"; }
           ])
         ];
 

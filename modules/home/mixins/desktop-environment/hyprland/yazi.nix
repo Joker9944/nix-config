@@ -63,6 +63,7 @@ mkHyprlandModule {
         (mkLuaCall [
           "${mods.main} + E"
           (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
+          { description = "open the file explorer"; }
         ])
       ];
 

@@ -28,6 +28,7 @@ mkMixinModule "telegram" {
             (mkLuaCall [
               "${mods.app} + T"
               (mkLuaInline "hl.dsp.workspace.toggle_special(\"${workspace}\")")
+              { description = "toggle telegram special workspace"; }
             ])
           ];
 

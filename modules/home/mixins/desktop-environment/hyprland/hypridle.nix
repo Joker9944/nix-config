@@ -45,10 +45,7 @@ mkHyprlandModule {
       (mkLuaCall [
         "${mods.main} + ESCAPE"
         (mkLuaInline "hl.dsp.exec_cmd(\"loginctl lock-session\")")
-      ])
-      (mkLuaCall [
-        "${mods.main} + L"
-        (mkLuaInline "hl.dsp.exec_cmd(\"loginctl lock-session\")")
+        { description = "lock the session"; }
       ])
     ];
 }

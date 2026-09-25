@@ -100,22 +100,6 @@ mkMixinModule "gnome" {
           };
         };
 
-        keyboard.shortcuts = {
-          enable = true;
-
-          customShortcuts = [
-            {
-              name = "Launch Console";
-              command = "kgx";
-              binding = "<Super>t";
-            }
-            {
-              name = "Launch btop++";
-              command = "kgx -- btop";
-              binding = "<Shift><Control>Escape";
-            }
-          ];
-        };
       };
 
       gnome-tweaks = {
@@ -149,31 +133,6 @@ mkMixinModule "gnome" {
             "code.desktop" = 3;
             "spotify.desktop" = 4;
           };
-        };
-
-        # Keybindings
-        "org/gnome/desktop/wm/keybindings" = {
-          move-to-monitor-up = mkEmptyArray type.string;
-          move-to-monitor-down = mkEmptyArray type.string;
-          move-to-monitor-left = mkEmptyArray type.string;
-          move-to-monitor-right = mkEmptyArray type.string;
-          move-to-workspace-left = [ "<Shift><Super>Left" ];
-          move-to-workspace-right = [ "<Shift><Super>Right" ];
-          switch-to-workspace-left = [ "<Control><Super>Left" ];
-          switch-to-workspace-right = [ "<Control><Super>Right" ];
-          maximize = [ "<Super>Page_Up" ];
-          unmaximize = [ "<Super>Page_Down" ]; # cSpell:words unmaximize
-        };
-        "org/gnome/settings-daemon/plugins/media-keys" = {
-          home = [ "<Super>e" ];
-          calculator = [ "<Super>c" ];
-          screensaver = [
-            "<Super>Escape"
-            "<Super>l"
-          ];
-        };
-        "org/gnome/mutter/wayland/keybindings" = {
-          restore-shortcuts = mkEmptyArray type.string;
         };
 
         # Weather

@@ -46,48 +46,6 @@ mkMixinModule "kde-plasma" {
         workspace.lookAndFeel = "org.kde.breezedark.desktop";
         configFile."kdeglobals"."General"."AccentColor" = colors.primary; # cSpell:words kdeglobals
 
-        # Shortcuts
-        # cSpell:words ksmserver plasmashell kwin
-        shortcuts = {
-          "ksmserver"."Lock Session" = [
-            "Meta+Esc"
-            "Meta+L"
-            "Screensaver"
-          ];
-          "services/org.kde.plasma-systemmonitor.desktop"."_launch" = [ ]; # cSpell:ignore systemmonitor
-          "kwin" = {
-            "Overview" = [
-              "Meta"
-              "Meta+D"
-            ]; # Mission Control
-            "Window One Desktop Up" = [ "Meta+Shift+Up" ];
-            "Window One Desktop to the Right" = [ "Meta+Shift+Right" ];
-            "Window One Desktop Down" = [ "Meta+Shift+Down" ];
-            "Window One Desktop to the Left" = [ "Meta+Shift+Left" ];
-            "Window to Next Screen" = [ ];
-            "Window to Previous Screen" = [ ];
-            "Edit Tiles" = [ ];
-            "Show Desktop" = [ ];
-          };
-          "plasmashell"."activate application launcher" = [
-            "Meta+A"
-            "Alt+F1"
-          ];
-        };
-        hotkeys.commands = {
-          "launch-konsole" = {
-            name = "Launch Konsole";
-            key = "Meta+T";
-            command = "konsole";
-          };
-
-          "launch-btop" = {
-            name = "Launch btop++";
-            key = "Ctrl+Shift+Esc";
-            command = "btop";
-          };
-        };
-
         # Panels
         # cSpell:words kickerdash ksysguard barchart piechart linechart
         panels = [

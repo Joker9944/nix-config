@@ -23,6 +23,7 @@ mkMixinModule "discord" {
             (mkLuaCall [
               "${mods.app} + D"
               (mkLuaInline "hl.dsp.workspace.toggle_special(\"${workspace}\")")
+              { description = "toggle discord special workspace"; }
             ])
           ];
 

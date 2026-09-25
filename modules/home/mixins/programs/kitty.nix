@@ -6,9 +6,11 @@ mkMixinModule "kitty" {
 
     enableGitIntegration = config.programs.git.enable;
 
-    settings.enabled_layouts = "splits:split_axis=auto,stack";
-
-    keybindings."ctrl+shift+d" = "new_window_with_cwd";
+    settings = {
+      enabled_layouts = "splits:split_axis=auto,stack";
+      allow_remote_control = "socket-only";
+      listen_on = "unix:@kitty";
+    };
   };
 
   xdg = {

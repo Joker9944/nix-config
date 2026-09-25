@@ -46,7 +46,7 @@ mkHyprlandModule {
         { description = "toggle pseudo mode of active window"; }
       ])
       (mkLuaCall [
-        "${mods.main} + J"
+        "${mods.main} + S"
         (mkLuaInline "hl.dsp.layout(\"togglesplit\")")
         { description = "toggle the split view of active window"; }
       ])
@@ -178,7 +178,7 @@ mkHyprlandModule {
           ])
           # move to workspace
           (mkLuaCall [
-            "${mods.workspace} + ${key}"
+            "${mods.variant} + ${key}"
             (mkLuaInline "hl.dsp.window.move({ workspace = ${workspace}})")
             { description = "move active window to workspace ${workspace}"; }
           ])
@@ -187,21 +187,34 @@ mkHyprlandModule {
       lib.flatten
     ])
 
-    # move focus
-    ++ (lib.map
-      (
-        direction:
-        mkLuaCall [
-          "${mods.main} + ${direction}"
-          (mkLuaInline "hl.dsp.focus({ direction = \"${direction}\" })")
-          { description = "focus window ${direction} of active window"; }
-        ]
-      )
+    # focus and move directionally, vim keys primary, arrows as duplicates
+    ++ (lib.pipe
+      {
+        H = "left";
+        J = "down";
+        K = "up";
+        L = "right";
+        left = "left";
+        right = "right";
+        up = "up";
+        down = "down";
+      }
       [
-        "left"
-        "right"
-        "up"
-        "down"
+        (lib.mapAttrsToList (
+          key: direction: [
+            (mkLuaCall [
+              "${mods.main} + ${key}"
+              (mkLuaInline "hl.dsp.focus({ direction = \"${direction}\" })")
+              { description = "focus window ${direction} of active window"; }
+            ])
+            (mkLuaCall [
+              "${mods.variant} + ${key}"
+              (mkLuaInline "hl.dsp.window.move({ direction = \"${direction}\" })")
+              { description = "move active window ${direction}"; }
+            ])
+          ]
+        ))
+        lib.flatten
       ]
     );
 }

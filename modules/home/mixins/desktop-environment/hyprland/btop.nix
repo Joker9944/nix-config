@@ -23,24 +23,34 @@ mkHyprlandModule {
   wayland.windowManager.hyprland.settings = {
     bind =
       let
-        command = cfg.terminal.mkRunCommand {
-          inherit id;
-          command = "btop";
-        };
+        inherit (cfg.binds) mods;
         inherit (flake.lib.hyprland) mkLuaCall;
         inherit (lib.generators) mkLuaInline;
       in
       [
         (mkLuaCall [
-          "CTRL + ALT + DELETE"
-          (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
-        ])
-        (mkLuaCall [
-          "CTRL + SHIFT + ESCAPE"
-          (mkLuaInline "hl.dsp.exec_cmd(\"${command}\")")
+          "${mods.app} + B"
+          (mkLuaInline "hl.dsp.workspace.toggle_special(\"${id}\")")
+          { description = "toggle btop special workspace"; }
         ])
       ];
 
-    window_rule = cfg.terminal.mkWindowRules { inherit id; };
+    workspace_rule = [
+      {
+        workspace = "special:${id}";
+        on_created_empty = cfg.terminal.mkRunCommand {
+          inherit id;
+          command = "btop";
+        };
+      }
+    ];
+
+    window_rule = cfg.terminal.mkWindowRules { inherit id; } ++ [
+      {
+        name = "btop-special";
+        match.class = id;
+        workspace = "special:${id} silent";
+      }
+    ];
   };
 }

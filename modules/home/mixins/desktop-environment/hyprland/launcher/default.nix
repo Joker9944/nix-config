@@ -80,11 +80,15 @@ mkDefaultHyprlandModule { dir = ./.; } {
           (mkLuaCall [
             "${mods.main} + R"
             (mkLuaInline "hl.dsp.exec_cmd(\"${cfg.launcher.toggleCommand}\")")
+            { description = "toggle the launcher"; }
           ])
           (mkLuaCall [
             "${mods.main} + ${mods.main}_L"
             (mkLuaInline "hl.dsp.exec_cmd(\"${cfg.launcher.toggleCommand}\")")
-            { release = true; }
+            {
+              description = "toggle the launcher (tap super)";
+              release = true;
+            }
           ])
         ];
       };

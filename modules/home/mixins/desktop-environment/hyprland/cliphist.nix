@@ -1,13 +1,5 @@
-{ mkHyprlandModule, flake, ... }:
-{
-  lib,
-  config,
-  pkgs-unstable,
-  ...
-}:
-let
-  cfg = config.mixins.desktopEnvironment.hyprland;
-in
+{ mkHyprlandModule, ... }:
+{ pkgs-unstable, ... }:
 mkHyprlandModule {
   home.packages = [ pkgs-unstable.wl-clipboard ]; # Wayland clipboard utilities
 
@@ -15,15 +7,4 @@ mkHyprlandModule {
     enable = true;
     package = pkgs-unstable.cliphist;
   };
-
-  wayland.windowManager.hyprland.settings.bind =
-    let
-      dmenuCommand = cfg.launcher.mkDmenuCommand { };
-    in
-    [
-      (flake.lib.hyprland.mkLuaCall [
-        "${cfg.binds.mods.utility} + V"
-        (lib.generators.mkLuaInline "hl.dsp.exec_cmd(\"cliphist list | ${dmenuCommand} | cliphist decode | wl-copy\")")
-      ])
-    ];
 }

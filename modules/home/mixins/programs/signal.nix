@@ -23,6 +23,7 @@ mkMixinModule "signal" {
             (mkLuaCall [
               "${mods.app} + G"
               (mkLuaInline "hl.dsp.workspace.toggle_special(\"${workspace}\")")
+              { description = "toggle signal special workspace"; }
             ])
           ];
 

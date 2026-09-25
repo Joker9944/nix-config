@@ -23,14 +23,17 @@ mkHyprlandModule {
       (mkLuaCall [
         "PRINT"
         (mkLuaInline "hl.dsp.exec_cmd(\"grimblast --notify --freeze copysave area\")") # cSpell:ignore copysave
+        { description = "screenshot a selected area"; }
       ])
       (mkLuaCall [
         "${mods.main} + PRINT"
         (mkLuaInline "hl.dsp.exec_cmd(\"grimblast --notify --freeze copysave active\")")
+        { description = "screenshot the active window"; }
       ])
       (mkLuaCall [
-        "${mods.utility} + PRINT"
+        "${mods.variant} + PRINT"
         (mkLuaInline "hl.dsp.exec_cmd(\"grimblast --notify --freeze copysave output\")")
+        { description = "screenshot the whole output"; }
       ])
     ];
 }

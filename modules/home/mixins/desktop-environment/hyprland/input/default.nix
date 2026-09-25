@@ -10,26 +10,13 @@ mkDefaultHyprlandModule { dir = ./.; } {
         type = types.attrsOf types.str;
         default = {
           main = "SUPER";
+          variant = "SUPER + SHIFT";
+          app = "SUPER + CTRL";
         };
-        example = ''
-          {
-            main = "SUPER";
-            workspace = "SUPER SHIFT";
-            utility = "SUPER CTRL";
-          }
-        '';
         description = ''
-          Option to reuse mods without using Hyprland vars.
+          Modifier tier per bind category. Tier semantics live in
+          `.okf/architecture/shortcut-scheme.md`.
         '';
       };
     };
-
-  config = {
-    mixins.desktopEnvironment.hyprland.binds.mods = {
-      main = "SUPER";
-      workspace = "SUPER + SHIFT";
-      utility = "SUPER + CTRL";
-      app = "SUPER + ALT";
-    };
-  };
 }
