@@ -30,6 +30,7 @@ mkMixinModule "discord" {
         workspace_rule = [
           {
             workspace = "special:${workspace}";
+            layout = "scrolling";
             on_created_empty = "vesktop";
           }
         ];

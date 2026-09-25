@@ -30,6 +30,7 @@ mkMixinModule "signal" {
         workspace_rule = [
           {
             workspace = "special:${workspace}";
+            layout = "scrolling";
             on_created_empty = "signal-desktop";
           }
         ];

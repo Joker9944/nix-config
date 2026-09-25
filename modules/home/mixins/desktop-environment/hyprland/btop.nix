@@ -38,6 +38,7 @@ mkHyprlandModule {
     workspace_rule = [
       {
         workspace = "special:${id}";
+        layout = "scrolling";
         on_created_empty = cfg.terminal.mkRunCommand {
           inherit id;
           command = "btop";

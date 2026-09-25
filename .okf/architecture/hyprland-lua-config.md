@@ -117,6 +117,11 @@ names, and the effects' lua value types respectively. Grepping identifiers rathe
 paths survives upstream moving files — and if a name disappears, the empty result tells you
 to go looking rather than letting you trust something stale.
 
+`workspace_rule.layout_opts` is the same trap one level deeper: the lua binding validates
+only the table's *shape*, never its keys, so an opt no layout algorithm reads parses clean
+and does nothing — invisible even to `hyprctl configerrors`. `grep -rn m_layoutopts` in the
+pinned tree lists the keys actually consumed.
+
 The lua-LSP stub at `<hyprland>/share/hypr/stubs/hl.meta.lua` covers config variables, but
 is **not** a usable reference for rule effects: its `HL.WindowRuleSpec` declares only
 `name`, `match` and `enabled`, because effect fields are resolved dynamically.

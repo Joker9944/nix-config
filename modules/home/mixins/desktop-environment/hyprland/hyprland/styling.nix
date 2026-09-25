@@ -53,6 +53,8 @@ mkHyprlandModule {
 
         master.new_status = "master";
 
+        scrolling.column_width = 0.8;
+
         misc = {
           disable_hyprland_logo = true;
           size_limits_tiled = true; # Respect min_size and max_size rules also for tiled windows
