@@ -187,34 +187,51 @@ mkHyprlandModule {
       lib.flatten
     ])
 
-    # focus and move directionally, vim keys primary, arrows as duplicates
-    ++ (lib.pipe
-      {
-        H = "left";
-        J = "down";
-        K = "up";
-        L = "right";
-        left = "left";
-        right = "right";
-        up = "up";
-        down = "down";
-      }
-      [
-        (lib.mapAttrsToList (
-          key: direction: [
-            (mkLuaCall [
-              "${mods.main} + ${key}"
-              (mkLuaInline "hl.dsp.focus({ direction = \"${direction}\" })")
-              { description = "focus window ${direction} of active window"; }
-            ])
-            (mkLuaCall [
-              "${mods.variant} + ${key}"
-              (mkLuaInline "hl.dsp.window.move({ direction = \"${direction}\" })")
-              { description = "move active window ${direction}"; }
-            ])
-          ]
-        ))
-        lib.flatten
-      ]
+    # focus, move, and resize directionally, vim keys primary, arrows as duplicates
+    ++ (
+      let
+        resizeArgs = {
+          left = "{ x = -50, y = 0, relative = true }";
+          right = "{ x = 50, y = 0, relative = true }";
+          up = "{ x = 0, y = -50, relative = true }";
+          down = "{ x = 0, y = 50, relative = true }";
+        };
+      in
+      lib.pipe
+        {
+          H = "left";
+          J = "down";
+          K = "up";
+          L = "right";
+          left = "left";
+          right = "right";
+          up = "up";
+          down = "down";
+        }
+        [
+          (lib.mapAttrsToList (
+            key: direction: [
+              (mkLuaCall [
+                "${mods.main} + ${key}"
+                (mkLuaInline "hl.dsp.focus({ direction = \"${direction}\" })")
+                { description = "focus window ${direction} of active window"; }
+              ])
+              (mkLuaCall [
+                "${mods.variant} + ${key}"
+                (mkLuaInline "hl.dsp.window.move({ direction = \"${direction}\" })")
+                { description = "move active window ${direction}"; }
+              ])
+              (mkLuaCall [
+                "${mods.alternative} + ${key}"
+                (mkLuaInline "hl.dsp.window.resize(${resizeArgs.${direction}})")
+                {
+                  description = "resize active window ${direction}";
+                  repeating = true;
+                }
+              ])
+            ]
+          ))
+          lib.flatten
+        ]
     );
 }

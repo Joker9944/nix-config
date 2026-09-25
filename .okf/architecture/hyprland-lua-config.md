@@ -4,8 +4,8 @@ title: Hyprland lua config surface
 description: The hyprland tree emits `hyprland.lua`, not `hyprland.conf`. Documents the `settings` shape and the fact that rule keys are validated at runtime, not build time — so `nix build` proves nothing about a rule's validity.
 tags: [architecture, hyprland, home-manager, convention]
 generated:
-  by: claude-code/claude-opus-5
-  at: 2026-09-20T00:00:00Z
+  by: claude-code/claude-fable-5
+  at: 2026-09-25T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -41,6 +41,15 @@ clicks has to be fixed in the client (for wayneko, `--follow-pointer false`).
 Global window translucency comes from `mixins.desktopEnvironment.hyprland.style.opacity`,
 which feeds `decoration.active_opacity` / `inactive_opacity` — so *every* window is
 translucent by default and exempting one is a per-window rule, not a style change.
+
+# Bind form
+
+Every bind interpolates `binds.mods`
+(`modules/home/mixins/desktop-environment/hyprland/input/default.nix`) — none hard-codes a
+modifier string. Every bind passes `description`; a future cheatsheet reads it. Flags spell the
+scheme's dedicated-key behavior: `locked = true` for chords that must work on the lock screen,
+`repeating = true` for analog hold actions. Anything long-running a bind starts goes through
+`cfg.mkAppCommand` / `cfg.mkAppEntryCommand` — see [uwsm-session](uwsm-session.md).
 
 # Rule keys are validated at runtime, not at build time
 

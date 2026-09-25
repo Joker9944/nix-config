@@ -1,8 +1,8 @@
 ---
 type: Architecture Pattern
 title: Shortcut scheme
-description: Modifier ownership per layer — Super to the WM, Ctrl to apps, Ctrl+Shift to the terminal emulator, bare keys to TUIs — and the composition rules a new bind must pass.
-tags: [architecture, keybindings, hyprland, convention]
+description: Modifier ownership per layer — Super to the WM, Ctrl to apps, Ctrl+Shift to the terminal emulator, bare keys to TUIs — and the composition rules a bind in any layer must pass.
+tags: [architecture, keybindings, convention]
 generated:
   by: claude-code/claude-fable-5
   at: 2026-09-25T00:00:00Z
@@ -17,7 +17,7 @@ no chord changes meaning with focus and no app update can shadow a WM bind.
 
 | Layer | Modifier space |
 |---|---|
-| WM / global (Hyprland) | every chord containing `SUPER`, plus dedicated keys (`XF86*`, `PRINT`) |
+| WM / global | every chord containing `SUPER`, plus dedicated keys (`XF86*`, `PRINT`) |
 | GUI apps | `Ctrl` (+ `Shift` variants) — their platform defaults, left alone |
 | Terminal emulator | `Ctrl + Shift` |
 | TUIs | bare letters, vim motions, Alt-as-Meta (`ESC`-prefixed), and the `Ctrl` control codes upstream defines |
@@ -27,71 +27,70 @@ Three consequences the table implies but that deserve stating:
 
 * The WM never grabs a Super-less chord. Ctrl-anything belongs to whatever has focus, including
   Windows-idiom system chords like Ctrl+Alt+Del.
-* Bare `Alt` chords stay unbound everywhere — at the app layer Alt carries menu access keys,
-  inside the terminal it is Meta (readline word motions, Emacs `M-`), and a WM grab would shadow
-  both.
+* Bare `Alt` is conditionally the focused app's: GUIs use it for menu navigation (access keys),
+  terminals pass it through as Meta (readline word motions, Emacs `M-`), and an app may claim
+  bare-`Alt` chords only where it supports neither. The WM cannot know which case has focus, so
+  it never grabs bare Alt — in the scheme Alt appears only glued to Super.
 * Prefer the WM's window management over any app's built-in tabs, splits, or layouts, so managing
   windows reads the same regardless of the app.
 
-# Super tiers
+# Rules that hold in every layer
 
-Concrete modifier strings live in one place — `binds.mods` in
-`modules/home/mixins/desktop-environment/hyprland/input/default.nix`; every bind interpolates
-them, none hard-codes. The tiers mean:
+1. **Earn the chord.** A bind exists only for actions used reflexively, many times a day.
+   Anything you'd have to *remember* belongs to the launcher or the app's own palette/search —
+   clipboard history, calculator, emoji, power menu. A bind you keep forgetting isn't
+   under-advertised, it's mis-assigned: delete it, don't demote it to a rarer chord.
+2. **Mnemonic letter.** The key is the initial of the thing acted on or launched — T terminal,
+   B browser, E explorer.
+3. **One letter, one meaning — per namespace.** Within one namespace — a layer, or a declared
+   sub-namespace like the WM's app tier — a letter keeps one mnemonic. Separate namespaces never
+   collide: telegram's T (app tier) and terminal's T (main tier) coexist.
+4. **Shift is the first variant, everywhere.** The Shifted chord is the stronger/move/reverse
+   form of the unshifted one, never an unrelated action: `Ctrl+Z` → `Ctrl+Shift+Z` in apps,
+   `SUPER + n` → `SUPER + SHIFT + n` in the WM. Where a layer defines a second-variant modifier,
+   a key claims it only when its Shift slot is already taken.
+5. **Direction is vim.** `H`/`J`/`K`/`L` read left/down/up/right — natively in TUIs, lifted into
+   the WM, and in any app whose directional binds are configurable. The four letters are reserved
+   for direction in every namespace they appear in; arrows may duplicate a vim chord, never
+   replace it.
+6. **macOS as tiebreaker.** Super sits where Cmd sits on a Mac keyboard. When two chords serve
+   equally well, prefer the one that doesn't fight entrenched Cmd muscle memory — but never trade
+   a strong mnemonic for it.
+7. **Describable.** A custom bind carries a description wherever the tool supports one; an
+   undescribed bind is invisible to any future cheatsheet.
+
+# The WM layer: Super tiers
 
 | Tier | Chord | Meaning |
 |---|---|---|
 | main | `SUPER + key` | The desktop's home row: window/workspace focus, session control, everyday launches |
 | variant | `SUPER + SHIFT + key` | The stronger/move/reverse form of the same key's main action — never unrelated |
+| alternative | `SUPER + ALT + key` | The second variant of the same key's main action, claimed only when Shift is taken |
 | app | `SUPER + CTRL + key` | Summon/dismiss the background app whose initial is `key` (special-workspace toggles) |
 
-`SUPER + ALT` is deliberately unassigned headroom, not a tier — Alt thereby appears nowhere in the
-scheme. The long tail of rare actions goes through the launcher (see the first composition rule),
-so three tiers cover everything a chord should hold.
+The alternative tier is macOS's Cmd+Option semantic on Linux keys: the direction keys carry a
+directional verb per tier — focus (main), move (Shift), resize (Alt) — and resize is the tier's
+founding tenant. No two-modifier headroom remains; a family that ever outgrows the tiers gets a
+submap entered from a main-tier chord. The long tail of rare actions goes through the launcher
+(rule 1), so four tiers cover everything a chord should hold.
 
-The variant row is the standards' Shift rule, not a free tier: `SUPER + n` focuses workspace *n*,
-so `SUPER + SHIFT + n` moves the window there, and any future focus/move pair composes the same
-way.
+Dedicated keys behave, not just exist: an action on a hardware key works on the lock screen
+(audio, brightness) and repeats while held when it is analog.
 
-# Composition rules
+# The app layers
 
-A new bind passes all of these:
-
-1. **Earn the chord.** A bind exists only for actions used reflexively, many times a day.
-   Anything you'd have to *remember* is the launcher's job — clipboard history, calculator,
-   emoji, power menu. A bind you keep forgetting isn't under-advertised, it's mis-assigned:
-   delete it, don't demote it to a rarer chord.
-2. **Mnemonic letter.** The key is the initial of the thing acted on or launched — T terminal,
-   B browser, E explorer.
-3. **Direction is vim.** A directional action reads `H`/`J`/`K`/`L` as left/down/up/right — the
-   TUI layer's motion vocabulary lifted to the WM. With Shift it composes as the variant rule:
-   focus left on `SUPER + H`, move left on `SUPER + SHIFT + H`. One-letter-one-meaning then
-   reserves the four letters for direction across all Super tiers; arrows may duplicate a vim
-   chord, never replace it.
-4. **One letter, one meaning — per namespace.** Within the action tiers (main and its Shift
-   variant) a letter keeps one mnemonic. The app tier is its own namespace: its letters read as
-   app initials, so telegram's T and terminal's T never meet. `H`/`J`/`K`/`L` stay reserved for
-   direction in every tier, the app tier included.
-5. **Shift is the variant.** `SUPER + SHIFT + key` exists only as the stronger form of
-   `SUPER + key`, never as an unrelated slot.
-6. **Dedicated-key behavior.** An action on a dedicated key works on the lock screen (audio,
-   brightness) and repeats while held when analog — Hyprland spells these `locked = true` and
-   `repeating = true`.
-7. **macOS as tiebreaker.** Super sits where Cmd sits on a Mac keyboard. When two chords serve
-   equally well, prefer the one that doesn't fight entrenched Cmd muscle memory — but never trade
-   a strong mnemonic for it.
-8. **Describe it.** Every bind passes `description`; an undescribed bind is invisible to any
-   future cheatsheet.
-9. **Launch discipline (Hyprland-specific).** Under the UWSM session, anything long-running a
-   bind starts goes through `cfg.mkAppCommand` / `cfg.mkAppEntryCommand` — see
-   [uwsm-session](uwsm-session.md). The rule dies with the compositor: GNOME and KDE launch
-   through their own machinery.
+* **GUI apps** keep their platform defaults — the CUA/HIG chords arrive from the toolkit and are
+  left alone. A custom GUI bind goes on `Ctrl` (+ `Shift` for its variant), never on Super.
+* **The terminal emulator's** chrome stays inside `Ctrl + Shift`; what it doesn't use there is
+  its headroom, not app space.
+* **TUI custom binds** follow vim motions and the tool's own upstream idiom — aerc's mirrored
+  defaults are the live example — with bare Alt available per the conditional-Alt rule above.
 
 # Related
 
 * [/reference/shortcut-standards.md](/reference/shortcut-standards.md) — what each platform
   standard assigns; the consensus the layer table composes.
-* [uwsm-session](uwsm-session.md) — how a bind launches apps without landing them in the
+* [hyprland-lua-config](hyprland-lua-config.md) — how this repo's Hyprland realizes the WM layer:
+  bind form, `binds.mods`, flags, descriptions.
+* [uwsm-session](uwsm-session.md) — how a Hyprland bind launches apps without landing them in the
   compositor's unit.
-* [hyprland-lua-config](hyprland-lua-config.md) — the config surface binds are written in (`bind`
-  at the top level of `settings`).

@@ -23,6 +23,10 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 - TUI layer owns Alt-as-Meta; the bare-Alt rule gains the Meta rationale — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
 - Prefer the WM's window management over apps' built-in tabs/splits/layouts — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
 - Rule 4 scoped to the action tiers — the app tier keys letters to app initials; `variant` replaces the `workspace` attr name — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
+- Fourth tier: `SUPER + ALT` is the second variant axis, resize its founding tenant; no resize submap — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
+- Bare Alt is conditionally the app's — claimable only without menu navigation (GUIs) or Meta (terminals) — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
+- Scheme generalized: rules hold per layer, GUI/terminal/TUI layers get authoring guidance — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
+- Bind form (mods interpolation, descriptions, flags, launch wrapping) relocated here from the scheme — [architecture/hyprland-lua-config](/architecture/hyprland-lua-config.md)
 
 ## 2026-09-16
 

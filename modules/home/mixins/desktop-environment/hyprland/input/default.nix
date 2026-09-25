@@ -11,6 +11,7 @@ mkDefaultHyprlandModule { dir = ./.; } {
         default = {
           main = "SUPER";
           variant = "SUPER + SHIFT";
+          alternative = "SUPER + ALT";
           app = "SUPER + CTRL";
         };
         description = ''
