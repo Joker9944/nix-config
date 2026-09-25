@@ -15,6 +15,7 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 ## 2026-09-20
 
 - `layer_rule` cannot override a layer surface's input region; `hyprctl keyword` is registered but refuses under the lua parser — [architecture/hyprland-lua-config](/architecture/hyprland-lua-config.md)
+- `on_created_empty` is a third spawn path needing uwsm wrapping, next to binds and rofi — [architecture/uwsm-session](/architecture/uwsm-session.md)
 - `layout_opts` keys are consumer-validated — unknown opts silently ignored, `m_layoutopts` grep is the authority — [architecture/hyprland-lua-config](/architecture/hyprland-lua-config.md)
 - Vim-style direction rule: `H`/`J`/`K`/`L` reserved for directional actions across Super tiers — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
 - Launch discipline scoped as Hyprland-specific; dedicated-key flags reworded as portable requirements with Hyprland spelling — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)

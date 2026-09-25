@@ -24,6 +24,7 @@ mkMixinModule "spotify" {
 
   wayland.windowManager.hyprland.settings =
     let
+      cfg = config.mixins.desktopEnvironment.hyprland;
       workspace = "spotify";
     in
     {
@@ -45,7 +46,9 @@ mkMixinModule "spotify" {
         {
           workspace = "special:${workspace}";
           layout = "scrolling";
-          on_created_empty = "spotify";
+          on_created_empty = cfg.mkAppEntryCommand {
+            package = config.programs.spicetify.spotifyPackage;
+          };
         }
       ];
 

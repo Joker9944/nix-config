@@ -8,6 +8,7 @@ mkMixinModule "telegram" {
   config =
     let
       inherit (config.programs.telegram) package;
+      cfg = config.mixins.desktopEnvironment.hyprland;
       workspace = "telegram";
     in
     {
@@ -36,7 +37,10 @@ mkMixinModule "telegram" {
           {
             workspace = "special:${workspace}";
             layout = "scrolling";
-            on_created_empty = "Telegram";
+            on_created_empty = cfg.mkAppEntryCommand {
+              inherit package;
+              name = "org.telegram.desktop.desktop";
+            };
           }
         ];
 

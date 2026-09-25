@@ -7,6 +7,8 @@
 mkMixinModule "signal" {
   config =
     let
+      inherit (config.programs.signal) package;
+      cfg = config.mixins.desktopEnvironment.hyprland;
       workspace = "signal";
     in
     {
@@ -31,7 +33,10 @@ mkMixinModule "signal" {
           {
             workspace = "special:${workspace}";
             layout = "scrolling";
-            on_created_empty = "signal-desktop";
+            on_created_empty = cfg.mkAppEntryCommand {
+              inherit package;
+              name = "signal.desktop";
+            };
           }
         ];
 

@@ -4,8 +4,8 @@ title: UWSM session and app slices
 description: Hyprland runs under UWSM, so anything long-running a bind or rofi launches must go through `cfg.mkAppCommand` or `cfg.mkAppEntryCommand`, or it lands inside the compositor's own systemd unit.
 tags: [architecture, hyprland, uwsm, systemd, rofi, vicinae]
 generated:
-  by: claude-code/claude-opus-5
-  at: 2026-09-04T00:00:00Z
+  by: claude-code/claude-fable-5
+  at: 2026-09-25T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -24,7 +24,8 @@ the compositor's unit rather than getting its own. `uwsm app` is what moves it: 
 transient scope in `app-graphical.slice` before exec'ing.
 
 XDG autostart entries land correctly on their own, as does anything the tree declares as a
-home-manager systemd user service. Binds and rofi are the two paths that need help.
+home-manager systemd user service. Binds, rofi, and workspace rules' `on_created_empty` —
+which the compositor spawns exactly like an exec bind — are the paths that need help.
 
 # `mkAppCommand` and `mkAppEntryCommand`
 

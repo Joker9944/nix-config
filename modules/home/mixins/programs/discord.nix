@@ -7,6 +7,7 @@
 mkMixinModule "discord" {
   config =
     let
+      cfg = config.mixins.desktopEnvironment.hyprland;
       workspace = "discord";
     in
     {
@@ -31,7 +32,9 @@ mkMixinModule "discord" {
           {
             workspace = "special:${workspace}";
             layout = "scrolling";
-            on_created_empty = "vesktop";
+            on_created_empty = cfg.mkAppEntryCommand {
+              package = config.programs.vesktop.package;
+            };
           }
         ];
 
