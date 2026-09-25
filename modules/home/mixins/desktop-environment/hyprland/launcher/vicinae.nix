@@ -7,8 +7,24 @@
 }:
 let
   cfg = config.mixins.desktopEnvironment.hyprland;
+
+  # UPGRADE(26.11): drop this and the module override below; release-26.05's `programs.vicinae`
+  # predates `enableFirefoxIntegration`.
+  homeManagerVicinae = builtins.fetchGit {
+    url = "https://github.com/nix-community/home-manager";
+    rev = "979bfee6e1a7996fc395270d54c9b59e88762494";
+    shallow = true;
+  };
+
+  firefoxExtension."firefox@vicinae.com" = {
+    install_url = "https://addons.mozilla.org/firefox/downloads/latest/vicinae/latest.xpi";
+    installation_mode = "force_installed";
+  };
 in
 mkHyprlandModule {
+  disabledModules = [ "programs/vicinae" ];
+  imports = [ "${homeManagerVicinae}/modules/programs/vicinae" ];
+
   options.mixins.desktopEnvironment.hyprland.launcher.vicinae =
     let
       inherit (lib) mkEnableOption;
@@ -18,63 +34,68 @@ mkHyprlandModule {
     };
 
   config = lib.mkIf cfg.launcher.vicinae.enable {
-    programs.vicinae = {
-      enable = true;
-      package = pkgs-unstable.vicinae;
-
-      systemd = {
+    programs = {
+      vicinae = {
         enable = true;
-        target = config.wayland.systemd.target;
-      };
+        package = pkgs-unstable.vicinae;
 
-      settings = {
-        # general
-        telemetry.system_info = false;
-        global_shortcuts.toggle = ""; # bind handled in hyprland
-        providers.applications.preferences.launchPrefix = cfg.mkAppCommand { };
+        systemd = {
+          enable = true;
+          target = config.wayland.systemd.target;
+        };
 
-        # additional theming
-        launcher_window.opacity = cfg.style.opacity.active;
-        font.normal =
-          let
-            interfaceFont = config.custom.theme.fonts.interface;
-          in
-          {
-            family = interfaceFont.name;
-            inherit (interfaceFont) size;
-          };
+        settings = {
+          # general
+          telemetry.system_info = false;
+          global_shortcuts.toggle = ""; # bind handled in hyprland
+          providers.applications.preferences.launchPrefix = cfg.mkAppCommand { };
 
-        # preferences
-        providers = {
-          clipboard.entrypoints.history.alias = "clip";
+          # additional theming
+          launcher_window.opacity = cfg.style.opacity.active;
+          font.normal =
+            let
+              interfaceFont = config.custom.theme.fonts.interface;
+            in
+            {
+              family = interfaceFont.name;
+              inherit (interfaceFont) size;
+            };
 
-          core.entrypoints = {
-            search-emojis.alias = "emoji";
-            about.enabled = false;
-            documentation.enabled = false;
-            sponsor.enabled = false;
-          };
+          # preferences
+          providers = {
+            clipboard.entrypoints.history.alias = "clip";
 
-          files.entrypoints.search.alias = "file";
+            core.entrypoints = {
+              search-emojis.alias = "emoji";
+              about.enabled = false;
+              documentation.enabled = false;
+              sponsor.enabled = false;
+            };
 
-          power.entrypoints = {
-            power-off.alias = "poweroff";
-            reboot.alias = "reboot";
-          };
+            files.entrypoints.search.alias = "file";
 
-          system.entrypoints = {
-            run.alias = "run";
-            toggle-mute.enabled = false;
-            volume-0.enabled = false;
-            volume-25.enabled = false;
-            volume-50.enabled = false;
-            volume-75.enabled = false;
-            volume-100.enabled = false;
-            volume-down.enabled = false;
-            volume-up.enabled = false;
+            power.entrypoints = {
+              power-off.alias = "poweroff";
+              reboot.alias = "reboot";
+            };
+
+            system.entrypoints = {
+              run.alias = "run";
+              toggle-mute.enabled = false;
+              volume-0.enabled = false;
+              volume-25.enabled = false;
+              volume-50.enabled = false;
+              volume-75.enabled = false;
+              volume-100.enabled = false;
+              volume-down.enabled = false;
+              volume-up.enabled = false;
+            };
           };
         };
       };
+
+      firefox.policies.ExtensionSettings = firefoxExtension;
+      librewolf.policies.ExtensionSettings = firefoxExtension;
     };
 
     schemes.vicinae.enable = true;

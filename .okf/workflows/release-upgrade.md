@@ -5,7 +5,7 @@ description: How deferred "do this at the next nixpkgs/home-manager release" cha
 tags: [workflow, upgrade, nixpkgs, home-manager]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-16T00:00:00Z
+  at: 2026-09-25T00:00:00Z
 ---
 
 # Trigger
@@ -34,6 +34,34 @@ which the change becomes possible. One marker per site, co-located with the code
 NixOS cuts a release every **May and November**, so the only valid release strings are
 `<yy>.05` and `<yy>.11` (e.g. `26.05`, `26.11`, `27.05`). Pick the target accordingly — there is
 no `.06` or `.10`.
+
+# Backporting a single module
+
+When the gap is one home-manager module, the marker can sit beside a fix rather than a promise:
+displace the released module with the same file from a revision that has it. `builtins.fetchGit`
+keeps this inside the mixin, so the whole backport is one marker in one file rather than a flake
+input plus an override to find separately.
+
+```nix
+homeManagerVicinae = builtins.fetchGit {
+  url = "https://github.com/nix-community/home-manager";
+  rev = "979bfee6e1a7996fc395270d54c9b59e88762494";
+  shallow = true;
+};
+# ...
+disabledModules = [ "programs/vicinae" ];
+imports = [ "${homeManagerVicinae}/modules/programs/vicinae" ];
+```
+
+A full 40-character `rev` is its own content address, so pure flake eval accepts the fetch with no
+hash — nothing to hand-maintain, unlike `fetchTarball`. With `shallow` the clone is a couple of MiB.
+The cost is that the revision lives outside `flake.lock`, so `nix flake update` and renovate never
+see it, and evaluation needs network the first time.
+
+A relative `disabledModules` string resolves against home-manager's `modules/` directory, and a
+module that is a directory is keyed without `/default.nix`. `imports` and `disabledModules` are
+structural keys, so `mkConditionalModule` passes them through ungated — the swap applies to every
+configuration that loads the mixin, not just those enabling it.
 
 # Steps at a release bump
 
