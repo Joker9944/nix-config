@@ -18,33 +18,35 @@ mkDefaultHyprlandModule { dir = ./.; } {
   mixins.desktopEnvironment.hyprland.terminal = {
     inherit (config.programs.kitty) package;
 
-    mkRunCommand =
-      {
-        id,
-        command,
-        ...
-      }:
-      cfg.mkAppCommand {
-        name = id;
-        elems = [
-          "kitty"
-          "--override"
-          "confirm_os_window_close=0"
-          "--app-id"
-          id
-          command
-        ];
-      };
-
-    mkWindowRules =
-      { id, ... }:
-      [
+    lib = {
+      mkRunCommand =
         {
-          name = "terminal-${id}";
-          match.class = id;
-          min_size = mkLuaInline "{ 720, 480 }";
-        }
-      ];
+          id,
+          command,
+          ...
+        }:
+        cfg.lib.mkAppCommand {
+          name = id;
+          elems = [
+            "kitty"
+            "--override"
+            "confirm_os_window_close=0"
+            "--app-id"
+            id
+            command
+          ];
+        };
+
+      mkWindowRules =
+        { id, ... }:
+        [
+          {
+            name = "terminal-${id}";
+            match.class = id;
+            min_size = mkLuaInline "{ 720, 480 }";
+          }
+        ];
+    };
   };
 
   wayland.windowManager.hyprland.settings = {
@@ -52,8 +54,8 @@ mkDefaultHyprlandModule { dir = ./.; } {
       let
         inherit (config.mixins.desktopEnvironment.hyprland.binds) mods;
         inherit (flake.lib.hyprland) mkLuaCall;
-        terminalCommand = cfg.mkAppEntryCommand { package = cfg.terminal.package; };
-        quickAccessCommand = cfg.mkAppCommand {
+        terminalCommand = cfg.lib.mkAppEntryCommand { package = cfg.terminal.package; };
+        quickAccessCommand = cfg.lib.mkAppCommand {
           elems = [
             "kitten"
             "quick-access-terminal"
@@ -79,6 +81,6 @@ mkDefaultHyprlandModule { dir = ./.; } {
         ])
       ];
 
-    window_rule = cfg.terminal.mkWindowRules { id = "kitty"; };
+    window_rule = cfg.terminal.lib.mkWindowRules { id = "kitty"; };
   };
 }

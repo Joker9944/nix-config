@@ -16,7 +16,7 @@ let
   waylandCfg = config.wayland.windowManager.hyprland;
 in
 mkDefaultHyprlandModule { dir = ./.; } {
-  options.mixins.desktopEnvironment.hyprland =
+  options.mixins.desktopEnvironment.hyprland.lib =
     let
       inherit (lib) mkOption types;
     in
@@ -94,7 +94,7 @@ mkDefaultHyprlandModule { dir = ./.; } {
     # Remove when https://github.com/NixOS/nixpkgs/blob/fafef5049e2a7bcc36802e1ce72cd2f51d386388/nixos/modules/services/x11/display-managers/default.nix#L28-L50 ever gets fixed
     home.sessionVariables.XDG_CURRENT_DESKTOP = "Hyprland";
 
-    mixins.desktopEnvironment.hyprland = lib.mkIf osConfig.programs.hyprland.withUWSM {
+    mixins.desktopEnvironment.hyprland.lib = lib.mkIf osConfig.programs.hyprland.withUWSM {
       mkAppCommand =
         {
           elems ? [ ],
@@ -112,7 +112,8 @@ mkDefaultHyprlandModule { dir = ./.; } {
         ];
 
       mkAppEntryCommand =
-        args: cfg.mkAppCommand { elems = [ (flake.lib.requireDesktopFile ({ inherit pkgs; } // args)) ]; };
+        args:
+        cfg.lib.mkAppCommand { elems = [ (flake.lib.requireDesktopFile ({ inherit pkgs; } // args)) ]; };
     };
 
     wayland = {

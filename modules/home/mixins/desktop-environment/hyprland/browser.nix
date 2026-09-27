@@ -11,7 +11,7 @@ in
 mkHyprlandModule {
   wayland.windowManager.hyprland.settings.bind =
     let
-      command = cfg.mkAppEntryCommand { package = config.programs.librewolf.finalPackage; };
+      command = cfg.lib.mkAppEntryCommand { package = config.programs.librewolf.finalPackage; };
     in
     lib.mkIf config.programs.librewolf.enable [
       (flake.lib.hyprland.mkLuaCall [

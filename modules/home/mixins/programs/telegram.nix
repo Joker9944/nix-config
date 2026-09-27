@@ -18,10 +18,10 @@ mkMixinModule "telegram" {
       ];
 
       wayland.windowManager.hyprland.settings = lib.mkMerge [
-        (cfg.mkAppWorkspace {
+        (cfg.lib.mkAppWorkspace {
           id = "telegram";
           class = "org.telegram.desktop";
-          launch = cfg.mkAppEntryCommand {
+          launch = cfg.lib.mkAppEntryCommand {
             inherit package;
             name = "org.telegram.desktop.desktop";
           };

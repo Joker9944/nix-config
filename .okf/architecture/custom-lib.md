@@ -5,7 +5,7 @@ description: Three libs — `lib/` for module-system helpers, `apps/util-lib` fo
 tags: [architecture, lib, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-16T00:00:00Z
+  at: 2026-09-27T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -20,6 +20,17 @@ verified:
 | `apps/nix-schemes/lib/` | `lib.libSchemes` | `color` (construction, conversion, WCAG metrics), `gtk`, `views`, `modules`, plus `generateScheme`, `mkScheme`, `types` and `init` at the root |
 
 [/decisions/util-lib-split.md](/decisions/util-lib-split.md) has the boundary and the reasoning. All three load the same way, name themselves the same way, and nest under `lib.<name>` so a consumer's `inherit` reads the same as the tree's own arg — matching `inputs.nix-math.lib.math`.
+
+# When a helper must be an option instead
+
+A helper lands in a lib only if it reads no module attributes (`config`, `osConfig`, `pkgs`) **and**
+no module-level choice selects which implementation applies. Fail either and it is an option,
+declared at its canonical option path plus `lib` — `mixins.desktopEnvironment.hyprland.lib.mkAppCommand`,
+`…hyprland.terminal.lib.mkRunCommand`. The second condition is what keeps a *dispatch slot* an
+option even when every implementation is pure: `terminal.lib.mkWindowRules` is filled by whichever
+terminal mixin is enabled, so a caller like `modules/home/mixins/desktop-environment/hyprland/yazi.nix`
+never names kitty. This extends the boundary in
+[/decisions/util-lib-split.md](/decisions/util-lib-split.md) by one tier.
 
 # The loader
 

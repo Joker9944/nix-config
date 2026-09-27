@@ -2,6 +2,10 @@
 
 An index of bundle changes, not a narrative. One line each: what changed and the concept that holds the detail, in the form `CLAUDE.md` rule 3 sets. Rationale lives in the commit message, tied to the diff, or in a [decision](/decisions/index.md) — not here.
 
+## 2026-09-27
+
+- Hyprland helpers split from config values: a `lib` level on the option path, and the two conditions that send one to a lib instead — [architecture/custom-lib](/architecture/custom-lib.md)
+
 ## 2026-09-25
 
 - Backporting a single home-manager module across a release gap, via an in-mixin `builtins.fetchGit` — [workflows/release-upgrade](/workflows/release-upgrade.md)

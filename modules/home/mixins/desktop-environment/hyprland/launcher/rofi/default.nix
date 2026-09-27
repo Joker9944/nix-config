@@ -1,4 +1,4 @@
-{ mkHyprlandModule, libUtil, ... }:
+{ mkHyprlandModule, ... }:
 {
   lib,
   config,
@@ -29,8 +29,8 @@ mkHyprlandModule {
 
         # Only `drun` honours these; rofi bypasses both once it launches via GIO,
         # which silently returns apps to the compositor's unit. Recheck on bump.
-        run-command = cfg.mkAppCommand { elems = [ "{cmd}" ]; };
-        run-shell-command = cfg.mkAppCommand {
+        run-command = cfg.lib.mkAppCommand { elems = [ "{cmd}" ]; };
+        run-shell-command = cfg.lib.mkAppCommand {
           elems = [
             "{terminal}"
             "-e"
@@ -55,85 +55,15 @@ mkHyprlandModule {
       };
     };
 
-    mixins.desktopEnvironment.hyprland.launcher = {
-      toggleCommand = "pkill --exact \\\"rofi\\\" || ${
-        cfg.mkAppCommand {
-          elems = [
-            "rofi"
-            "-show"
-            "drun"
-            "-show-icons"
-          ];
-        }
-      }";
-
-      mkDmenuCommand =
-        {
-          location ? null,
-          search ? true,
-          width ? null,
-          height ? null,
-          x ? null,
-          y ? null,
-          extraArgs ? [ ],
-          ...
-        }:
-        let
-          locationMap = {
-            "center" = "center";
-            "top_left" = "northwest";
-            "top" = "north";
-            "top_right" = "northeast";
-            "right" = "east";
-            "bottom_right" = "southeast";
-            "bottom" = "south";
-            "bottom_left" = "southwest";
-            "left" = "northwest";
-          };
-          translateLocation =
-            location: "location: ${locationMap.${location}}; anchor: ${locationMap.${location}};";
-          windowTheme =
-            lib.pipe
-              [
-                (lib.optional (location != null) (translateLocation location))
-                (lib.optional (width != null) "width: ${toString width}px;")
-                (lib.optional (height != null) "height: ${toString height}px;")
-                (lib.optional (x != null) "x-offset: ${toString x}px;")
-                (lib.optional (y != null) "y-offset: ${toString y}px;")
-              ]
-              [
-                lib.flatten
-                (lib.concatStringsSep " ")
-                (opts: if (opts != "") then "window { ${opts} }" else "")
-              ];
-          # cSpell:words inputbar
-          inputbarTheme =
-            lib.pipe
-              [
-                (lib.optional (!search) "enabled: false;")
-              ]
-              [
-                lib.flatten
-                (lib.concatStringsSep " ")
-                (opts: if (opts != "") then "inputbar { ${opts} }" else "")
-              ];
-          themeString =
-            lib.pipe
-              [
-                (lib.optional (windowTheme != "") windowTheme)
-                (lib.optional (inputbarTheme != "") inputbarTheme)
-              ]
-              [
-                lib.flatten
-                (lib.concatStringsSep " ")
-              ];
-        in
-        libUtil.strings.mkCommand [
+    mixins.desktopEnvironment.hyprland.launcher.toggleCommand = "pkill --exact \\\"rofi\\\" || ${
+      cfg.lib.mkAppCommand {
+        elems = [
           "rofi"
-          "-dmenu"
-          (lib.optional (themeString != "") "-theme-str \"${themeString}\"")
-          extraArgs
+          "-show"
+          "drun"
+          "-show-icons"
         ];
-    };
+      }
+    }";
   };
 }

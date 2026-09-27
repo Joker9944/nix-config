@@ -5,7 +5,7 @@ description: The hyprland tree emits `hyprland.lua`, not `hyprland.conf`. Docume
 tags: [architecture, hyprland, home-manager, convention]
 generated:
   by: claude-code/claude-fable-5
-  at: 2026-09-25T00:00:00Z
+  at: 2026-09-27T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -49,9 +49,9 @@ Every bind interpolates `binds.mods`
 modifier string. Every bind passes `description`; a future cheatsheet reads it. Flags spell the
 scheme's dedicated-key behavior: `locked = true` for chords that must work on the lock screen,
 `repeating = true` for analog hold actions. Anything long-running a bind starts goes through
-`cfg.mkAppCommand` / `cfg.mkAppEntryCommand` — see [uwsm-session](uwsm-session.md). App summon
+`cfg.lib.mkAppCommand` / `cfg.lib.mkAppEntryCommand` — see [uwsm-session](uwsm-session.md). App summon
 workspaces don't hand-write the bind/workspace_rule/window_rule triple: they compose through
-`cfg.mkAppWorkspace`, with `silent` reserved for autostarted apps.
+`cfg.lib.mkAppWorkspace`, with `silent` reserved for autostarted apps.
 
 # Rule keys are validated at runtime, not at build time
 
@@ -132,7 +132,7 @@ is **not** a usable reference for rule effects: its `HL.WindowRuleSpec` declares
 
 * [custom-lib](custom-lib.md) — `mkLuaCall`, for the `_args` multi-argument lua form.
 * [uwsm-session](uwsm-session.md) — where a bind's `exec_cmd` process ends up, and why long-running
-  ones go through `cfg.mkAppCommand`.
+  ones go through `cfg.lib.mkAppCommand`.
 * [shortcut-scheme](shortcut-scheme.md) — the modifier layers and tier semantics a `bind` entry
   composes from.
 * [mixin-pattern](mixin-pattern.md) — the hyprland tree is the one hand-rolled fan-out

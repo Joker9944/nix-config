@@ -8,10 +8,10 @@ mkMixinModule "discord" {
     {
       programs.vesktop.enable = true;
 
-      wayland.windowManager.hyprland.settings = cfg.mkAppWorkspace {
+      wayland.windowManager.hyprland.settings = cfg.lib.mkAppWorkspace {
         id = "discord";
         class = "vesktop";
-        launch = cfg.mkAppEntryCommand {
+        launch = cfg.lib.mkAppEntryCommand {
           package = config.programs.vesktop.package;
         };
       };

@@ -21,14 +21,14 @@ mkHyprlandModule {
   };
 
   wayland.windowManager.hyprland.settings = lib.mkMerge [
-    (cfg.mkAppWorkspace {
+    (cfg.lib.mkAppWorkspace {
       inherit id;
       class = id;
-      launch = cfg.terminal.mkRunCommand {
+      launch = cfg.terminal.lib.mkRunCommand {
         inherit id;
         command = "btop";
       };
     })
-    { window_rule = cfg.terminal.mkWindowRules { inherit id; }; }
+    { window_rule = cfg.terminal.lib.mkWindowRules { inherit id; }; }
   ];
 }

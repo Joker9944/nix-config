@@ -1,11 +1,11 @@
 ---
 type: Architecture Pattern
 title: UWSM session and app slices
-description: Hyprland runs under UWSM, so anything long-running a bind or rofi launches must go through `cfg.mkAppCommand` or `cfg.mkAppEntryCommand`, or it lands inside the compositor's own systemd unit.
+description: Hyprland runs under UWSM, so anything long-running a bind or rofi launches must go through `cfg.lib.mkAppCommand` or `cfg.lib.mkAppEntryCommand`, or it lands inside the compositor's own systemd unit.
 tags: [architecture, hyprland, uwsm, systemd, rofi, vicinae]
 generated:
   by: claude-code/claude-fable-5
-  at: 2026-09-25T00:00:00Z
+  at: 2026-09-27T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -40,7 +40,7 @@ UWSM off they degrade to something that still works.
   fallback: an entry ID is executable *only* because uwsm resolves it, so degrading to a bare
   `mkCommand` would emit `hl.dsp.exec_cmd("librewolf.desktop")` and break the bind.
 
-Wrapping happens wherever the command is built, including inside `cfg.terminal.mkRunCommand`, so
+Wrapping happens wherever the command is built, including inside `cfg.terminal.lib.mkRunCommand`, so
 every terminal-app bind (`btop`, `yazi`, `numbat`) inherits it without repeating itself. Those share
 `kitty` as argv[0], which uwsm would otherwise use for the unit name — hence `mkAppCommand`'s `name`
 argument, which passes `uwsm app -a` so each gets its own scope name.
@@ -57,7 +57,7 @@ every keypress.
 
 Given an entry ID, `uwsm app` adds `SourcePath=`, a unit description from `Name`/`GenericName`,
 `Path=` as working directory, and the packaged `Exec` line. Reach for it through
-`cfg.mkAppEntryCommand`, which routes through `flake.lib.requireDesktopFile` so a renamed entry
+`cfg.lib.mkAppEntryCommand`, which routes through `flake.lib.requireDesktopFile` so a renamed entry
 fails the build instead of producing a bind that silently does nothing — see
 [custom-lib](custom-lib.md).
 
@@ -67,8 +67,8 @@ Two constraints decide where it applies:
   can be garbage-collected.
 * **Not for `Terminal=true` entries.** `btop.desktop` and `yazi.desktop` are such entries; uwsm would
   route them through the xdg-terminal-exec-selected terminal with no `--app-id`, and the
-  `cfg.terminal.mkWindowRules` `class:` rules would stop matching. Those binds keep the executable
-  form built by `cfg.terminal.mkRunCommand`.
+  `cfg.terminal.lib.mkWindowRules` `class:` rules would stop matching. Those binds keep the executable
+  form built by `cfg.terminal.lib.mkRunCommand`.
 
 `xdg-open` is **not** the way to launch an entry outside uwsm, though it looks like it. Its
 `open_generic()` treats the argument as a *document*: it resolves the MIME type
@@ -79,7 +79,7 @@ hence `lib.getExe`.
 
 # rofi
 
-`programs.rofi.extraConfig` carries two hooks, both set from `cfg.mkAppCommand`:
+`programs.rofi.extraConfig` carries two hooks, both set from `cfg.lib.mkAppCommand`:
 
 * `run-command` — `drun` selections. Verified in rofi 2.0.0 source: `exec_cmd_entry` →
   `helper_execute_command` → `config.run_command`, with `{cmd}` substituted and then shell-parsed
@@ -97,9 +97,6 @@ environment, but rofi 2.0.0 does not export them.
 `DESKTOP_ENTRY_*` variables. The first would silently undo this; the second would make entry IDs
 available for free.
 
-`cfg.launcher.mkDmenuCommand` is deliberately untouched — the dmenu form is a stdin/stdout filter,
-not an app launcher.
-
 # vicinae
 
 vicinae needs no equivalent of those hooks: it detects UWSM and prefixes `uwsm-app --` itself, so
@@ -110,7 +107,7 @@ the quickest way to check.
 Without it vicinae can resolve the terminal to kitty's `kitty +open %U` URL-launcher entry and
 append `-e <cmd>`, which errors instead of running anything. With it, vicinae passes
 `--class <entry-id>`, so a vicinae-launched `btop` has class `btop.desktop` where the bind's
-`cfg.terminal.mkRunCommand` gives `btop` — `mkWindowRules` matches only the latter.
+`cfg.terminal.lib.mkRunCommand` gives `btop` — `mkWindowRules` matches only the latter.
 
 `nix build` proves the string was generated, nothing more; the check that means anything is
 `cut -d: -f3 < /proc/<pid>/cgroup` on a running app.

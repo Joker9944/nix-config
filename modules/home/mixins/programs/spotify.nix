@@ -24,10 +24,10 @@ mkMixinModule "spotify" {
     let
       cfg = config.mixins.desktopEnvironment.hyprland;
     in
-    cfg.mkAppWorkspace {
+    cfg.lib.mkAppWorkspace {
       id = "spotify";
       class = "Spotify";
-      launch = cfg.mkAppEntryCommand {
+      launch = cfg.lib.mkAppEntryCommand {
         package = config.programs.spicetify.spotifyPackage;
       };
     };

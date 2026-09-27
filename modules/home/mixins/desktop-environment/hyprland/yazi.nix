@@ -54,7 +54,7 @@ mkHyprlandModule {
         inherit (cfg.binds) mods;
         inherit (flake.lib.hyprland) mkLuaCall;
         inherit (lib.generators) mkLuaInline;
-        command = cfg.terminal.mkRunCommand {
+        command = cfg.terminal.lib.mkRunCommand {
           inherit id;
           command = "yazi";
         };
@@ -67,6 +67,6 @@ mkHyprlandModule {
         ])
       ];
 
-    window_rule = cfg.terminal.mkWindowRules { inherit id; };
+    window_rule = cfg.terminal.lib.mkWindowRules { inherit id; };
   };
 }

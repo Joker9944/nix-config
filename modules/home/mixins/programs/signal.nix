@@ -9,11 +9,11 @@ mkMixinModule "signal" {
     {
       programs.signal.enable = true;
 
-      wayland.windowManager.hyprland.settings = cfg.mkAppWorkspace {
+      wayland.windowManager.hyprland.settings = cfg.lib.mkAppWorkspace {
         id = "signal";
         key = "G";
         class = "signal";
-        launch = cfg.mkAppEntryCommand {
+        launch = cfg.lib.mkAppEntryCommand {
           inherit package;
           name = "signal.desktop";
         };

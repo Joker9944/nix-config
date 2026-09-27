@@ -1,4 +1,4 @@
-{ mkHyprlandModule, libUtil, ... }:
+{ mkHyprlandModule, ... }:
 {
   lib,
   config,
@@ -48,7 +48,7 @@ mkHyprlandModule {
           # general
           telemetry.system_info = false;
           global_shortcuts.toggle = ""; # bind handled in hyprland
-          providers.applications.preferences.launchPrefix = cfg.mkAppCommand { };
+          providers.applications.preferences.launchPrefix = cfg.lib.mkAppCommand { };
 
           # additional theming
           launcher_window.opacity = cfg.style.opacity.active;
@@ -100,28 +100,7 @@ mkHyprlandModule {
 
     schemes.vicinae.enable = true;
 
-    mixins.desktopEnvironment.hyprland.launcher = {
-      toggleCommand = "vicinae toggle";
-
-      mkDmenuCommand =
-        {
-          width ? null,
-          height ? null,
-          ...
-        }:
-        libUtil.strings.mkCommand [
-          "vicinae"
-          "dmenu"
-          (lib.optional (width != null) [
-            "--width"
-            (toString width)
-          ])
-          (lib.optional (height != null) [
-            "--height"
-            (toString height)
-          ])
-        ];
-    };
+    mixins.desktopEnvironment.hyprland.launcher.toggleCommand = "vicinae toggle";
 
     wayland.windowManager.hyprland.settings.layer_rule = [
       {

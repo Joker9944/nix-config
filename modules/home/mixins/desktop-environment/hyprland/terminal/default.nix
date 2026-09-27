@@ -1,49 +1,64 @@
 { mkDefaultHyprlandModule, ... }:
 {
   lib,
-  config,
   pkgs,
   ...
 }:
-let
-  cfg = config.mixins.desktopEnvironment.hyprland;
-in
 mkDefaultHyprlandModule { dir = ./.; } {
   options.mixins.desktopEnvironment.hyprland.terminal =
     let
-      inherit (lib) mkPackageOption mkOption types;
+      inherit (lib)
+        mkPackageOption
+        mkOption
+        types
+        literalExpression
+        ;
     in
     {
       package = mkPackageOption pkgs "terminal" {
         default = null;
       };
 
-      mkRunCommand = mkOption {
-        type = types.functionTo types.str;
-        default =
-          {
-            command,
-            ...
-          }:
-          cfg.mkAppCommand {
-            elems = [
-              "kitty"
-              command
-            ];
-          };
-        description = ''
-          Function to generate a command to run a command in terminal.
-        '';
-      };
+      lib = {
+        mkRunCommand = mkOption {
+          type = types.functionTo types.str;
+          example = literalExpression ''
+            {
+              id,
+              command,
+              ...
+            }:
+            cfg.lib.mkAppCommand {
+              name = id;
+              elems = [
+                "foot"
+                "--app-id"
+                id
+                command
+              ];
+            }
+          '';
+          description = ''
+            Function to generate a command to run a command in terminal.
+          '';
+        };
 
-      mkWindowRules = mkOption {
-        type = types.functionTo (types.listOf types.attrs);
-        default =
-          { id, ... }:
-          [ "minsize 720 480, class:${id}" ];
-        description = ''
-          Function to generate Hyprland window rules for terminal windows.
-        '';
+        mkWindowRules = mkOption {
+          type = types.functionTo (types.listOf types.attrs);
+          example = literalExpression ''
+            { id, ... }:
+            [
+              {
+                name = "terminal-''${id}";
+                match.class = id;
+                min_size = lib.generators.mkLuaInline "{ 720, 480 }";
+              }
+            ]
+          '';
+          description = ''
+            Function to generate Hyprland window rules for terminal windows.
+          '';
+        };
       };
     };
 }
