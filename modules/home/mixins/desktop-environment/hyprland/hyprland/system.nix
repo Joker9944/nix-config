@@ -24,12 +24,19 @@ mkHyprlandModule {
 
           follow_mouse = 1;
 
-          # TODO get a feel on laptop
           touchpad = {
-            natural_scroll = false;
+            natural_scroll = true;
           };
         };
     };
+
+    gesture = [
+      {
+        fingers = 3;
+        direction = "horizontal";
+        action = "workspace";
+      }
+    ];
 
     window_rule = lib.mkBefore [
       {
