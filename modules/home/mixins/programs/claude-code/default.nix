@@ -30,7 +30,7 @@ mkMixinModule "claude-code" {
       # everything `/config` and `/model` would otherwise persist has to live here too.
       settings = {
         model = "opus";
-        effortLevel = "high";
+        effortLevel = "medium";
         tui = "fullscreen";
         skipAutoPermissionPrompt = true;
 

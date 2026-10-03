@@ -14,8 +14,10 @@ GLYPH_FIVE_HOUR='󰥔'
 GLYPH_SEVEN_DAY='󰸗'
 
 BAR_WIDTH=10
-BAR_FILLED='▓'
-BAR_EMPTY='░'
+BAR_FULL='█'
+BAR_TRACK='─'
+# Indexed by eighths of a cell to fill; index 0 is unused.
+BAR_PARTIAL=('' '▏' '▎' '▍' '▌' '▋' '▊' '▉')
 
 input=$(cat)
 
@@ -31,18 +33,25 @@ color_for() {
 	fi
 }
 
+# Fill resolves to eighths of a cell so low percentages still register. Emits its own colors
+# because the track is dim while the fill carries the threshold color.
 bar_for() {
-	local pct=$1 filled i out=''
-	filled=$((pct * BAR_WIDTH / 100))
-	((filled > BAR_WIDTH)) && filled=$BAR_WIDTH
-	for ((i = 0; i < BAR_WIDTH; i++)); do
-		if ((i < filled)); then
-			out+=$BAR_FILLED
-		else
-			out+=$BAR_EMPTY
-		fi
+	local pct=$1
+	local eighths=$((pct * BAR_WIDTH * 8 / 100))
+	((eighths > BAR_WIDTH * 8)) && eighths=$((BAR_WIDTH * 8))
+	local full=$((eighths / 8)) rest=$((eighths % 8))
+	local used=$full fill='' track='' i
+	for ((i = 0; i < full; i++)); do
+		fill+=$BAR_FULL
 	done
-	printf '%s' "$out"
+	if ((rest > 0)); then
+		fill+=${BAR_PARTIAL[rest]}
+		used=$((used + 1))
+	fi
+	for ((i = used; i < BAR_WIDTH; i++)); do
+		track+=$BAR_TRACK
+	done
+	printf '%s%s%s%s%s%s' "$(color_for "$pct")" "$fill" "$RESET" "$DIM" "$track" "$RESET"
 }
 
 format_tokens() {
@@ -72,10 +81,15 @@ format_until() {
 }
 
 model_segment() {
-	local model
+	local model effort
 	model=$(jq -r '.model.display_name // empty' <<<"$input")
 	[[ -n $model ]] || return 0
 	printf '%s%s %s%s' "$MAGENTA" "$GLYPH_MODEL" "$model" "$RESET"
+
+	# Absent for models that do not support effort levels.
+	effort=$(jq -r '.effort.level // empty' <<<"$input")
+	[[ -n $effort ]] || return 0
+	printf ' %s%s%s' "$DIM" "$effort" "$RESET"
 }
 
 context_segment() {
@@ -85,8 +99,8 @@ context_segment() {
 	size=$(jq -r '.context_window.context_window_size // 0' <<<"$input")
 	((size > 0)) || return 0
 	color=$(color_for "$pct")
-	printf '%s%s %d%%%s %s(%s/%s)%s' \
-		"$color" "$(bar_for "$pct")" "$pct" "$RESET" \
+	printf '%s %s%d%%%s %s(%s/%s)%s' \
+		"$(bar_for "$pct")" "$color" "$pct" "$RESET" \
 		"$DIM" "$(format_tokens "$used")" "$(format_tokens "$size")" "$RESET"
 }
 
