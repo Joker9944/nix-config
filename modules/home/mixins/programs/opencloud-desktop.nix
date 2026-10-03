@@ -2,6 +2,7 @@
 {
   lib,
   config,
+  pkgs,
   pkgs-unstable,
   ...
 }:
@@ -11,12 +12,27 @@ mkMixinModule "opencloud-desktop" {
     package = pkgs-unstable.opencloud-desktop;
   };
 
-  xdg.userDirs = {
-    enable = true;
+  xdg = {
+    # the app writes its own entry from /proc/self/exe, which points past the Nix wrapper
+    autostart.entries =
+      let
+        inherit (config.programs.opencloud-desktop) package;
+        desktopFile = "share/applications/OpenCloud.desktop";
+        entry = pkgs.runCommandLocal "opencloud-desktop-autostart-entry" { } ''
+          install -Dm444 "${package}/share/applications/opencloud.desktop" "$out/${desktopFile}"
+          substituteInPlace "$out/${desktopFile}" \
+            --replace-fail "opencloud --showsettings" "opencloud"
+        '';
+      in
+      [ "${entry}/${desktopFile}" ];
 
-    extraConfig = {
-      GAMES = "${config.home.homeDirectory}/Games";
-      NOTES = "${config.home.homeDirectory}/Notes";
+    userDirs = {
+      enable = true;
+
+      extraConfig = {
+        GAMES = "${config.home.homeDirectory}/Games";
+        NOTES = "${config.home.homeDirectory}/Notes";
+      };
     };
   };
 

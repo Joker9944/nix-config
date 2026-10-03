@@ -2,7 +2,11 @@
 { config, ... }:
 mkMixinModule "xdg" {
   xdg = {
-    autostart.enable = true;
+    autostart = {
+      enable = true;
+      readOnly = true;
+    };
+
     mimeApps.enable = true;
 
     userDirs = {

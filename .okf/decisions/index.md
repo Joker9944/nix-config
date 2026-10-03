@@ -16,6 +16,7 @@ Load-bearing choices behind the shape of the repo. Consult before proposing stru
 * [scheme-model](scheme-model.md) — A scheme is total and derived; user input enters as typed options, never as post-hoc mutation.
 * [vendored-schemes](vendored-schemes.md) — Upstream schemes are converted to Nix and committed; a monthly job refreshes them, nothing checks them at eval time.
 * [desktop-files-at-build-time](desktop-files-at-build-time.md) — Desktop-file contents are read by derivations, never during evaluation; `[Added Associations]` is not reproduced.
+* [declared-autostart](declared-autostart.md) — `~/.config/autostart` is read-only; an app that writes its own entry records the binary behind its Nix wrapper.
 * [no-ifd](no-ifd.md) — `allow-import-from-derivation = false` on the machines and in CI; evaluation never builds.
 * [dual-class-modules](dual-class-modules.md) — A module for both trees is one feature directory whose tree-specific halves dispatch on `_class`; the dendritic pattern is not adopted.
 * [firewall-source-scoping](firewall-source-scoping.md) — Cluster ports are scoped to their peers in `extraCommands`; the firewall stays on the iptables backend.
