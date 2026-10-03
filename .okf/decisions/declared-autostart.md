@@ -1,8 +1,8 @@
 ---
 type: Decision
 title: Autostart entries are declared, never self-registered
-description: '`xdg.autostart.readOnly = true` makes `~/.config/autostart` a read-only store symlink, because an app that writes its own entry records `/proc/self/exe` and so bypasses its Nix wrapper.'
-tags: [decision, xdg, autostart, desktop-entry, wrapper]
+description: '`xdg.autostart.readOnly = true` makes `~/.config/autostart` a read-only store symlink, because an app that writes its own entry records `/proc/self/exe` and so bypasses its Nix wrapper; `xdg.desktopEntries` is the `hiPrio` lever for displacing an entry a package ships.'
+tags: [decision, xdg, autostart, desktop-entry, launcher, wrapper]
 generated:
   by: claude-code/claude-opus-5
   at: 2026-10-04T00:00:00Z
@@ -48,6 +48,18 @@ Two naming constraints:
 
 This is not [no-ifd](no-ifd.md) territory: a derivation path is interpolated, never read at eval
 time, and home-manager's own `xdg.autostart` is a `runCommandLocal` over the entry list regardless.
+
+# Displacing an entry a package ships
+
+`xdg.desktopEntries` is the other lever, and it does not write to `$XDG_DATA_HOME` as the name
+suggests — it adds a `lib.hiPrio` `makeDesktopItem` to `home.packages`, so the generated entry wins
+the *profile* collision at `share/applications/<attr key>.desktop`. That makes it the way to suppress
+an entry rather than shadow it, via `noDisplay = true`.
+
+opencloud-desktop needs this too: upstream installs `opencloudcmd.desktop` byte-identical to
+`opencloud.desktop` — same `Name`, same `Exec` — and launchers dedup by entry ID, not by name, so the
+GUI is listed twice. Unfiled upstream, so there is no link for
+[/workflows/track-upstream-blockers](/workflows/track-upstream-blockers.md) to watch.
 
 # Related
 

@@ -13,7 +13,8 @@ mkMixinModule "opencloud-desktop" {
   };
 
   xdg = {
-    # the app writes its own entry from /proc/self/exe, which points past the Nix wrapper
+    # WORKAROUND: the app writes its own entry from /proc/self/exe, which is the binary behind the
+    # Nix wrapper, so the entry has to be declared here instead
     autostart.entries =
       let
         inherit (config.programs.opencloud-desktop) package;
@@ -25,6 +26,15 @@ mkMixinModule "opencloud-desktop" {
         '';
       in
       [ "${entry}/${desktopFile}" ];
+
+    # HACK: upstream installs opencloudcmd.desktop byte-identical to opencloud.desktop, so the
+    # launcher lists the GUI twice; this entry wins the profile collision and hides the copy
+    desktopEntries.opencloudcmd = {
+      name = "OpenCloud Desktop sync client (CLI)";
+      exec = "opencloudcmd";
+      terminal = true;
+      noDisplay = true;
+    };
 
     userDirs = {
       enable = true;
