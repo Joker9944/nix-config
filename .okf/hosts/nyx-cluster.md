@@ -5,7 +5,7 @@ description: Four headless x86_64-linux machines running k3s — tars/case/kipp 
 tags: [host, server, k3s, zfs, longhorn]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-16T00:00:00Z
+  at: 2026-10-04T00:00:00Z
 sources:
   - id: longhorn-2166
     resource: https://github.com/longhorn/longhorn/issues/2166
@@ -48,6 +48,8 @@ All three servers advertise `192.168.0.20/32` into the tailnet — `services.tai
 Two halves are outside nix. The route must be **approved** in the Tailscale admin console (or by an ACL `autoApprovers` entry) before any client sees it; and `tailscale set` writes persistent prefs, so deleting the nix lines only removes the unit — unadvertising needs an explicit `tailscale set --advertise-routes=` on the node.
 
 Linux clients ignore subnet routes unless told otherwise, so [wintermute](wintermute.md) carries the matching `useRoutingFeatures = "client"` + `--accept-routes`. Phones and macOS accept by default.
+
+Alongside `192.168.0.20/32` each server advertises `192.168.0.128/25`, the MetalLB pool, which is how the ingress at **192.168.0.128** is reached from off-LAN. The `hosts` mixin pins the subdomains that resolve *only* inside the tailnet to that address, so a client without Tailscale up has no route to them.
 
 The tailnet is also the *only* way in to `6443`: the firewall scopes the API server to the node addresses plus the tailnet CGNAT range, so `kubectl` from a desktop on the cluster LAN is refused. [HAL9000](HAL9000.md) is on a different subnet entirely and only ever reached the cluster this way.
 

@@ -4,6 +4,7 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 
 ## 2026-10-04
 
+- The `hosts` mixin only holds labels missing from public DNS; the tailnet reaches them via the advertised MetalLB pool — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - New concept: autostart entries are declared because a self-registered one records the binary behind the Nix wrapper — [decisions/declared-autostart](/decisions/declared-autostart.md)
 - `xdg.desktopEntries` overrides via a `hiPrio` profile collision, not `$XDG_DATA_HOME` — [decisions/declared-autostart](/decisions/declared-autostart.md)
 - Single-instance handoff needs one identity across launch contexts; opencloud keys it on `XDG_SESSION_ID` — [decisions/declared-autostart](/decisions/declared-autostart.md)
