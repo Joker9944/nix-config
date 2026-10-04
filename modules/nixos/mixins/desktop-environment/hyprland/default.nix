@@ -37,6 +37,10 @@ flake.lib.modules.mkDefaultModule
               hyprland
               xdg-desktop-portal-hyprland
               ;
+
+            inherit (inputs.hyprland.inputs.nixpkgs.legacyPackages.${prev.stdenv.hostPlatform.system})
+              mesa
+              ;
           })
         ];
 
@@ -60,7 +64,7 @@ flake.lib.modules.mkDefaultModule
 
         environment.systemPackages = with pkgs-unstable; [ kitty ];
 
-        # Override graphics drivers with the ones from Hyprland
+        # Override graphics drivers with Hyprland's, via the mesa overlay above
         hardware.graphics = {
           package = pkgs-unstable.mesa;
           package32 = pkgs-unstable.pkgsi686Linux.mesa;
