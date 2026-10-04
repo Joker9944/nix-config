@@ -4,8 +4,8 @@ title: UWSM session and app slices
 description: Hyprland runs under UWSM, so anything long-running a bind or rofi launches must go through `cfg.lib.mkAppCommand` or `cfg.lib.mkAppEntryCommand`, or it lands inside the compositor's own systemd unit.
 tags: [architecture, hyprland, uwsm, systemd, rofi, vicinae]
 generated:
-  by: claude-code/claude-fable-5
-  at: 2026-09-27T00:00:00Z
+  by: claude-code/claude-opus-5
+  at: 2026-10-04T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -26,6 +26,21 @@ transient scope in `app-graphical.slice` before exec'ing.
 XDG autostart entries land correctly on their own, as does anything the tree declares as a
 home-manager systemd user service. Binds, rofi, and workspace rules' `on_created_empty` —
 which the compositor spawns exactly like an exec bind — are the paths that need help.
+
+# Slicing is uniform, the environment is not
+
+`uwsm finalize` exports only `WAYLAND_DISPLAY`, `DISPLAY` and whatever `UWSM_FINALIZE_VARNAMES`
+names — nothing here sets the latter — so the systemd user-manager environment has no
+`XDG_SESSION_ID`. Autostart units get one regardless, because uwsm's `app-@autostart.service.d`
+drop-in adds `EnvironmentFile=-%t/uwsm/env_session.conf`, which carries it; so do the transient
+scopes behind binds. A plain home-manager user service has neither, which is why **vicinae** runs
+without it while the apps it launches would otherwise expect it.
+
+That drop-in is also what sets `Slice=app-graphical.slice`, so moving an app off XDG autostart and
+onto a user service gives up both at once: it lands in `app.slice` with the smaller environment.
+
+An app that keys state on such a variable therefore behaves differently depending on who launched
+it — see [/decisions/declared-autostart](/decisions/declared-autostart.md) for the case that bit.
 
 # `mkAppCommand` and `mkAppEntryCommand`
 

@@ -6,6 +6,10 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 
 - New concept: autostart entries are declared because a self-registered one records the binary behind the Nix wrapper — [decisions/declared-autostart](/decisions/declared-autostart.md)
 - `xdg.desktopEntries` overrides via a `hiPrio` profile collision, not `$XDG_DATA_HOME` — [decisions/declared-autostart](/decisions/declared-autostart.md)
+- Single-instance handoff needs one identity across launch contexts; opencloud keys it on `XDG_SESSION_ID` — [decisions/declared-autostart](/decisions/declared-autostart.md)
+- Autostart units and bind scopes carry `XDG_SESSION_ID`; the manager env and plain user services do not — [architecture/uwsm-session](/architecture/uwsm-session.md)
+- A user service is preferred over an XDG autostart entry; new public `services.opencloud-desktop` — [decisions/declared-autostart](/decisions/declared-autostart.md)
+- uwsm's autostart drop-in supplies the graphical slice as well as the session environment — [architecture/uwsm-session](/architecture/uwsm-session.md)
 
 ## 2026-09-27
 
