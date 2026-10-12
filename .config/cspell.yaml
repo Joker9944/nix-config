@@ -20,7 +20,5 @@ ignorePaths:
   - .idea
   - flake.lock
   - '@girs'
-  - 'node_modules'
-  - 'nx*'
 dictionaries:
   - project

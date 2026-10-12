@@ -125,16 +125,6 @@
               inherit (self.checks.${system}.preCommitHooks) shellHook;
               buildInputs = self.checks.${system}.preCommitHooks.enabledPackages;
             };
-            nx =
-              (pkgs.buildFHSEnv {
-                name = "nx-dev";
-                targetPkgs =
-                  pkgs: with pkgs; [
-                    bash
-                    git
-                    nodejs
-                  ];
-              }).env;
           };
 
           checks = {
@@ -179,10 +169,7 @@
                 # Shell
                 shellcheck = {
                   enable = true;
-                  excludes = [
-                    "^nx(\\..+)?$"
-                    ".envrc"
-                  ];
+                  excludes = [ ".envrc" ];
                 };
                 shfmt.enable = true;
 

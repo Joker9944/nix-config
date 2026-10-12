@@ -2,6 +2,10 @@
 
 An index of bundle changes, not a narrative. One line each: what changed and the concept that holds the detail, in the form `CLAUDE.md` rule 3 sets. Rationale lives in the commit message, tied to the diff, or in a [decision](/decisions/index.md) — not here.
 
+## 2026-10-12
+
+- nx workspace tooling removed; excludes list trimmed to `.envrc` — [workflows/formatting-and-cspell](/workflows/formatting-and-cspell.md)
+
 ## 2026-10-04
 
 - The `hosts` mixin only holds labels missing from public DNS; the tailnet reaches them via the advertised MetalLB pool — [hosts/nyx-cluster](/hosts/nyx-cluster.md)

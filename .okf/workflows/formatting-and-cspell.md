@@ -5,7 +5,7 @@ description: What the pre-commit hooks enforce (nixfmt, shfmt, flake8, ruff-form
 tags: [workflow, formatting, spellcheck, pre-commit]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-05T00:00:00Z
+  at: 2026-10-12T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -75,7 +75,7 @@ The VS Code cspell extension only lints open files. For an IntelliJ-style "all p
 
 # Excludes
 
-`shellcheck` skips files matching `^nx(\..+)?$` (the `nx` monorepo tooling). cspell has no pre-commit exclude (it's not a hook); its ignore list lives in `.config/cspell.yaml#ignorePaths` — `secrets.yaml`, `.sops.yaml`, `flake.lock`, `.gitignore`, `.idea`, `*.patch`, `/result`, `@girs`, `node_modules`, `nx*`.
+`shellcheck` skips `.envrc`. cspell has no pre-commit exclude (it's not a hook); its ignore list lives in `.config/cspell.yaml#ignorePaths` — `secrets.yaml`, `.sops.yaml`, `flake.lock`, `.gitignore`, `.idea`, `*.patch`, `/result`, `@girs`.
 
 # Related
 
