@@ -35,7 +35,7 @@ Each server also passes `--tls-san=<vip>` through `services.k3s.extraFlags`. Thi
 
 # GPU on mother
 
-A GTX 1660 SUPER, the only GPU in the cluster. `mother` takes the `nvidia` mixin without `nvidiaCuda`: Jellyfin wants NVENC/NVDEC, which the driver provides, so `cudaSupport` would rebuild the package set for nothing.
+A GTX 1660 SUPER, the only GPU in the cluster. `mother` takes the `nvidia` mixin without `nvidiaCuda`: Jellyfin wants NVENC/NVDEC, which the driver provides, and nothing here runs CUDA compute — see [decisions/cuda-opt-in](/decisions/cuda-opt-in.md).
 
 `hardware.nvidia-container-toolkit.enable` runs a boot oneshot writing a CDI spec to `/run/cdi/nvidia-container-toolkit.json`, declaring `nvidia.com/gpu=0` and `=all`. containerd 2.2, which k3s 1.35 bundles, enables CDI by default over `/var/run/cdi`, so a `cdi.k8s.io/<key>: nvidia.com/gpu=0` pod annotation claims the device with nothing else in place.
 

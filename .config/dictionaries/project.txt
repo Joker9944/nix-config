@@ -64,6 +64,8 @@ mountpoint
 neww
 nextl
 noinherit
+onnx
+onnxruntime
 orchidlift
 PAMFAIL
 passwordless

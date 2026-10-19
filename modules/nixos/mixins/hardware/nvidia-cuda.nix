@@ -1,13 +1,13 @@
 { mkMixinModule, ... }:
 { lib, ... }:
 mkMixinModule "nvidiaCuda" {
+  # A capability flag, not a package-set switch: consumers read
+  # `mixins.hardware.nvidiaCuda.enable` and opt in per package. Setting
+  # `nixpkgs.config.cudaSupport` instead rebuilds every downstream consumer of a
+  # CUDA-aware library, and the cache below carries only the libraries.
+
   # CUDA EULA comes from the nvidia mixin, which this is always paired with.
   custom.nixpkgsCompat.allowUnfreeLicenses = [ "cuDNN EULA" ];
-
-  # Rebuilds a large part of the package set against CUDA, so it is opt-in
-  # separately from the driver: a host that only needs NVENC/NVDEC does not
-  # want it.
-  nixpkgs.config.cudaSupport = true;
 
   nix.settings = {
     substituters = lib.toList "https://cache.nixos-cuda.org";
