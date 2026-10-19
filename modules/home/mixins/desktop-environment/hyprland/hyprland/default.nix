@@ -120,8 +120,18 @@ mkDefaultHyprlandModule { dir = ./.; } {
       systemd.target = lib.mkIf waylandCfg.systemd.enable "hyprland-session.target";
 
       windowManager.hyprland = {
-        inherit (osConfig.programs.hyprland) package portalPackage;
+        inherit (osConfig.programs.hyprland) package;
         enable = true;
+
+        # UPGRADE(26.11): drop the `override` stub and inherit `portalPackage` with `package`
+        # again; home-manager master guards the override with `functionArgs`.
+        # xdg-desktop-portal-hyprland dropped its `hyprland` argument, but home-manager 26.05
+        # overrides it unconditionally to keep the portal's compositor in sync. The NixOS module
+        # guards the same override via `genFinalPackage`, so only the home side breaks.
+        # https://github.com/nix-community/home-manager/issues/10028 krank:ignore-line (merged upstream; the release pin is the removal condition)
+        portalPackage = osConfig.programs.hyprland.portalPackage // {
+          override = _: osConfig.programs.hyprland.portalPackage;
+        };
 
         systemd.enable = !osConfig.programs.hyprland.withUWSM;
 
