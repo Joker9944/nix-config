@@ -1,11 +1,11 @@
 ---
 type: Architecture Pattern
-title: Entry points — mkNixosConfiguration & mkHomeConfiguration
-description: The two constructors called from flake.nix that assemble every host system and every home-manager configuration.
+title: Entry points — mkNixosConfiguration, mkHomeConfiguration & mkNixOnDroidConfiguration
+description: The constructors called from flake.nix that assemble every host system, every home-manager configuration and the nix-on-droid phone.
 tags: [architecture, flake, entry-point]
 generated:
   by: claude-code/claude-opus-4-8
-  at: 2026-09-04T00:00:00Z
+  at: 2026-10-20T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -43,9 +43,30 @@ paired NixOS config, and the one value a static arg cannot carry, since
 example, to inherit `osConfig.mixins.desktopEnvironment` and by
 `modules/home/users/joker9944/hosts/HAL9000/default.nix` to read `osConfig.programs.steam.package`.
 
+# `mkNixOnDroidConfiguration`
+
+Defined in `lib/configuration/mkNixOnDroidConfiguration.nix`. Builds an Android device from
+`flake.nixOnDroidModules."hosts-<hostname>"` (`modules/nix-on-droid/hosts/<hostname>/`), with
+home-manager **integrated** (`home-manager.config`), since nix-on-droid has no standalone form. There
+is no paired NixOS config, so it imports nixpkgs itself with the flake's overlays, and the shared
+home tree — `homeModules.mixins`, `theme`, every `public-*` — arrives via `home-manager.sharedModules`.
+`users-<username>` is not loaded: it is desktop-shaped and reads `osConfig`; the host's own
+`home.nix` enables mixins instead.
+
+nix-on-droid evaluates home-manager as a bare submodule, so the constructor restores two special
+args standalone home-manager sets: `_class = "homeManager"` (else `mkClassModule` drops the theme's
+nix-schemes half) and `modulesPath` (else a string `disabledModules`, as in the vicinae backport,
+matches nothing and the option is declared twice). `osConfig` is `null` there, which home mixins
+must survive even while disabled — a submodule-typed definition read from `osConfig` is forced
+regardless of `mkIf` (`modules/home/mixins/services/maintenance.nix`).
+
+The activation package is impure: nix-on-droid pins `proot-termux` with `builtins.storePath`, so it
+evaluates only with `--impure` (which `nix-on-droid switch` passes) and with that path present —
+hence it is kept out of `checks.evalConfigurations`.
+
 # How they're called
 
-`flake.nix` pipes a list of host records through `lib.map` and `lib.listToAttrs`. `nixosConfigurations` is keyed by `hostname`. `homeConfigurations` is keyed by `<username>@<hostname>` and passes the already-built `nixosConfigurations.<hostname>` as the first argument to `mkHomeConfiguration` — that's how the home-manager side inherits `pkgs` and `osConfig` from the paired system. See `flake.nix#nixosConfigurations` and `flake.nix#homeConfigurations` for the concrete record shape.
+`flake.nix` pipes a list of host records through `lib.map` and `lib.listToAttrs`. `nixosConfigurations` is keyed by `hostname`. `homeConfigurations` is keyed by `<username>@<hostname>` and passes the already-built `nixosConfigurations.<hostname>` as the first argument to `mkHomeConfiguration` — that's how the home-manager side inherits `pkgs` and `osConfig` from the paired system. `nixOnDroidConfigurations` is keyed by `hostname` too; on the device, `nix-on-droid switch --flake <path>#<hostname>`. See `flake.nix#nixosConfigurations` and `flake.nix#homeConfigurations` for the concrete record shape.
 
 # Related
 

@@ -13,6 +13,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # nix-on-droid
+    nix-on-droid = {
+      url = "github:nix-community/nix-on-droid/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+
     # third party packages
     nix-assets = {
       url = "github:joker9944/nix-assets/main";
@@ -259,6 +266,12 @@
             theme = lib.modules.importApply ./modules/theme moduleArgs;
           };
 
+        nixOnDroidModules = self.lib.modules.mkModules {
+          prefix = "hosts";
+          dir = ./modules/nix-on-droid/hosts;
+          args = moduleArgs;
+        };
+
         lib = lib.fix (
           libSelf:
           import ./lib {
@@ -335,6 +348,22 @@
                 value = self.lib.configuration.mkHomeConfiguration {
                   nixosConfigurations = self.nixosConfigurations.${cfg.hostname};
                 } cfg;
+              }))
+              lib.listToAttrs
+            ];
+
+        nixOnDroidConfigurations =
+          lib.pipe
+            [
+              {
+                system = "aarch64-linux";
+                hostname = "marvin";
+              }
+            ]
+            [
+              (lib.map (cfg: {
+                name = cfg.hostname;
+                value = self.lib.configuration.mkNixOnDroidConfiguration cfg;
               }))
               lib.listToAttrs
             ];
