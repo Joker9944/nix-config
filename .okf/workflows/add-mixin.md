@@ -5,7 +5,7 @@ description: The 3-step process for adding either a home-manager or a NixOS mixi
 tags: [workflow, modules, home-manager, nixos]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-04T00:00:00Z
+  at: 2026-10-19T00:00:00Z
 ---
 
 # Trigger
@@ -49,6 +49,7 @@ See [rebuild](rebuild.md).
 # Anti-patterns
 
 * Exposing multiple options beyond `enable`. See [decisions/enable-flag-mixins](/decisions/enable-flag-mixins.md) — if the mixin needs a knob, put it in `modules/nixos/hosts/<host>/default.nix` or `modules/home/users/<user>/hosts/<host>/default.nix` as a plain override.
+* Wrapping a single upstream option as a "capability". A fact that expands to one line and that nothing reads is a host delta, not a mixin — the flag is a rename. What earns a mixin is a second expansion or a cross-tree reader: `mixins.hardware.battery` carries `upower` + `power-profiles-daemon` *and* is read by the yas home mixin, while `hardware.bluetooth.enable` stays a raw line in `modules/nixos/hosts/wintermute/default.nix`. Capabilities are mixins ([decisions/host-profiles](/decisions/host-profiles.md)); not every per-host fact is a capability.
 * Wrapping a *parametrized template* as a mixin. If the thing is really a function from per-host params to config (a disk layout, say), it belongs in `flake.lib`, not a mixin — see [architecture/custom-lib](/architecture/custom-lib.md) (`disko`).
 * Hand-rolling a plugin's config generation when upstream ships a home-manager module — check first. Import via `imports = [ inputs.<flake>.homeManagerModules.default ]` inside `mkMixinModule` (imports stay structural; precedent: `modules/home/mixins/desktop-environment/kde-plasma.nix`). Especially worth it for plugins that "autobuild" config into their own directory, which fails on the read-only store.
 

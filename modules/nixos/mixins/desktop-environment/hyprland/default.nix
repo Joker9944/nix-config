@@ -71,16 +71,16 @@ flake.lib.modules.mkDefaultModule
         };
 
         services = {
-          # Since I do like the GNOME ecosystem enable this for GNOME keyring, online accounts, etc.
-          gnome.core-os-services.enable = true;
+          gnome = {
+            gnome-keyring.enable = true;
+            # Defaults to gnome-keyring.enable; SSH is 1Password's job
+            gcr-ssh-agent.enable = false;
+          };
+          # Quirks database; the X11 half is inert without xserver
+          libinput.enable = true;
           # Needed for mounting disks without root privileges
           udisks2.enable = true;
         };
-
-        # WORKAROUND This is enabled by default by gnome.core-os-services
-        # Wayland does no play nice with the i18n.inputMethod family of NixOS options.
-        # Setup moved to Home Manager
-        i18n.inputMethod.enable = false;
 
         # Allow hyprlock to be installed and used on user level
         security.pam.services.hyprlock.enableGnomeKeyring = true;

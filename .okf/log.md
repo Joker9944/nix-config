@@ -4,6 +4,8 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 
 ## 2026-10-19
 
+- `mixins.hardware.battery` added; upower/ppd move behind it and the yas mixin reads it — [workflows/add-mixin](/workflows/add-mixin.md)
+- New concept: the hyprland mixin names its system services; `gnome.core-os-services` dropped — [decisions/gnome-keyring-not-core-os-services](/decisions/gnome-keyring-not-core-os-services.md)
 - New concept: `nvidiaCuda` carries no `nixpkgs.config.cudaSupport`; consumers opt in per package — [decisions/cuda-opt-in](/decisions/cuda-opt-in.md)
 
 ## 2026-10-12

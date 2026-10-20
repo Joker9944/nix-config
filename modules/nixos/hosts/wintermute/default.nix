@@ -10,6 +10,8 @@ flake.lib.modules.mkDefaultModule
 
     boot.loader.limine.style.interface.brandingColor = "#0000FF"; # blue
 
+    hardware.bluetooth.enable = true;
+
     programs.regreet.hyprland.settings.window_rule = [
       {
         match.initial_class = "apps\\.regreet";

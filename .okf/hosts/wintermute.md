@@ -5,7 +5,7 @@ description: Lenovo ThinkPad X1 Yoga Gen 4 laptop, x86_64-linux, Swiss keymap, 4
 tags: [host, laptop, hyprland, thinkpad]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-04T00:00:00Z
+  at: 2026-10-19T00:00:00Z
 ---
 
 # Hardware
@@ -20,10 +20,11 @@ Host-specific quirks (all in `modules/nixos/hosts/wintermute/default.nix`):
 * Blue limine boot branding (vs HAL9000's red).
 * Tailscale accepts subnet routes (`useRoutingFeatures = "client"` + `--accept-routes`), to reach the [nyx](nyx-cluster.md) kube-vip from off-LAN.
 * Swiss keymap: `services.xserver.xkb.layout = "ch";`
+* Bluetooth is enabled here and nowhere else (HAL9000 has no radio), as a raw `hardware.bluetooth.enable` line rather than a mixin. It used to arrive via `gnome.core-os-services`; see [decisions/gnome-keyring-not-core-os-services](/decisions/gnome-keyring-not-core-os-services.md).
 
 # Host record & mixin selection
 
-Host record: `flake.nix#nixosConfigurations`, selecting `profile = "hyprland-desktop"` — the shared graphical baseline (see [profiles](/architecture/profiles.md)). `modules/nixos/hosts/wintermute/mixins.nix` holds only the deltas: `openssh` and `windowsSupport`. It differs from [HAL9000](HAL9000.md) — same profile, but no Nvidia / Steam / Docker — solely in those deltas.
+Host record: `flake.nix#nixosConfigurations`, selecting `profile = "hyprland-desktop"` — the shared graphical baseline (see [profiles](/architecture/profiles.md)). `modules/nixos/hosts/wintermute/mixins.nix` holds only the deltas: `openssh`, `windowsSupport`, `networking.hosts` and `hardware.battery` — the last being the only host with a battery, which the [yas](/apps/yas.md) mixin reads to enable its battery module. It differs from [HAL9000](HAL9000.md) — same profile, but no Nvidia / Steam / Docker — solely in those deltas.
 
 Home-manager side: `modules/home/users/joker9944/hosts/wintermute/default.nix` enables the `wayvnc` mixin and sets `programs.yas.config.battery = true;` — the only host with a battery, so the [yas](/apps/yas.md) battery module is off everywhere else.
 
