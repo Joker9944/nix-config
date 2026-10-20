@@ -65,6 +65,12 @@ The activation package is impure: nix-on-droid pins `proot-termux` with `builtin
 evaluates only with `--impure` (which `nix-on-droid switch` passes) and with that path present —
 hence it is kept out of `checks.evalConfigurations`.
 
+An install older than the flake cannot switch to it directly: its Nix may not parse the flake, and
+its `proot-static` fails every build against a newer glibc ([nix-on-droid#495](https://github.com/nix-community/nix-on-droid/issues/495)) — including
+the uid/gid import-from-derivation, which `hosts/AM` sidesteps by pinning both.
+`modules/nix-on-droid/files/bootstrap.sh` evaluates with a current Nix, stages the new
+`proot-static` for the next app start, then builds with the installed Nix.
+
 # How they're called
 
 `flake.nix` pipes a list of host records through `lib.map` and `lib.listToAttrs`. `nixosConfigurations` is keyed by `hostname`. `homeConfigurations` is keyed by `<username>@<hostname>` and passes the already-built `nixosConfigurations.<hostname>` as the first argument to `mkHomeConfiguration` — that's how the home-manager side inherits `pkgs` and `osConfig` from the paired system. `nixOnDroidConfigurations` is keyed by `hostname` too; on the device, `nix-on-droid switch --flake <path>#<hostname>`. See `flake.nix#nixosConfigurations` and `flake.nix#homeConfigurations` for the concrete record shape.
