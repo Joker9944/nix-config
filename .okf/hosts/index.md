@@ -6,5 +6,5 @@ Six x86_64-linux machines, all owned by user `joker9944` — two graphical, four
 
 * [HAL9000](HAL9000.md) — desktop with three monitors and an Nvidia GPU.
 * [wintermute](wintermute.md) — Lenovo ThinkPad X1 Yoga Gen 4 laptop, Swiss keymap.
-* `marvin` — Android phone, nix-on-droid with a shell-only mixin set; see [entry-points](/architecture/entry-points.md#mknixondroidconfiguration).
+* `AM` — Android phone, nix-on-droid with a shell mixin set and JupyterLab; see [entry-points](/architecture/entry-points.md#mknixondroidconfiguration).
 * [nyx-cluster](nyx-cluster.md) — `tars`, `case`, `kipp`, `mother`: the headless k3s cluster.

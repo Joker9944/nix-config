@@ -13,6 +13,7 @@ _:
         eza.enable = true;
         fish.enable = true;
         git.enable = true;
+        jupyter.enable = true;
         starship.enable = true;
       };
 

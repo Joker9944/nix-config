@@ -357,7 +357,7 @@
             [
               {
                 system = "aarch64-linux";
-                hostname = "marvin";
+                hostname = "AM";
               }
             ]
             [

@@ -4,7 +4,7 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 
 ## 2026-10-20
 
-- New constructor `mkNixOnDroidConfiguration` and host `marvin`; the two special args it restores and the `osConfig = null` constraint — [architecture/entry-points](/architecture/entry-points.md)
+- New constructor `mkNixOnDroidConfiguration` and host `AM`; the two special args it restores and the `osConfig = null` constraint — [architecture/entry-points](/architecture/entry-points.md)
 - `modules/nix-on-droid/` is a hosts-only tree exported as `nixOnDroidModules` — [architecture/module-layout](/architecture/module-layout.md)
 
 ## 2026-10-19
