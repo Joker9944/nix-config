@@ -47,7 +47,8 @@ example, to inherit `osConfig.mixins.desktopEnvironment` and by
 
 Defined in `lib/configuration/mkNixOnDroidConfiguration.nix`. Builds an Android device from
 `flake.nixOnDroidModules."hosts-<hostname>"` (`modules/nix-on-droid/hosts/<hostname>/`), with
-home-manager **integrated** (`home-manager.config`), since nix-on-droid has no standalone form. There
+home-manager **integrated** (`home-manager.config`) — nix-on-droid's supported form, and
+`mkHomeConfiguration` needs a NixOS pair to inherit from; one `nix-on-droid switch` covers both. There
 is no paired NixOS config, so it imports nixpkgs itself with the flake's overlays, and the shared
 home tree — `homeModules.mixins`, `theme`, every `public-*` — arrives via `home-manager.sharedModules`.
 `users-<username>` is not loaded: it is desktop-shaped and reads `osConfig`; the host's own
