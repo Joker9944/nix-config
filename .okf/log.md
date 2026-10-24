@@ -2,6 +2,12 @@
 
 An index of bundle changes, not a narrative. One line each: what changed and the concept that holds the detail, in the form `CLAUDE.md` rule 3 sets. Rationale lives in the commit message, tied to the diff, or in a [decision](/decisions/index.md) — not here.
 
+## 2026-10-20
+
+- New constructor `mkNixOnDroidConfiguration` and host `AM`; the two special args it restores and the `osConfig = null` constraint — [architecture/entry-points](/architecture/entry-points.md)
+- Bootstrapping an outdated nix-on-droid install: `bootstrap.sh`, and why uid/gid are pinned — [architecture/entry-points](/architecture/entry-points.md)
+- `modules/nix-on-droid/` is a hosts-only tree exported as `nixOnDroidModules` — [architecture/module-layout](/architecture/module-layout.md)
+
 ## 2026-10-19
 
 - `mixins.hardware.battery` added; upower/ppd move behind it and the yas mixin reads it — [workflows/add-mixin](/workflows/add-mixin.md)

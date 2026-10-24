@@ -1,7 +1,9 @@
 { mkMixinModule, ... }:
-{ osConfig, ... }:
+{ lib, osConfig, ... }:
 mkMixinModule "maintenance" {
-  nix = { inherit (osConfig.nix) gc; };
+  # A submodule-typed definition is forced even while the mixin is disabled, and
+  # osConfig is null outside a NixOS pairing (nix-on-droid).
+  nix = lib.optionalAttrs (osConfig != null) { inherit (osConfig.nix) gc; };
 
   # Enable automatic upgrades
   services = {

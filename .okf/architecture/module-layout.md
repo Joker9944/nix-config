@@ -5,7 +5,7 @@ description: On-disk layout for any nix module in the repo — single file for t
 tags: [architecture, modules, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-05T00:00:00Z
+  at: 2026-10-20T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -29,7 +29,8 @@ flat keys — `hosts-*` / `profiles-*` / `users-*` / `public-*` on the NixOS sid
 `public-*` on the home side (see
 [auto-discovery](auto-discovery.md#the-flake-level-collector-mkmodules)). The
 [entry-point](entry-points.md) constructors select the per-host and per-user keys and inject every
-`public-*` module wholesale.
+`public-*` module wholesale. `modules/nix-on-droid/` is a third, hosts-only tree, exported as
+`nixOnDroidModules` — its home-manager side reuses `modules/home/`.
 
 Any other directory under `modules/` is a **feature** exported under its own key in *both* sets —
 `modules/theme/` is `{nixos,home}Modules.theme`. A feature is one module value both trees load, so
