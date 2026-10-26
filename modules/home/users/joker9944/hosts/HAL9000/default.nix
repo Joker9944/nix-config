@@ -59,13 +59,15 @@
       }
     ];
 
-    on = flake.lib.hyprland.mkLuaCall [
-      "hyprland.start"
-      (lib.generators.mkLuaInline ''
-        function()
-          hl.exec_cmd("${lib.getExe pkgs.xrandr} --output DP-2 --primary")
-        end
-      '')
+    on = [
+      (flake.lib.hyprland.mkLuaCall [
+        "hyprland.start"
+        (lib.generators.mkLuaInline ''
+          function()
+            hl.exec_cmd("${lib.getExe pkgs.xrandr} --output DP-2 --primary")
+          end
+        '')
+      ])
     ];
 
     workspace_rule = [

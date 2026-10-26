@@ -19,6 +19,7 @@ mkDefaultHyprlandModule { dir = ./.; } {
   options.mixins.desktopEnvironment.hyprland.lib =
     let
       inherit (lib) mkOption types;
+      toLua = lib.generators.toLua { };
     in
     {
       mkAppCommand = mkOption {
@@ -70,8 +71,19 @@ mkDefaultHyprlandModule { dir = ./.; } {
               {
                 workspace = "special:${id}";
                 layout = "scrolling";
-                on_created_empty = launch;
               }
+            ];
+            on = [
+              (flake.lib.hyprland.mkLuaCall [
+                "workspace.created"
+                (lib.generators.mkLuaInline ''
+                  function(ws)
+                    if ws.addressable_name == ${toLua "special:${id}"} and ws.is_empty then
+                      hl.exec_cmd(${toLua launch})
+                    end
+                  end
+                '')
+              ])
             ];
             window_rule = [
               {
@@ -83,7 +95,8 @@ mkDefaultHyprlandModule { dir = ./.; } {
           };
         description = ''
           Compose the app-tier summon pattern for one app: the toggle bind, the special
-          workspace's scrolling rule with its launch fallback, and the window assignment.
+          workspace's scrolling rule, the window assignment, and a `workspace.created`
+          handler that launches the app when the workspace is created empty.
         '';
       };
     };

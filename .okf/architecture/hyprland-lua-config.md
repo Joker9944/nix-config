@@ -4,8 +4,8 @@ title: Hyprland lua config surface
 description: The hyprland tree emits `hyprland.lua`, not `hyprland.conf`. Documents the `settings` shape and the fact that rule keys are validated at runtime, not build time — so `nix build` proves nothing about a rule's validity.
 tags: [architecture, hyprland, home-manager, convention]
 generated:
-  by: claude-code/claude-fable-5
-  at: 2026-09-27T00:00:00Z
+  by: claude-code/claude-opus-5
+  at: 2026-10-26T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -34,6 +34,12 @@ emits a raw lua expression. See [custom-lib](custom-lib.md).
 the repo convention, and re-declaring an existing name updates that rule rather than
 registering a second one.
 
+Any key more than one module contributes to must be a **list in every one of them**. The
+`settings` type is an `oneOf`, and `either`'s merge delegates to `listOf` only when every
+definition is a list — a single-element attrset next to a list falls through to `mergeOneOption`
+and the eval fails. `on` is the key where this bites, since a host may add one handler and
+`mkAppWorkspace` adds one per app.
+
 `layer_rule` effects are render and stacking only. A layer surface's input region is set by
 the client, and Hyprland has no rule that overrides it — a layer-shell panel that swallows
 clicks has to be fixed in the client (for wayneko, `--follow-pointer false`).
@@ -50,8 +56,10 @@ modifier string. Every bind passes `description`; a future cheatsheet reads it. 
 scheme's dedicated-key behavior: `locked = true` for chords that must work on the lock screen,
 `repeating = true` for analog hold actions. Anything long-running a bind starts goes through
 `cfg.lib.mkAppCommand` / `cfg.lib.mkAppEntryCommand` — see [uwsm-session](uwsm-session.md). App summon
-workspaces don't hand-write the bind/workspace_rule/window_rule triple: they compose through
-`cfg.lib.mkAppWorkspace`, with `silent` reserved for autostarted apps.
+workspaces don't hand-write the bind/workspace_rule/window_rule/`on` quartet: they compose through
+`cfg.lib.mkAppWorkspace`, with `silent` reserved for autostarted apps. Its `on` entry handles
+`workspace.created`, launching the app when `ws.is_empty` — which is false when a window is what
+created the workspace, so an app started outside the bind is not duplicated.
 
 # Rule keys are validated at runtime, not at build time
 
