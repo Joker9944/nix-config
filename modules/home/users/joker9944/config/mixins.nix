@@ -28,6 +28,7 @@ _: {
       opencloud-desktop.enable = true;
       pandoc.enable = true;
       papers.enable = true;
+      projectlibre.enable = true;
       signal.enable = true;
       spotify.enable = true;
       starship.enable = true;

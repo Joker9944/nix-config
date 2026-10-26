@@ -66,6 +66,9 @@ let
     {
       package = "butterfly";
     }
+    {
+      package = "projectlibre";
+    }
   ];
 in
 {
