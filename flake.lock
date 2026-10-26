@@ -19,7 +19,10 @@
     },
     "ags": {
       "inputs": {
-        "astal": "astal",
+        "astal": [
+          "yas",
+          "astal"
+        ],
         "nixpkgs": [
           "yas",
           "nixpkgs"
@@ -35,6 +38,7 @@
       },
       "original": {
         "owner": "aylur",
+        "ref": "main",
         "repo": "ags",
         "type": "github"
       }
@@ -76,20 +80,20 @@
       "inputs": {
         "nixpkgs": [
           "yas",
-          "ags",
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1773914523,
-        "narHash": "sha256-GOL+bR30FPImAzy4NNsTMY1gpoINMsLTXR0WJBRSq30=",
+        "lastModified": 1790193629,
+        "narHash": "sha256-u8CMQ5ODv9Q+mHgx1QDgSDeMANprWTfZ+owxXNhu8Pc=",
         "owner": "aylur",
         "repo": "astal",
-        "rev": "41b50290c6a1cdce7b482897c22fe49286912b9a",
+        "rev": "cbcd9f49dd6b9638dc5623b56cc6e1e0a60b593e",
         "type": "github"
       },
       "original": {
         "owner": "aylur",
+        "ref": "main",
         "repo": "astal",
         "type": "github"
       }
@@ -1282,6 +1286,7 @@
     "yas": {
       "inputs": {
         "ags": "ags",
+        "astal": "astal",
         "flake-utils": "flake-utils_4",
         "nixpkgs": [
           "nixpkgs"

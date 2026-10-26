@@ -4,9 +4,17 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-    ags = {
-      url = "github:aylur/ags";
+    astal = {
+      url = "github:aylur/astal/main";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    ags = {
+      url = "github:aylur/ags/main";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        astal.follows = "astal";
+      };
     };
 
     flake-utils.url = "github:numtide/flake-utils/main"; # cSpell:ignore numtide
