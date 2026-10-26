@@ -110,21 +110,18 @@
 
           apps = import ./apps.nix { inherit lib pkgs system; };
 
-          devShells = {
-            default = pkgs.mkShell {
-              buildInputs = [
-                self.packages.${system}.hm-options
-                self.packages.${system}.nixos-options
-                pkgs.mkpasswd
-                pkgs.python3
-                pkgs.sops
-                pkgs.ssh-to-age
-              ];
-            };
-            preCommitHooks = pkgs.mkShell {
-              inherit (self.checks.${system}.preCommitHooks) shellHook;
-              buildInputs = self.checks.${system}.preCommitHooks.enabledPackages;
-            };
+          devShells.default = pkgs.mkShell {
+            inherit (self.checks.${system}.preCommitHooks) shellHook;
+
+            buildInputs = [
+              self.packages.${system}.hm-options
+              self.packages.${system}.nixos-options
+              pkgs.mkpasswd
+              pkgs.python3
+              pkgs.sops
+              pkgs.ssh-to-age
+            ]
+            ++ self.checks.${system}.preCommitHooks.enabledPackages;
           };
 
           checks = {
