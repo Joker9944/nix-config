@@ -5,7 +5,7 @@ description: Only the GNOME keyring is wanted from the aggregate; hyprland's own
 tags: [decision, hyprland, gnome, keyring, portals, secret-service]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-10-19T00:00:00Z
+  at: 2026-10-27T00:00:00Z
 ---
 
 # The rule
@@ -21,7 +21,7 @@ otherwise starts a second SSH agent competing with the 1Password one
 
 `hardware.bluetooth`, `services.power-profiles-daemon` and `services.upower` were part of the
 aggregate and now reach [wintermute](/hosts/wintermute.md) alone — bluetooth as a raw host line,
-the other two behind `mixins.hardware.battery`.
+the other two behind `mixins.hardware.battery`, where ppd has since given way to TLP.
 
 # Why
 
@@ -52,8 +52,8 @@ database as well as the X11 input driver, and only the latter is conditional on
 `services.xserver.enable` — which is false here.
 
 `upower` is the one survivor that did *not* stay in the mixin, because it is a property of the
-machine rather than of the session — it lives in `mixins.hardware.battery` with
-`power-profiles-daemon`, and the [yas](/apps/yas.md) mixin derives `programs.yas.config.battery`
+machine rather than of the session — it lives in `mixins.hardware.battery`, and the
+[yas](/apps/yas.md) mixin derives `programs.yas.config.battery`
 from `osConfig.mixins.hardware.battery.enable` so the fact is stated once.
 
 That coupling is the reason the capability exists rather than two host lines. yas' battery module

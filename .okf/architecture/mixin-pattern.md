@@ -5,7 +5,7 @@ description: Every reusable module declares one `enable` flag under `options.mix
 tags: [architecture, modules, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-11T00:00:00Z
+  at: 2026-10-27T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -65,6 +65,8 @@ For the on-disk shape once a mixin grows beyond a single `.nix` file, see [modul
 Config that isn't reusable — per-host quirks, monitor layouts, keyboard layout choices — does *not* go in a mixin. It lives directly in `modules/nixos/hosts/<host>/default.nix` (NixOS) or `modules/home/users/<user>/hosts/<host>/default.nix` (home-manager), alongside the enable list, as a plain assignment to the upstream option.
 
 Config that *is* reusable across a class of machines — the enable set that defines "a desktop", "a server" — goes one level up, in a **[profile](profiles.md)**, not copied into each host's `mixins.nix`. The three tiers: a mixin is one capability, a profile is a role (a shared set of mixin enables), a host holds only its deltas.
+
+A capability names **one** hardware axis, and what rides along has to hold on every machine that could enable it: `thermald` is in `mixins.hardware.intelCpu`, not `mixins.hardware.battery`. A knob narrower than the capability stays a host delta — wintermute's TLP charge thresholds are `thinkpad_acpi`-specific, so they sit in its host file.
 
 # Cross-tree link
 

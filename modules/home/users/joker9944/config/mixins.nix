@@ -51,7 +51,6 @@ _: {
 
     services = {
       maintenance.enable = true;
-      ollama.enable = true;
       remmina.enable = true;
     };
   };

@@ -2,6 +2,7 @@
 {
   lib,
   config,
+  osConfig,
   pkgs-unstable,
   ...
 }:
@@ -14,6 +15,7 @@ mkHyprlandModule {
       general = {
         lock_cmd = "hyprlock";
         unlock_cmd = "pkill --exact hyprlock";
+        before_sleep_cmd = "loginctl lock-session";
         after_sleep_cmd = "hyprctl dispatch dpms on";
       };
 
@@ -29,7 +31,11 @@ mkHyprlandModule {
         }
         {
           timeout = 30 * 60;
-          on-timeout = "systemctl suspend";
+          on-timeout =
+            if osConfig.mixins.hardware.battery.enable then
+              "systemctl suspend-then-hibernate"
+            else
+              "systemctl suspend";
         }
       ];
     };

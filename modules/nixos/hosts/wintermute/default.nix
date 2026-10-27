@@ -32,6 +32,12 @@ flake.lib.modules.mkDefaultModule
         useRoutingFeatures = "client";
         extraSetFlags = [ "--accept-routes" ];
       };
+
+      # Reached through thinkpad_acpi, so not part of the battery mixin.
+      tlp.settings = {
+        START_CHARGE_THRESH_BAT0 = 75;
+        STOP_CHARGE_THRESH_BAT0 = 80;
+      };
     };
 
     # This value determines the NixOS release from which the default
