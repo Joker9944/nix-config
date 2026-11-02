@@ -1,19 +1,13 @@
 { mkMixinModule, ... }:
-_:
 mkMixinModule "battery" {
-  # Lid close suspends and escalates to hibernate once the battery is estimated
-  # to run low; the countdown starts at unplug, so a lid close on AC only
-  # suspends. Resume comes from systemd's HibernateLocation EFI variable, which
-  # is why the swapfile-on-LUKS layout needs no boot.resumeDevice.
   services.logind.settings.Login.HandleLidSwitch = "suspend-then-hibernate";
-  systemd.sleep.settings.Sleep.HibernateOnACPower = false;
 
   services = {
-    # Read by the home tree: the yas battery module is an AstalBattery (UPower)
-    # client, and that client is constructed whether or not the module renders.
+    # Enabled for readout only.
     upower = {
       enable = true;
-      criticalPowerAction = "Hibernate";
+      criticalPowerAction = "Ignore";
+      allowRiskyCriticalPowerAction = true;
     };
 
     # Chosen over power-profiles-daemon; the two cannot coexist.
