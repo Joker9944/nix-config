@@ -2,7 +2,7 @@
 { lib, ... }:
 let
   nyx = {
-    ingress = "192.168.0.128";
+    ingress = "192.168.1.128";
   };
 in
 mkMixinModule "hosts" {

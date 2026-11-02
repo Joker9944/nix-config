@@ -5,7 +5,7 @@ description: Four headless x86_64-linux machines running k3s — tars/case/kipp 
 tags: [host, server, k3s, zfs, longhorn]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-10-27T00:00:00Z
+  at: 2026-11-02T00:00:00Z
 sources:
   - id: longhorn-2166
     resource: https://github.com/longhorn/longhorn/issues/2166
@@ -16,16 +16,16 @@ sources:
 
 | Host | Address | k3s role | Deltas |
 |---|---|---|---|
-| tars | 192.168.0.21/23 | server, `clusterInit` | deploys the kube-vip manifest |
-| case | 192.168.0.22/23 | server | — |
-| kipp | 192.168.0.23/23 | server | — |
-| mother | 192.168.0.24/23 | agent | `zfs` + `nfs` mixins, `hostId`, `chronos` pool |
+| tars | 192.168.1.21/23 | server, `clusterInit` | deploys the kube-vip manifest |
+| case | 192.168.1.22/23 | server | — |
+| kipp | 192.168.1.23/23 | server | — |
+| mother | 192.168.1.24/23 | agent | `zfs` + `nfs` mixins, `hostId`, `chronos` pool |
 
-All four select `profile = "server"` (see [profiles](/architecture/profiles.md)); their `mixins.nix` files hold only the role deltas and a CPU-vendor capability — `intelCpu` on tars/kipp/mother, `amdCpu` on case, each carrying that vendor's microcode and kvm module. Static addressing is per host under `systemd.network.networks."10-lan"`, since the profile only turns systemd-networkd on. `tars` names its exact interface rather than globbing `en*`: the glob also matches its unpopulated second onboard NIC, which then inherits `RequiredForOnline` and hangs `systemd-networkd-wait-online` for its full timeout before failing — and would take a duplicate copy of the static address the day anyone cables it. The others have no second NIC and keep the glob.
+All four select `profile = "server"` (see [profiles](/architecture/profiles.md)); their `mixins.nix` files hold only the role deltas and a CPU-vendor capability — `intelCpu` on tars/kipp/mother, `amdCpu` on case, each carrying that vendor's microcode and kvm module. The router serves 192.168.0.0/23 with its gateway and resolver at 192.168.0.254; the cluster sits in the upper half, out of the 192.168.0.0/24 range the rest of the LAN uses. Static addressing is per host under `systemd.network.networks."10-lan"`, since the profile only turns systemd-networkd on; moving any of it afterwards is [renumber-nodes](/workflows/renumber-nodes.md), not a rebuild. `tars` and `mother` name their exact interface rather than globbing `en*`: the glob also matches the unpopulated second onboard NIC each has, which then inherits `RequiredForOnline` and hangs `systemd-networkd-wait-online` for its full timeout before failing — and would take a duplicate copy of the static address the day anyone cables it. `case` and `kipp` have one NIC and keep the glob.
 
 # The kube-vip endpoint
 
-`tars` bootstraps the cluster and deploys kube-vip as an auto-deploy manifest (`services.k3s.manifests.kube-vip.content`, a list of Kubernetes objects). It claims **192.168.0.20** in ARP mode — the address the Talos cluster used — so `case`/`kipp`/`mother` register against a `serverAddr` that survives losing `tars`.
+`tars` bootstraps the cluster and deploys kube-vip as an auto-deploy manifest (`services.k3s.manifests.kube-vip.content`, a list of Kubernetes objects). It claims **192.168.1.20** in ARP mode, so `case`/`kipp`/`mother` register against a `serverAddr` that survives losing `tars`.
 
 The kube-vip image tag is a literal at the top of `modules/nixos/hosts/tars/default.nix`. `vip_interface` is deliberately left unset: the DaemonSet is one object scheduled onto every control-plane node, and the wired interface is not named the same on each (`enp2s0` on tars, an `en*` glob on case and kipp), so no single literal is correct. kube-vip then binds the default-route interface, which on each node is the one holding the VIP's own subnet.
 
@@ -43,13 +43,13 @@ For a runtime handler instead: k3s locates runtimes with `exec.LookPath`, so the
 
 # Remote access
 
-All three servers advertise `192.168.0.20/32` into the tailnet — `services.tailscale.useRoutingFeatures = "server"` for the forwarding sysctl, `extraSetFlags = [ "--advertise-routes=…" ]` for the `tailscaled-set.service` oneshot. Advertising from every server rather than one lets Tailscale's primary-router election fail the tailnet route over the same way kube-vip fails the VIP over at L2.
+All three servers advertise `192.168.1.20/32` into the tailnet — `services.tailscale.useRoutingFeatures = "server"` for the forwarding sysctl, `extraSetFlags = [ "--advertise-routes=…" ]` for the `tailscaled-set.service` oneshot. Advertising from every server rather than one lets Tailscale's primary-router election fail the tailnet route over the same way kube-vip fails the VIP over at L2.
 
 Two halves are outside nix. The route must be **approved** in the Tailscale admin console (or by an ACL `autoApprovers` entry) before any client sees it; and `tailscale set` writes persistent prefs, so deleting the nix lines only removes the unit — unadvertising needs an explicit `tailscale set --advertise-routes=` on the node.
 
 Linux clients ignore subnet routes unless told otherwise, so [wintermute](wintermute.md) carries the matching `useRoutingFeatures = "client"` + `--accept-routes`. Phones and macOS accept by default.
 
-Alongside `192.168.0.20/32` each server advertises `192.168.0.128/25`, the MetalLB pool, which is how the ingress at **192.168.0.128** is reached from off-LAN. The `hosts` mixin pins the subdomains that resolve *only* inside the tailnet to that address, so a client without Tailscale up has no route to them.
+Alongside `192.168.1.20/32` each server advertises `192.168.1.128/25`, the MetalLB pool, which is how the ingress at **192.168.1.128** is reached from off-LAN. The `hosts` mixin pins the subdomains that resolve *only* inside the tailnet to that address, so a client without Tailscale up has no route to them.
 
 The tailnet is also the *only* way in to `6443`: the firewall scopes the API server to the node addresses plus the tailnet CGNAT range, so `kubectl` from a desktop on the cluster LAN is refused. [HAL9000](HAL9000.md) is on a different subnet entirely and only ever reached the cluster this way.
 

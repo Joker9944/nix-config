@@ -1,8 +1,8 @@
 { flake, ... }@args:
 let
-  # kube-vip control-plane VIP, ARP mode. Reclaims the Talos L2 VIP so the k3s
-  # registration endpoint (serverAddr on case/kipp/mother) stays 192.168.0.20:6443.
-  vip = "192.168.0.20";
+  # kube-vip control-plane VIP, ARP mode. Every other node registers against
+  # it as its serverAddr, so it survives losing this host.
+  vip = "192.168.1.20";
   kubeVipImage = "ghcr.io/kube-vip/kube-vip:v0.8.9";
 in
 flake.lib.modules.mkDefaultModule
@@ -17,9 +17,9 @@ flake.lib.modules.mkDefaultModule
       # Not en*: the board's second onboard NIC (enp3s0) is unpopulated, and
       # RequiredForOnline below would then wait on a link that never comes up.
       matchConfig.Name = "enp2s0";
-      address = [ "192.168.0.21/23" ];
-      routes = [ { Gateway = "192.168.1.1"; } ];
-      dns = [ "192.168.1.1" ];
+      address = [ "192.168.1.21/23" ];
+      routes = [ { Gateway = "192.168.0.254"; } ];
+      dns = [ "192.168.0.254" ];
       linkConfig.RequiredForOnline = "routable";
     };
 
@@ -28,7 +28,7 @@ flake.lib.modules.mkDefaultModule
     # way the VIP does at L2.
     services.tailscale = {
       useRoutingFeatures = "server";
-      extraSetFlags = [ "--advertise-routes=${vip}/32,192.168.0.128/25" ];
+      extraSetFlags = [ "--advertise-routes=${vip}/32,192.168.1.128/25" ];
     };
 
     services.k3s = {

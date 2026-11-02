@@ -18,9 +18,9 @@ flake.lib.modules.mkDefaultModule
       # Not en*: the board has a second onboard NIC (eno2) that is unpopulated,
       # and RequiredForOnline below would then wait on a link that never comes up.
       matchConfig.Name = "eno1";
-      address = [ "192.168.0.24/23" ];
-      routes = [ { Gateway = "192.168.1.1"; } ];
-      dns = [ "192.168.1.1" ];
+      address = [ "192.168.1.24/23" ];
+      routes = [ { Gateway = "192.168.0.254"; } ];
+      dns = [ "192.168.0.254" ];
       linkConfig.RequiredForOnline = "routable";
     };
 
@@ -42,12 +42,12 @@ flake.lib.modules.mkDefaultModule
     services = {
       tailscale = {
         useRoutingFeatures = "server";
-        extraSetFlags = [ "--advertise-routes=192.168.0.128/25" ];
+        extraSetFlags = [ "--advertise-routes=192.168.1.128/25" ];
       };
 
       k3s = {
         role = "agent";
-        serverAddr = "https://192.168.0.20:6443";
+        serverAddr = "https://192.168.1.20:6443";
         nodeTaint = [ "vonarx.online/reserved=storage:NoSchedule" ];
       };
 

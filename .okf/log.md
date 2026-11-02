@@ -7,6 +7,9 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 - `amdCpu` added and `intelCpu` extended; both own their vendor's microcode and kvm module, and every host enables one — [architecture/mixin-pattern](/architecture/mixin-pattern.md)
 - thermald moves behind `thermalThrottling`, which derives the mechanism from the CPU capability — [architecture/mixin-pattern](/architecture/mixin-pattern.md)
 - Generated hardware configs trimmed to what is actually scanned — [workflows/install-nixos](/workflows/install-nixos.md)
+- Cluster nodes, VIP and MetalLB pool moved into 192.168.1.0/24 of the router's widened /23 — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- `mother` pins `eno1` for the same reason `tars` pins `enp2s0`; only case/kipp glob — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- Playbook for renumbering a node: widen the allow-set, then roll, updating each etcd peer URL ahead of its node — [workflows/renumber-nodes](/workflows/renumber-nodes.md)
 
 ## 2026-10-27
 

@@ -11,22 +11,22 @@ flake.lib.modules.mkDefaultModule
 
     systemd.network.networks."10-lan" = {
       matchConfig.Name = "en*";
-      address = [ "192.168.0.23/23" ];
-      routes = [ { Gateway = "192.168.1.1"; } ];
-      dns = [ "192.168.1.1" ];
+      address = [ "192.168.1.23/23" ];
+      routes = [ { Gateway = "192.168.0.254"; } ];
+      dns = [ "192.168.0.254" ];
       linkConfig.RequiredForOnline = "routable";
     };
 
     # Subnet-route the kube-vip endpoint; see tars.
     services.tailscale = {
       useRoutingFeatures = "server";
-      extraSetFlags = [ "--advertise-routes=192.168.0.20/32,192.168.0.128/25" ];
+      extraSetFlags = [ "--advertise-routes=192.168.1.20/32,192.168.1.128/25" ];
     };
 
     services.k3s = {
-      serverAddr = "https://192.168.0.20:6443";
+      serverAddr = "https://192.168.1.20:6443";
       # The API cert must carry the VIP or joiners reject it on a SAN mismatch.
-      extraFlags = [ "--tls-san=192.168.0.20" ];
+      extraFlags = [ "--tls-san=192.168.1.20" ];
     };
 
     system.stateVersion = "26.05";
