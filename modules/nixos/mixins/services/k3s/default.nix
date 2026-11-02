@@ -98,6 +98,7 @@ mkMixinModule "k3s" {
           "umount"
           "mount.nfs"
           "mount.nfs4"
+          "fstrim"
         ];
 
     networking.firewall = {
