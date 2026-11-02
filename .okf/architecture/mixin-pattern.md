@@ -66,7 +66,7 @@ Config that isn't reusable — per-host quirks, monitor layouts, keyboard layout
 
 Config that *is* reusable across a class of machines — the enable set that defines "a desktop", "a server" — goes one level up, in a **[profile](profiles.md)**, not copied into each host's `mixins.nix`. The three tiers: a mixin is one capability, a profile is a role (a shared set of mixin enables), a host holds only its deltas.
 
-A capability names **one** hardware axis, and what rides along has to hold on every machine that could enable it: `thermald` is in `mixins.hardware.intelCpu`, not `mixins.hardware.battery`. A knob narrower than the capability stays a host delta — wintermute's TLP charge thresholds are `thinkpad_acpi`-specific, so they sit in its host file.
+A capability names **one** axis, and what rides along has to hold on every machine that could enable it. State the intent and derive the mechanism: `mixins.hardware.thermalThrottling` reads `mixins.hardware.intelCpu.enable` to decide on thermald, rather than hosts naming daemons. A knob narrower than the capability stays a host delta — wintermute's TLP charge thresholds are `thinkpad_acpi`-specific, so they sit in its host file.
 
 # Cross-tree link
 

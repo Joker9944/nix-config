@@ -1,3 +1,7 @@
 _: {
-  mixins.services.k3s.enable = true;
+  mixins = {
+    hardware.amdCpu.enable = true;
+
+    services.k3s.enable = true;
+  };
 }

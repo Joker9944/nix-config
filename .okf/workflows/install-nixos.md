@@ -5,7 +5,7 @@ description: Declare a host, harvest its hardware facts from the live installer,
 tags: [workflow, install, nixos, disko, sops]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-07T00:00:00Z
+  at: 2026-10-27T00:00:00Z
 ---
 
 # Trigger
@@ -98,6 +98,7 @@ ssh <name> systemctl --failed
 
 * **Untracked files are invisible to a git flake.** A freshly generated `hardware-configuration.nix` that is not `git add`-ed does not exist as far as `nix build` is concerned — the build silently uses the old tree, or fails on the missing import. `git add` before every install or rebuild.
 * **The outer module layer.** A stock `nixos-generate-config` file starts `{ config, lib, modulesPath, ... }:`, which `importApply` would feed the *static* args. Without a `_:` in front it fails with `attempt to call something which is not a function but a set`.
+* **The harvested file gets trimmed.** Vendor microcode and `kvm-intel`/`kvm-amd` belong to the `intelCpu`/`amdCpu` mixins, and the generator's empty `initrd.kernelModules`/`extraModulePackages` lines are no-ops; drop all of them, plus the module args that leaves unused — `deadnix` runs in pre-commit and fails on those. Keep the `not-detected.nix` import, the only source of `hardware.enableRedistributableFirmware = true`. Re-running the generator re-adds everything.
 * **`--vm-test` cannot validate these layouts.** disko's test harness hardcodes 4 GB disk images (`lib/tests.nix`, `emptyDiskImages`) with no knob to raise it, so any layout here fails partitioning in the VM regardless of correctness. Not a signal.
 * **`hashedPasswordFile` is an *initial* password here.** `users.mutableUsers` is `true`, and `update-users-groups.pl` overwrites an existing `/etc/shadow` entry only when it is `false`. So the seeded hash lands only at account creation, `passwd` afterwards wins permanently, and the file cannot repair a host that is already installed. A missing file is a warning, not a build failure.
 * **`nixos-anywhere --generate-hardware-config`** does the same harvest (its backend runs the identical `nixos-generate-config --show-hardware-config --no-filesystems`) and can write the file for you. It still needs the `_:` prepended and `git add`-ed before the build can see it, which is why step 2 does it explicitly.

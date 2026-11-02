@@ -3,7 +3,6 @@ _:
 # and may be overwritten by future invocations.  Please make changes
 # to /etc/nixos/configuration.nix instead.
 {
-  config,
   lib,
   modulesPath,
   ...
@@ -13,21 +12,14 @@ _:
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
-  boot = {
-    initrd = {
-      availableKernelModules = [
-        "nvme"
-        "xhci_pci"
-        "ahci"
-        "usb_storage"
-        "usbhid"
-        "sd_mod"
-      ];
-      kernelModules = [ ];
-    };
-    kernelModules = [ "kvm-amd" ];
-    extraModulePackages = [ ];
-  };
+  boot.initrd.availableKernelModules = [
+    "nvme"
+    "xhci_pci"
+    "ahci"
+    "usb_storage"
+    "usbhid"
+    "sd_mod"
+  ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
@@ -35,6 +27,4 @@ _:
   # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
   networking.useDHCP = lib.mkDefault true;
   # networking.interfaces.enp5s0.useDHCP = lib.mkDefault true;
-
-  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }

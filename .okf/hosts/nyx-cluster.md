@@ -5,7 +5,7 @@ description: Four headless x86_64-linux machines running k3s — tars/case/kipp 
 tags: [host, server, k3s, zfs, longhorn]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-10-04T00:00:00Z
+  at: 2026-10-27T00:00:00Z
 sources:
   - id: longhorn-2166
     resource: https://github.com/longhorn/longhorn/issues/2166
@@ -21,7 +21,7 @@ sources:
 | kipp | 192.168.0.23/23 | server | — |
 | mother | 192.168.0.24/23 | agent | `zfs` + `nfs` mixins, `hostId`, `chronos` pool |
 
-All four select `profile = "server"` (see [profiles](/architecture/profiles.md)); their `mixins.nix` files hold only the role deltas. Static addressing is per host under `systemd.network.networks."10-lan"`, since the profile only turns systemd-networkd on. `tars` names its exact interface rather than globbing `en*`: the glob also matches its unpopulated second onboard NIC, which then inherits `RequiredForOnline` and hangs `systemd-networkd-wait-online` for its full timeout before failing — and would take a duplicate copy of the static address the day anyone cables it. The others have no second NIC and keep the glob.
+All four select `profile = "server"` (see [profiles](/architecture/profiles.md)); their `mixins.nix` files hold only the role deltas and a CPU-vendor capability — `intelCpu` on tars/kipp/mother, `amdCpu` on case, each carrying that vendor's microcode and kvm module. Static addressing is per host under `systemd.network.networks."10-lan"`, since the profile only turns systemd-networkd on. `tars` names its exact interface rather than globbing `en*`: the glob also matches its unpopulated second onboard NIC, which then inherits `RequiredForOnline` and hangs `systemd-networkd-wait-online` for its full timeout before failing — and would take a duplicate copy of the static address the day anyone cables it. The others have no second NIC and keep the glob.
 
 # The kube-vip endpoint
 

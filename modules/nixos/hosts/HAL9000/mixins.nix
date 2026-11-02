@@ -3,6 +3,7 @@ _: {
     boot.windowsSupport.enable = true;
 
     hardware = {
+      amdCpu.enable = true;
       nvidia.enable = true;
       nvidiaCuda.enable = true;
     };

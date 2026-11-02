@@ -5,6 +5,7 @@ _: {
     hardware = {
       battery.enable = true;
       intelCpu.enable = true;
+      thermalThrottling.enable = true;
     };
 
     networking.hosts.enable = true;

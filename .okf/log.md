@@ -2,18 +2,21 @@
 
 An index of bundle changes, not a narrative. One line each: what changed and the concept that holds the detail, in the form `CLAUDE.md` rule 3 sets. Rationale lives in the commit message, tied to the diff, or in a [decision](/decisions/index.md) — not here.
 
+## 2026-11-02
+
+- `amdCpu` added and `intelCpu` extended; both own their vendor's microcode and kvm module, and every host enables one — [architecture/mixin-pattern](/architecture/mixin-pattern.md)
+- thermald moves behind `thermalThrottling`, which derives the mechanism from the CPU capability — [architecture/mixin-pattern](/architecture/mixin-pattern.md)
+- Generated hardware configs trimmed to what is actually scanned — [workflows/install-nixos](/workflows/install-nixos.md)
+
 ## 2026-10-27
 
-<<<<<<< Updated upstream
 - `mkAppWorkspace` launches from a `workspace.created` handler; `on_created_empty` is deprecated upstream — [architecture/hyprland-lua-config](/architecture/hyprland-lua-config.md)
-=======
 - Lid close is `suspend-then-hibernate`; hibernation resumes from the `HibernateLocation` EFI variable, so the swapfile needs no `boot.resumeDevice` — [hosts/wintermute](/hosts/wintermute.md)
 - `eDP-1` declared so the lid binds derive their restore spec from it; the lua API has no `keyword` dispatcher — [hosts/wintermute](/hosts/wintermute.md)
 - power-profiles-daemon dropped for TLP in the battery mixin — [hosts/wintermute](/hosts/wintermute.md)
 - `ollama` moved from the shared user config to HAL9000's host file — [hosts/wintermute](/hosts/wintermute.md)
 - New `mixins.hardware.intelCpu` takes microcode and thermald; a capability names one hardware axis — [architecture/mixin-pattern](/architecture/mixin-pattern.md)
 - TLP's ThinkPad charge thresholds moved to the host file as a delta — [hosts/wintermute](/hosts/wintermute.md)
->>>>>>> Stashed changes
 
 ## 2026-10-19
 
