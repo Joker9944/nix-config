@@ -1,6 +1,6 @@
 # Architecture
 
-The concepts here explain the shape of the repo — the ones a newcomer (human or agent) has to piece together from several files to see. Prefer reading these before proposing structural changes.
+The shape of the repo — the parts that have to be pieced together from several files to see.
 
 # Structural patterns
 

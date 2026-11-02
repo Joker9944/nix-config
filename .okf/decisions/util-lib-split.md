@@ -5,7 +5,7 @@ description: General-purpose Nix helpers live in the standalone `apps/util-lib` 
 tags: [decision, lib, architecture]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-08-31T00:00:00Z
+  at: 2026-11-02T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -35,9 +35,6 @@ option paths is not reusable, whatever its dependency graph says.
 
 # Namespaces come from directories, nothing else
 
-`mkLibNamespace` takes a directory and an argument set. Subdirectories become nested
-namespaces through their own `default.nix`, which is the same one-liner at every depth.
-
 An earlier draft let each `default.nix` also declare its own namespace path and the arg name
 to inject under. Both were dropped. The fixed point is tied **once per flake**, in
 `flake.nix`, and the resulting args thread down unchanged — so a leaf at any depth already
@@ -46,16 +43,13 @@ directory name already says, or contradict it.
 
 # Naming: `libSelf`, and foreign libs by name
 
-A lib tree is injected into its own files as `libSelf`; a foreign lib arrives under its own
-name — `libUtil`, `libSchemes`, `libMath`. One attrset, one name, no aliases.
+One attrset, one name, no aliases, in every position a lib is passed —
+[/architecture/custom-lib.md](/architecture/custom-lib.md#argument-convention) has the names and
+where they land.
 
 `self` is unavailable for a lib because a flake already uses it for itself, and both land in
 the same argument sets — `lib/configuration/mkNixosConfiguration.nix` takes the flake as
 `flake`, so naming the lib `self` beside it reads backwards.
-
-The rule binds in *every* position a lib is passed, not just module arguments — see
-[/architecture/custom-lib.md](/architecture/custom-lib.md#argument-convention) for where that
-lands.
 
 Each lib nests under `lib.<name>` rather than exporting flat, so `inherit (inputs.x.lib)
 libFoo` yields the same identifier the tree uses internally. `inputs.nix-math.lib.math` set

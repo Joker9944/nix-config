@@ -1,11 +1,11 @@
 ---
 type: Decision
 title: The scheme is a total derived model
-description: Every view a consumer reads is computed for every scheme; user input enters as typed options the module system merges, never as post-hoc mutation. Replaces the transformer list, the four override shapes and requireKey.
+description: Every view a consumer reads is computed for every scheme; user input enters as typed options the module system merges, never as post-hoc mutation.
 tags: [decision, nix-schemes, api, colour]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-01T00:00:00Z
+  at: 2026-11-02T00:00:00Z
 verified:
   - by: claude-code/claude-fable-5
     at: 2026-09-04T00:00:00Z
@@ -61,13 +61,10 @@ workbench keys that nobody would enumerate, so its `colors` is one free-form opt
 Both rows name a family rather than a module: `mkVariantModules` generates three browsers and four
 editors from one template each, so the channel is chosen once and inherited by every variant.
 
-# What this replaced
+# Per-scheme deviation
 
-`schemes.transformers` (an ordered list of `scheme -> libSchemes -> attrs` folded with
-`recursiveUpdate`), the `transform` method on the scheme value, `schemes.gtk.accentTransformer`, four
-incompatible per-consumer override shapes, and `requireKey`. Per-scheme deviation is now
-`schemes.overrides.<view>.<path>`, typed and merged by the module system, so ordering is no longer
-the caller's problem.
+`schemes.overrides.<view>.<path>` is the only channel, typed and merged by the module system, so
+ordering is never the caller's problem.
 
 # Trade-offs accepted
 
@@ -76,7 +73,7 @@ the caller's problem.
 * **No function-shaped escape hatch.** Anything the override tree cannot express is a signal the
   model is wrong. One can be added later; removing one that themes depend on cannot.
 * **`schemes.accent` defaults to `base0D`, not to the GTK accent selector.** `custom.theme.gtk.accent`
-  used to double as the palette selector; a theme that wants that slot now names it
+  is the GTK-only half and selects no palette slot; a theme wanting a different accent names it
   (`modules/theme/uwunicorn.nix` sets `accent = "base0E"`).
 
 # Related

@@ -304,8 +304,14 @@ def section_refs(bundle, repo, tracked):
 
 
 def resolves(token, repo, tracked):
-    if (Path(repo) / token).exists():
-        return True
+    # An absolute token joins to itself, escaping the repo onto the real
+    # filesystem, where stat can also be denied rather than merely false.
+    if not token.startswith("/"):
+        try:
+            if (Path(repo) / token).exists():
+                return True
+        except OSError:
+            pass
     if token in tracked:
         return True
     suffix = "/" + token

@@ -1,11 +1,12 @@
 ---
 type: Playbook
+status: deprecated
 title: Bootstrap the nyx cluster
-description: Order and per-host facts for rolling out tars, case, kipp and mother onto k3s, migrating off Talos + TrueNAS.
+description: Order and per-host facts for rolling out tars, case, kipp and mother onto k3s, migrating off Talos + TrueNAS. The rollout is complete; kept as the record of how the four machines were brought up.
 tags: [workflow, install, k3s, cluster, nyx]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-08T00:00:00Z
+  at: 2026-11-02T00:00:00Z
 ---
 
 # Trigger

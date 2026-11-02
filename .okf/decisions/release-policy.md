@@ -31,5 +31,3 @@ Current pins live in `flake.nix#inputs`; concrete revisions are in `flake.lock`.
 * **Delayed access to new packages.** Anything landing on unstable takes about six months to reach here.
 * **Semi-annual coordinated upgrade.** nixpkgs, home-manager, and any user-facing option renames all land at once, not on a smooth continuous curve. The `home-manager-options` skill (`.claude/skills/home-manager-options/SKILL.md`) exists in part to catch the option-rename churn that comes with each release-N.NN bump.
 * **Anything on an escape hatch can break independently.** An upstream regression or option rename requires an ad-hoc fix, and a `pkgs-unstable` package can change its config schema mid-cycle with no upgrade moment to catch it — yazi 26.8 moved opener placeholders from `$1` to `%s1`, which silently handed every opener an empty argument.
-
-# Related

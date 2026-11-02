@@ -5,7 +5,7 @@ description: Lenovo ThinkPad X1 Yoga Gen 4 laptop, x86_64-linux, Swiss keymap, 4
 tags: [host, laptop, hyprland, thinkpad]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-10-27T00:00:00Z
+  at: 2026-11-02T00:00:00Z
 ---
 
 # Hardware
@@ -14,7 +14,7 @@ Lenovo ThinkPad X1 Yoga Gen 4. Internal panel is `eDP-1`. Reference: <https://wi
 
 Host-specific quirks (all in `modules/nixos/hosts/wintermute/default.nix`):
 
-* Fingerprint reader service (`fprintd`) is currently disabled.
+* Fingerprint reader service (`fprintd`) is explicitly disabled.
 * Firmware updates via `fwupd` are enabled.
 * Regreet window rule pinned to `eDP-1` (vs `DP-2` on HAL9000).
 * Blue limine boot branding (vs HAL9000's red).
@@ -32,7 +32,7 @@ Host-specific quirks (all in `modules/nixos/hosts/wintermute/default.nix`):
   `modules/home/users/joker9944/hosts/wintermute/default.nix` derive their restore spec from that
   declaration. They disable the panel on lid close, which logind deliberately ignores while docked;
   `hl.monitor` and a lua function are used because the lua API exposes no `keyword` dispatcher.
-* Bluetooth is enabled here and nowhere else (HAL9000 has no radio), as a raw `hardware.bluetooth.enable` line rather than a mixin. It used to arrive via `gnome.core-os-services`; see [decisions/gnome-keyring-not-core-os-services](/decisions/gnome-keyring-not-core-os-services.md).
+* Bluetooth is enabled here and nowhere else (HAL9000 has no radio), as a raw `hardware.bluetooth.enable` line rather than a mixin — see [decisions/gnome-keyring-not-core-os-services](/decisions/gnome-keyring-not-core-os-services.md).
 
 # Host record & mixin selection
 

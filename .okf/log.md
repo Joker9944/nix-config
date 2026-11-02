@@ -1,32 +1,30 @@
 # Update Log
 
-An index of bundle changes, not a narrative. One line each: what changed and the concept that holds the detail, in the form `CLAUDE.md` rule 3 sets. Rationale lives in the commit message, tied to the diff, or in a [decision](/decisions/index.md) — not here.
+An index of bundle changes, not a narrative — one line per change, in the form `CLAUDE.md` rule 3 sets.
 
 ## 2026-11-02
 
-- `amdCpu` added and `intelCpu` extended; both own their vendor's microcode and kvm module, and every host enables one — [architecture/mixin-pattern](/architecture/mixin-pattern.md)
-- thermald moves behind `thermalThrottling`, which derives the mechanism from the CPU capability — [architecture/mixin-pattern](/architecture/mixin-pattern.md)
+- `amdCpu`/`intelCpu` own vendor microcode and kvm; `thermalThrottling` derives thermald from them — [architecture/mixin-pattern](/architecture/mixin-pattern.md)
 - Generated hardware configs trimmed to what is actually scanned — [workflows/install-nixos](/workflows/install-nixos.md)
-- Cluster nodes, VIP and MetalLB pool moved into 192.168.1.0/24 of the router's widened /23 — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
-- `mother` pins `eno1` for the same reason `tars` pins `enp2s0`; only case/kipp glob — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
-- Playbook for renumbering a node: widen the allow-set, then roll, updating each etcd peer URL ahead of its node — [workflows/renumber-nodes](/workflows/renumber-nodes.md)
+- Nodes, VIP and MetalLB pool moved into 192.168.1.0/24; `mother` pins `eno1`, case/kipp glob — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- Renumbering a node: widen the allow-set, then roll, updating each etcd peer URL ahead of its node — [workflows/renumber-nodes](/workflows/renumber-nodes.md)
 - `dm_crypt` joins the Longhorn node prerequisites in the `k3s` mixin — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- The four-machine rollout is complete, so its playbook is deprecated — [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md)
 
 ## 2026-10-26
 
-- `mkAppWorkspace` launches from a `workspace.created` handler; `on_created_empty` is deprecated upstream — [architecture/hyprland-lua-config](/architecture/hyprland-lua-config.md)
-- Lid close is `suspend-then-hibernate`; hibernation resumes from the `HibernateLocation` EFI variable, so the swapfile needs no `boot.resumeDevice` — [hosts/wintermute](/hosts/wintermute.md)
-- `eDP-1` declared so the lid binds derive their restore spec from it; the lua API has no `keyword` dispatcher — [hosts/wintermute](/hosts/wintermute.md)
-- power-profiles-daemon dropped for TLP in the battery mixin — [hosts/wintermute](/hosts/wintermute.md)
+- `mkAppWorkspace` launches from `workspace.created`; `on_created_empty` is deprecated upstream — [architecture/hyprland-lua-config](/architecture/hyprland-lua-config.md)
+- Lid close is `suspend-then-hibernate`; the `HibernateLocation` EFI var replaces `boot.resumeDevice` — [hosts/wintermute](/hosts/wintermute.md)
+- `eDP-1` is declared so the lid binds derive their restore spec from it — [hosts/wintermute](/hosts/wintermute.md)
+- TLP replaces power-profiles-daemon; its ThinkPad charge thresholds are a host delta — [hosts/wintermute](/hosts/wintermute.md)
 - `ollama` moved from the shared user config to HAL9000's host file — [hosts/wintermute](/hosts/wintermute.md)
-- New `mixins.hardware.intelCpu` takes microcode and thermald; a capability names one hardware axis — [architecture/mixin-pattern](/architecture/mixin-pattern.md)
-- TLP's ThinkPad charge thresholds moved to the host file as a delta — [hosts/wintermute](/hosts/wintermute.md)
+- `mixins.hardware.intelCpu` takes microcode and thermald; a capability names one hardware axis — [architecture/mixin-pattern](/architecture/mixin-pattern.md)
 
 ## 2026-10-19
 
-- `mixins.hardware.battery` added; upower/ppd move behind it and the yas mixin reads it — [workflows/add-mixin](/workflows/add-mixin.md)
-- New concept: the hyprland mixin names its system services; `gnome.core-os-services` dropped — [decisions/gnome-keyring-not-core-os-services](/decisions/gnome-keyring-not-core-os-services.md)
-- New concept: `nvidiaCuda` carries no `nixpkgs.config.cudaSupport`; consumers opt in per package — [decisions/cuda-opt-in](/decisions/cuda-opt-in.md)
+- `mixins.hardware.battery` added; upower moves behind it and the yas mixin reads it — [workflows/add-mixin](/workflows/add-mixin.md)
+- The hyprland mixin names its system services instead of `gnome.core-os-services` — [decisions/gnome-keyring-not-core-os-services](/decisions/gnome-keyring-not-core-os-services.md)
+- `nvidiaCuda` carries no `nixpkgs.config.cudaSupport`; consumers opt in per package — [decisions/cuda-opt-in](/decisions/cuda-opt-in.md)
 
 ## 2026-10-12
 
@@ -34,17 +32,17 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 
 ## 2026-10-04
 
-- The `hosts` mixin only holds labels missing from public DNS; the tailnet reaches them via the advertised MetalLB pool — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
-- New concept: autostart entries are declared because a self-registered one records the binary behind the Nix wrapper — [decisions/declared-autostart](/decisions/declared-autostart.md)
+- The `hosts` mixin holds only labels missing from public DNS; the tailnet uses the MetalLB pool — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- Autostart entries are declared; a self-registered one records the binary behind the Nix wrapper — [decisions/declared-autostart](/decisions/declared-autostart.md)
 - `xdg.desktopEntries` overrides via a `hiPrio` profile collision, not `$XDG_DATA_HOME` — [decisions/declared-autostart](/decisions/declared-autostart.md)
-- Single-instance handoff needs one identity across launch contexts; opencloud keys it on `XDG_SESSION_ID` — [decisions/declared-autostart](/decisions/declared-autostart.md)
-- Autostart units and bind scopes carry `XDG_SESSION_ID`; the manager env and plain user services do not — [architecture/uwsm-session](/architecture/uwsm-session.md)
+- Single-instance handoff needs one identity per launch context; opencloud keys on `XDG_SESSION_ID` — [decisions/declared-autostart](/decisions/declared-autostart.md)
 - A user service is preferred over an XDG autostart entry; new public `services.opencloud-desktop` — [decisions/declared-autostart](/decisions/declared-autostart.md)
+- Autostart units and bind scopes carry `XDG_SESSION_ID`; the manager env and user services do not — [architecture/uwsm-session](/architecture/uwsm-session.md)
 - uwsm's autostart drop-in supplies the graphical slice as well as the session environment — [architecture/uwsm-session](/architecture/uwsm-session.md)
 
 ## 2026-09-27
 
-- Hyprland helpers split from config values: a `lib` level on the option path, and the two conditions that send one to a lib instead — [architecture/custom-lib](/architecture/custom-lib.md)
+- Hyprland helpers sit at a `lib` level on the option path; two conditions send one to a lib instead — [architecture/custom-lib](/architecture/custom-lib.md)
 
 ## 2026-09-25
 
@@ -52,90 +50,84 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 
 ## 2026-09-24
 
-- `checks.evalConfigurations` forces every host and home `drvPath` with the context discarded, gating the evaluation both trees previously escaped — [workflows/rebuild](/workflows/rebuild.md)
-- New concept: modifier semantics across shortcut standards (CUA, GNOME/KDE/macOS HIG, i3, terminals) — [reference/shortcut-standards](/reference/shortcut-standards.md)
-- New concept: modifier layers, Super-tier semantics, and the composition rules for keybindings — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
+- `checks.evalConfigurations` forces every host and home `drvPath`, gating both trees' evaluation — [workflows/rebuild](/workflows/rebuild.md)
+- Modifier semantics across shortcut standards: CUA, GNOME/KDE/macOS HIG, i3, terminals — [reference/shortcut-standards](/reference/shortcut-standards.md)
+- Modifier layers, Super-tier semantics, and the composition rules for keybindings — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
 
 ## 2026-09-20
 
-- `layer_rule` cannot override a layer surface's input region; `hyprctl keyword` is registered but refuses under the lua parser — [architecture/hyprland-lua-config](/architecture/hyprland-lua-config.md)
-- App summon pattern composes through `cfg.mkAppWorkspace`; `silent` tracks autostart — [architecture/hyprland-lua-config](/architecture/hyprland-lua-config.md)
-- `on_created_empty` is a third spawn path needing uwsm wrapping, next to binds and rofi — [architecture/uwsm-session](/architecture/uwsm-session.md)
-- `layout_opts` keys are consumer-validated — unknown opts silently ignored, `m_layoutopts` grep is the authority — [architecture/hyprland-lua-config](/architecture/hyprland-lua-config.md)
-- Vim-style direction rule: `H`/`J`/`K`/`L` reserved for directional actions across Super tiers — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
-- Launch discipline scoped as Hyprland-specific; dedicated-key flags reworded as portable requirements with Hyprland spelling — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
-- Utility tier dropped (`SUPER + CTRL` is unassigned headroom); "earn the chord" — the launcher absorbs rare actions — leads the composition rules — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
-- App tier moved to `SUPER + CTRL`; `SUPER + ALT` is the unassigned headroom, so Alt leaves the scheme — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
+- `layer_rule` cannot override a layer surface's input region; `hyprctl keyword` refuses under lua — [architecture/hyprland-lua-config](/architecture/hyprland-lua-config.md)
+- App summon composes through `cfg.mkAppWorkspace`; `layout_opts` keys are consumer-validated — [architecture/hyprland-lua-config](/architecture/hyprland-lua-config.md)
+- Bind form — mods interpolation, descriptions, flags, launch wrapping — lives here — [architecture/hyprland-lua-config](/architecture/hyprland-lua-config.md)
+- `on_created_empty` is a third spawn path needing uwsm wrapping, beside binds and rofi — [architecture/uwsm-session](/architecture/uwsm-session.md)
+- Four Super tiers: main, `SHIFT` variant, `ALT` alternative (resize), `CTRL` app; utility dropped — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
+- "Earn the chord" leads the composition rules; the launcher absorbs rare actions — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
+- `H`/`J`/`K`/`L` are reserved for direction in every namespace they appear in — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
+- Bare Alt is conditionally the app's — menu navigation (GUIs) or Meta (terminals) — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
+- Rule 4 scoped to the action tiers; the app tier keys letters to app initials — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
+- Rules hold per layer; the GUI, terminal and TUI layers get authoring guidance — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
+- Prefer the WM's window management over apps' built-in tabs, splits and layouts — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
 - Alt-as-Meta: the `ESC`-prefix encoding makes Alt the TUI world's one free modifier — [reference/shortcut-standards](/reference/shortcut-standards.md)
-- TUI layer owns Alt-as-Meta; the bare-Alt rule gains the Meta rationale — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
-- Prefer the WM's window management over apps' built-in tabs/splits/layouts — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
-- Rule 4 scoped to the action tiers — the app tier keys letters to app initials; `variant` replaces the `workspace` attr name — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
-- Fourth tier: `SUPER + ALT` is the second variant axis, resize its founding tenant; no resize submap — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
-- Bare Alt is conditionally the app's — claimable only without menu navigation (GUIs) or Meta (terminals) — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
-- Scheme generalized: rules hold per layer, GUI/terminal/TUI layers get authoring guidance — [architecture/shortcut-scheme](/architecture/shortcut-scheme.md)
-- Bind form (mods interpolation, descriptions, flags, launch wrapping) relocated here from the scheme — [architecture/hyprland-lua-config](/architecture/hyprland-lua-config.md)
 
 ## 2026-09-16
 
-- Cluster ports are scoped to their peers via `extraCommands`, not opened to every source; `6443` and etcd are server-only and kube-proxy binds the node address — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- Cluster ports are scoped to their peers via `extraCommands`, not opened to every source — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - Why source scoping stays on the iptables backend, and why the pod CIDR is in the allow-set — [decisions/firewall-source-scoping](/decisions/firewall-source-scoping.md)
+- tailscaled's `ts-input` preempts `nixos-fw`; bind addresses are the only control on the tailnet — [decisions/firewall-source-scoping](/decisions/firewall-source-scoping.md)
 - `flake.lib.network` holds `mkAllowFrom` and the `nyxNodes` address map — [architecture/custom-lib](/architecture/custom-lib.md)
 - `mother` owns its NFS firewall rule and export ACL; the `nfs` mixin opens no port — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - Corrected the per-host NIC names behind the unset `vip_interface` — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
-- tailscaled's `ts-input` accept preempts `nixos-fw`, so firewall rules never apply to tailnet traffic; bind addresses are the only control there — [decisions/firewall-source-scoping](/decisions/firewall-source-scoping.md)
 
 ## 2026-09-11
 
-- `modules/home/mixins/programs/mcp.nix` is the canonical minimal mixin; the claude-code one now carries package wrappers — [architecture/mixin-pattern](/architecture/mixin-pattern.md)
+- `modules/home/mixins/programs/mcp.nix` is the canonical minimal mixin — [architecture/mixin-pattern](/architecture/mixin-pattern.md)
 
 ## 2026-09-10
 
-- Qt apps use the gtk3 platform theme, which initialises GTK in-process and needs GSettings schemas `wrapQtAppsHook` does not supply — [reference/gtk-theming](/reference/gtk-theming.md)
+- Qt apps on the gtk3 platform theme need GSettings schemas `wrapQtAppsHook` does not supply — [reference/gtk-theming](/reference/gtk-theming.md)
 
 ## 2026-09-09
 
-- Host metrics ports need explicit firewall holes; kube-proxy also needs `metrics-bind-address=0.0.0.0`, and which control-plane metrics stay loopback-only — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
-- ZED alerts `chronos` to Gotify natively; the app token is a `zed.rc` command substitution, since zed preserves only `TZ` in the zedlet environment — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
-- Longhorn node prerequisites (`openiscsi`, `mount.nfs`) belong to the `k3s` mixin — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
-- longhorn-manager needs host tools at FHS paths; `/usr/bin` symlinks, not the `iscsid` BindPaths workaround — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- Host metrics ports need explicit firewall holes; kube-proxy needs `metrics-bind-address=0.0.0.0` — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- ZED alerts Gotify natively; the app token is a `zed.rc` substitution, as zed keeps only `TZ` — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- Longhorn needs `openiscsi`/`mount.nfs` in the `k3s` mixin and host tools at `/usr/bin` — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - `mother` serves NFSv4 only; port 111 is closed, so `showmount` misreports a healthy server — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - All four nyx nodes installed; TrueNAS retired — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - `mother`'s label and taint are contracts k8s-config keys on; changing either fails silently — [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md)
-- `mother`'s GPU reaches pods through CDI; the `k3s` mixin also puts the toolkit on the unit `PATH` so k3s emits an `nvidia-cdi` handler — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- `mother`'s GPU reaches pods through CDI; the toolkit on the unit `PATH` yields `nvidia-cdi` — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - `services.k3s.containerdConfigTemplate` downgrades containerd off config v3 — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 
 ## 2026-09-08
 
-- `chronos` holds no encrypted datasets and mounts at `/chronos/*`; TrueNAS's `/mnt` was altroot, not a stored mountpoint — [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md)
+- `chronos` has no encrypted datasets and mounts at `/chronos/*`, not TrueNAS's `/mnt` altroot — [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md)
 - Only the `vonarx.online/*` labels are left to resolve on the machines — [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md), [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - mother boots legacy BIOS under TrueNAS; systemd-boot and the disko ESP need UEFI selected first — [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md)
+- Node labels reduced to `mother`'s `nfs-host`; capacity is node status, not a label — [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md)
+- `mother` taints itself `reserved=storage:NoSchedule`; labels and taints apply at registration only — [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md)
+- `k3s agent` rejects `--disable`; the mixin gates it on `role == "server"` — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - Rebuilding another host: `--target-host`/`--build-host`, and why `sudo` elevation is required — [workflows/rebuild](/workflows/rebuild.md)
-- `k3s agent` rejects `--disable`; the mixin gates it on `role == "server"`, and where server-only settings live — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
-- Node labels reduced to `mother`'s `nfs-host`; capacity is node status, not a label, and `nodeLabel` only applies at registration — [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md)
-- `mother` taints itself `vonarx.online/reserved=storage:NoSchedule`; `nodeTaint` shares `nodeLabel`'s registration-only behaviour — [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md)
-- `nvidia` mixin split: driver plus `hardware.graphics` in `nvidia`, `cudaSupport` opt-in as `nvidiaCuda` — [hosts/HAL9000](/hosts/HAL9000.md)
+- `nvidia` mixin split: driver and `hardware.graphics` in `nvidia`, `cudaSupport` as `nvidiaCuda` — [hosts/HAL9000](/hosts/HAL9000.md)
 
 ## 2026-09-07
 
 - Servers advertise the VIP as a tailnet subnet route; approval and unadvertising sit outside nix — [hosts/nyx-cluster](/hosts/nyx-cluster.md), [hosts/wintermute](/hosts/wintermute.md)
 - `tars`, `case` and `kipp` are installed; the outstanding `TODO` facts are `mother`'s alone — [hosts/nyx-cluster](/hosts/nyx-cluster.md), [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md)
 - Servers pass `--tls-san` for the VIP per host; k3s does not reissue the cert when SANs change — [hosts/nyx-cluster](/hosts/nyx-cluster.md), [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md)
-- `tars` names one interface; an `en*` glob catches its uncabled second NIC and hangs wait-online — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - kube-vip's `vip_interface` is unset on purpose; one DaemonSet spans nodes whose NICs differ in name — [hosts/nyx-cluster](/hosts/nyx-cluster.md), [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md)
-- New playbook: the counter/SMART/link-speed ladder for telling a failing drive from a failing cable — [workflows/diagnose-disk-faults](/workflows/diagnose-disk-faults.md)
-- chronos is raidz2 + an Optane log vdev; the OS SSD is addressed by-id because mother has two NVMe devices — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- `tars` names one interface; an `en*` glob catches its uncabled second NIC and hangs wait-online — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- chronos is raidz2 plus an Optane log vdev; the OS SSD is by-id, mother having two NVMe — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- The counter/SMART/link-speed ladder for telling a failing drive from a failing cable — [workflows/diagnose-disk-faults](/workflows/diagnose-disk-faults.md)
 - The seed tree also carries the user's password hash; without it a new host is created locked — [workflows/install-nixos](/workflows/install-nixos.md)
 
 ## 2026-09-05
 
-- Install a new host once: harvest hardware facts from the live installer, seed the host key, then `nixos-anywhere` — [workflows/install-nixos](/workflows/install-nixos.md)
+- Install a host once: harvest hardware facts, seed the host key, then `nixos-anywhere` — [workflows/install-nixos](/workflows/install-nixos.md)
 - Rollout order and per-host `TODO` facts for the four cluster machines — [workflows/nyx-bootstrap](/workflows/nyx-bootstrap.md)
-- The k3s sops file moved into the mixin; per-secret `sopsFile`, since `defaultSopsFile` is host-global — [workflows/secrets](/workflows/secrets.md)
+- System-level sops decrypts at activation via the host SSH key; per-secret `sopsFile` in the mixin — [workflows/secrets](/workflows/secrets.md)
 - Sops payloads go in `secrets/`, not `files/`, and only inside a leaf module folder — [architecture/module-layout](/architecture/module-layout.md)
 - `conform` gates commit messages at the commit-msg stage; types and scopes live in `.conform.yaml` — [workflows/formatting-and-cspell](/workflows/formatting-and-cspell.md)
-- A `pkgs/` subdir also holds a single package whose script lives under `files/`, not only input-hungry groups — [architecture/packages](/architecture/packages.md)
-- The `server` profile and the four headless nyx-cluster hosts; cluster roles are mixins, not a second profile — [architecture/profiles](/architecture/profiles.md), [hosts/nyx-cluster](/hosts/nyx-cluster.md)
-- System-level sops decrypted at activation via each host's SSH host key — [workflows/secrets](/workflows/secrets.md)
+- A `pkgs/` subdir may hold a single package whose script lives under `files/` — [architecture/packages](/architecture/packages.md)
+- The `server` profile and four headless hosts; cluster roles are mixins, not a second profile — [architecture/profiles](/architecture/profiles.md), [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - The `server-longhorn-v1` disko template and `mkDiskoLayout`'s `longhorn` size default — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 
 ## 2026-09-04
@@ -143,7 +135,7 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 - The module trees live under `modules/{home,nixos}/`; flake outputs are flat `mkModules` keys — [architecture/entry-points](/architecture/entry-points.md), [architecture/auto-discovery](/architecture/auto-discovery.md)
 - The theme's per-tree halves sit in one auto-discovered `compat.nix` behind `mkClassModule` — [decisions/dual-class-modules](/decisions/dual-class-modules.md)
 - `mixins.programs.steam.resolution` is the second non-enable mixin surface beside hyprland's — [architecture/mixin-pattern](/architecture/mixin-pattern.md)
-- The option-lookup workflows are gone; the two skills' `SKILL.md` files are the sole authority — [architecture/packages](/architecture/packages.md)
+- The two option-lookup skills' `SKILL.md` files are the sole authority — [architecture/packages](/architecture/packages.md)
 
 ## 2026-09-01
 
@@ -175,8 +167,7 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 - base16 upcasts to base24 unconditionally, so no consumer branches on `meta.system` — [reference/base24](/reference/base24.md)
 - `named`, `status`, `ansi` are always-present views; colour words carry `normal`/`bright` — [reference/base24](/reference/base24.md)
 - `schemes.accent` carries the accent; `custom.theme.gtk.accent` selects GNOME's nine only — [architecture/module-layout](/architecture/module-layout.md)
-- Cursor slots are declared options with derived defaults; `custom.theme.altColor` is gone — [reference/cursor-theming](/reference/cursor-theming.md)
-- `toHsl`/`fromHsl`/`rotateHue` in the color lib; `accentAlt` is the accent turned −120° — [reference/cursor-theming](/reference/cursor-theming.md)
+- Cursor slots are declared options with derived defaults; `accentAlt` is the accent −120° — [reference/cursor-theming](/reference/cursor-theming.md)
 - corrected: on a dark scheme `fill` is `base00` and `outline` is `base06`, not the reverse — [reference/cursor-theming](/reference/cursor-theming.md)
 
 ## 2026-08-23
@@ -215,7 +206,7 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 
 ## 2026-08-19
 
-- adw-gtk3 is mandatory — stock stylesheets are flat-compiled; GTK4 applies it via the user stylesheet — [reference/gtk-theming](/reference/gtk-theming.md)
+- adw-gtk3 is mandatory; stock stylesheets are flat-compiled, GTK4 applies it via the user sheet — [reference/gtk-theming](/reference/gtk-theming.md)
 - `mkGtkThemeCss` compiles SCSS: Nix resolves colours, SCSS owns structure — [reference/gtk-theming](/reference/gtk-theming.md)
 - `color.relativeLuminance` / `color.contrastRatio` added; GTK foreground picks use WCAG contrast — [reference/base24](/reference/base24.md)
 - `home.file` aborts on a pre-existing unmanaged target without `backupFileExtension` — [workflows/rebuild](/workflows/rebuild.md)
@@ -232,10 +223,10 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 - Unit switched to `X-Restart-Triggers`; the reload form silently no-ops without `ExecReload` — [apps/yas](/apps/yas.md)
 - Popup timers only for `expireTimeout <= 0`; the daemon resolves the rest — [apps/yas](/apps/yas.md)
 - No destructuring live GObject properties; explicit `onCleanup` destroy; `GError` calls throw — [apps/yas](/apps/yas.md)
+- The home module installs the `astal-notifd` CLI, the only way to reach do-not-disturb — [apps/yas](/apps/yas.md)
 - `npm run types` produces `@girs/` and `tsconfig.json`, which is untracked and loses `lib` on regen — [workflows/develop-yas](/workflows/develop-yas.md)
 - A new source file is invisible to `nix build` until it is `git add`ed — [workflows/develop-yas](/workflows/develop-yas.md)
 - `notify-send` corpus covering both body branches and visual resolution — [workflows/develop-yas](/workflows/develop-yas.md)
-- The home module installs the `astal-notifd` CLI, the only way to reach do-not-disturb — [apps/yas](/apps/yas.md)
 
 ## 2026-08-16
 
@@ -280,10 +271,10 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 ## 2026-07-29
 
 - `users/joker9944/nixos` made server-safe; desktop extras gated per owning mixin — [architecture/entry-points](/architecture/entry-points.md)
-- Bundle migrated to OKF v0.2 and stripped of change-narrative
 - Profiles added as a role layer above mixins; hosts reduced to deltas — [architecture/profiles](/architecture/profiles.md), [decisions/host-profiles](/decisions/host-profiles.md)
 - Mixins returned to binary `enable`; files renamed to kebab-case matching their options — [architecture/mixin-pattern](/architecture/mixin-pattern.md), [decisions/enable-flag-mixins](/decisions/enable-flag-mixins.md), [architecture/module-layout](/architecture/module-layout.md)
 - `lib/` doc-string convention (RFC 145) recorded — [architecture/custom-lib](/architecture/custom-lib.md)
+- Bundle migrated to OKF v0.2 and stripped of change-narrative
 
 ## 2026-07-27
 
@@ -291,9 +282,9 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 
 ## 2026-07-24
 
-- regreet's hyprland config ported from hyprlang to lua
 - New workflow: `UPGRADE(<release>)` markers for deferred release work — [workflows/release-upgrade](/workflows/release-upgrade.md)
 - Anti-pattern: look for an upstream home-manager module before hand-rolling config — [workflows/add-mixin](/workflows/add-mixin.md)
+- regreet's hyprland config ported from hyprlang to lua
 
 ## 2026-07-23
 

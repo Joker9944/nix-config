@@ -1,6 +1,6 @@
 # Decisions
 
-Load-bearing choices behind the shape of the repo. Consult before proposing structural changes — these encode the *why*, so future work stays coherent with the past.
+Load-bearing choices behind the shape of the repo — the *why* behind what the other categories describe.
 
 # Decisions
 

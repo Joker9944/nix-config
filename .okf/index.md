@@ -36,4 +36,4 @@ The durable knowledge about this repository lives here — the "why" behind the 
 
 # Meta
 
-* [log](log.md) — Chronological change history for this bundle.
+* [log](log.md) — Dated index of changes to this bundle.
