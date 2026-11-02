@@ -70,6 +70,10 @@ mkMixinModule "k3s" {
     systemd.services.k3s.path = lib.optional isNvidiaGpu pkgs.nvidia-container-toolkit.tools;
 
     # Longhorn node prerequisites
+    # Longhorn's node check reports dm_crypt missing even where no encrypted
+    # volume exists, and nothing on these nodes autoloads it.
+    boot.kernelModules = [ "dm_crypt" ];
+
     services.openiscsi = {
       enable = true;
       name = "iqn.2016-04.com.open-iscsi:${config.networking.hostName}";

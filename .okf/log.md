@@ -10,8 +10,9 @@ An index of bundle changes, not a narrative. One line each: what changed and the
 - Cluster nodes, VIP and MetalLB pool moved into 192.168.1.0/24 of the router's widened /23 — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - `mother` pins `eno1` for the same reason `tars` pins `enp2s0`; only case/kipp glob — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - Playbook for renumbering a node: widen the allow-set, then roll, updating each etcd peer URL ahead of its node — [workflows/renumber-nodes](/workflows/renumber-nodes.md)
+- `dm_crypt` joins the Longhorn node prerequisites in the `k3s` mixin — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 
-## 2026-10-27
+## 2026-10-26
 
 - `mkAppWorkspace` launches from a `workspace.created` handler; `on_created_empty` is deprecated upstream — [architecture/hyprland-lua-config](/architecture/hyprland-lua-config.md)
 - Lid close is `suspend-then-hibernate`; hibernation resumes from the `HibernateLocation` EFI variable, so the swapfile needs no `boot.resumeDevice` — [hosts/wintermute](/hosts/wintermute.md)
