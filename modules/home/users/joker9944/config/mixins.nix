@@ -16,7 +16,7 @@ _: {
       fish.enable = true;
       git.enable = true;
       gnome-text-editor.enable = true;
-      jetbrains.enable = true;
+      jetbrains-idea.enable = true;
       jupyter.enable = true;
       kitty.enable = true;
       librewolf.enable = true;
