@@ -31,6 +31,12 @@ let
   # break scraping on every node at once.
   podCidr = "10.42.0.0/16";
   tailnet = "100.64.0.0/10";
+
+  wg = flake.lib.network.wgEdge;
+  wgSpoke =
+    lib.throwIf (!lib.hasAttr hostName wg.spokes)
+      "k3s mixin: ${hostName} is a server but has no entry in lib/network/wgEdge.nix; the ingress tunnel needs a transit address and public key per server"
+      wg.spokes.${hostName};
 in
 mkMixinModule "k3s" {
   imports = [ inputs.sops-nix.nixosModules.sops ];
@@ -38,7 +44,12 @@ mkMixinModule "k3s" {
   config = {
     sops = {
       age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-      secrets."k3s/token".sopsFile = ./secrets/k3s.yaml;
+      secrets = {
+        "k3s/token".sopsFile = ./secrets/k3s.yaml;
+      }
+      // lib.optionalAttrs isServer {
+        "wireguard/${hostName}/private-key".sopsFile = ./secrets/wireguard.yaml;
+      };
     };
 
     services.k3s = {
@@ -63,11 +74,40 @@ mkMixinModule "k3s" {
         ++ (lib.optional isNfs "vonarx.online/nfs-host=true");
     };
 
-    # k3s LookPaths $PATH for nvidia-container-runtime[.cdi] and writes the
-    # matching containerd runtime handlers into its generated config. The
-    # toolkit installs those binaries on no path of its own, so without this
-    # the handlers never appear and runtimeClassName resolves to nothing.
-    systemd.services.k3s.path = lib.optional isNvidiaGpu pkgs.nvidia-container-toolkit.tools;
+    # Spoke of the public ingress tunnel. wopr holds the only public address, so
+    # it listens and each server dials out; the keepalive is what holds the
+    # conntrack entry on the CGNAT'd uplink open so the hub can reach back in.
+    # Server-only and uniform, hence here rather than in three identical host
+    # files — mother is an agent and runs no Traefik pod.
+    networking.wireguard.interfaces = lib.optionalAttrs isServer {
+      wg0 = {
+        ips = [ "${wgSpoke.address}/32" ];
+        privateKeyFile = config.sops.secrets."wireguard/${hostName}/private-key".path;
+        peers = [
+          {
+            inherit (wg.hub) publicKey;
+            endpoint = "${wg.endpoint.address}:${toString wg.endpoint.port}";
+            allowedIPs = [ "${wg.hub.address}/32" ];
+            persistentKeepalive = 25;
+          }
+        ];
+      };
+    };
+
+    systemd = {
+      # The generated unit sets only Name and address, and a wireguard link that
+      # never reaches routable would hang systemd-networkd-wait-online for its
+      # full timeout.
+      network.networks = lib.optionalAttrs isServer {
+        "40-wg0".linkConfig.RequiredForOnline = "no";
+      };
+
+      # k3s LookPaths $PATH for nvidia-container-runtime[.cdi] and writes the
+      # matching containerd runtime handlers into its generated config. The
+      # toolkit installs those binaries on no path of its own, so without this
+      # the handlers never appear and runtimeClassName resolves to nothing.
+      services.k3s.path = lib.optional isNvidiaGpu pkgs.nvidia-container-toolkit.tools;
+    };
 
     # Longhorn node prerequisites
     # Longhorn's node check reports dm_crypt missing even where no encrypted
@@ -143,6 +183,12 @@ mkMixinModule "k3s" {
               2379 # etcd client
               2380 # etcd peer
             ];
+          })
+          # wg0 is deliberately not a trusted interface, so the edge's whole
+          # reach across the tunnel is this one port.
+          (flake.lib.network.mkAllowFrom {
+            sources = [ wg.hub.address ];
+            tcp = [ wg.nodePort ]; # traefik websecure-proxied
           })
         ]
       );

@@ -305,6 +305,12 @@
                 profile = "server";
                 usernames = [ "joker9944" ];
               }
+              {
+                system = "x86_64-linux";
+                hostname = "wopr";
+                profile = "server";
+                usernames = [ "joker9944" ];
+              }
             ]
             [
               (lib.map (cfg: {

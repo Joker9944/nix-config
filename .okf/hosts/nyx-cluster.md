@@ -5,7 +5,7 @@ description: Four headless x86_64-linux machines running k3s — tars/case/kipp 
 tags: [host, server, k3s, zfs, longhorn]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-11-02T00:00:00Z
+  at: 2026-11-03T00:00:00Z
 sources:
   - id: longhorn-2166
     resource: https://github.com/longhorn/longhorn/issues/2166
@@ -49,7 +49,9 @@ Two halves are outside nix. The route must be **approved** in the Tailscale admi
 
 Linux clients ignore subnet routes unless told otherwise, so [wintermute](wintermute.md) carries the matching `useRoutingFeatures = "client"` + `--accept-routes`. Phones and macOS accept by default.
 
-Alongside `192.168.1.20/32` each server advertises `192.168.1.128/25`, the MetalLB pool, which is how the ingress at **192.168.1.128** is reached from off-LAN. The `hosts` mixin pins the subdomains that resolve *only* inside the tailnet to that address, so a client without Tailscale up has no route to them.
+Alongside `192.168.1.20/32` each server advertises `192.168.1.128/25`, the MetalLB pool, which is how the ingress at **192.168.1.128** is reached from off-LAN. The `hosts` mixin pins the subdomains that resolve *only* inside the tailnet to that address, so a client without Tailscale up has no route to them. Public ingress does **not** use this route — [wopr](wopr.md) reaches Traefik over a separate WireGuard tunnel instead.
+
+Each server is also a **spoke** of that tunnel. The `k3s` mixin gates it on `isServer`, since the config is uniform and only differs by the host's own entry in `flake.lib.network.wgEdge`; `mother` is an agent, runs no Traefik pod and is not a spoke. The servers dial out because wopr holds the only public address, and `persistentKeepalive` is what holds the conntrack entry on the CGNAT'd uplink open so the hub can reach back in. Private keys live in the mixin's `secrets/wireguard.yaml`, keyed to the three servers only — wopr's key is in its own file so neither side can decrypt the other's.
 
 The tailnet is also the *only* way in to `6443`: the firewall scopes the API server to the node addresses plus the tailnet CGNAT range, so `kubectl` from a desktop on the cluster LAN is refused. [HAL9000](HAL9000.md) is on a different subnet entirely and only ever reached the cluster this way.
 
@@ -77,8 +79,9 @@ Nothing the cluster needs goes in `allowedTCPPorts` — that opens a port to eve
 | tcp 10250, 9100, 10249 | nodes + `10.42.0.0/16` — kubelet API, node-exporter, kube-proxy |
 | tcp 6443, servers only | nodes + `100.64.0.0/10` |
 | tcp 2379 + 2380, servers only | nodes |
+| tcp 30443, servers only | the tunnel hub only — traefik `websecure-proxied` |
 
-The table governs the **LAN path only**. Nothing arriving on `tailscale0` is filtered by `networking.firewall` at all, so a wildcard-bound port answers any tailnet peer whatever the rules say — see [decisions/firewall-source-scoping](/decisions/firewall-source-scoping.md).
+The table governs the **LAN path only**. Nothing arriving on `tailscale0` is filtered by `networking.firewall` at all, so a wildcard-bound port answers any tailnet peer whatever the rules say — see [decisions/firewall-source-scoping](/decisions/firewall-source-scoping.md). `wg0` is the opposite case and deliberately so: it is **not** in `trustedInterfaces`, so the rule above is the edge's entire reach across the tunnel.
 
 The node addresses are `flake.lib.network.nyxNodes`, not a mixin option: every node needs the whole set rather than its own entry, and a host that enables the mixin without an entry there fails at eval. `mother` reads the same list for its NFS rule and export ACL. The `nfs` mixin itself opens nothing — who may reach 2049 is the same decision as who appears in the export ACL, and exports are a host delta.
 

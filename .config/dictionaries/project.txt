@@ -15,6 +15,7 @@ blueglassblock
 breezedark
 centerbox
 checkperm
+conntrack
 crudini
 crypted
 Dawt
@@ -44,6 +45,7 @@ hyprcursors
 hyprwm
 imapnotify
 isInstaller
+keepalive
 kexec
 keylocation
 keystatus
@@ -63,6 +65,7 @@ mimeinfo
 mountpoint
 neww
 nextl
+nodeport
 noinherit
 onnx
 onnxruntime
@@ -113,6 +116,7 @@ vscodevim
 vsplit
 Weaveworks
 webextension
+wopr
 wxmaxima
 xalign
 xcrun

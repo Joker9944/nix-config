@@ -5,7 +5,7 @@ description: How to rebuild NixOS and home-manager from this flake, via nh or th
 tags: [workflow, build, nixos, home-manager]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-24T00:00:00Z
+  at: 2026-11-03T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -33,6 +33,12 @@ Common variants:
 
 * `nixos-rebuild boot --flake .` — build and activate on next reboot instead of now (safer for kernel/initrd changes).
 * `nixos-rebuild build --flake .` — build only, don't activate. Useful for smoke-testing before switching.
+
+A switch does not replay udev events, so a service started *only* by a udev rule's
+`ENV{SYSTEMD_WANTS}` — with no `wantedBy` of its own — stays dead until the next boot even though the
+generation is live. `services.qemuGuest` on [wopr](/hosts/wopr.md) is the instance.
+`udevadm trigger --subsystem-match=<subsys> --action=add` starts it now and exercises the boot path,
+which `systemctl start` does not.
 
 ## Another host
 

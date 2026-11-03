@@ -2,7 +2,23 @@
 
 An index of bundle changes, not a narrative — one line per change, in the form `CLAUDE.md` rule 3 sets.
 
+## 2026-11-03
+
+- Public ingress moved off the tailnet onto a dedicated WireGuard tunnel; failover is the nginx upstream, not router election — [decisions/edge-not-a-cluster-node](/decisions/edge-not-a-cluster-node.md)
+- `wopr` is the tunnel hub and now a plain tailnet leaf; `allowedUDPPorts` joins its firewall exception — [hosts/wopr](/hosts/wopr.md)
+- Servers are spokes behind the `k3s` mixin's `isServer` gate; `wg0` is deliberately not a trusted interface — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- Probing a node from the tunnel hub drops `6443`/`10250`/`9100`, unlike the tailnet path — [decisions/firewall-source-scoping](/decisions/firewall-source-scoping.md)
+- Tunnel keys split across two sops rules so neither side can decrypt the other's — [workflows/secrets](/workflows/secrets.md)
+- `wopr` addressing is static v4+v6 with RAs off on `ens3`; the provider serves no DHCP — [hosts/wopr](/hosts/wopr.md)
+- `wopr` runs the qemu guest agent as a host delta; it is the only VM — [hosts/wopr](/hosts/wopr.md)
+- A switch replays no udev events, so a udev-only service stays dead until reboot — [workflows/rebuild](/workflows/rebuild.md)
+- A VM's harvested hardware config imports `qemu-guest.nix`, not `not-detected.nix` — [workflows/install-nixos](/workflows/install-nixos.md)
+
 ## 2026-11-02
+
+- `wopr` added: an L4 `:443` splice to the cluster Traefik over the tailnet, PROXY protocol onto a dedicated `:8443` entrypoint — [hosts/wopr](/hosts/wopr.md)
+- Why the ingress edge is not a k3s node, a hand-rolled tunnel, a DNAT, or the Tailscale operator — [decisions/edge-not-a-cluster-node](/decisions/edge-not-a-cluster-node.md)
+- `allowedTCPPorts` has one legitimate use: a host whose peer set is every source — [decisions/firewall-source-scoping](/decisions/firewall-source-scoping.md)
 
 - `amdCpu`/`intelCpu` own vendor microcode and kvm; `thermalThrottling` derives thermald from them — [architecture/mixin-pattern](/architecture/mixin-pattern.md)
 - Generated hardware configs trimmed to what is actually scanned — [workflows/install-nixos](/workflows/install-nixos.md)

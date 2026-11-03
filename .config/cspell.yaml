@@ -13,6 +13,9 @@ ignoreRegExpList:
   - '"#?[0-9A-Fa-f]{6}"'
 ignorePaths:
   - 'secrets.yaml'
+  # sops-encrypted payloads live in secrets/ dirs; the ciphertext is noise to a
+  # spellchecker and 'secrets.yaml' alone does not cover k3s.yaml or wireguard.yaml
+  - '**/secrets/*.yaml'
   - /result
   - .sops.yaml
   - '*.patch'
