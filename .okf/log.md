@@ -2,6 +2,10 @@
 
 An index of bundle changes, not a narrative — one line per change, in the form `CLAUDE.md` rule 3 sets.
 
+## 2026-11-04
+
+- A program belongs to the profile, not the user module, which lands on headless hosts too — [architecture/entry-points](/architecture/entry-points.md)
+
 ## 2026-11-03
 
 - Public ingress moved off the tailnet onto a dedicated WireGuard tunnel; failover is the nginx upstream, not router election — [decisions/edge-not-a-cluster-node](/decisions/edge-not-a-cluster-node.md)

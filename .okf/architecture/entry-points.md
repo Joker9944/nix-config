@@ -5,7 +5,7 @@ description: The two constructors called from flake.nix that assemble every host
 tags: [architecture, flake, entry-point]
 generated:
   by: claude-code/claude-opus-4-8
-  at: 2026-09-04T00:00:00Z
+  at: 2026-11-04T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -18,7 +18,7 @@ Defined in `lib/configuration/mkNixosConfiguration.nix`. Assembles a `nixosSyste
 1. `nixosModules.mixins` — the reusable NixOS mixin tree, `modules/nixos/mixins/`.
 2. `nixosModules."profiles-<profile>"` — the host's role, when the record sets a `profile` string (optional). See [profiles](profiles.md).
 3. `nixosModules."hosts-<hostname>"` — the per-host directory `modules/nixos/hosts/<hostname>/`, whose `default.nix` auto-loads its siblings (`mixins.nix`, `disks.nix`, `hardware-configuration.nix`, …) via `mkDefaultModule`.
-4. `nixosModules."users-<username>"` for each username in the host record — user-owned system-level tweaks, `modules/nixos/users/<username>/`. The module keeps a universal identity (account, ssh keys, `wheel`/`keys` groups) unconditional and gates its desktop-coupled extras — capability group memberships per owning mixin (`docker`/`gamemode`/`networkmanager`), the unfree-package allowlist and the `audiomenu` overlay on `mixins.programs.home-manager.enable` — so it imports cleanly on a graphical-free server.
+4. `nixosModules."users-<username>"` for each username in the host record — user-owned system-level tweaks, `modules/nixos/users/<username>/`. The module keeps a universal identity (account, ssh keys, `wheel`/`keys` groups) unconditional and gates its desktop-coupled extras — capability group memberships per owning mixin (`docker`/`gamemode`/`networkmanager`), the unfree-package allowlist and the `audiomenu` overlay on `mixins.programs.home-manager.enable` — so it imports cleanly on a graphical-free server. Gating is for what is genuinely *user*-scoped; a **program** is not, and belongs to the profile for that class of machine. Putting one here instead installs it on every host the user exists on, headless ones included — which is how `programs.localsend` once opened 53317 on all four cluster nodes.
 5. Every `public-*` key, `nixosModules.theme`, and inline wiring: the flake's overlays, `nixpkgs.hostPlatform` and the `custom.pkgs.pkgs-unstable` binding.
 
 Neither constructor sets `specialArgs`. Modules receive `flake`, `inputs`, `libUtil` and `libMath` as

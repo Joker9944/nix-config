@@ -23,5 +23,7 @@
     };
   };
 
+  programs.localsend.enable = true;
+
   console.useXkbConfig = true;
 }
