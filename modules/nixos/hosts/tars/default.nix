@@ -23,12 +23,12 @@ flake.lib.modules.mkDefaultModule
       linkConfig.RequiredForOnline = "routable";
     };
 
-    # Subnet-route the kube-vip endpoint into the tailnet. All three servers
-    # advertise it, so Tailscale's primary-router election fails over the same
-    # way the VIP does at L2.
+    # Subnet-route the kube-vip endpoint into the tailnet so kubectl reaches the
+    # API off-LAN. All three servers advertise it, so Tailscale's primary-router
+    # election fails over the same way the VIP does at L2.
     services.tailscale = {
       useRoutingFeatures = "server";
-      extraSetFlags = [ "--advertise-routes=${vip}/32,192.168.1.128/25" ];
+      extraSetFlags = [ "--advertise-routes=${vip}/32" ];
     };
 
     services.k3s = {

@@ -51,21 +51,25 @@ to travel out of band, hence PROXY protocol.
 `:443` is the only public TCP port. ACME is DNS-01, so there is no HTTP-01 challenge to serve and no
 redirect is offered; a plain `http://` request is refused at the TCP level by design.
 
-# The dedicated Traefik entrypoint
+# The Traefik entrypoint
 
-The backend is a **separate** `websecure-proxied` entrypoint, exposed as a NodePort Service with
-`proxyProtocol.trustedIPs` set to this host's transit address. Enabling PROXY protocol on the
-cluster's existing `:443` instead would break every tailnet-only service that reaches the ingress
-directly — such an entrypoint rejects any connection without the header, and the `hosts` mixin
-points `alertmanager`, `prometheus`, `longhorn` and `pgadmin` straight at `192.168.1.128`. A
-consequence: the NodePort refuses a plain `curl`, so probes against it must speak PROXY protocol.
+The backend is Traefik's **sole** `websecure` entrypoint, exposed as a NodePort Service with
+`proxyProtocol.trustedIPs` set to this host's transit address. It can require the header on every
+connection because nothing reaches the ingress directly: internal services are tailnet services
+provisioned by the Tailscale operator ([nyx-cluster](nyx-cluster.md)), and there is no
+load-balancer VIP. A consequence: the NodePort refuses a plain `curl`, so probes
+against it must speak PROXY protocol.
 
 `trustedIPs` being exactly one address is the point. A PROXY header is forgeable by anything inside
 the trusted range, so widening it would let its source spoof a client address past the geo and
 whitelist rules. That is why the Service is `externalTrafficPolicy: Local` — under `Cluster`,
 kube-proxy SNATs to a node address when it forwards to a pod elsewhere, and `trustedIPs` would have
-to widen to the node set. `Local` also means only a node running a Traefik pod can serve, so the
-upstream list and the pod placement have to agree.
+to widen to the node set. `Local` also means only a node running a Traefik pod can serve, which the
+`vonarx.online/ingress-spoke` node label is there to guarantee.
+
+`trustedIPs` is the control here, not the firewall: a NodePort is DNATed ahead of `nixos-fw`, so the
+port answers anything that can route to a node — see
+[firewall-source-scoping](/decisions/firewall-source-scoping.md).
 
 # Reaching the cluster
 

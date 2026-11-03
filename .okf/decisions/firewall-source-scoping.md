@@ -26,12 +26,21 @@ Three invariants follow and are why `mkAllowFrom` exists rather than hand-writte
 
 `networking.firewall` does not apply to the tailnet **at all**. tailscaled runs with the default `--netfilter-mode=on`, which inserts its own `ts-input` chain at the head of `INPUT` with an accept for everything arriving on `tailscale0` — ahead of the `-A INPUT -j nixos-fw` jump. No `allowedTCPPorts` entry, `trustedInterfaces` entry or `extraCommands` rule is consulted for a tailnet packet, on any host in this repo (the base profile enables tailscale everywhere).
 
-So on a node, any port bound to `0.0.0.0` is reachable by anything on the tailnet regardless of these rules. What actually keeps the cluster's internal ports off the tailnet is their **bind address**, not the firewall: kube-proxy (`10249`), etcd (`2379`/`2380`) and the metallb speaker (`7946`) listen on the node's LAN address only, while kube-apiserver (`6443`), kubelet (`10250`) and node-exporter (`9100`) listen on `0.0.0.0` and answer any tailnet peer. Verified by probing a node from a tailnet host: exactly the wildcard-bound ports answered.
+So on a node, any port bound to `0.0.0.0` is reachable by anything on the tailnet regardless of these rules. What actually keeps the cluster's internal ports off the tailnet is their **bind address**, not the firewall: kube-proxy (`10249`) and etcd (`2379`/`2380`) listen on the node's LAN address only, while kube-apiserver (`6443`), kubelet (`10250`) and node-exporter (`9100`) listen on `0.0.0.0` and answer any tailnet peer. Verified by probing a node from a tailnet host: exactly the wildcard-bound ports answered.
 
 The ingress tunnel is the deliberate contrast. `wg0` is **not** a trusted interface, so these rules
-do govern it and the hub's only accept is Traefik's NodePort. Verified by probing `tars` from the hub
-with the tunnel up: `6443`, `10250` and `9100` all time out. A timeout rather than a refusal is the
-expected signature — `rejectPackets` is `false`, so `nixos-fw-refuse` drops.
+do govern it: verified by probing `tars` from the hub with the tunnel up, `6443`, `10250` and `9100`
+all time out. A timeout rather than a refusal is the expected signature — `rejectPackets` is
+`false`, so `nixos-fw-refuse` drops.
+
+A **NodePort is the third case where the firewall is not the control**, and the reason generalises to
+any DNATed traffic: `nixos-fw` is jumped from `INPUT` and from nowhere else. kube-proxy DNATs a
+NodePort in `nat/PREROUTING` (`KUBE-SERVICES` → `KUBE-NODEPORTS`), so by the time the filter table
+runs the destination is a pod, the packet traverses `FORWARD`, and `KUBE-FORWARD` accepts it on the
+`0x4000` service mark. Verified against a live ruleset: `-A INPUT -j nixos-fw` exists, no
+`FORWARD` counterpart does. The `30443` rule is therefore a no-op kept as belt-and-braces, a node's
+NodePort answers anything that can route to it, and what prevents a forged client address is
+Traefik's `proxyProtocol.trustedIPs`.
 
 That is why the kube-proxy `metrics-bind-address` is the node address rather than `0.0.0.0` — on this path the bind is the control, and the firewall rule is not. The `100.64.0.0/10` source on the `6443` rule is kept as belt-and-braces for a future where tailscale's netfilter mode changes; it admits nothing today.
 

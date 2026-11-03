@@ -5,7 +5,7 @@ description: Move cluster nodes to new LAN addresses without partitioning the cl
 tags: [workflow, networking, k3s, etcd, cluster, nyx]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-11-02T00:00:00Z
+  at: 2026-11-03T00:00:00Z
 sources:
   - id: k3s-5787
     resource: https://github.com/k3s-io/k3s/issues/5787
@@ -29,7 +29,7 @@ Three things break, independently of each other.
 
 **The firewall allow-set is cluster-wide data.** Each node admits only the addresses in
 `lib/network/nyxNodes.nix` as of the generation it is running, so a renumbered node and an
-un-renumbered one reject each other in both directions — etcd, kubelet and the metallb memberlist,
+un-renumbered one reject each other in both directions — etcd and kubelet,
 and flannel's VXLAN (`udp 8472`) with them. The pod network partitions too, which is how a LAN
 renumber reaches Longhorn.
 
@@ -235,11 +235,9 @@ them, and mother's second `nfs-server` restart lands here:
 ssh <each> iptables -S nixos-fw | grep -o '192\.168\.0\.[0-9]*' | sort -u   # empty when done
 ```
 
-Two hosts outside the cluster also carry a cluster address: `wintermute` and `HAL9000` are the only
-users of the `hosts` mixin, which pins the tailnet-only subdomains to the ingress. If the ingress
-address moved, they need a rebuild too, in the same window as the MetalLB pool change that moves it
-— early and the subdomains break, late and they resolve to an address nothing answers on, which on a
-`/23` hangs on ARP rather than failing fast.
+No host outside the cluster carries a cluster address any more. `wintermute` and `HAL9000` used to
+pin the tailnet-only subdomains to the ingress through the `hosts` mixin; those are MagicDNS names
+from the Tailscale operator now, so renumbering nodes does not touch them.
 
 # When the rolling path fails
 
@@ -260,7 +258,7 @@ ssh tars kubectl get volumes -n longhorn-system    # nothing faulted
 ```
 
 Addresses baked into the cluster's own config — an NFS server address, scrape targets naming node
-IPs, the MetalLB pool — live in the k8s-config repo and move in their own window.
+IPs — live in the k8s-config repo and move in their own window.
 
 # Related
 

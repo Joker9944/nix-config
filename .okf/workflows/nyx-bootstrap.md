@@ -6,7 +6,7 @@ description: Order and per-host facts for rolling out tars, case, kipp and mothe
 tags: [workflow, install, k3s, cluster, nyx]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-11-02T00:00:00Z
+  at: 2026-11-03T00:00:00Z
 ---
 
 # Trigger
@@ -50,7 +50,7 @@ systemctl restart k3s
 
 # 3. Node labels and taints
 
-Only `mother` carries either: the label `vonarx.online/nfs-host=true`, and the taint `vonarx.online/reserved=storage:NoSchedule` so only workloads that tolerate it land on the NAS. Both are contracts the k8s-config repo keys on, key and value and effect alike; changing one there fails silently, as pods that never schedule rather than an error. The Talos cluster also labelled CPU and memory capacity per node; those are not reproduced, because the kubelet already publishes both as node status and a hand-kept copy drifts from the hardware.
+`mother` carries the label `vonarx.online/nfs-host=true` and the taint `vonarx.online/reserved=storage:NoSchedule`, so only workloads that tolerate it land on the NAS. The three servers carry `vonarx.online/ingress-spoke=true` — see [hosts/nyx-cluster](/hosts/nyx-cluster.md) for what selects on it. Both are contracts the k8s-config repo keys on, key and value and effect alike; changing one there fails silently, as pods that never schedule rather than an error. The Talos cluster also labelled CPU and memory capacity per node; those are not reproduced, because the kubelet already publishes both as node status and a hand-kept copy drifts from the hardware.
 
 `nodeLabel` and `nodeTaint` are applied at **registration only**. Changing either and rebuilding leaves an already-joined node untouched — reconcile with `kubectl label node <name> <key>=<value>` / `kubectl taint node <name> <key>=<value>:<effect>`, or delete the node and let it re-register.
 

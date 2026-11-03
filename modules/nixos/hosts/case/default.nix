@@ -20,7 +20,7 @@ flake.lib.modules.mkDefaultModule
     # Subnet-route the kube-vip endpoint; see tars.
     services.tailscale = {
       useRoutingFeatures = "server";
-      extraSetFlags = [ "--advertise-routes=192.168.1.20/32,192.168.1.128/25" ];
+      extraSetFlags = [ "--advertise-routes=192.168.1.20/32" ];
     };
 
     services.k3s = {

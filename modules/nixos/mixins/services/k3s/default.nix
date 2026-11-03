@@ -69,9 +69,14 @@ mkMixinModule "k3s" {
       # accept it too.
       extraFlags = [ "--kube-proxy-arg=metrics-bind-address=${nodeAddress}" ];
 
+      # The ingress-spoke label selects where Traefik must run: the edge's
+      # NodePort is externalTrafficPolicy: Local, so a node without a local pod
+      # cannot serve. `isServer` is the spoke gate because the wgSpoke throwIf
+      # above makes server and spoke equivalent.
       nodeLabel =
         (lib.optional isNvidiaGpu "nvidia.com/gpu.present=true")
-        ++ (lib.optional isNfs "vonarx.online/nfs-host=true");
+        ++ (lib.optional isNfs "vonarx.online/nfs-host=true")
+        ++ (lib.optional isServer "vonarx.online/ingress-spoke=true");
     };
 
     # Spoke of the public ingress tunnel. wopr holds the only public address, so
@@ -153,11 +158,7 @@ mkMixinModule "k3s" {
         [
           (flake.lib.network.mkAllowFrom {
             sources = nodeAddresses;
-            tcp = [ 7946 ]; # metallb peering
-            udp = [
-              8472 # flannel VXLAN
-              7946 # metallb gossip
-            ];
+            udp = [ 8472 ]; # flannel VXLAN
           })
           (flake.lib.network.mkAllowFrom {
             sources = nodeAddresses ++ [ podCidr ];
@@ -184,8 +185,11 @@ mkMixinModule "k3s" {
               2380 # etcd peer
             ];
           })
-          # wg0 is deliberately not a trusted interface, so the edge's whole
-          # reach across the tunnel is this one port.
+          # Belt-and-braces only: kube-proxy DNATs a NodePort in nat/PREROUTING,
+          # so the packet traverses FORWARD and never reaches nixos-fw on INPUT.
+          # What actually keeps a forged client address out is Traefik's
+          # proxyProtocol.trustedIPs. Host-bound ports on wg0 *are* governed
+          # here, which is what keeps 6443/10250/9100 off the tunnel.
           (flake.lib.network.mkAllowFrom {
             sources = [ wg.hub.address ];
             tcp = [ wg.nodePort ]; # traefik websecure-proxied

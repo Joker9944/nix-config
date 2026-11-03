@@ -36,12 +36,12 @@ lateral movement, but a node compromise is not a NetworkPolicy problem.
 
 # Why a tunnel of its own rather than the tailnet
 
-Primary-router election is a control-plane function and the `192.168.1.128/25` route only exists in
-wopr's table because the coordination server put it there, so riding the tailnet puts a third party
-in the liveness path of **public** ingress. A static tunnel has no such dependency once the keys are
-in sops.
+Primary-router election is a control-plane function, and a subnet route reaches a client's table only
+because the coordination server put it there — so riding the tailnet puts a third party in the
+liveness path of **public** ingress. A static tunnel has no such dependency once the keys are in
+sops.
 
-The HA objection that previously ruled this out assumed the shared MetalLB VIP as the tunnel
+The HA objection that previously ruled this out assumed a shared load-balancer VIP as the tunnel
 destination, which does force one route onto three peers — `AllowedIPs` *is* the routing table.
 Targeting a per-server transit `/32` instead makes the sets disjoint, so one interface carries all
 three peers and failover moves into the nginx upstream (`max_fails`/`fail_timeout`, open-source
@@ -54,10 +54,11 @@ punched, since wopr's address is public and static.
 
 A second win: `tailscale0` bypasses `networking.firewall` entirely
 ([firewall-source-scoping](firewall-source-scoping.md)), while `wg0` is deliberately **not** a
-trusted interface, so `mkAllowFrom` scopes the edge's whole reach across the tunnel to one port on
-three hosts. The Tailscale ACL stays necessary regardless — wopr is still a tailnet member and
-`6443`/`10250`/`9100` are wildcard-bound — but it is now defence in depth rather than the only
-control.
+trusted interface, so the edge's reach at the wildcard-bound host ports — `6443`, `10250`, `9100` —
+is closed by `mkAllowFrom` rather than by an admin-console ACL. The NodePort itself is *not* scoped
+that way: kube-proxy DNATs it ahead of `nixos-fw`, so `trustedIPs` is what keeps a forged client
+address out. The Tailscale ACL stays necessary regardless, since wopr is still a tailnet member — but
+it is now defence in depth rather than the only control.
 
 # Why the cluster side is a host process
 
@@ -76,26 +77,33 @@ through the tunnel. Masquerading destroys the client IP, and a PROXY header cann
 the kernel path — which rules it out, because geo-blocking and IP whitelisting run on that address.
 It would also need MSS clamping that the proxy design makes unnecessary.
 
-# Why not the Tailscale Kubernetes operator
+# Why not the Tailscale Kubernetes operator — for the public path
 
-Its L7 Ingress provisions a MagicDNS name with a Tailscale-managed certificate via Serve and
-supports no custom domain, so public clients would be served a `*.ts.net` certificate for a
-`vonarx.online` hostname. The L4 `loadBalancerClass: tailscale` path does fit, and a `ProxyGroup`
-with two replicas gives it real HA — but it depends on Tailscale's *control-plane API* (OAuth
-clients, programmatic device registration, tag ownership), the surface headscale implements least
-completely, whereas route advertisement and approval are core functionality it does support. Its
-source-address behaviour is also undocumented; if the proxy masquerades, `trustedIPs` widens from
-one address to the pod CIDR and any pod in the cluster can forge a client address past the geo and
-whitelist rules.
+The operator **is** in use, for internal services ([nyx-cluster](/hosts/nyx-cluster.md)). This
+section rejects it only for public ingress, and the reason is the certificate: its L7 Ingress
+provisions a MagicDNS name with a Tailscale-managed certificate via Serve and supports no custom
+domain, so public clients would be served a `*.ts.net` certificate for a `vonarx.online` hostname.
+Internally that is the right answer and this is not; the two uses do not compete.
+
+The L4 `loadBalancerClass: tailscale` path does fit, and a `ProxyGroup` with two replicas gives it
+real HA. Its source-address behaviour is undocumented, though: if the proxy masquerades, `trustedIPs`
+widens from one address to the pod CIDR and any pod in the cluster can forge a client address past
+the geo and whitelist rules.
 
 The choice stays cheap to revisit: it is the nginx upstream and the `trustedIPs` value, nothing
 else.
 
 # Deferred
 
-Self-hosting headscale on the edge is what removes the third party from the **private** path; the
-public path no longer has one. It is a separate project: nothing here changes when `--login-server`
-flips.
+Self-hosting headscale would remove the third party from the **private** path; the public path no
+longer has one, which was the point of the tunnel.
+
+Adopting the operator moved that goal *further* away rather than closer. The operator depends on
+Tailscale's **control-plane API** — OAuth clients, programmatic device registration, tag ownership —
+the surface headscale implements least completely, where plain route advertisement and approval are
+core functionality it does support. So the private path is now more tightly coupled to Tailscale the
+company than before, in exchange for real certificates and no subnet routes. That is a deliberate
+trade, not an oversight, but a headscale migration now means replacing the operator too.
 
 # Related
 

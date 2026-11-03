@@ -49,9 +49,13 @@ Two halves are outside nix. The route must be **approved** in the Tailscale admi
 
 Linux clients ignore subnet routes unless told otherwise, so [wintermute](wintermute.md) carries the matching `useRoutingFeatures = "client"` + `--accept-routes`. Phones and macOS accept by default.
 
-Alongside `192.168.1.20/32` each server advertises `192.168.1.128/25`, the MetalLB pool, which is how the ingress at **192.168.1.128** is reached from off-LAN. The `hosts` mixin pins the subdomains that resolve *only* inside the tailnet to that address, so a client without Tailscale up has no route to them. Public ingress does **not** use this route — [wopr](wopr.md) reaches Traefik over a separate WireGuard tunnel instead.
+`192.168.1.20/32` is the **only** advertised route, and it exists for `kubectl` alone. There is no load-balancer pool, so nothing else needs reaching off-LAN and `mother` advertises nothing at all — it carries no `services.tailscale` block. Public ingress does not use the tailnet either: [wopr](wopr.md) reaches Traefik over its own WireGuard tunnel.
+
+Internal services are **tailnet services provisioned by the Tailscale operator** — `longhorn.<tailnet>.ts.net` and friends, each a MagicDNS name with a Tailscale-managed certificate. That is why no `hosts` mixin pins subdomains to a cluster address any more: MagicDNS resolves them, so a client without Tailscale up simply cannot name them. The operator's L7 path was rejected for *public* ingress because it serves no custom domain ([edge-not-a-cluster-node](/decisions/edge-not-a-cluster-node.md)); for internal services a `*.ts.net` name is exactly what is wanted.
 
 Each server is also a **spoke** of that tunnel. The `k3s` mixin gates it on `isServer`, since the config is uniform and only differs by the host's own entry in `flake.lib.network.wgEdge`; `mother` is an agent, runs no Traefik pod and is not a spoke. The servers dial out because wopr holds the only public address, and `persistentKeepalive` is what holds the conntrack entry on the CGNAT'd uplink open so the hub can reach back in. Private keys live in the mixin's `secrets/wireguard.yaml`, keyed to the three servers only — wopr's key is in its own file so neither side can decrypt the other's.
+
+Each spoke also carries the node label `vonarx.online/ingress-spoke=true`, which is what the Traefik DaemonSet selects on: the edge's NodePort is `externalTrafficPolicy: Local`, so a node without a local Traefik pod cannot serve and the label has to track the tunnel exactly. It is gated on `isServer` because the mixin's `wgSpoke` assertion already makes server and spoke equivalent. Like every label here it applies at registration only — see [nyx-bootstrap](/workflows/nyx-bootstrap.md).
 
 The tailnet is also the *only* way in to `6443`: the firewall scopes the API server to the node addresses plus the tailnet CGNAT range, so `kubectl` from a desktop on the cluster LAN is refused. [HAL9000](HAL9000.md) is on a different subnet entirely and only ever reached the cluster this way.
 
@@ -75,13 +79,13 @@ Nothing the cluster needs goes in `allowedTCPPorts` — that opens a port to eve
 
 | Ports | Sources |
 |---|---|
-| tcp 7946, udp 7946 + 8472 | nodes — metallb memberlist, flannel VXLAN |
+| udp 8472 | nodes — flannel VXLAN |
 | tcp 10250, 9100, 10249 | nodes + `10.42.0.0/16` — kubelet API, node-exporter, kube-proxy |
 | tcp 6443, servers only | nodes + `100.64.0.0/10` |
 | tcp 2379 + 2380, servers only | nodes |
 | tcp 30443, servers only | the tunnel hub only — traefik `websecure-proxied` |
 
-The table governs the **LAN path only**. Nothing arriving on `tailscale0` is filtered by `networking.firewall` at all, so a wildcard-bound port answers any tailnet peer whatever the rules say — see [decisions/firewall-source-scoping](/decisions/firewall-source-scoping.md). `wg0` is the opposite case and deliberately so: it is **not** in `trustedInterfaces`, so the rule above is the edge's entire reach across the tunnel.
+The table governs the **LAN path only**. Nothing arriving on `tailscale0` is filtered by `networking.firewall` at all, so a wildcard-bound port answers any tailnet peer whatever the rules say — see [decisions/firewall-source-scoping](/decisions/firewall-source-scoping.md). `wg0` is **not** in `trustedInterfaces`, so host-bound ports *are* governed on the tunnel — that is what drops `6443`/`10250`/`9100` for the edge. The `30443` row is the exception and is belt-and-braces only: a DNATed NodePort traverses `FORWARD`, and `nixos-fw` is jumped from `INPUT` alone. Verified both ways — reaching a node's `30443` from another node's LAN address, which the rule does not admit, and the ruleset having no `FORWARD` jump to `nixos-fw`.
 
 The node addresses are `flake.lib.network.nyxNodes`, not a mixin option: every node needs the whole set rather than its own entry, and a host that enables the mixin without an entry there fails at eval. `mother` reads the same list for its NFS rule and export ACL. The `nfs` mixin itself opens nothing — who may reach 2049 is the same decision as who appears in the export ACL, and exports are a host delta.
 

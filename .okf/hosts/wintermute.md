@@ -5,7 +5,7 @@ description: Lenovo ThinkPad X1 Yoga Gen 4 laptop, x86_64-linux, Swiss keymap, 4
 tags: [host, laptop, hyprland, thinkpad]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-11-02T00:00:00Z
+  at: 2026-11-03T00:00:00Z
 ---
 
 # Hardware
@@ -36,7 +36,7 @@ Host-specific quirks (all in `modules/nixos/hosts/wintermute/default.nix`):
 
 # Host record & mixin selection
 
-Host record: `flake.nix#nixosConfigurations`, selecting `profile = "hyprland-desktop"` — the shared graphical baseline (see [profiles](/architecture/profiles.md)). `modules/nixos/hosts/wintermute/mixins.nix` holds only the deltas: `openssh`, `windowsSupport`, `networking.hosts`, `hardware.battery` — the only host with a battery, which the [yas](/apps/yas.md) mixin reads to enable its battery module — plus `hardware.intelCpu` and `hardware.thermalThrottling` — the latter is enabled nowhere else, so thermald runs only here ([why the mechanism is derived](/architecture/mixin-pattern.md#where-per-host-config-lives)). It differs from [HAL9000](HAL9000.md) — same profile, but no Nvidia / Steam / Docker — solely in those deltas.
+Host record: `flake.nix#nixosConfigurations`, selecting `profile = "hyprland-desktop"` — the shared graphical baseline (see [profiles](/architecture/profiles.md)). `modules/nixos/hosts/wintermute/mixins.nix` holds only the deltas: `openssh`, `windowsSupport`, `hardware.battery` — the only host with a battery, which the [yas](/apps/yas.md) mixin reads to enable its battery module — plus `hardware.intelCpu` and `hardware.thermalThrottling` — the latter is enabled nowhere else, so thermald runs only here ([why the mechanism is derived](/architecture/mixin-pattern.md#where-per-host-config-lives)). It differs from [HAL9000](HAL9000.md) — same profile, but no Nvidia / Steam / Docker — solely in those deltas.
 
 Home-manager side: `modules/home/users/joker9944/hosts/wintermute/default.nix` enables the `wayvnc` mixin and holds the monitor declaration and lid binds. The [yas](/apps/yas.md) battery module follows from the same mixin flag, so it is off on every other host without being named here. `ollama` is enabled per-host on [HAL9000](HAL9000.md) rather than in the shared user config, to keep it off this battery.
 
