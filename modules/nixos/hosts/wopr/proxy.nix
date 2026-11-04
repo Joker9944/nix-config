@@ -32,6 +32,7 @@ in
 
       server {
         listen 443;
+        listen [::]:443;
         proxy_pass cluster;
         proxy_protocol on;
         proxy_connect_timeout 2s;

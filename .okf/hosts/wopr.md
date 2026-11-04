@@ -24,8 +24,14 @@ provider's console loses graceful shutdown and snapshot fsfreeze. Single NIC, so
 `matchConfig.Name` globs `en* eth0`. NixOS names the NIC **`ens3`** here, so the `en*` half is what
 matches; `eth0` is kept because the provider's own images use that name and the glob costs nothing. Addressing is **static**, v4 and v6: there is no
 DHCP server on the segment, so `DHCP=yes` would bring the host up with no network and no
-console-free way back. The v6 gateway is link-local and `IPv6AcceptRA` is off, since the static v6
-address is already the EUI-64 value an RA would hand out. Disks come from the `server-longhorn-v1`
+console-free way back. The provider routes the whole `/64` here, so the v6 host part is
+chosen: a random stable suffix, not `::1` (every v6 scanner's first guess) and not the EUI-64 value
+(which encodes the VM's MAC, so it changes if the VM is rebuilt). The gateway is link-local, and
+`IPv6AcceptRA` is off because v6 is static end to end — an RA would add a SLAAC address and a
+competing default route on top. nginx carries a separate `listen [::]:443`, so `:443` serves both
+families while the tunnel to the cluster stays v4. A client's v4 and v6 addresses are unrelated, so
+every geo rule and IP whitelist Traefik applies has to cover both families per party — a v4-only
+whitelist locks out the same client arriving over v6, which browsers prefer. Disks come from the `server-longhorn-v1`
 template with
 `longhorn` left at its `null` default, which gates that partition off and leaves a plain ESP plus
 btrfs `root`/`home`/`nix`.

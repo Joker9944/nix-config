@@ -5,6 +5,7 @@ An index of bundle changes, not a narrative — one line per change, in the form
 ## 2026-11-04
 
 - A program belongs to the profile, not the user module, which lands on headless hosts too — [architecture/entry-points](/architecture/entry-points.md)
+- `wopr` takes a chosen v6 address out of its routed `/64` and serves `:443` on both families — [hosts/wopr](/hosts/wopr.md)
 
 ## 2026-11-03
 

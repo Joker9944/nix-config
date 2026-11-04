@@ -24,14 +24,19 @@ flake.lib.modules.mkDefaultModule
     # tars/mother. NixOS names it ens3; eth0 is kept because the provider's own
     # images use that name and the glob costs nothing.
     #
-    # The v6 gateway is link-local, and the v6 address is the EUI-64 value RA
-    # would hand out anyway — accepting RAs on top would manage the same address
-    # twice, hence IPv6AcceptRA off.
+    # The provider routes the whole 2a03:4000:15:19fc::/64 here, so the v6 host
+    # part is ours to choose. A random stable suffix rather than ::1, which every
+    # v6 scanner tries first, and rather than the EUI-64 value, which encodes the
+    # VM's MAC and so changes if the VM is rebuilt.
+    #
+    # The v6 gateway is link-local. v6 is configured statically end to end, so
+    # IPv6AcceptRA is off: an RA would otherwise add a SLAAC address and a
+    # competing default route on top.
     systemd.network.networks."10-wan" = {
       matchConfig.Name = "en* eth0";
       address = [
         "62.83.98.27/22"
-        "2a03:4000:15:19fc:2842:12ff:feb9:5d7/64"
+        "2a03:4000:15:19fc::9d4f:21c7/64"
       ];
       routes = [
         { Gateway = "62.83.96.1"; }
