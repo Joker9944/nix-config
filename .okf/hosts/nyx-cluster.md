@@ -5,7 +5,7 @@ description: Four headless x86_64-linux machines running k3s — tars/case/kipp 
 tags: [host, server, k3s, zfs, longhorn]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-11-03T00:00:00Z
+  at: 2026-11-04T00:00:00Z
 sources:
   - id: longhorn-2166
     resource: https://github.com/longhorn/longhorn/issues/2166
@@ -19,7 +19,7 @@ sources:
 | tars | 192.168.1.21/23 | server, `clusterInit` | deploys the kube-vip manifest |
 | case | 192.168.1.22/23 | server | — |
 | kipp | 192.168.1.23/23 | server | — |
-| mother | 192.168.1.24/23 | agent | `zfs` + `nfs` mixins, `hostId`, `chronos` pool |
+| mother | 192.168.1.24/23 | agent | `zfs` + `nfs` + `smartd` mixins, `hostId`, `chronos` pool |
 
 All four select `profile = "server"` (see [profiles](/architecture/profiles.md)); their `mixins.nix` files hold only the role deltas and a CPU-vendor capability — `intelCpu` on tars/kipp/mother, `amdCpu` on case, each carrying that vendor's microcode and kvm module. The router serves 192.168.0.0/23 with its gateway and resolver at 192.168.0.254; the cluster sits in the upper half, out of the 192.168.0.0/24 range the rest of the LAN uses. Static addressing is per host under `systemd.network.networks."10-lan"`, since the profile only turns systemd-networkd on; moving any of it afterwards is [renumber-nodes](/workflows/renumber-nodes.md), not a rebuild. `tars` and `mother` name their exact interface rather than globbing `en*`: the glob also matches the unpopulated second onboard NIC each has, which then inherits `RequiredForOnline` and hangs `systemd-networkd-wait-online` for its full timeout before failing — and would take a duplicate copy of the static address the day anyone cables it. `case` and `kipp` have one NIC and keep the glob.
 

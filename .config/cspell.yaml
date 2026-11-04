@@ -11,6 +11,8 @@ dictionaryDefinitions:
 ignoreRegExpList:
   # Color palette hex values, e.g. "1E1823" or "#B478AE"
   - '"#?[0-9A-Fa-f]{6}"'
+  # Drive serials, e.g. WD-WX62D656UTZF
+  - 'WD-W[A-Z0-9]+'
 ignorePaths:
   - 'secrets.yaml'
   # sops-encrypted payloads live in secrets/ dirs; the ciphertext is noise to a

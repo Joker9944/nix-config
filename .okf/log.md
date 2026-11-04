@@ -4,6 +4,8 @@ An index of bundle changes, not a narrative — one line per change, in the form
 
 ## 2026-11-04
 
+- `mother` schedules SMART self-tests and pushes smartd warnings to Gotify; the mixin is also what puts `smartctl` on `PATH` — [workflows/diagnose-disk-faults](/workflows/diagnose-disk-faults.md), [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- Pool members map by WWN, not partuuid; the `sdg`/`sdh` ↔ `ata7`/`ata8` example was stale — [workflows/diagnose-disk-faults](/workflows/diagnose-disk-faults.md)
 - A program belongs to the profile, not the user module, which lands on headless hosts too — [architecture/entry-points](/architecture/entry-points.md)
 - `wopr` takes a chosen v6 address out of its routed `/64` and serves `:443` on both families — [hosts/wopr](/hosts/wopr.md)
 

@@ -5,7 +5,7 @@ description: Tell a dying drive from a bad cable when ZFS faults a pool member �
 tags: [workflow, zfs, smart, sata, hardware]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-08T00:00:00Z
+  at: 2026-11-04T00:00:00Z
 ---
 
 # Trigger
@@ -38,20 +38,22 @@ Counters persist until `zpool clear`, so they can outlive the disk they describe
 
 # 3. Map vdev to a serial
 
-Pools built under TrueNAS name their vdevs by partition UUID:
+chronos names its members by WWN (`wwn-0x…-part1`). A member that is already gone shows its vdev GUID instead, followed by the last path it held — which still carries the WWN:
 
 ```bash
-ls -l /dev/disk/by-partuuid/<uuid>
+ls -l /dev/disk/by-id/wwn-0x<wwn>
 lsblk -o NAME,SERIAL,MODEL -d /dev/sd?
 ```
 
-`/dev/sdX` is not stable and not even monotonic — on mother `sdg` is `ata8` while `sdh` is `ata7`. The serial is the only handle that survives a reboot and identifies the drive in the chassis.
+`/dev/sdX` is assigned in discovery order, so it shifts whenever a device leaves the bus or a non-ATA disk appears — on mother `sdh` is a 10 GB iSCSI volume, not a pool member. The serial is the only handle that survives a reboot and identifies the drive in the chassis.
 
 # 4. SMART: media or interface?
 
 ```bash
 smartctl -a /dev/sdX
 ```
+
+The `smartd` mixin puts `smartmontools` in `environment.systemPackages` — the service unit pins its own copy and exports nothing, so without the mixin `smartctl` is not on `PATH`. It also schedules a short self-test daily at 02:00 and a long one Wednesday at 03:00 (`services.smartd.defaults.autodetected`) and pushes any warning to Gotify, so a failing drive usually announces itself before a pool member faults.
 
 | Attribute rising | Means |
 |---|---|
@@ -86,6 +88,8 @@ Reseat or swap the cable; moving the drive to a spare port isolates a bad connec
 * **`UDMA_CRC_Error_Count` never resets.** It is lifetime-cumulative, so a fixed cable keeps its old value. Record the number and check it stops growing.
 * **A scrub that finishes too fast did not run.** Compare the duration against the pool's size and its previous scrubs in `zpool history`; chronos takes about eight hours, so a 65-second `scrub repaired 0B` is an abort.
 * **A faulted member generates no new kernel errors**, because ZFS stops sending it I/O. An empty `journalctl -k | grep ata` is not a clean bill of health.
+* **smartd's `notifications.mail.mailer` is not a `-s`-style hook.** The NixOS module owns the `-M exec` slot itself and pipes an RFC822 blob plus a whole `smartctl -a` dump into `mailer -i <recipient>`. A readable push means leaving every `notifications.*` backend off — including `wall`, which defaults on — so the module's `notifyOpts` stays empty, then supplying `-m <nomailer> -M exec` in the directive and reading the `SMARTD_*` environment variables.
+* **All eight members self-test together.** Staggering would need explicit `services.smartd.devices` entries, and `/dev/sdX` is not stable across boots — the same reason step 3 exists.
 * **`services.zfs.trim` is off on mother** — the HDDs do not support TRIM and 3D XPoint has no NAND garbage collection for it to feed, so the Optane does not need it either — and a missing trim timer is expected, not a symptom. The btrfs root is covered by `services.fstrim`.
 
 # Related

@@ -49,6 +49,52 @@ flake.lib.modules.mkDefaultModule
       # chronos is 8 CMR HDDs plus an Optane SLOG; periodic trim has nothing
       # meaningful to reclaim. The btrfs root keeps services.fstrim.
       zfs.trim.enable = false;
+
+      smartd = {
+        # The member list is the inventory, so a drive that is gone is visible
+        # in `systemctl status` and in the journal as a device smartd was told
+        # about and could not register, rather than silently absent from a
+        # DEVICESCAN. It has to be updated when a drive is replaced.
+        #
+        # It does NOT make absence alertable: a listed device that fails to
+        # register is dropped with "Prevent retry of registration", so the
+        # open-failure warning path never runs for it. Member absence belongs
+        # to zed, which does alert on it. See /workflows/diagnose-disk-faults.
+        autodetect = false;
+
+        # Without this, one unregisterable device is fatal at startup and
+        # nothing is monitored at all — the absent member would take the other
+        # nine with it. The unit has no Restart=, so that death is permanent.
+        extraOptions = [ "-q never" ];
+
+        devices =
+          let
+            sata = wwn: {
+              device = "/dev/disk/by-id/wwn-0x${wwn}";
+              options = "-d sat";
+            };
+            nvme = eui: {
+              device = "/dev/disk/by-id/nvme-eui.${eui}";
+              options = "-d nvme";
+            };
+          in
+          # WWN rather than the ata-*_<serial> form so an alert maps straight
+          # onto a `zpool status` line; the serial identifies it in the chassis.
+          map sata [
+            "50014ee216f1caac" # WD-WX52D6595S6U
+            "50014ee2c19d268f" # WD-WX62D656UTZF
+            "50014ee2c083e7e4" # WD-WXP2D53H7NLK
+            "50014ee215d82378" # WD-WXF2D53K625L
+            "50014ee2161dc96e" # WD-WX42DA37PS27
+            "50014ee2161df97a" # WD-WX12D93PD9J6
+            "50014ee26b732b89" # WD-WX52D93K4FSC
+            "50014ee26b70d757" # absent: ata8 PHY dead, awaiting a cable swap
+          ]
+          ++ [
+            (nvme "e8238fa6bf530001001b448b4c1f4e59") # WD Red SN700, OS
+            (nvme "5cd2e4b0161e0100") # Optane M10, chronos log; no self-tests
+          ];
+      };
     };
 
     system.stateVersion = "26.05";
