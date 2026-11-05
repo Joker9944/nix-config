@@ -1,0 +1,133 @@
+#!/usr/bin/env python3
+"""Classify nixpkgs attribute paths against a flake's pinned nixpkgs.
+
+Existence and version are separate questions: an attribute can exist
+without a `version`, and a removed alias throws rather than going
+missing. Collapsing those into one `nix eval` and reading the error text
+is how a lookup reports a real package as absent.
+"""
+
+import json
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+PROBE = """
+let
+  pkgs = %s.legacyPackages.${builtins.currentSystem};
+  split = s:
+    builtins.filter
+      (x: builtins.isString x && x != "")
+      (builtins.split "\\\\." s);
+  step = acc: seg:
+    if !acc.ok then acc
+    else let r = builtins.tryEval (acc.val ? ${seg}); in
+      if !r.success then { ok = false; why = "throw"; val = null; }
+      else if !r.value then { ok = false; why = "missing"; val = null; }
+      else { ok = true; why = null; val = acc.val.${seg}; };
+  resolve = path:
+    builtins.foldl' step { ok = true; why = null; val = pkgs; }
+      (split path);
+  probe = path:
+    let r = resolve path; in
+    if !r.ok then r.why
+    else let v = builtins.tryEval (r.val.version or ""); in
+      if v.success then "ok:" + v.value else "throw";
+in builtins.listToAttrs
+  (map (p: { name = p; value = probe p; }) [%s])
+"""
+
+
+def find_flake(start):
+    for d in [start, *start.parents]:
+        if (d / "flake.nix").is_file():
+            return d
+    return None
+
+
+def nix_eval(args):
+    return subprocess.run(
+        ["nix", "eval", "--impure", *args],
+        capture_output=True,
+        text=True,
+    )
+
+
+def alias_message(source, attr):
+    """Recover the throw text, which names the replacement attribute."""
+    p = nix_eval(
+        [
+            "--raw",
+            "--expr",
+            f"{source}.legacyPackages.${{builtins.currentSystem}}." + attr,
+        ]
+    )
+    segs = attr.split(".")
+    # The alias is declared as `<seg> = throw "..."`; matching that
+    # shape avoids picking up unrelated neighbouring alias lines.
+    exact = [
+        ln.strip()
+        for ln in p.stderr.splitlines()
+        if any(f"{s} = throw" in ln for s in segs)
+    ]
+    loose = [
+        ln.strip()
+        for ln in p.stderr.splitlines()
+        if "has been removed" in ln or "renamed" in ln
+    ]
+    hits = list(dict.fromkeys(exact or loose))
+    return hits[:2] or ["(re-run nix eval by hand to read the message)"]
+
+
+def main(attrs):
+    env_flake = os.environ.get("NIX_PKG_FLAKE")
+    flake = Path(env_flake) if env_flake else find_flake(Path.cwd())
+    if flake:
+        source = f"(builtins.getFlake (toString {flake})).inputs.nixpkgs"
+        origin = f"pinned nixpkgs of {flake}"
+    else:
+        source = '(builtins.getFlake "nixpkgs")'
+        origin = "flake registry nixpkgs (NOT a project pin)"
+
+    quoted = " ".join(json.dumps(a) for a in attrs)
+    p = nix_eval(["--json", "--expr", PROBE % (source, quoted)])
+    if p.returncode != 0:
+        print(
+            "nix-pkg: evaluation failed. This is NOT a verdict about any "
+            "package -- nothing below was determined.",
+            file=sys.stderr,
+        )
+        print(p.stderr.strip(), file=sys.stderr)
+        if "not tracked by Git" in p.stderr:
+            print(
+                "\nhint: `git add` the untracked path. getFlake ignores "
+                "untracked files, so a new file breaks evaluation.",
+                file=sys.stderr,
+            )
+        return 1
+
+    print(f"source: {origin}")
+    for attr, val in json.loads(p.stdout).items():
+        if val.startswith("ok:"):
+            ver = val[3:] or "(no version attr; existence still proven)"
+            print(f"  {attr}: EXISTS   version={ver}")
+        elif val == "missing":
+            print(
+                f"  {attr}: MISSING  not in this nixpkgs -- the only "
+                "true negative"
+            )
+        else:
+            print(
+                f"  {attr}: RENAMED/REMOVED  the alias names its replacement:"
+            )
+            for ln in alias_message(source, attr):
+                print(f"      {ln}")
+    return 0
+
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("usage: nix-pkg <attr> [attr...]", file=sys.stderr)
+        sys.exit(2)
+    sys.exit(main(sys.argv[1:]))

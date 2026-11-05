@@ -42,6 +42,8 @@ mkMixinModule "claude-code" {
         };
       };
 
+      skills.nix-packages = ./files/skills/nix-packages;
+
       plugins = [
         "${inputs.claude-plugins-official}/plugins/skill-creator"
         "${inputs.claude-plugins-official}/plugins/code-review"

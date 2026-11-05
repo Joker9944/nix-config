@@ -2,6 +2,12 @@
 
 An index of bundle changes, not a narrative — one line per change, in the form `CLAUDE.md` rule 3 sets.
 
+## 2026-11-05
+
+- The `nix` MCP server and the `mcp` mixin are gone; a global `nix-packages` skill answers from the pin — [decisions/nix-lookup-not-mcp](/decisions/nix-lookup-not-mcp.md)
+- Canonical minimal mixin is now `wiremix.nix`; the cited `mcp.nix` is deleted — [architecture/mixin-pattern](/architecture/mixin-pattern.md)
+- The lock's `nixpkgs` node is a dependency's; `.version` is not an existence check — [decisions/nix-lookup-not-mcp](/decisions/nix-lookup-not-mcp.md)
+
 ## 2026-11-04
 
 - `mother` schedules SMART self-tests and pushes smartd warnings to Gotify; the mixin is also what puts `smartctl` on `PATH` — [workflows/diagnose-disk-faults](/workflows/diagnose-disk-faults.md), [hosts/nyx-cluster](/hosts/nyx-cluster.md)
