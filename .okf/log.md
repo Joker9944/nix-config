@@ -9,6 +9,7 @@ An index of bundle changes, not a narrative — one line per change, in the form
 
 ## 2026-11-05
 
+- chronos/media-data owners named on mother: group `media` plus a system user per app uid — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
 - The `nix` MCP server and the `mcp` mixin are gone; a global `nix-packages` skill answers from the pin — [decisions/nix-lookup-not-mcp](/decisions/nix-lookup-not-mcp.md)
 - Canonical minimal mixin is now `wiremix.nix`; the cited `mcp.nix` is deleted — [architecture/mixin-pattern](/architecture/mixin-pattern.md)
 - The lock's `nixpkgs` node is a dependency's; `.version` is not an existence check — [decisions/nix-lookup-not-mcp](/decisions/nix-lookup-not-mcp.md)

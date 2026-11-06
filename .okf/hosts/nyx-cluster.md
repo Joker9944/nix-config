@@ -5,7 +5,7 @@ description: Four headless x86_64-linux machines running k3s — tars/case/kipp 
 tags: [host, server, k3s, zfs, longhorn]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-11-04T00:00:00Z
+  at: 2026-11-05T00:00:00Z
 sources:
   - id: longhorn-2166
     resource: https://github.com/longhorn/longhorn/issues/2166
@@ -72,6 +72,8 @@ Longhorn's node prerequisites sit in the `k3s` mixin so every node gets them: `s
 Installing them is not enough. longhorn-manager reaches host tools with `nsenter <host ns> <tool>`, which keeps the *container's* PATH — and no directory on that PATH exists here — while its RWX path hardcodes `/usr/bin` outright[^longhorn-2166]. The mixin therefore symlinks `iscsiadm`, `mount`, `umount` and the NFS mount helpers into `/usr/bin`, the one FHS directory NixOS already populates (`env`), which satisfies both. Without them the manager crashloops on `exit status 127` naming a tool that is in fact installed — and a PATH-only workaround, such as giving `iscsid` a private mount namespace with `BindPaths`, clears that crash while leaving RWX broken.
 
 `mother` exports `/chronos/media-data` over **NFSv4 only** — the `nfs` mixin opens 2049 and nothing else, so rpcbind's 111 is closed and `showmount` reports nothing on a server that is working fine. Clients must not fall back to v3. Export ACL and firewall are both generated from the node list, so only the four nodes can mount it and neither list can drift from the other.
+
+Ownership on that dataset predates the machine, as numeric uids plus gid 6000. `users.nix` names them — group `media`, and an `isSystemUser` per uid — which grants nothing, since NFSv4 `sec=sys` maps by number; it keeps `ls -l` readable and keeps NixOS from handing one of those uids to an unrelated service. The uids belong to the cluster's media apps and are owned by [k8s-config](https://github.com/Joker9944/k8s-config), so a uid here can outlive the app that made it. The dataset roots are `root:media` mode 2775: setgid holds new files in the group, group-write is what the apps and `joker9944` use, and `root` is the one owner no app can be assigned.
 
 # Firewall exposure
 
