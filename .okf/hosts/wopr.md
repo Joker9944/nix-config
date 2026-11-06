@@ -54,8 +54,12 @@ means each side negotiates MSS against its own path, so the tunnel hop cannot bl
 responses — a DNAT design would need MSS clamping in `FORWARD`. It also means the client address has
 to travel out of band, hence PROXY protocol.
 
-`:443` is the only public TCP port. ACME is DNS-01, so there is no HTTP-01 challenge to serve and no
-redirect is offered; a plain `http://` request is refused at the TCP level by design.
+`:443` is the only public TCP port, and keeping it that way takes an override: the `openssh` mixin
+leaves `openFirewall` at its `true` default, which would publish 22 here, so this host sets it
+`false`. Admin SSH arrives over `tailscale0`, which bypasses `networking.firewall` regardless. Any
+service mixin enabled on this host needs the same check. ACME is DNS-01, so there is no HTTP-01
+challenge to serve and no redirect is offered; a plain `http://` request is refused at the TCP level
+by design.
 
 # The Traefik entrypoint
 

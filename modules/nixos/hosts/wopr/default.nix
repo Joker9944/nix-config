@@ -15,11 +15,26 @@ flake.lib.modules.mkDefaultModule
   {
     networking.hostName = "wopr";
 
-    # The only VM in the fleet. hardware-configuration.nix imports
-    # profiles/qemu-guest.nix, which carries the virtio modules but starts no
-    # agent, so the provider's console reports it missing and loses graceful
-    # shutdown and snapshot fsfreeze.
-    services.qemuGuest.enable = true;
+    services = {
+      # The only VM in the fleet. hardware-configuration.nix imports
+      # profiles/qemu-guest.nix, which carries the virtio modules but starts no
+      # agent, so the provider's console reports it missing and loses graceful
+      # shutdown and snapshot fsfreeze.
+      qemuGuest.enable = true;
+
+      # The openssh mixin leaves openFirewall at its true default, which would
+      # publish 22 on the public link. Admin SSH arrives over tailscale0, which
+      # bypasses networking.firewall regardless, so closing it costs nothing —
+      # and the provider's console is the way back if tailscaled ever fails to
+      # start.
+      openssh.openFirewall = false;
+
+      # Wildcard bind, scoped on wg0 by the firewall rule below.
+      prometheus.exporters.node = {
+        enable = true;
+        openFirewall = false;
+      };
+    };
 
     # Provider-assigned addressing, static: there is no DHCP server on this
     # segment, so DHCP would leave the host unreachable with no console-free
@@ -84,11 +99,6 @@ flake.lib.modules.mkDefaultModule
         sources = map (spoke: spoke.address) (builtins.attrValues wg.spokes);
         tcp = [ 9100 ];
       };
-    };
-
-    services.prometheus.exporters.node = {
-      enable = true;
-      openFirewall = false;
     };
 
     system.stateVersion = "26.05";

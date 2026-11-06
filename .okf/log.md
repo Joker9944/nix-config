@@ -4,6 +4,7 @@ An index of bundle changes, not a narrative — one line per change, in the form
 
 ## 2026-11-06
 
+- Public SSH closed on the edge; the `openssh` mixin's `openFirewall` default was publishing 22 there — [hosts/wopr](/hosts/wopr.md)
 - Prometheus scrapes node-exporter over the ingress tunnel, `mkAllowFrom` scoping 9100 to the spokes; why the wildcard bind stays — [hosts/wopr](/hosts/wopr.md)
 
 ## 2026-11-05
