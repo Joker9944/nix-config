@@ -4,6 +4,9 @@
 # Traefik and decides nothing itself. Deliberately not a cluster member — see
 # decisions/edge-not-a-cluster-node.
 # hardware-configuration.nix is generated on the machine at rollout.
+let
+  wg = flake.lib.network.wgEdge;
+in
 flake.lib.modules.mkDefaultModule
   {
     dir = ./.;
@@ -61,18 +64,26 @@ flake.lib.modules.mkDefaultModule
 
     # No subnet routes accepted: ingress rides the WireGuard tunnel in
     # wireguard.nix, so this is a plain tailnet leaf with no route into
-    # 192.168.1.0/23 at all. Tailscale stays enabled through base for admin SSH
-    # and the node-exporter scrape.
+    # 192.168.1.0/23 at all. Tailscale stays enabled through base for admin SSH.
 
-    # The one host whose peer set really is every source on every interface,
-    # which decisions/firewall-source-scoping reserves as its exception — the
-    # spokes dial from a CGNAT'd uplink, so 51820 has no stable source to scope
-    # to either. 9100 is deliberately absent: the firewall blocks it on the
-    # public link, while tailscale0 bypasses the firewall entirely, which is how
-    # Prometheus gets it.
     networking.firewall = {
+      # The two ports whose peer set really is every source on every interface,
+      # which decisions/firewall-source-scoping reserves as its exception — 443
+      # is public by definition, and the spokes dial from a CGNAT'd uplink, so
+      # 51820 has no stable source to scope to either.
       allowedTCPPorts = [ 443 ];
-      allowedUDPPorts = [ flake.lib.network.wgEdge.endpoint.port ];
+      allowedUDPPorts = [ wg.endpoint.port ];
+
+      # Prometheus scrapes over the tunnel, and wg0 is not a trusted interface,
+      # so the spokes need admitting. 9100 being absent from allowedTCPPorts
+      # covers the public link; tailscale0 bypasses nixos-fw entirely, so the
+      # wildcard bind answers every tailnet peer whatever is written here and
+      # only a Tailscale ACL can close that — the posture the cluster's own
+      # node-exporter already has.
+      extraCommands = flake.lib.network.mkAllowFrom {
+        sources = map (spoke: spoke.address) (builtins.attrValues wg.spokes);
+        tcp = [ 9100 ];
+      };
     };
 
     services.prometheus.exporters.node = {

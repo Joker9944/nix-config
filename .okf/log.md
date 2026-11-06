@@ -2,6 +2,10 @@
 
 An index of bundle changes, not a narrative — one line per change, in the form `CLAUDE.md` rule 3 sets.
 
+## 2026-11-06
+
+- Prometheus scrapes node-exporter over the ingress tunnel, `mkAllowFrom` scoping 9100 to the spokes; why the wildcard bind stays — [hosts/wopr](/hosts/wopr.md)
+
 ## 2026-11-05
 
 - The `nix` MCP server and the `mcp` mixin are gone; a global `nix-packages` skill answers from the pin — [decisions/nix-lookup-not-mcp](/decisions/nix-lookup-not-mcp.md)

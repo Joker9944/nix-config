@@ -5,7 +5,7 @@ description: A small VPS that restores public ingress after the cluster lost its
 tags: [host, server, edge, ingress, wireguard, tailscale, nginx]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-11-03T00:00:00Z
+  at: 2026-11-06T00:00:00Z
 ---
 
 # What it is
@@ -87,7 +87,7 @@ Why a tunnel of its own rather than the tailnet route is
 
 It is still a tailnet member — `base` enables Tailscale — but a plain leaf: no `useRoutingFeatures`,
 no `--accept-routes`, so it holds no route into `192.168.1.0/23` at all. That is what keeps admin
-SSH and the node-exporter scrape working while removing the LAN path.
+SSH working while removing the LAN path.
 
 Three things are outside nix. The node must be approved after `tailscale up` (there is no
 `authKeyFile` anywhere in this repo). The private key must be in
@@ -99,13 +99,25 @@ with no subnet route.
 
 # Firewall
 
-This is the one host whose peer set genuinely is every source on every interface, which is why
-`allowedTCPPorts` and `allowedUDPPorts` are used here and nowhere else — the exception
-[decisions/firewall-source-scoping](/decisions/firewall-source-scoping.md) reserves, not a
-violation of it. `:443` is open to the internet by definition, and the WireGuard port cannot be
-scoped either: the spokes dial from a CGNAT'd uplink with no stable source address. The exposure is
-small, since WireGuard answers an unauthenticated packet with silence.
+`:443` and the WireGuard port are the one peer set here that genuinely is every source on every
+interface, which is why `allowedTCPPorts` and `allowedUDPPorts` are used on this host and nowhere
+else — the exception [decisions/firewall-source-scoping](/decisions/firewall-source-scoping.md)
+reserves, not a violation of it. `:443` is open to the internet by definition, and the tunnel port
+cannot be scoped either: the spokes dial from a CGNAT'd uplink with no stable source address. The
+exposure is small, since WireGuard answers an unauthenticated packet with silence.
 
-`9100` is deliberately absent from that list. node-exporter stays on its default wildcard bind: the
-firewall blocks it on the public link, while the `tailscale0` bypass is what makes it scrapeable
-with no rule at all — the same posture the cluster's own node-exporter already has.
+`9100` is absent from that list and scoped by `mkAllowFrom` to the three spoke addresses instead:
+Prometheus scrapes over the tunnel, and `wg0` is not a trusted interface, so the rule is what admits
+it. node-exporter keeps its default **wildcard** bind, which leaves the port answering every tailnet
+peer whatever the rules say — `tailscale0` bypasses `nixos-fw` entirely, so only a Tailscale ACL
+closes that. The same posture the cluster's own node-exporter has.
+
+Binding the hub transit address instead looks strictly better and is not: it drags in a
+`StartLimitIntervalSec`/`RestartSec` workaround, because `wg0` is a networkd netdev and so has no
+per-link unit whose completion means "the address exists" — `Restart=always` would otherwise exhaust
+the start limit retrying a bind against an address that is not there yet. Socket activation with
+`FreeBind` is the fix that would need neither, but this node-exporter build registers only
+`--web.listen-address` and `--web.config.file`.
+
+One cluster-side consequence this repo cannot assert: only a node that *is* a spoke can route to the
+hub, so a Prometheus pod scheduled onto `mother` cannot scrape this host at all.
