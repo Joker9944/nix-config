@@ -2,6 +2,7 @@
 {
   lib,
   pkgs,
+  pkgs-unstable,
   config,
   ...
 }:
@@ -52,12 +53,12 @@ mkMixinModule "claude-code" {
 
       lspServers = {
         nix = {
-          command = lib.getExe pkgs.nil;
+          command = lib.getExe pkgs-unstable.nil;
           extensionToLanguage.".nix" = "nix";
         };
 
         haskell = {
-          command = lib.getExe' pkgs.haskellPackages.haskell-language-server "haskell-language-server-wrapper";
+          command = lib.getExe' pkgs-unstable.haskellPackages.haskell-language-server "haskell-language-server-wrapper";
           args = [ "--lsp" ];
           extensionToLanguage = {
             ".hs" = "haskell";
@@ -67,7 +68,7 @@ mkMixinModule "claude-code" {
 
         typescript = {
           args = [ "--stdio" ];
-          command = lib.getExe pkgs.typescript-language-server;
+          command = lib.getExe pkgs-unstable.typescript-language-server;
           extensionToLanguage = {
             ".js" = "javascript";
             ".jsx" = "javascriptreact";
@@ -77,8 +78,17 @@ mkMixinModule "claude-code" {
         };
 
         cue = {
-          command = lib.getExe pkgs.cuelsp;
+          command = lib.getExe pkgs-unstable.cuelsp;
           extensionToLanguage.".cue" = "cue";
+        };
+
+        python = {
+          command = lib.getExe pkgs-unstable.ty;
+          args = [ "server" ];
+          extensionToLanguage = {
+            ".py" = "python";
+            ".pyi" = "python";
+          };
         };
       };
     };

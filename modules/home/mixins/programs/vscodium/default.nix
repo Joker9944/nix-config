@@ -145,12 +145,21 @@ mkMixinModule "vscodium" {
         }
         {
           # lang python
-          extensions = [
-            open-vsx-release.ms-python.python
-            open-vsx-release.charliermarsh.ruff # cSpell:ignore charliermarsh
+          extensions = with open-vsx-release; [
+            # dependency for `debugpy`
+            ms-python.python
+            # debug python apps
+            ms-python.debugpy # cSpell:ignore debugpy
+            # python lsp
+            astral-sh.ty
+            # python formatter
+            charliermarsh.ruff # cSpell:ignore charliermarsh
           ];
 
           userSettings = {
+            "python.languageServer" = "None";
+            "ty.path" = [ (lib.getExe pkgs-unstable.ty) ];
+            "ruff.path" = [ (lib.getExe pkgs-unstable.ruff) ];
             "[python]" = {
               "editor.defaultFormatter" = "charliermarsh.ruff";
             };
