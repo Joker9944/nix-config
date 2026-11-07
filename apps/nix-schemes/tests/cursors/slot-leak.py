@@ -34,12 +34,7 @@ def offenders(png):
         red, green, blue, alpha = pixels[index : index + 4]
         if alpha != 255:
             continue
-        if (
-            green <= red
-            and blue <= red
-            and abs(green - blue) <= 6
-            and red - green >= 8
-        ):
+        if green <= red and blue <= red and abs(green - blue) <= 6 and red - green >= 8:
             continue
         found[(red, green, blue)] += 1
     return found
@@ -47,7 +42,7 @@ def offenders(png):
 
 def main():
     if len(sys.argv) != 2:
-        sys.exit(__doc__.strip().splitlines()[-1])
+        sys.exit((__doc__ or "").strip().splitlines()[-1])
     theme = pathlib.Path(sys.argv[1])
 
     # `cursors_scalable` is the substituted SVG exactly as the theme ships it,
@@ -88,14 +83,12 @@ def main():
         listing = "\n".join(
             f"  {where}: "
             + ", ".join(
-                f"#{r:02x}{g:02x}{b:02x} x{n}"
-                for (r, g, b), n in found.most_common(4)
+                f"#{r:02x}{g:02x}{b:02x} x{n}" for (r, g, b), n in found.most_common(4)
             )
             for where, found in sorted(leaks.items())
         )
         sys.exit(
-            f"slot-leak: {len(leaks)} file(s) paint outside the "
-            f"palette:\n{listing}"
+            f"slot-leak: {len(leaks)} file(s) paint outside the palette:\n{listing}"
         )
 
     print(f"slot-leak: {scanned} frames, every solid pixel came from a slot")

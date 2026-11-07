@@ -5,7 +5,7 @@ description: On-disk layout for any nix module in the repo — single file for t
 tags: [architecture, modules, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-05T00:00:00Z
+  at: 2026-11-07T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -156,8 +156,9 @@ for: `libraries` for imports, and `makeWrapperArgs` — undocumented but passed 
 `subprocess`, `--add-flags` to prefill an argument the caller does not choose. Both cursor apps in
 `apps/nix-schemes/apps/default.nix` are the worked example.
 
-The writer supplies the interpreter line, so such a file carries **no shebang** of its own; it would
-land on line 2 and fail the writer's flake8 as `E265`. A script a derivation runs as
+The writer supplies the interpreter line, so such a file carries **no shebang** of its own — it
+would land on line 2 and do nothing. Both calls also pass `doCheck = false` to drop the writer's
+sandboxed flake8 check. A script a derivation runs as
 `python3 <path>` instead — `mkCursorTheme/build.py`, `mkIconTheme/recolour.py` — keeps one.
 
 # `git` is ambient, not a `runtimeInput`

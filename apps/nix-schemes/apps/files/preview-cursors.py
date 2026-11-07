@@ -39,11 +39,9 @@ def theme_dir(argument):
 
 def main():
     if not 2 <= len(sys.argv) <= 5:
-        sys.exit(__doc__.strip().splitlines()[-1])
+        sys.exit((__doc__ or "").strip().splitlines()[-1])
     theme = theme_dir(sys.argv[1])
-    output = pathlib.Path(
-        sys.argv[2] if len(sys.argv) > 2 else f"{theme.name}.png"
-    )
+    output = pathlib.Path(sys.argv[2] if len(sys.argv) > 2 else f"{theme.name}.png")
     dark = sys.argv[3] if len(sys.argv) > 3 else "#1c1c1c"
     light = sys.argv[4] if len(sys.argv) > 4 else "#e8e8e8"
 
@@ -91,9 +89,7 @@ def main():
 
             row, column = divmod(index, COLUMNS)
             x, y = column * cell_width, row * cell_height + HEAD
-            draw.rectangle(
-                [x, y, x + cell_width // 2, y + cell_height], fill=dark
-            )
+            draw.rectangle([x, y, x + cell_width // 2, y + cell_height], fill=dark)
             draw.rectangle(
                 [x + cell_width // 2, y, x + cell_width, y + cell_height],
                 fill=light,

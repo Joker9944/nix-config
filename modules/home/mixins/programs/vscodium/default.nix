@@ -152,7 +152,7 @@ mkMixinModule "vscodium" {
             ms-python.debugpy # cSpell:ignore debugpy
             # python lsp
             astral-sh.ty
-            # python formatter
+            # python linter & formatter
             charliermarsh.ruff # cSpell:ignore charliermarsh
           ];
 

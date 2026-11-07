@@ -171,10 +171,13 @@
                 shfmt.enable = true;
 
                 # Python
-                flake8 = {
+                ty = {
                   enable = true;
-                  settings.extendIgnore = [ "E203" ];
+                  # `pillow` is supplied by the derivations that run the cursor
+                  # scripts, so ty needs an environment carrying it to resolve `PIL`.
+                  settings.python = "${pkgs.python3.withPackages (ps: [ ps.pillow ])}/bin/python";
                 };
+                ruff.enable = true;
                 ruff-format.enable = true;
 
                 # Git

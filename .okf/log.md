@@ -2,6 +2,10 @@
 
 An index of bundle changes, not a narrative — one line per change, in the form `CLAUDE.md` rule 3 sets.
 
+## 2026-11-07
+
+- flake8 replaced by `ty` + `ruff` at 88 columns; `writePython3Bin` passes `doCheck = false` — [workflows/formatting-and-cspell](/workflows/formatting-and-cspell.md), [architecture/module-layout](/architecture/module-layout.md)
+
 ## 2026-11-06
 
 - Public SSH closed on the edge; the `openssh` mixin's `openFirewall` default was publishing 22 there — [hosts/wopr](/hosts/wopr.md)

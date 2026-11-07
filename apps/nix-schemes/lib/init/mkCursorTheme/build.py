@@ -59,13 +59,14 @@ def resolve_slots(path, colours):
             continue
         if slot not in colours:
             sys.exit(f"build: {path.name} wants unknown slot {slot!r}")
-        element.set(
-            "stop-color" if element.tag == STOP else "fill", colours[slot]
-        )
+        element.set("stop-color" if element.tag == STOP else "fill", colours[slot])
         # The annotation is scaffolding for the build, not part of the artwork,
         # and `cursors_scalable` is specified as SVG Tiny 1.2.
         del element.attrib["data-slot"]
-    return tree, float(root.get("width"))
+    width = root.get("width")
+    if width is None:
+        sys.exit(f"build: {path.name} has no width attribute")
+    return tree, float(width)
 
 
 def paint_templates(source, colours, into):
@@ -116,9 +117,7 @@ def write_xcursor(target, frames, svg_dir, canvas, work):
     # xcursorgen reads an animation as consecutive images of the same size, so
     # the config is grouped by size with the frames of each in order.
     config = work / f"{target.name}.config"
-    config.write_text(
-        "\n".join(row for size in SIZES for row in rows[size]) + "\n"
-    )
+    config.write_text("\n".join(row for size in SIZES for row in rows[size]) + "\n")
     subprocess.run(["xcursorgen", str(config), str(target)], check=True)
 
 
@@ -160,9 +159,7 @@ def write_hyprcursor_shape(target, name, frames, svg_dir, canvas, aliases):
         shutil.copyfile(svg_dir / filename, target / filename)
         delay = frame.get("delay")
         # Size 0 means "take the SVG whole"; repeating it animates the shape.
-        meta.append(
-            f"define_size = 0, {filename}" + (f", {delay}" if delay else "")
-        )
+        meta.append(f"define_size = 0, {filename}" + (f", {delay}" if delay else ""))
 
     (target / "meta.hl").write_text("\n".join(meta) + "\n")
 
@@ -175,9 +172,7 @@ def undate(archive):
     --rebuild`. Nothing reads these timestamps.
     """
     with zipfile.ZipFile(archive) as source:
-        entries = [
-            (info, source.read(info.filename)) for info in source.infolist()
-        ]
+        entries = [(info, source.read(info.filename)) for info in source.infolist()]
     with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as target:
         for info, data in entries:
             stamped = zipfile.ZipInfo(info.filename, EPOCH)
@@ -233,15 +228,13 @@ def link_aliases(aliases, directories):
 
 def write_index_theme(theme, name):
     (theme / "index.theme").write_text(
-        "[Icon Theme]\n"
-        f"Name={name}\n"
-        f"Comment=Breeze cursors recoloured for {name}\n"
+        f"[Icon Theme]\nName={name}\nComment=Breeze cursors recoloured for {name}\n"
     )
 
 
 def main():
     if len(sys.argv) != 5:
-        sys.exit(__doc__.strip().splitlines()[-1])
+        sys.exit((__doc__ or "").strip().splitlines()[-1])
     templates = pathlib.Path(sys.argv[1])
     colours = json.loads(pathlib.Path(sys.argv[2]).read_text())
     name = sys.argv[3]

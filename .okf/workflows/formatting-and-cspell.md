@@ -1,11 +1,11 @@
 ---
 type: Playbook
 title: Formatting and cspell
-description: What the pre-commit hooks enforce (nixfmt, shfmt, flake8, ruff-format, conform on commit messages, …), why python is formatted at 79 columns, why cspell is deliberately NOT a hook (editor + on-demand only), and how to whitelist technical words.
+description: What the pre-commit hooks enforce (nixfmt, shfmt, ruff, ty, ruff-format, conform on commit messages, …), why `ty` needs a pillow-bearing python env, why cspell is deliberately NOT a hook (editor + on-demand only), and how to whitelist technical words.
 tags: [workflow, formatting, spellcheck, pre-commit]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-10-12T00:00:00Z
+  at: 2026-11-07T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -20,7 +20,7 @@ Defined in `flake.nix#checks.<system>.preCommitHooks.hooks`:
 | Files | `trim-trailing-whitespace`, `end-of-file-fixer`, `fix-byte-order-marker`, `mixed-line-endings` (LF) |
 | Nix | `deadnix`, `nil`, `nixfmt`, `statix` |
 | Shell | `shellcheck`, `shfmt` |
-| Python | `flake8`, `ruff-format` |
+| Python | `ty`, `ruff`, `ruff-format` |
 | Links | `rewrite-pr-links` (`.nix` and `.md`) |
 | Git | `conform` (commit messages) |
 
@@ -30,19 +30,17 @@ Run everything at once: `nix fmt` (aliased to `pre-commit run --all-files`). Ind
 
 It runs at the **commit-msg** stage, so `nix fmt` and `nix flake check` never exercise it — only a real `git commit` does. Allowed types and scopes live in `.conform.yaml`; the scope list is closed and structural (the area of the repo, never the program), so an unlisted scope fails the commit. `Merge …` and `Revert "…"` messages aren't conventional commits and need `git commit --no-verify`.
 
-## Python is linted by flake8 at 79 columns
+## Python is checked by ty and ruff
 
-flake8 rather than `ruff` as the linter, because nixpkgs' `writers.writePython3Bin` hardcodes
-flake8 as its build-time check and runs it in a sandbox no project config can reach — so its
-defaults are the only ones that can ever be satisfied. `ruff.toml` therefore sets
-`line-length = 79` to match, and `ruff-format` stays as the formatter, flake8 having none.
+`ty` type-checks, `ruff` lints, `ruff-format` formats, all at ruff's default 88 columns — there is
+no `ruff.toml`. nixpkgs' `writers.writePython3Bin` would otherwise run its own flake8 check in a
+sandbox no project config can reach, so every `writePython3Bin` call passes `doCheck = false`.
 
-That leaves exactly one rule the two cannot both satisfy: a black-style formatter puts space
-around a slice colon when either side is an expression, and `E203` rejects it. It is turned off
-in `settings.extendIgnore`. Nothing else needs an exception, which is the point — a
-`writePython3Bin` call needs no `flakeIgnore` at all.
+`ty` resolves imports against `settings.python`, which points at a `python3.withPackages` env
+carrying `pillow` — without it the cursor scripts' `from PIL import …` is an `unresolved-import`.
+A script's own `__doc__` is `str | None` to ty, so the usage lines read `(__doc__ or "").strip()`.
 
-Neither tool rewraps prose, so an over-long docstring or comment is a manual fix.
+`ruff-format` doesn't rewrap prose, so an over-long docstring or comment is a manual fix.
 
 # cspell is NOT a hook
 

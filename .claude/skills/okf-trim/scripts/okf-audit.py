@@ -140,9 +140,7 @@ def parse_frontmatter(text):
         data["generated_at"] = found.group(1).strip()
     verified_block = re.search(r"(?m)^verified:(.*?)(?=^\w|\Z)", block, re.S)
     if verified_block:
-        data["verified_by"] = re.findall(
-            r"by:\s*([^\s,}]+)", verified_block.group(1)
-        )
+        data["verified_by"] = re.findall(r"by:\s*([^\s,}]+)", verified_block.group(1))
     return data, text[match.end() :]
 
 
@@ -173,9 +171,7 @@ def source_lines(text):
 def sentences(text):
     """`# Related` sections are parallel by design across every concept and
     swamp the comparison, so they are dropped before splitting."""
-    body = re.sub(
-        r"(?ms)^#+\s*Related\s*$.*?(?=^#|\Z)", "", strip_code_blocks(text)
-    )
+    body = re.sub(r"(?ms)^#+\s*Related\s*$.*?(?=^#|\Z)", "", strip_code_blocks(text))
     body = re.sub(r"(?m)^\s*[-*]\s+\[.*$", "", body)
     for chunk in re.split(r"(?<=[.!?])\s+|\n\n", body):
         chunk = " ".join(chunk.split())
@@ -240,10 +236,7 @@ def section_duplicates(bundle, repo, threshold):
         for j in range(i + 1, len(blocks)):
             if blocks[i][0] == blocks[j][0]:
                 continue
-            if not (
-                blocks[i][0].startswith(prefix)
-                or blocks[j][0].startswith(prefix)
-            ):
+            if not (blocks[i][0].startswith(prefix) or blocks[j][0].startswith(prefix)):
                 continue
             matcher = difflib.SequenceMatcher(None, blocks[i][2], blocks[j][2])
             if matcher.quick_ratio() < threshold:
@@ -316,8 +309,7 @@ def resolves(token, repo, tracked):
         return True
     suffix = "/" + token
     return any(
-        p == token or p.endswith(suffix) or p.startswith(token + "/")
-        for p in tracked
+        p == token or p.endswith(suffix) or p.startswith(token + "/") for p in tracked
     )
 
 
@@ -360,9 +352,7 @@ def section_churn(bundle, repo, tracked):
                 "commits": len([ln for ln in out.splitlines() if ln.strip()]),
             }
         )
-    return sorted(
-        rows, key=lambda r: (r["commits"] is None, -(r["commits"] or 0))
-    )
+    return sorted(rows, key=lambda r: (r["commits"] is None, -(r["commits"] or 0)))
 
 
 def section_log(bundle):
@@ -384,9 +374,7 @@ def section_log(bundle):
             # Strip every trailing link, not just the first: entries carry
             # several separated by commas, and counting those as prose
             # overstates the length.
-            prose = re.sub(
-                r"(\s*[—,]\s*\[[^\]]*\]\([^)]*\))+\s*$", "", entry
-            ).strip()
+            prose = re.sub(r"(\s*[—,]\s*\[[^\]]*\]\([^)]*\))+\s*$", "", entry).strip()
             entries.append(
                 {
                     "date": current,
@@ -463,9 +451,7 @@ def section_links(bundle):
                 base = bundle if target.startswith("/") else path.parent
                 resolved = (base / target.lstrip("/")).resolve()
                 if not resolved.exists():
-                    broken.append(
-                        {"file": str(path), "line": lineno, "target": target}
-                    )
+                    broken.append({"file": str(path), "line": lineno, "target": target})
     return broken
 
 
@@ -502,8 +488,7 @@ def emit_text(report, out):
     for hit in report["narrative"]:
         tag = f"{hit['type']}/" if hit["type"] else ""
         print(
-            f"  {hit['file']}:{hit['line']} "
-            f"[{tag}{hit['kind']}] {hit['text']}",
+            f"  {hit['file']}:{hit['line']} [{tag}{hit['kind']}] {hit['text']}",
             file=out,
         )
 
@@ -524,8 +509,7 @@ def emit_text(report, out):
     for hit in report["behavioral"]:
         flag = "DENSE " if hit["dense"] else ""
         print(
-            f"  {hit['file']}:{hit['line']} "
-            f"[{flag}{hit['kind']}] {hit['text']}",
+            f"  {hit['file']}:{hit['line']} [{flag}{hit['kind']}] {hit['text']}",
             file=out,
         )
 
@@ -569,9 +553,7 @@ def emit_text(report, out):
     )
     for row in report["index"]:
         if row.get("missing"):
-            print(
-                f"  MISSING TARGET {row['index']} -> {row['target']}", file=out
-            )
+            print(f"  MISSING TARGET {row['index']} -> {row['target']}", file=out)
             continue
         print(f"  {row['target']}", file=out)
         print(f"      bullet: {row['bullet']}", file=out)
@@ -599,8 +581,7 @@ def emit_text(report, out):
         )
         if log["merge_candidates"]:
             print(
-                f"  merge candidates (>2 entries in a day): "
-                f"{log['merge_candidates']}",
+                f"  merge candidates (>2 entries in a day): {log['merge_candidates']}",
                 file=out,
             )
 
@@ -624,9 +605,7 @@ def main():
         "bundle": str(bundle),
         "repo": str(args.repo),
         "narrative": section_narrative(bundle),
-        "duplicates": section_duplicates(
-            bundle, args.repo, args.duplicate_threshold
-        ),
+        "duplicates": section_duplicates(bundle, args.repo, args.duplicate_threshold),
         "behavioral": section_behavioral(bundle),
         "refs": section_refs(bundle, args.repo, tracked),
         "links": section_links(bundle),

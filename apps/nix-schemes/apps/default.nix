@@ -20,6 +20,7 @@
     type = "app";
     program = lib.getExe (
       pkgs.writers.writePython3Bin "preview-cursors" {
+        doCheck = false;
         libraries = [ pkgs.python3Packages.pillow ];
         # `libraries` covers imports; a renderer reached through `subprocess` needs PATH.
         makeWrapperArgs = [
@@ -37,6 +38,7 @@
     type = "app";
     program = lib.getExe (
       pkgs.writers.writePython3Bin "update-cursor-templates" {
+        doCheck = false;
         # The source is the locked input, not something a caller picks; `git` stays
         # ambient, per the rule every working-copy script here follows.
         makeWrapperArgs = [

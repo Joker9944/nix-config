@@ -101,9 +101,7 @@ def annotate(element, inherited, under_filter, unmapped, counts, path):
 
     # A declared paint is annotated wherever it sits, container or not, so that
     # a slot change moves the declaration a child may still be inheriting from.
-    subject = (
-        element.tag in PAINT or element.tag == STOP or declared is not None
-    )
+    subject = element.tag in PAINT or element.tag == STOP or declared is not None
     if element.tag == STOP:
         effective = element.get("stop-color")
 
@@ -111,9 +109,7 @@ def annotate(element, inherited, under_filter, unmapped, counts, path):
         try:
             slot = classify(effective, filtered)
         except KeyError as error:
-            unmapped.setdefault(
-                error.args[0], f"{path.name}#{element.get('id')}"
-            )
+            unmapped.setdefault(error.args[0], f"{path.name}#{element.get('id')}")
             slot = None
         if slot is not None:
             element.set("data-slot", slot)
@@ -132,19 +128,12 @@ def working_copy():
         capture_output=True,
         text=True,
     ).stdout.strip()
-    return (
-        pathlib.Path(root)
-        / "apps"
-        / "nix-schemes"
-        / "vendor"
-        / "cursors"
-        / "breeze"
-    )
+    return pathlib.Path(root) / "apps" / "nix-schemes" / "vendor" / "cursors" / "breeze"
 
 
 def main():
     if len(sys.argv) != 2:
-        sys.exit(__doc__.strip().splitlines()[-1])
+        sys.exit((__doc__ or "").strip().splitlines()[-1])
     source = pathlib.Path(sys.argv[1]) / "cursors" / "Breeze"
     vendor = working_copy()
     # Regenerated wholesale: merging into an existing tree would keep a
@@ -170,12 +159,9 @@ def main():
     # one.
     if unmapped:
         listing = "\n".join(
-            f"  {paint}  (e.g. {where})"
-            for paint, where in sorted(unmapped.items())
+            f"  {paint}  (e.g. {where})" for paint, where in sorted(unmapped.items())
         )
-        sys.exit(
-            f"vendor-cursors: {len(unmapped)} unmapped paint(s):\n{listing}"
-        )
+        sys.exit(f"vendor-cursors: {len(unmapped)} unmapped paint(s):\n{listing}")
 
     # Everything below is written rather than copied so the tree already
     # satisfies the `trim-trailing-whitespace` and `end-of-file-fixer` hooks. A

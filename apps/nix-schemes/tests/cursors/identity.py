@@ -39,9 +39,7 @@ def render(directory, name, into):
 
 
 def main():
-    upstream, templates = (
-        pathlib.Path(argument) for argument in sys.argv[1:3]
-    )
+    upstream, templates = (pathlib.Path(argument) for argument in sys.argv[1:3])
 
     have = {path.name for path in templates.glob("*.svg")}
     want = {path.name for path in upstream.glob("*.svg")}

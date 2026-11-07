@@ -113,14 +113,9 @@ def main(attrs):
             ver = val[3:] or "(no version attr; existence still proven)"
             print(f"  {attr}: EXISTS   version={ver}")
         elif val == "missing":
-            print(
-                f"  {attr}: MISSING  not in this nixpkgs -- the only "
-                "true negative"
-            )
+            print(f"  {attr}: MISSING  not in this nixpkgs -- the only true negative")
         else:
-            print(
-                f"  {attr}: RENAMED/REMOVED  the alias names its replacement:"
-            )
+            print(f"  {attr}: RENAMED/REMOVED  the alias names its replacement:")
             for ln in alias_message(source, attr):
                 print(f"      {ln}")
     return 0

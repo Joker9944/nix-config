@@ -89,9 +89,7 @@ def rewrite_rules(body, colours, seen):
         for name in names:
             seen[name] += 1
         if not COLOR_DECL.search(declarations):
-            declarations = (
-                f"{declarations.rstrip().rstrip(';')};color:{colour};"
-            )
+            declarations = f"{declarations.rstrip().rstrip(';')};color:{colour};"
             return f"{selector}{{{declarations}}}"
         return f"{selector}{{{COLOR_DECL.sub(rf'\1{colour}', declarations)}}}"
 
@@ -99,12 +97,10 @@ def rewrite_rules(body, colours, seen):
 
 
 def stylesheet(names, colours):
-    return "".join(
-        f".{name} {{ color:{colours[name]}; }}" for name in sorted(names)
-    )
+    return "".join(f".{name} {{ color:{colours[name]}; }}" for name in sorted(names))
 
 
-def recolour(path, colours, stats):
+def recolour(path, colours, stats, classes):
     used, literal = classes_in_document(path)
     if not used:
         stats["files-without-class"] += 1
@@ -116,7 +112,7 @@ def recolour(path, colours, stats):
 
     def block(match):
         nonlocal defined
-        body, found = rewrite_rules(match.group(2), colours, stats["class"])
+        body, found = rewrite_rules(match.group(2), colours, classes)
         defined |= found
         return f"{match.group(1)}{body}{match.group(3)}"
 
@@ -126,7 +122,7 @@ def recolour(path, colours, stats):
     if missing:
         rules = stylesheet(missing, colours)
         for name in missing:
-            stats["class"][name] += 1
+            classes[name] += 1
         first = STYLE_SPAN.search(result)
         if first:
             # A class is used but no rule declares it; extend the existing
@@ -145,9 +141,7 @@ def recolour(path, colours, stats):
                 '<defs><style id="current-color-scheme" '
                 f'type="text/css">{rules}</style></defs>'
             )
-            result = (
-                result[: opening.end()] + injected + result[opening.end() :]
-            )
+            result = result[: opening.end()] + injected + result[opening.end() :]
             stats["stylesheets-injected"] += 1
 
     if result == source:
@@ -161,7 +155,7 @@ def recolour(path, colours, stats):
 
 def main():
     if len(sys.argv) != 3:
-        sys.exit(__doc__.strip().splitlines()[-1])
+        sys.exit((__doc__ or "").strip().splitlines()[-1])
     tree, colour_file = sys.argv[1], sys.argv[2]
     with open(colour_file, encoding="utf-8") as handle:
         colours = json.load(handle)
@@ -183,17 +177,13 @@ def main():
             unknown.setdefault(name, os.path.relpath(path, tree))
     if unknown:
         listing = "\n".join(
-            f"  {name}  (e.g. {where})"
-            for name, where in sorted(unknown.items())
+            f"  {name}  (e.g. {where})" for name, where in sorted(unknown.items())
         )
-        sys.exit(
-            f"recolour: {len(unknown)} unmapped ColorScheme "
-            f"class(es):\n{listing}"
-        )
+        sys.exit(f"recolour: {len(unknown)} unmapped ColorScheme class(es):\n{listing}")
 
     stats = Counter()
-    stats["class"] = Counter()
-    changed = sum(recolour(path, colours, stats) for path in svg_files(tree))
+    classes = Counter()
+    changed = sum(recolour(path, colours, stats, classes) for path in svg_files(tree))
 
     print(f"recoloured {changed} of {total} non-symbolic svg files")
     for key in (
@@ -205,7 +195,7 @@ def main():
     ):
         if stats[key]:
             print(f"  {key:<22} {stats[key]}")
-    for name, count in stats["class"].most_common():
+    for name, count in classes.most_common():
         print(f"  {name:<32} {colours[name]}  x{count}")
 
 
