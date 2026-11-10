@@ -84,11 +84,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794005199,
-        "narHash": "sha256-4r+vz1Hdp/M/zoXOeG2zU4LxJ2LNkqS6oWu4NbtRCkU=",
+        "lastModified": 1794133227,
+        "narHash": "sha256-VBloruW48HKHRfyZDZHbreC3/tjtf70v4oqpsq+yO/w=",
         "owner": "aylur",
         "repo": "astal",
-        "rev": "ab2ab64f79c571bb5fef5c03bdb4d8afe642e758",
+        "rev": "b7aaf4ce69ebb3c5b1818d524e04b23bc755a97d",
         "type": "github"
       },
       "original": {
@@ -155,11 +155,11 @@
     "claude-plugins-official": {
       "flake": false,
       "locked": {
-        "lastModified": 1794009064,
-        "narHash": "sha256-mKi7wkI60esAVbrxGQu+CRNE3Sc7ypwrnv9s+Ps+I9o=",
+        "lastModified": 1794274029,
+        "narHash": "sha256-hrUTcp9tRpomnvud6ywIp/0kNullipnAvgiguQAZLZs=",
         "owner": "anthropics",
         "repo": "claude-plugins-official",
-        "rev": "0412be76f50ab4f4f8abff3753efa9269fbbca5b",
+        "rev": "dceb15d50832e6adf380bedc26dde03d251324b9",
         "type": "github"
       },
       "original": {
@@ -378,11 +378,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1792818383,
-        "narHash": "sha256-199i7ubVSXTMl+0AAlL7cVCXSjcI+jWByMcimYjeMX0=",
+        "lastModified": 1794251182,
+        "narHash": "sha256-R2sZBXiOJo3HAnvTiVkbbHDJy//JMlAwUKEiPbfqPXk=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "24f2190587513b9c2f73db112a17844ae912d965",
+        "rev": "6eb2d33d1d0c95a37ef6443c88e6c1686012ee8b",
         "type": "github"
       },
       "original": {
@@ -489,11 +489,11 @@
         "xdph": "xdph"
       },
       "locked": {
-        "lastModified": 1794180039,
-        "narHash": "sha256-vENRpNT6omxYGd2cI9+X1xwm9aAp2JD5ixibTqg7uLQ=",
+        "lastModified": 1794306826,
+        "narHash": "sha256-ap84LNWTemJDf2iujKEyuWIe6rtMKCO+A1CajGI2QiU=",
         "owner": "hyprwm",
         "repo": "Hyprland",
-        "rev": "151b0434114fad482e4fed9438c081b46e73423c",
+        "rev": "1aa477bed3e1534b345fba03b3b76c84b81b3044",
         "type": "github"
       },
       "original": {
@@ -845,11 +845,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794202607,
-        "narHash": "sha256-foUWdIx5HTEopoOHXzTy7uhbZYYl1BdjZKPQpkR+pgg=",
+        "lastModified": 1794293298,
+        "narHash": "sha256-suCfhP7yXhgzvyy/o2tLh6Xw+11e96NKxLAMpyhOKus=",
         "owner": "nix-community",
         "repo": "nix-vscode-extensions",
-        "rev": "934620178cf8eed2058484c24b5db62dbf4f08b1",
+        "rev": "3ae5de090ea5bc16fc75cd7593486c76e41d1878",
         "type": "github"
       },
       "original": {
@@ -916,11 +916,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1793865203,
-        "narHash": "sha256-/cpdPHaySDIyCgZI6EWngiM6jK3YLUNzv1b7lTzy6Bk=",
+        "lastModified": 1794165970,
+        "narHash": "sha256-XuAV2cUwaod3Bt4XFVqiXz3v1w2ex16W6Sv4S7EWres=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "c56a87d8e41ce69bd2af57eb35dcc117a9dfca33",
+        "rev": "ac588ef1c914865dad517b337ea0eb9694a4021c",
         "type": "github"
       },
       "original": {
@@ -1068,11 +1068,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793995029,
-        "narHash": "sha256-ZlE4BtMjWhfC6rFXLO9Qimn36Ene1INqCgKDDvazjhc=",
+        "lastModified": 1794261845,
+        "narHash": "sha256-Ivif/kuD68yEOKcZZG3zSwNMFUuIgzUgeJuzcHrQy+8=",
         "owner": "Mic92",
         "repo": "sops-nix",
-        "rev": "89a234ce2daf6e568a7d4b4fe250afdd23d84e20",
+        "rev": "fe7b4228405aeac2ce7192c2049a6e2bc8637082",
         "type": "github"
       },
       "original": {
@@ -1197,11 +1197,11 @@
     "tinted-vscode": {
       "flake": false,
       "locked": {
-        "lastModified": 1793511627,
-        "narHash": "sha256-aUNEEjbrKY8zwDdX/fqBxnaU8qRCKLMSLiHKXeKyRE0=",
+        "lastModified": 1794116508,
+        "narHash": "sha256-N7DGn+DlHPlulZUbHRWwpIil3JKp0bH0wuy8WCfFKt0=",
         "owner": "tinted-theming",
         "repo": "tinted-vscode",
-        "rev": "a087e3bff20d1e77ffa405e47f19c3ba87f48dc0",
+        "rev": "86e7c7523e0b79844edc5f94e5d71c593086ea83",
         "type": "github"
       },
       "original": {
