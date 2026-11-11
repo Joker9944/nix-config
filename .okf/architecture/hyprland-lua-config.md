@@ -5,7 +5,7 @@ description: The hyprland tree emits `hyprland.lua`, not `hyprland.conf`. Docume
 tags: [architecture, hyprland, home-manager, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-10-26T00:00:00Z
+  at: 2026-11-11T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -33,6 +33,11 @@ emits a raw lua expression. See [custom-lib](custom-lib.md).
 `pwas/youtube/default.nix` all contribute independently. Give every rule a `name`: it is
 the repo convention, and re-declaring an existing name updates that rule rather than
 registering a second one.
+
+Effects from every matching rule are applied in config order, and scalar effects are overwritten by later ones.
+`suppress_event` is the exception: it appends and can't be cleared, so a broad rule's exemptions have to be in
+its own `match`. The global maximize suppression takes them from `hyprland.maximize.exempt`. A `match.content`
+condition sees only the window's live content type, so it can't react to `content` set by another rule.
 
 Any key more than one module contributes to must be a **list in every one of them**. The
 `settings` type is an `oneOf`, and `either`'s merge delegates to `listOf` only when every

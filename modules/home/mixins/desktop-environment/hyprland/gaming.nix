@@ -7,6 +7,8 @@ let
   ];
 in
 mkHyprlandModule {
+  mixins.desktopEnvironment.hyprland.maximize.exempt = regexes;
+
   wayland.windowManager.hyprland.settings = {
     workspace_rule = [
       {
@@ -22,7 +24,6 @@ mkHyprlandModule {
       content = "game";
       opaque = true;
       immediate = true;
-      suppress_event = "";
       workspace = "name:gaming";
     }) regexes;
 

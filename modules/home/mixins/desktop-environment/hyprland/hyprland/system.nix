@@ -1,76 +1,94 @@
 { mkHyprlandModule, ... }:
 {
   lib,
+  config,
   osConfig,
   ...
 }:
+let
+  cfg = config.mixins.desktopEnvironment.hyprland;
+in
 mkHyprlandModule {
-  home.sessionVariables.NIXOS_OZONE = 1;
+  options.mixins.desktopEnvironment.hyprland.maximize.exempt = lib.mkOption {
+    type = lib.types.listOf lib.types.str;
+    default = [ ];
+    description = ''
+      Class regexes exempt from the global maximize event suppression.
+    '';
+  };
 
-  wayland.windowManager.hyprland.settings = {
-    config = {
-      # WORKAROUND Fix scaling for xwayland apps
-      xwayland.force_zero_scaling = true;
+  config = {
+    home.sessionVariables.NIXOS_OZONE = 1;
 
-      input =
-        let
-          osConfigXkb = osConfig.services.xserver.xkb;
-        in
-        {
-          kb_layout = osConfigXkb.layout;
-          kb_variant = osConfigXkb.variant;
-          kb_model = osConfigXkb.model;
-          kb_options = osConfigXkb.options;
+    wayland.windowManager.hyprland.settings = {
+      config = {
+        # WORKAROUND Fix scaling for xwayland apps
+        xwayland.force_zero_scaling = true;
 
-          follow_mouse = 1;
+        input =
+          let
+            osConfigXkb = osConfig.services.xserver.xkb;
+          in
+          {
+            kb_layout = osConfigXkb.layout;
+            kb_variant = osConfigXkb.variant;
+            kb_model = osConfigXkb.model;
+            kb_options = osConfigXkb.options;
 
-          touchpad = {
-            natural_scroll = true;
+            follow_mouse = 1;
+
+            touchpad = {
+              natural_scroll = true;
+            };
           };
-        };
+      };
+
+      gesture = [
+        {
+          fingers = 3;
+          direction = "horizontal";
+          action = "workspace";
+        }
+      ];
+
+      window_rule = lib.mkBefore [
+        {
+          name = "fix-xwayland-drags";
+          match = {
+            class = "^$";
+            title = "^$";
+            xwayland = true;
+            float = true;
+            fullscreen = false;
+            pin = false;
+          };
+          no_focus = true;
+        }
+        {
+          name = "suppress-maximize-events";
+          match.class =
+            if cfg.maximize.exempt == [ ] then
+              ".*"
+            else
+              "negative:(${lib.concatStringsSep "|" cfg.maximize.exempt})";
+          suppress_event = "maximize";
+        }
+      ];
+
+      # Permissions
+      # TODO set this up
+
+      # See https://wiki.hyprland.org/Configuring/Permissions/
+      # Please note permission changes here require a Hyprland restart and are not applied on-the-fly
+      # for security reasons
+
+      # ecosystem {
+      #   enforce_permissions = 1
+      # }
+
+      # permission = /usr/(bin|local/bin)/grim, screencopy, allow
+      # permission = /usr/(lib|libexec|lib64)/xdg-desktop-portal-hyprland, screencopy, allow
+      # permission = /usr/(bin|local/bin)/hyprpm, plugin, allow
     };
-
-    gesture = [
-      {
-        fingers = 3;
-        direction = "horizontal";
-        action = "workspace";
-      }
-    ];
-
-    window_rule = lib.mkBefore [
-      {
-        name = "fix-xwayland-drags";
-        match = {
-          class = "^$";
-          title = "^$";
-          xwayland = true;
-          float = true;
-          fullscreen = false;
-          pin = false;
-        };
-        no_focus = true;
-      }
-      {
-        name = "suppress-maximize-events";
-        match.class = ".*";
-        suppress_event = "maximize";
-      }
-    ];
-
-    # Permissions
-    # TODO set this up
-
-    # See https://wiki.hyprland.org/Configuring/Permissions/
-    # Please note permission changes here require a Hyprland restart and are not applied on-the-fly
-    # for security reasons
-
-    # ecosystem {
-    #   enforce_permissions = 1
-    # }
-
-    # permission = /usr/(bin|local/bin)/grim, screencopy, allow
-    # permission = /usr/(lib|libexec|lib64)/xdg-desktop-portal-hyprland, screencopy, allow
-    # permission = /usr/(bin|local/bin)/hyprpm, plugin, allow
   };
 }
