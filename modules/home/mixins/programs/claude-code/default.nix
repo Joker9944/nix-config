@@ -22,6 +22,7 @@ mkMixinModule "claude-code" {
   programs = {
     claude-code = {
       enable = true;
+      package = pkgs-unstable.claude-code;
 
       context = ./files/CLAUDE.md;
 
