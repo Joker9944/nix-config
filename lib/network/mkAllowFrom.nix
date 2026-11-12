@@ -2,15 +2,8 @@
   Render `networking.firewall.extraCommands` that accept the given ports only from
   the given source addresses.
 
-  NixOS' iptables backend interpolates `extraCommands` into the firewall start
-  script after the `allowedTCPPorts` accepts and before the catch-all
-  `nixos-fw-log-refuse` jump, so appending to `nixos-fw` here lands in the right
-  place. Three invariants follow from that script and are why this is a helper:
-  the rule appends to `nixos-fw`, jumps to `nixos-fw-accept` rather than `ACCEPT`,
-  and takes `-w` for the xtables lock. Rules are IPv4 only.
-
-  One `-m multiport` rule is emitted per source and protocol, which caps each
-  protocol at multiport's 15 ports.
+  Rules are IPv4 only, one `-m multiport` per source and protocol; the
+  `nixos-fw` invariants and the 15-port cap live in `mkAcceptRules.nix`.
 
   # Type
 
@@ -46,22 +39,15 @@
   tcp ? [ ],
   udp ? [ ],
 }:
-let
-  mkRules =
-    proto: ports:
-    lib.optionals (ports != [ ]) (
-      lib.throwIf (lib.length ports > 15)
-        "mkAllowFrom: ${proto} port list exceeds multiport's limit of 15: ${toString ports}"
-        (
-          lib.map (
-            source:
-            "iptables -w -A nixos-fw -s ${source} -p ${proto} -m multiport --dports ${
-              lib.concatMapStringsSep "," toString ports
-            } -j nixos-fw-accept"
-          ) sources
-        )
-    );
-in
 lib.throwIf (sources == [ ]) "mkAllowFrom: sources is empty, which would open nothing" (
-  lib.concatStringsSep "\n" (mkRules "tcp" tcp ++ mkRules "udp" udp)
+  lib.concatStringsSep "\n" (
+    import ./mkAcceptRules.nix { inherit lib; } {
+      caller = "mkAllowFrom";
+      matches = lib.map (source: {
+        command = "iptables";
+        match = "-s ${source}";
+      }) sources;
+      inherit tcp udp;
+    }
+  )
 )

@@ -1,5 +1,5 @@
 { libUtil, ... }@args:
-libUtil.mkLibNamespace {
+removeAttrs (libUtil.mkLibNamespace {
   context = ./.;
   inherit args;
-}
+}) [ "mkAcceptRules" ]

@@ -5,7 +5,7 @@ description: Every `default.nix` in a mixin category directory calls `mkDefaultM
 tags: [architecture, modules, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-04T00:00:00Z
+  at: 2026-11-12T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -13,7 +13,7 @@ verified:
 
 # What it does
 
-`flake.lib.modules.mkDefaultModule { dir = ./.; } { … }` extends a module's `imports` list with every sibling `.nix` file in `dir`, excluding `default.nix` itself. Registration is by filesystem presence — dropping a new file into the right category directory is enough; no manual list to update. Implementation in `lib/modules/mkDefaultModule.nix`.
+`flake.lib.modules.mkDefaultModule { dir = ./.; } { … }` extends a module's `imports` list with every sibling entry in `dir`, excluding `default.nix` itself. `libUtil.files.list` filters by *filetype*, not extension, so subdirectories are imported as modules too and a non-`.nix` sibling — a `files/` script directory, say — needs either `exclude` or a hand-written `default.nix` in the directory that holds it. Registration is by filesystem presence — dropping a new file into the right category directory is enough; no manual list to update. Implementation in `lib/modules/mkDefaultModule.nix`.
 
 Every category `default.nix` under `modules/nixos/mixins/` and `modules/home/mixins/` is a one-liner over the threaded aggregator helper (see [mixin-pattern](mixin-pattern.md#mkmixinmodule-sugar)):
 

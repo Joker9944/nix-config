@@ -5,7 +5,7 @@ description: Three libs — `lib/` for module-system helpers, `apps/util-lib` fo
 tags: [architecture, lib, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-27T00:00:00Z
+  at: 2026-11-12T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -76,7 +76,9 @@ Notable helpers with non-obvious use:
 | `lookupDesktopFiles.nix` | Names of the `.desktop` files a package *declares* through `desktopItems`. A package that installs its entries any other way — most of them — yields `[ ]`, since the rest is only readable by building it. |
 | `requireDesktopFile.nix` | Asserts a package provides an entry and returns its ID, so a renamed entry fails the build. `name` defaults to the package name + `.desktop`, which is a guess — the assertion is what catches cases like `signal-desktop` → `signal.desktop`. A declared entry is checked during evaluation; for anything else the returned ID carries a check derivation in its string context, which is why the function needs `pkgs` — see [/decisions/desktop-files-at-build-time](/decisions/desktop-files-at-build-time.md). Used by the hyprland binds, see [uwsm-session](uwsm-session.md). |
 | `disko/` | Disk-layout template renderer. `flake.lib.disko.mkDiskoLayout { config, template ? templates.version1 }` renders a disko `devices` set from per-host params; templates live under `flake.lib.disko.templates.*` and are curried `lib` args first, then `{ config }`. Called from each `modules/nixos/hosts/<host>/disks.nix` (which also imports `inputs.disko.nixosModules.disko` itself). |
-| `network/mkAllowFrom.nix` | Renders `networking.firewall.extraCommands` accepting ports only from given sources. Encodes the three invariants of that hook — append to `nixos-fw`, jump to `nixos-fw-accept`, `-w` for the xtables lock. See [/decisions/firewall-source-scoping](/decisions/firewall-source-scoping.md). |
+| `network/mkAcceptRules.nix` | Private builder behind both `mkAllowFrom*` helpers, removed from the namespace by `network/default.nix`. Encodes the three invariants of `extraCommands` — append to `nixos-fw`, jump to `nixos-fw-accept`, `-w` for the xtables lock — and multiport's 15-port cap. |
+| `network/mkAllowFrom.nix` | Renders `networking.firewall.extraCommands` accepting ports only from given sources. See [/decisions/firewall-source-scoping](/decisions/firewall-source-scoping.md). |
+| `network/mkAllowFromSet.nix` | The ipset counterpart for both address families: guarantees the named v4 / v6 sets exist without comparing parameters, so a mismatch can't abort the firewall script. See [/decisions/geoblock-at-the-edge](/decisions/geoblock-at-the-edge.md). |
 | `network/nyxNodes.nix` | Node addresses of the [nyx cluster](/hosts/nyx-cluster.md), keyed by host name. Data, not a helper — the firewall rules on each node need the whole set. |
 | `obfuscation/` | XOR-based string obfuscation, exposed via the `obfuscate` app in `apps.nix`. Hand-written `default.nix`, not directory-loaded — splitting it would make its ASCII table public. |
 

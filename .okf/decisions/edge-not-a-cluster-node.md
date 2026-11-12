@@ -74,7 +74,7 @@ change exists to remove; and the private key would move from host-key-bound sops
 `networking.nat.forwardPorts` needs masquerade, not just DNAT: the cluster's default route leaves by
 its own CGNAT'd uplink, so a preserved client source address would never get its replies back
 through the tunnel. Masquerading destroys the client IP, and a PROXY header cannot be injected from
-the kernel path — which rules it out, because geo-blocking and IP whitelisting run on that address.
+the kernel path — which rules it out, because Traefik's IP whitelisting runs on that address.
 It would also need MSS clamping that the proxy design makes unnecessary.
 
 # Why not the Tailscale Kubernetes operator — for the public path
@@ -88,7 +88,7 @@ Internally that is the right answer and this is not; the two uses do not compete
 The L4 `loadBalancerClass: tailscale` path does fit, and a `ProxyGroup` with two replicas gives it
 real HA. Its source-address behaviour is undocumented, though: if the proxy masquerades, `trustedIPs`
 widens from one address to the pod CIDR and any pod in the cluster can forge a client address past
-the geo and whitelist rules.
+Traefik's whitelist rules.
 
 The choice stays cheap to revisit: it is the nginx upstream and the `trustedIPs` value, nothing
 else.

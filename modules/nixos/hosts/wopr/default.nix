@@ -82,11 +82,11 @@ flake.lib.modules.mkDefaultModule
     # 192.168.1.0/23 at all. Tailscale stays enabled through base for admin SSH.
 
     networking.firewall = {
-      # The two ports whose peer set really is every source on every interface,
-      # which decisions/firewall-source-scoping reserves as its exception — 443
-      # is public by definition, and the spokes dial from a CGNAT'd uplink, so
-      # 51820 has no stable source to scope to either.
-      allowedTCPPorts = [ 443 ];
+      # The one port whose peer set really is every source on every interface,
+      # which decisions/firewall-source-scoping reserves as its exception: the
+      # spokes dial from a CGNAT'd uplink, so there is no stable source to scope
+      # to. 443 is public but scoped: geoblock/ accepts it from a geolocation
+      # allowlist.
       allowedUDPPorts = [ wg.endpoint.port ];
 
       # Prometheus scrapes over the tunnel, and wg0 is not a trusted interface,

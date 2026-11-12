@@ -5,14 +5,14 @@ description: Cluster ports go in `networking.firewall.extraCommands` scoped to t
 tags: [decision, networking, k3s, firewall]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-11-03T00:00:00Z
+  at: 2026-11-12T00:00:00Z
 ---
 
 # The rule
 
 `allowedTCPPorts` / `allowedUDPPorts` open a port to **every source on every interface**. For anything with a known set of peers — everything the [nyx cluster](/hosts/nyx-cluster.md) needs — the rule goes in `networking.firewall.extraCommands`, built by `flake.lib.network.mkAllowFrom` with an explicit source list.
 
-The exception is [wopr](/hosts/wopr.md), where the peer set genuinely is every source on every interface — `:443` by definition, and the WireGuard port because its spokes dial from a CGNAT'd uplink with no stable source address. There `allowedTCPPorts`/`allowedUDPPorts` are the correct option rather than a shortcut.
+The exception is [wopr](/hosts/wopr.md)'s WireGuard port, whose spokes dial from a CGNAT'd uplink with no stable source address, so `allowedUDPPorts` is the correct option there rather than a shortcut. Its `:443` is public but still scoped, by an ipset rather than a source list — [geoblock-at-the-edge](geoblock-at-the-edge.md) is also why that host keeps the iptables backend.
 
 # Why not nftables
 

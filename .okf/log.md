@@ -2,6 +2,17 @@
 
 An index of bundle changes, not a narrative — one line per change, in the form `CLAUDE.md` rule 3 sets.
 
+## 2026-11-12
+
+- How to verify the geoblock from outside — [hosts/wopr](/hosts/wopr.md)
+- The geoblock refresh downloads only a newer month, sets names from nix, and exits 2 when it serves a stale cache — [decisions/geoblock-at-the-edge](/decisions/geoblock-at-the-edge.md), [hosts/wopr](/hosts/wopr.md)
+- Geo-blocking moved off the Traefik middleware onto an ipset allowlist on the edge; why ipset, why db-ip, and the fail-open/fail-closed split — [decisions/geoblock-at-the-edge](/decisions/geoblock-at-the-edge.md), [hosts/wopr](/hosts/wopr.md)
+- wopr's unscoped-port exception is now the WireGuard port alone; `:443` is scoped by ipset — [decisions/firewall-source-scoping](/decisions/firewall-source-scoping.md)
+- `mkDefaultModule` imports every sibling entry, not just `.nix` files — subdirectories and stray files land in `imports` too — [architecture/auto-discovery](/architecture/auto-discovery.md)
+- The `nixos-fw` rule invariants live in a private `mkAcceptRules` builder — [architecture/custom-lib](/architecture/custom-lib.md)
+- The geoblock cache load is skipped when a `/run` digest shows the sets already hold it; break-glass entries last until the next release — [decisions/geoblock-at-the-edge](/decisions/geoblock-at-the-edge.md)
+- `mkAllowFromSet` only guarantees its sets exist; a parameter mismatch can't fail the firewall open — [architecture/custom-lib](/architecture/custom-lib.md), [decisions/geoblock-at-the-edge](/decisions/geoblock-at-the-edge.md)
+
 ## 2026-11-11
 
 - `suppress_event` accumulates across rules; maximize exemptions go through `hyprland.maximize.exempt` — [architecture/hyprland-lua-config](/architecture/hyprland-lua-config.md)

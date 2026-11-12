@@ -22,5 +22,6 @@ Load-bearing choices behind the shape of the repo — the *why* behind what the 
 * [cuda-opt-in](cuda-opt-in.md) — CUDA is opted into per package; the `nvidiaCuda` mixin is a capability flag, not a `nixpkgs.config` switch.
 * [firewall-source-scoping](firewall-source-scoping.md) — Cluster ports are scoped to their peers in `extraCommands`; the firewall stays on the iptables backend.
 * [edge-not-a-cluster-node](edge-not-a-cluster-node.md) — Public ingress terminates on a non-member VPS proxying over its own WireGuard tunnel; joining it to k3s would move the whole cluster dataplane onto a tunnel.
+* [geoblock-at-the-edge](geoblock-at-the-edge.md) — Public ingress is geo-filtered on the edge by an ipset allowlist, not by a Traefik middleware calling an external API per request.
 * [gnome-keyring-not-core-os-services](gnome-keyring-not-core-os-services.md) — The hyprland mixin names the three system services it wants; `gnome.core-os-services` brought a dozen it did not, and lost the portal race.
 * [nix-lookup-not-mcp](nix-lookup-not-mcp.md) — Package and option verdicts come from the pinned revision; search.nixos.org is name discovery only, and the `mcp-nixos` server is deleted rather than kept as a cross-check.
