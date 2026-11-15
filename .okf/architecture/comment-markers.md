@@ -30,7 +30,7 @@ next — and, for a `HACK`, quietly drops the expectation that anyone will ever 
 # The id
 
 Docker-style `adjective-surname`, and **optional**. It exists so that one marker spanning several
-files can be pulled up as a unit — `grep -rn 'WORKAROUND(stoic-ritchie)'` — so a marker with a
+files can be pulled up as a unit — `grep -rn 'WORKAROUND(nostalgic-lovelace)'` — so a marker with a
 single site does not need one, and every site in a group carries the same id. The id is arbitrary
 and carries no meaning beyond joining its sites.
 
