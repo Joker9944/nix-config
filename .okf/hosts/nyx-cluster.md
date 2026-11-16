@@ -4,8 +4,8 @@ title: nyx cluster
 description: Four headless x86_64-linux machines running k3s — tars/case/kipp as servers, mother as a NAS agent — migrated off Talos + TrueNAS.
 tags: [host, server, k3s, zfs, longhorn]
 generated:
-  by: claude-code/claude-opus-5
-  at: 2026-11-16T00:00:00Z
+  by: claude-code/claude-opus-5-5
+  at: 2026-11-17T00:00:00Z
 sources:
   - id: longhorn-2166
     resource: https://github.com/longhorn/longhorn/issues/2166
@@ -19,7 +19,7 @@ sources:
 | tars | 192.168.1.21/23 | server, `clusterInit` | deploys the kube-vip manifest |
 | case | 192.168.1.22/23 | server | — |
 | kipp | 192.168.1.23/23 | server | — |
-| mother | 192.168.1.24/23 | agent | `zfs` + `nfs` + `smartd` mixins, `hostId`, `chronos` pool |
+| mother | 192.168.1.24/23 | agent | `zfs` + `nfs` + `smartd` + `nixCache` mixins, `hostId`, `chronos` pool |
 
 All four select `profile = "server"` (see [profiles](/architecture/profiles.md)); their `mixins.nix` files hold only the role deltas and a CPU-vendor capability — `intelCpu` on tars/kipp/mother, `amdCpu` on case, each carrying that vendor's microcode and kvm module. The router serves 192.168.0.0/23 with its gateway and resolver at 192.168.0.254; the cluster sits in the upper half, out of the 192.168.0.0/24 range the rest of the LAN uses. Static addressing is per host under `systemd.network.networks."10-lan"`, since the profile only turns systemd-networkd on; moving any of it afterwards is [renumber-nodes](/workflows/renumber-nodes.md), not a rebuild. `tars` and `mother` name their exact interface rather than globbing `en*`: the glob also matches the unpopulated second onboard NIC each has, which then inherits `RequiredForOnline` and hangs `systemd-networkd-wait-online` for its full timeout before failing — and would take a duplicate copy of the static address the day anyone cables it. `case` and `kipp` have one NIC and keep the glob.
 
@@ -49,9 +49,9 @@ Two halves are outside nix. The route must be **approved** before any client see
 
 Linux clients ignore subnet routes unless told otherwise, so [wintermute](wintermute.md) carries the matching `useRoutingFeatures = "client"` + `--accept-routes`. Phones and macOS accept by default.
 
-The **tailnet policy** lives in the admin console, not in this repo, and is default-deny. Untagged devices are clients: SSH to everything, `6443` on the VIP route, `443` on every service. Servers (`tag:nyx`), the edge (`tag:edge`) and the ephemeral CI runners (`tag:ci`) reach `svc:attic` and nothing else. Clients are granted services through `tag:nyx-internal`, which the operator puts on every service, so a new Ingress needs no policy change — `svc:*` is not valid syntax. The console's policy tests cannot see a tag grant to a service: an `accept` test on `svc:<name>` fails while traffic passes, so only the deny side is tested. A node denied a service cannot resolve its name either.
+The **tailnet policy** lives in the admin console, not in this repo, and is default-deny. Untagged devices are clients: SSH to everything, `6443` on the VIP route, `443` on every service. The ephemeral CI runners (`tag:ci`) reach `svc:nix-cache` on `22` and `443` and nothing else, clients on `443` by a direct grant; mother additionally carries `tag:nix-cache`, which auto-approves it as that service's host ([decisions/private-binary-cache](/decisions/private-binary-cache.md)). A service must be defined in the console first — advertising an undefined one is silently ignored. Clients are granted services through `tag:nyx-internal`, which the operator puts on every service, so a new Ingress needs no policy change — `svc:*` is not valid syntax. The console's policy tests cannot see a tag grant to a service: an `accept` test on `svc:<name>` fails while traffic passes, so only the deny side is tested. A node denied a service cannot resolve its name either.
 
-`192.168.1.20/32` is the **only** advertised route, and it exists for `kubectl` alone. There is no load-balancer pool, so nothing else needs reaching off-LAN and `mother` advertises nothing at all — it carries no `services.tailscale` block. Public ingress does not use the tailnet either: [wopr](wopr.md) reaches Traefik over its own WireGuard tunnel.
+`192.168.1.20/32` is the **only** advertised route, and it exists for `kubectl` alone. There is no load-balancer pool, so nothing else needs reaching off-LAN and `mother` advertises no route. Public ingress does not use the tailnet either: [wopr](wopr.md) reaches Traefik over its own WireGuard tunnel.
 
 Internal services are **tailnet services provisioned by the Tailscale operator** — `longhorn.<tailnet>.ts.net` and friends, each a MagicDNS name with a Tailscale-managed certificate. That is why no `hosts` mixin pins subdomains to a cluster address any more: MagicDNS resolves them, so a client without Tailscale up simply cannot name them. The operator's L7 path was rejected for *public* ingress because it serves no custom domain ([edge-not-a-cluster-node](/decisions/edge-not-a-cluster-node.md)); for internal services a `*.ts.net` name is exactly what is wanted.
 

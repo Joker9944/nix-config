@@ -4,8 +4,8 @@ title: Dependency updates
 description: The channels that keep dependencies current — Renovate for GitHub Actions digests, nix-flake-update.yaml for the lock files, nix-packages-update.yaml for pkgs/*.nix, nix-schemes-update.yaml for the vendored schemes, and a manual release bump.
 tags: [workflow, ci, renovate, flake, updates]
 generated:
-  by: claude-code/claude-opus-5
-  at: 2026-08-20T00:00:00Z
+  by: claude-code/claude-opus-5-5
+  at: 2026-11-16T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -51,6 +51,11 @@ the push that merges it — the second run is a cache seed, not a gate
 ([decisions/ci-nix-installer](/decisions/ci-nix-installer.md)). It is the gate every nix update PR
 waits on — which only holds because the app token triggers `on: pull_request`; `GITHUB_TOKEN` would
 not, and automerge would hang.
+
+A PR that changes `flake.lock` also waits on `.github/workflows/nix-closure-build.yaml`, which builds
+the desktop closures and pushes them to the binary cache
+([decisions/private-binary-cache](/decisions/private-binary-cache.md)). Its required check is the
+`gate` job, which passes when the build is skipped, so other PRs never wait on it.
 
 # Related
 

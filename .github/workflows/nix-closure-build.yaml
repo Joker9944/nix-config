@@ -1,0 +1,161 @@
+name: nix-closure-build
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+
+  changes:
+
+    runs-on: ubuntu-latest
+
+    outputs:
+      lock: ${{ steps.lock-diff.outputs.lock }}
+
+    steps:
+
+      - name: Repository checkout
+        id: git-checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 2
+
+      - name: Detect flake.lock change
+        id: lock-diff
+        shell: bash
+
+        run: |
+          if [[ "${{ github.event_name }}" != 'pull_request' ]] || ! git diff --quiet HEAD^1 HEAD -- flake.lock; then
+            echo 'lock=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'lock=false' >> "$GITHUB_OUTPUT"
+          fi
+
+  build:
+
+    needs: changes
+    if: needs.changes.outputs.lock == 'true'
+
+    permissions:
+      contents: read
+      id-token: write
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: HAL9000
+            host: HAL9000
+            attr: nixosConfigurations.HAL9000.config.system.build.toplevel
+          - name: wintermute
+            host: wintermute
+            attr: nixosConfigurations.wintermute.config.system.build.toplevel
+          - name: joker9944@HAL9000
+            host: HAL9000
+            attr: homeConfigurations."joker9944@HAL9000".activationPackage
+          - name: joker9944@wintermute
+            host: wintermute
+            attr: homeConfigurations."joker9944@wintermute".activationPackage
+
+    name: build (${{ matrix.name }})
+
+    steps:
+
+      - name: Free disk space
+        id: disk-free
+        shell: bash
+
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache
+
+      - name: Repository checkout
+        id: git-checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup nix
+        id: nix-setup
+        uses: ./.github/composites/nix-setup
+        with:
+          save: false
+
+      - name: Add host substituters
+        id: nix-substituters
+        shell: bash
+
+        run: |
+          nix eval --json '.#nixosConfigurations.${{ matrix.host }}.config.nix.settings' \
+            --apply 's: { inherit (s) substituters trusted-public-keys; }' |
+            jq -r '"extra-substituters = \(.substituters | join(" "))",
+                   "extra-trusted-public-keys = \(."trusted-public-keys" | join(" "))"' \
+              >> ~/.config/nix/nix.conf
+
+      - name: Join tailnet
+        id: tailscale
+        uses: tailscale/github-action@064b10558093f38325e838ddea35486bdc6b1d5c # v4.4.0
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          audience: ${{ secrets.TS_AUDIENCE }}
+          tags: tag:ci
+
+      - name: Setup cache access
+        id: cache-access
+        shell: bash
+        env:
+          NIX_CACHE_SSH_KEY: ${{ secrets.NIX_CACHE_SSH_KEY }}
+          NIX_CACHE_SIGNING_KEY: ${{ secrets.NIX_CACHE_SIGNING_KEY }}
+
+        run: |
+          install -d -m 700 ~/.ssh
+          install -m 600 /dev/null ~/.ssh/id_ed25519
+          printf '%s\n' "$NIX_CACHE_SSH_KEY" > ~/.ssh/id_ed25519
+          printf '%s %s\n' '${{ vars.NIX_CACHE_HOST }}' '${{ vars.NIX_CACHE_HOST_KEY }}' >> ~/.ssh/known_hosts
+          install -m 600 /dev/null "$RUNNER_TEMP/nix-signing.key"
+          printf '%s' "$NIX_CACHE_SIGNING_KEY" > "$RUNNER_TEMP/nix-signing.key"
+
+      - name: Build closure
+        id: nix-build
+        shell: bash
+
+        run: nix build --print-build-logs '.#${{ matrix.attr }}'
+
+      - name: Push closure
+        id: cache-push
+        shell: bash
+
+        run: |
+          nix store sign --recursive --key-file "$RUNNER_TEMP/nix-signing.key" ./result
+          nix copy --substitute-on-destination --to 'ssh-ng://${{ vars.NIX_CACHE_USER }}@${{ vars.NIX_CACHE_HOST }}' ./result
+          ssh '${{ vars.NIX_CACHE_USER }}@${{ vars.NIX_CACHE_HOST }}' nix-env \
+            --profile '/nix/var/nix/profiles/per-user/${{ vars.NIX_CACHE_USER }}/${{ matrix.name }}' \
+            --set "$(readlink -f result)"
+
+  gate:
+
+    needs:
+      - changes
+      - build
+    if: always()
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Check results
+        id: gate-check
+        shell: bash
+
+        run: |
+          [[ "${{ needs.changes.result }}" == 'success' ]]
+          [[ "${{ needs.build.result }}" == 'success' || "${{ needs.build.result }}" == 'skipped' ]]

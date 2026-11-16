@@ -1,4 +1,11 @@
 name: nix-setup
+description: Install single-user nix and restore the nix store cache
+
+inputs:
+  save:
+    description: Whether to save the nix store cache — true or false; empty infers it
+    required: false
+    default: ''
 
 runs:
   using: "composite"
@@ -20,4 +27,4 @@ runs:
         primary-key: nix-${{ runner.os }}-${{ hashFiles('**/flake.lock') }}
         restore-prefixes-first-match: nix-${{ runner.os }}-
         gc-max-store-size-linux: 2G
-        save: ${{ github.event_name != 'pull_request' || !endsWith(github.event.pull_request.user.login, '[bot]') }}
+        save: ${{ inputs.save != '' && inputs.save || github.event_name != 'pull_request' || !endsWith(github.event.pull_request.user.login, '[bot]') }}

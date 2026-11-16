@@ -2,11 +2,18 @@
 
 An index of bundle changes, not a narrative — one line per change, in the form `CLAUDE.md` rule 3 sets.
 
+## 2026-11-17
+
+- `svc:nix-cache` must be defined in the console before mother's advertisement registers — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- harmonia binds a Unix socket that `svc:nix-cache` TLS-terminates onto — [decisions/private-binary-cache](/decisions/private-binary-cache.md)
+
 ## 2026-11-16
 
-- Tailnet policy shape: default-deny, clients reach services via `tag:nyx-internal`, servers/edge/CI reach attic only; tests can't see tag grants to services — [hosts/nyx-cluster](/hosts/nyx-cluster.md), [hosts/wopr](/hosts/wopr.md), [decisions/firewall-source-scoping](/decisions/firewall-source-scoping.md)
+- Tailnet policy shape: default-deny, clients reach services via `tag:nyx-internal`, CI and clients reach `svc:nix-cache`; tests can't see tag grants to services — [hosts/nyx-cluster](/hosts/nyx-cluster.md), [hosts/wopr](/hosts/wopr.md), [decisions/firewall-source-scoping](/decisions/firewall-source-scoping.md)
 - Lid binds disable the panel only when docked and restore it by config reload; runtime `hl.monitor` cannot re-enable a disabled output — [hosts/wintermute](/hosts/wintermute.md)
 - `scriptArgs` reaches only the systemd `script` body; a delegated `writeShellApplication` needs `"$@"` forwarded — [architecture/module-layout](/architecture/module-layout.md)
+- Desktop closures are built on lock-changing PRs and pushed to harmonia on mother (`svc:nix-cache`); `gate` is the required check — [decisions/private-binary-cache](/decisions/private-binary-cache.md), [workflows/dependency-updates](/workflows/dependency-updates.md), [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+- `nix-setup` takes a `save` override — [decisions/ci-nix-installer](/decisions/ci-nix-installer.md)
 
 ## 2026-11-12
 

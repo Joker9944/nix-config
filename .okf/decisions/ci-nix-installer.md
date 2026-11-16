@@ -4,8 +4,8 @@ title: CI installs Nix single-user with community actions
 description: nix-setup uses nixbuild/nix-quick-install-action plus nix-community/cache-nix-action instead of the DeterminateSystems pair; the store is unprivileged, the cache is keyed on the lock files, and nix-flake-check runs on push to main to seed it.
 tags: [decision, ci, nix, cache]
 generated:
-  by: claude-code/claude-opus-5
-  at: 2026-08-21T00:00:00Z
+  by: claude-code/claude-opus-5-5
+  at: 2026-11-16T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -18,7 +18,8 @@ verified:
 through `nix-community/cache-nix-action`, an `actions/cache` fork. Neither DeterminateSystems action
 is used — a vendor choice, not a defect in the tooling.
 
-The composite takes no inputs. `nix_conf` carries `keep-outputs` and `keep-env-derivations`, which
+The composite's one input, `save`, overrides the inferred save condition below; `nix-closure-build`
+passes `false`, since a desktop closure would evict every other entry from the 10 GB budget. `nix_conf` carries `keep-outputs` and `keep-env-derivations`, which
 is what makes a restored store useful rather than a pile of unreferenced paths, plus
 `allow-import-from-derivation = false`, the CI half of [no-ifd](no-ifd.md); the action appends
 `extra-experimental-features = nix-command flakes` and `accept-flake-config = true` itself, so

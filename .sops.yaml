@@ -39,6 +39,12 @@ creation_rules:
         - *tars
         - *case
         - *kipp
+  # Binary cache signing key — only the host serving the cache.
+  - path_regex: nix-cache/secrets/nix-cache\.yaml$
+    key_groups:
+      - age:
+        - *joker9944
+        - *mother
   # Global secrets
   - path_regex: secrets/[^/]+\.(ya?ml|json|env|ini)$
     key_groups:
