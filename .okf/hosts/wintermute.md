@@ -5,7 +5,7 @@ description: Lenovo ThinkPad X1 Yoga Gen 4 laptop, x86_64-linux, Swiss keymap, 4
 tags: [host, laptop, hyprland, thinkpad]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-11-03T00:00:00Z
+  at: 2026-11-16T00:00:00Z
 ---
 
 # Hardware
@@ -27,11 +27,11 @@ Host-specific quirks (all in `modules/nixos/hosts/wintermute/default.nix`):
   unplug. Hibernation needs no `boot.resumeDevice` or `resume_offset` despite the swapfile sitting
   on btrfs inside LUKS — systemd writes a `HibernateLocation` EFI variable and resumes from it in
   the systemd initrd. `/sys/power/resume` reading `0:0` is therefore expected, not a fault.
-* `eDP-1` is declared (`3840x2160@60.00Hz`, scale 2, the panel's only mode) rather than left to
-  Hyprland's inference, because the lid binds in
-  `modules/home/users/joker9944/hosts/wintermute/default.nix` derive their restore spec from that
-  declaration. They disable the panel on lid close, which logind deliberately ignores while docked;
-  `hl.monitor` and a lua function are used because the lua API exposes no `keyword` dispatcher.
+* `eDP-1` is declared (`3840x2160@60.00Hz`, scale 2, the panel's only mode). The lid binds in
+  `modules/home/users/joker9944/hosts/wintermute/default.nix` disable it on close only while another
+  output is active, since logind ignores a docked lid; undocked, logind suspends and the lid-open
+  event does not survive the resume. Lid open restores it with `hl.dsp.reload_config()`: a runtime
+  `hl.monitor` call cannot re-enable a disabled output.
 * Bluetooth is enabled here and nowhere else (HAL9000 has no radio), as a raw `hardware.bluetooth.enable` line rather than a mixin — see [decisions/gnome-keyring-not-core-os-services](/decisions/gnome-keyring-not-core-os-services.md).
 
 # Host record & mixin selection

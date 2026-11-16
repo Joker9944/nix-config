@@ -4,6 +4,7 @@ An index of bundle changes, not a narrative — one line per change, in the form
 
 ## 2026-11-16
 
+- Lid binds disable the panel only when docked and restore it by config reload; runtime `hl.monitor` cannot re-enable a disabled output — [hosts/wintermute](/hosts/wintermute.md)
 - `scriptArgs` reaches only the systemd `script` body; a delegated `writeShellApplication` needs `"$@"` forwarded — [architecture/module-layout](/architecture/module-layout.md)
 
 ## 2026-11-12
