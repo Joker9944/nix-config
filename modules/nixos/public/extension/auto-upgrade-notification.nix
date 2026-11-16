@@ -115,7 +115,9 @@ _:
                 ];
               };
             in
-            lib.getExe script;
+            ''
+              ${lib.getExe script} "$@"
+            '';
         };
       };
     };

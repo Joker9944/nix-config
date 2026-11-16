@@ -5,7 +5,7 @@ description: On-disk layout for any nix module in the repo — single file for t
 tags: [architecture, modules, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-11-07T00:00:00Z
+  at: 2026-11-16T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -146,6 +146,14 @@ back into a nix string — not the form to copy.
 
 The hook lints the file standalone, with no knowledge that the wrapper sets `errexit` — so a bare
 `cd` needs an explicit `|| exit` that would be redundant inline.
+
+## `scriptArgs` stops at the systemd body
+
+`systemd.services.<n>.scriptArgs` is appended to the *generated* job script's `ExecStart`, so it
+arrives as `$@` in `script` and nowhere else. A `script` that delegates to a `writeShellApplication`
+must forward them explicitly (`${lib.getExe app} "$@"`), not hand back a bare `lib.getExe app` — or the
+wrapper's `set -u` aborts on the first `$1`.
+`modules/nixos/public/extension/auto-upgrade-notification.nix` passes `%i` that way.
 
 ## A python payload is not a shell body
 

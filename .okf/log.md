@@ -2,6 +2,10 @@
 
 An index of bundle changes, not a narrative — one line per change, in the form `CLAUDE.md` rule 3 sets.
 
+## 2026-11-16
+
+- `scriptArgs` reaches only the systemd `script` body; a delegated `writeShellApplication` needs `"$@"` forwarded — [architecture/module-layout](/architecture/module-layout.md)
+
 ## 2026-11-12
 
 - How to verify the geoblock from outside — [hosts/wopr](/hosts/wopr.md)
