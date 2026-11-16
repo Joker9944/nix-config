@@ -5,7 +5,7 @@ description: Cluster ports go in `networking.firewall.extraCommands` scoped to t
 tags: [decision, networking, k3s, firewall]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-11-12T00:00:00Z
+  at: 2026-11-16T00:00:00Z
 ---
 
 # The rule
@@ -26,7 +26,7 @@ Three invariants follow and are why `mkAllowFrom` exists rather than hand-writte
 
 `networking.firewall` does not apply to the tailnet **at all**. tailscaled runs with the default `--netfilter-mode=on`, which inserts its own `ts-input` chain at the head of `INPUT` with an accept for everything arriving on `tailscale0` — ahead of the `-A INPUT -j nixos-fw` jump. No `allowedTCPPorts` entry, `trustedInterfaces` entry or `extraCommands` rule is consulted for a tailnet packet, on any host in this repo (the base profile enables tailscale everywhere).
 
-So on a node, any port bound to `0.0.0.0` is reachable by anything on the tailnet regardless of these rules. What actually keeps the cluster's internal ports off the tailnet is their **bind address**, not the firewall: kube-proxy (`10249`) and etcd (`2379`/`2380`) listen on the node's LAN address only, while kube-apiserver (`6443`), kubelet (`10250`) and node-exporter (`9100`) listen on `0.0.0.0` and answer any tailnet peer. Verified by probing a node from a tailnet host: exactly the wildcard-bound ports answered.
+So on a node, any port bound to `0.0.0.0` is reachable by anything on the tailnet regardless of these rules. What actually keeps the cluster's internal ports off the tailnet is their **bind address**, not the firewall: kube-proxy (`10249`) and etcd (`2379`/`2380`) listen on the node's LAN address only, while kube-apiserver (`6443`), kubelet (`10250`) and node-exporter (`9100`) listen on `0.0.0.0` and answer any tailnet peer the tailnet policy admits — clients only ([nyx-cluster](/hosts/nyx-cluster.md)). Verified by probing a node from a tailnet host: exactly the wildcard-bound ports answered.
 
 The ingress tunnel is the deliberate contrast. `wg0` is **not** a trusted interface, so these rules
 do govern it: verified by probing `tars` from the hub with the tunnel up, `6443`, `10250` and `9100`

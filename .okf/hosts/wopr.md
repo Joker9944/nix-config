@@ -5,7 +5,7 @@ description: A small VPS that restores public ingress after the cluster lost its
 tags: [host, server, edge, ingress, wireguard, tailscale, nginx]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-11-12T00:00:00Z
+  at: 2026-11-16T00:00:00Z
 ---
 
 # What it is
@@ -100,10 +100,10 @@ SSH working while removing the LAN path.
 Three things are outside nix. The node must be approved after `tailscale up` (there is no
 `authKeyFile` anywhere in this repo). The private key must be in
 `wireguard/secrets/wireguard.yaml`, which needs this host's age recipient in `.sops.yaml` before the
-first activation. And a **Tailscale ACL** is still not optional hardening: `tailscale0` bypasses
-`networking.firewall` entirely, and `6443`, `10250` and `9100` are wildcard-bound on the cluster
-nodes, so an un-ACL'd edge reaches the Kubernetes API over every server's `100.64.x` address even
-with no subnet route.
+first activation. And it must carry `tag:edge`, never `tag:nyx`: `tailscale0` bypasses
+`networking.firewall` entirely and `6443`, `10250` and `9100` are wildcard-bound on the cluster
+nodes, so the tailnet policy ([nyx-cluster](nyx-cluster.md)) is all that keeps the edge off the
+Kubernetes API — and `tag:nyx` would let it auto-approve the VIP route.
 
 # Firewall
 

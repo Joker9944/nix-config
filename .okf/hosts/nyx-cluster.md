@@ -5,7 +5,7 @@ description: Four headless x86_64-linux machines running k3s — tars/case/kipp 
 tags: [host, server, k3s, zfs, longhorn]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-11-05T00:00:00Z
+  at: 2026-11-16T00:00:00Z
 sources:
   - id: longhorn-2166
     resource: https://github.com/longhorn/longhorn/issues/2166
@@ -45,9 +45,11 @@ For a runtime handler instead: k3s locates runtimes with `exec.LookPath`, so the
 
 All three servers advertise `192.168.1.20/32` into the tailnet — `services.tailscale.useRoutingFeatures = "server"` for the forwarding sysctl, `extraSetFlags = [ "--advertise-routes=…" ]` for the `tailscaled-set.service` oneshot. Advertising from every server rather than one lets Tailscale's primary-router election fail the tailnet route over the same way kube-vip fails the VIP over at L2.
 
-Two halves are outside nix. The route must be **approved** in the Tailscale admin console (or by an ACL `autoApprovers` entry) before any client sees it; and `tailscale set` writes persistent prefs, so deleting the nix lines only removes the unit — unadvertising needs an explicit `tailscale set --advertise-routes=` on the node.
+Two halves are outside nix. The route must be **approved** before any client sees it — the tailnet policy's `autoApprovers` does that for `tag:nyx`; and `tailscale set` writes persistent prefs, so deleting the nix lines only removes the unit — unadvertising needs an explicit `tailscale set --advertise-routes=` on the node.
 
 Linux clients ignore subnet routes unless told otherwise, so [wintermute](wintermute.md) carries the matching `useRoutingFeatures = "client"` + `--accept-routes`. Phones and macOS accept by default.
+
+The **tailnet policy** lives in the admin console, not in this repo, and is default-deny. Untagged devices are clients: SSH to everything, `6443` on the VIP route, `443` on every service. Servers (`tag:nyx`), the edge (`tag:edge`) and the ephemeral CI runners (`tag:ci`) reach `svc:attic` and nothing else. Clients are granted services through `tag:nyx-internal`, which the operator puts on every service, so a new Ingress needs no policy change — `svc:*` is not valid syntax. The console's policy tests cannot see a tag grant to a service: an `accept` test on `svc:<name>` fails while traffic passes, so only the deny side is tested. A node denied a service cannot resolve its name either.
 
 `192.168.1.20/32` is the **only** advertised route, and it exists for `kubectl` alone. There is no load-balancer pool, so nothing else needs reaching off-LAN and `mother` advertises nothing at all — it carries no `services.tailscale` block. Public ingress does not use the tailnet either: [wopr](wopr.md) reaches Traefik over its own WireGuard tunnel.
 
