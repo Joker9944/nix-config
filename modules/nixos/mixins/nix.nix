@@ -1,15 +1,19 @@
 { mkMixinModule, ... }:
 { lib, ... }:
 mkMixinModule "nix" {
-  nix.settings = {
-    allow-import-from-derivation = false;
+  nix = {
+    channel.enable = false;
 
-    experimental-features = [
-      "nix-command"
-      "flakes"
-    ];
+    settings = {
+      allow-import-from-derivation = false;
 
-    substituters = lib.toList "https://nix-community.cachix.org";
-    trusted-public-keys = lib.toList "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="; # cSpell:disable-line
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+
+      substituters = lib.toList "https://nix-community.cachix.org";
+      trusted-public-keys = lib.toList "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="; # cSpell:disable-line
+    };
   };
 }
