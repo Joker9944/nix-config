@@ -2,6 +2,12 @@
 
 An index of bundle changes, not a narrative — one line per change, in the form `CLAUDE.md` rule 3 sets.
 
+## 2026-11-17
+
+- DP-2 is now a Dell AW2724DM; HDR stays on demand, desktop colour corrected with `cm = "edid"` — [hosts/HAL9000](/hosts/HAL9000.md)
+- `SUPER + D` toggles DP-2 between `edid` and `hdredid` — [hosts/HAL9000](/hosts/HAL9000.md)
+- `PROTON_ENABLE_WAYLAND=1` and `PROTON_FORCE_HDR=1` set globally on the Steam package; why `FORCE` under `cm_auto_hdr` — [hosts/HAL9000](/hosts/HAL9000.md)
+
 ## 2026-11-16
 
 - Tailnet policy shape: default-deny, clients reach services via `tag:nyx-internal`, servers/edge/CI reach attic only; tests can't see tag grants to services — [hosts/nyx-cluster](/hosts/nyx-cluster.md), [hosts/wopr](/hosts/wopr.md), [decisions/firewall-source-scoping](/decisions/firewall-source-scoping.md)

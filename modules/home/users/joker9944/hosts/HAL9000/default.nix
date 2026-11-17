@@ -6,6 +6,18 @@
   osConfig,
   ...
 }:
+let
+  inherit (flake.lib.hyprland) mkLuaCall;
+  inherit (lib.generators) mkLuaInline toLua;
+
+  hdrMonitor = {
+    output = "DP-2";
+    mode = "2560x1440@164.96Hz";
+    position = "1920x0";
+    bitdepth = 10;
+    cm = "edid";
+  };
+in
 {
   xdg.autostart.entries = [ "${osConfig.programs.steam.package}/share/applications/steam.desktop" ];
 
@@ -50,12 +62,7 @@
         mode = "1920x1080@60.00Hz";
         position = "0x0";
       }
-      {
-        output = "DP-2";
-        mode = "2560x1440@164.96Hz";
-        position = "1920x0";
-        bitdepth = 10;
-      }
+      hdrMonitor
       {
         output = "DP-3";
         mode = "1920x1080@60.00Hz";
@@ -63,10 +70,25 @@
       }
     ];
 
+    bind = [
+      (mkLuaCall [
+        "${config.mixins.desktopEnvironment.hyprland.binds.mods.main} + D"
+        (mkLuaInline ''
+          function()
+            local hdr = hl.get_monitor("${hdrMonitor.output}").cm ~= "hdredid"
+            local cm = hdr and "hdredid" or "${hdrMonitor.cm}"
+            hl.monitor(${toLua { } (hdrMonitor // { cm = mkLuaInline "cm"; })})
+            hl.notification.create({ text = hdr and "HDR on" or "HDR off", duration = 10000 })
+          end
+        '')
+        { description = "toggle HDR on ${hdrMonitor.output}"; }
+      ])
+    ];
+
     on = [
-      (flake.lib.hyprland.mkLuaCall [
+      (mkLuaCall [
         "hyprland.start"
-        (lib.generators.mkLuaInline ''
+        (mkLuaInline ''
           function()
             hl.exec_cmd("${lib.getExe pkgs.xrandr} --output DP-2 --primary")
           end
