@@ -5,7 +5,7 @@ description: Public ingress is geo-filtered on wopr by an iptables rule matching
 tags: [decision, networking, ingress, firewall, geoblocking]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-11-12T00:00:00Z
+  at: 2026-11-18T00:00:00Z
 ---
 
 # The rule
@@ -13,8 +13,7 @@ generated:
 [wopr](/hosts/wopr.md) accepts `:443` only from sources in the `geoblock4` / `geoblock6` ipsets.
 `modules/nixos/hosts/wopr/geoblock/` holds the country list, `flake.lib.network.mkAllowFromSet`
 renders the rules, and `update-geoblock.service` populates the sets from db-ip country-lite daily.
-Traefik keeps the per-router IP whitelists, which still see the real client address over PROXY
-protocol.
+It is the only source allowlisting in the ingress path; Traefik applies none.
 
 The decision is **global**, because `proxy.nix` is an L4 splice with no SNI map — the edge cannot
 tell one hostname from another, and giving it that ability would make it a place where ingress is

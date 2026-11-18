@@ -5,7 +5,7 @@ description: A small VPS that restores public ingress after the cluster lost its
 tags: [host, server, edge, ingress, wireguard, tailscale, nginx]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-11-16T00:00:00Z
+  at: 2026-11-18T00:00:00Z
 ---
 
 # What it is
@@ -13,8 +13,8 @@ generated:
 A 2-core/4 GB VPS, `profile = "server"`, and the only host the internet can reach: the
 [nyx cluster](nyx-cluster.md)'s internet plan carries no public IP. It terminates no TLS, holds no
 certificates and makes no per-hostname decisions — Traefik in the cluster stays the sole owner of
-ingress rules, ACME and IP whitelisting. Geo-blocking is the one ingress decision that *is* made
-here, as a source allowlist on `:443`
+ingress rules and ACME. Source allowlisting is the one ingress decision that *is* made
+here — all of it, Traefik applies none — as a source allowlist on `:443`
 ([decisions/geoblock-at-the-edge](/decisions/geoblock-at-the-edge.md)); being global, it needs no
 per-hostname knowledge. Why it is not a k3s node is
 [decisions/edge-not-a-cluster-node](/decisions/edge-not-a-cluster-node.md).
@@ -33,7 +33,7 @@ chosen: a random stable suffix, not `::1` (every v6 scanner's first guess) and n
 `IPv6AcceptRA` is off because v6 is static end to end — an RA would add a SLAAC address and a
 competing default route on top. nginx carries a separate `listen [::]:443`, so `:443` serves both
 families while the tunnel to the cluster stays v4. A client's v4 and v6 addresses are unrelated, so
-the geo allowlist here and every IP whitelist Traefik applies has to cover both families per party —
+the geo allowlist has to cover both families per party —
 a v4-only rule locks out the same client arriving over v6, which browsers prefer. Disks come from the `server-longhorn-v1`
 template with
 `longhorn` left at its `null` default, which gates that partition off and leaves a plain ESP plus
@@ -74,8 +74,8 @@ load-balancer VIP. A consequence: the NodePort refuses a plain `curl`, so probes
 against it must speak PROXY protocol.
 
 `trustedIPs` being exactly one address is the point. A PROXY header is forgeable by anything inside
-the trusted range, so widening it would let its source spoof a client address past Traefik's
-whitelist rules. The geo allowlist is unaffected — it matches the real TCP source here, before any
+the trusted range, so widening it would let its source spoof the client address Traefik
+sees. The geo allowlist is unaffected — it matches the real TCP source here, before any
 header exists. That is why the Service is `externalTrafficPolicy: Local` — under `Cluster`,
 kube-proxy SNATs to a node address when it forwards to a pod elsewhere, and `trustedIPs` would have
 to widen to the node set. `Local` also means only a node running a Traefik pod can serve, which the

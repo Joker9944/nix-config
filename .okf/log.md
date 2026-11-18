@@ -2,6 +2,10 @@
 
 An index of bundle changes, not a narrative — one line per change, in the form `CLAUDE.md` rule 3 sets.
 
+## 2026-11-18
+
+- Traefik applies no IP allowlists; all source allowlisting is the edge's — [decisions/geoblock-at-the-edge](/decisions/geoblock-at-the-edge.md)
+
 ## 2026-11-17
 
 - DP-2 is now a Dell AW2724DM; HDR stays on demand, desktop colour corrected with `cm = "edid"` — [hosts/HAL9000](/hosts/HAL9000.md)
