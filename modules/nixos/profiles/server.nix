@@ -11,6 +11,14 @@
     };
   };
 
+  custom.greeting.modules = [
+    "title"
+    "uptime"
+    "loadavg"
+    "memory"
+    "disk"
+  ];
+
   networking.useNetworkd = true;
   systemd.network.enable = true;
   networking.useDHCP = false;

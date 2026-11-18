@@ -5,7 +5,7 @@ description: A profile is a reusable host role — a named set of mixin enables 
 tags: [architecture, profiles, hosts, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-09-05T00:00:00Z
+  at: 2026-11-18T00:00:00Z
 verified:
   - by: claude-code/claude-fable-5
     at: 2026-09-04T00:00:00Z
@@ -56,7 +56,7 @@ Two role branches share `base`.
 
 `base` ← `desktop` ← `hyprland-desktop` (each `imports` the one on its left):
 
-* **base** — every machine: `nix`, `localization`, `git`/`vim`/`utilities`, `maintenance`, `tailscale`.
+* **base** — every machine: `nix`, `localization`, `git`/`vim`/`utilities`, `maintenance`, `tailscale`, `custom.greeting`.
 * **desktop** — graphical baseline: the limine loader, `fonts`, `networkmanager`, `theme.orchidlift-lume`, `pipewire`, `printing`, `_1password`, `gnupg`, `home-manager`, plus `console.useXkbConfig`.
 * **hyprland-desktop** — picks the DE + DM: `desktopEnvironment.hyprland`, `displayManager.regreet`.
 

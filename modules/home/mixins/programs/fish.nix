@@ -11,6 +11,9 @@ mkMixinModule "fish" {
       fi
     '';
 
-    fish.enable = true;
+    fish = {
+      enable = true;
+      functions.fish_greeting = "";
+    };
   };
 }

@@ -1,4 +1,6 @@
 _: {
+  custom.greeting.enable = true;
+
   mixins = {
     localization.enable = true;
     nix.enable = true;

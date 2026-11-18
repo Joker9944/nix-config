@@ -4,6 +4,7 @@ An index of bundle changes, not a narrative — one line per change, in the form
 
 ## 2026-11-18
 
+- Per-host shell greeting via `custom.greeting` (random tagline per launch), rendered by fastfetch, bash-hooked, enabled in `base`; servers add load/mem/disk — [hosts](/hosts/index.md), [architecture/profiles](/architecture/profiles.md)
 - Traefik applies no IP allowlists; all source allowlisting is the edge's — [decisions/geoblock-at-the-edge](/decisions/geoblock-at-the-edge.md)
 
 ## 2026-11-17
