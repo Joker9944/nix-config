@@ -2,6 +2,10 @@
 
 An index of bundle changes, not a narrative — one line per change, in the form `CLAUDE.md` rule 3 sets.
 
+## 2026-11-19
+
+- Desktops run rootless Podman (`docker` alias, user socket as `DOCKER_HOST`) instead of Docker — [architecture/profiles](/architecture/profiles.md)
+
 ## 2026-11-18
 
 - Per-host shell greeting via `custom.greeting` (random tagline per launch), rendered by fastfetch, bash-hooked, enabled in `base`; servers add load/mem/disk — [hosts](/hosts/index.md), [architecture/profiles](/architecture/profiles.md)

@@ -26,7 +26,6 @@ in
         "keys"
       ]
       ++ lib.optional config.mixins.networking.networkmanager.enable "networkmanager"
-      ++ lib.optional config.mixins.virtualisation.docker.enable "docker"
       ++ lib.optional config.mixins.programs.steam.enable "gamemode";
 
       openssh.authorizedKeys.keys =

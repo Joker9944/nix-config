@@ -21,6 +21,8 @@
       pipewire.enable = true;
       printing.enable = true;
     };
+
+    virtualisation.podman.enable = true;
   };
 
   programs.localsend.enable = true;

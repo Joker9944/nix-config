@@ -15,7 +15,5 @@ _: {
         resolution = "2560x1440";
       };
     };
-
-    virtualisation.docker.enable = true;
   };
 }

@@ -5,7 +5,7 @@ description: A profile is a reusable host role — a named set of mixin enables 
 tags: [architecture, profiles, hosts, convention]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-11-18T00:00:00Z
+  at: 2026-11-19T00:00:00Z
 verified:
   - by: claude-code/claude-fable-5
     at: 2026-09-04T00:00:00Z
@@ -48,7 +48,7 @@ This is the guard against the failure mode where every machine grows a bespoke `
 |---|---|---|---|
 | Profile | "what role does this *class* of machine play?" | `modules/nixos/profiles/*.nix` | `desktop` enables `fonts`, `pipewire`, `networkmanager`, the limine loader, … |
 | Mixin | "what single capability?" | `modules/nixos/mixins/**` | `programs.steam`, `hardware.nvidia` |
-| Host delta | "what is unique to *this* machine?" | `modules/nixos/hosts/<host>/{mixins,default}.nix` | HAL9000's `nvidia`+`steam`+`docker`; wintermute's `openssh`; per-host limine branding colour |
+| Host delta | "what is unique to *this* machine?" | `modules/nixos/hosts/<host>/{mixins,default}.nix` | HAL9000's `nvidia`+`steam`; wintermute's `openssh`; per-host limine branding colour |
 
 # Current profiles
 
@@ -57,7 +57,7 @@ Two role branches share `base`.
 `base` ← `desktop` ← `hyprland-desktop` (each `imports` the one on its left):
 
 * **base** — every machine: `nix`, `localization`, `git`/`vim`/`utilities`, `maintenance`, `tailscale`, `custom.greeting`.
-* **desktop** — graphical baseline: the limine loader, `fonts`, `networkmanager`, `theme.orchidlift-lume`, `pipewire`, `printing`, `_1password`, `gnupg`, `home-manager`, plus `console.useXkbConfig`.
+* **desktop** — graphical baseline: the limine loader, `fonts`, `networkmanager`, `theme.orchidlift-lume`, `pipewire`, `printing`, `podman`, `_1password`, `gnupg`, `home-manager`, plus `console.useXkbConfig`.
 * **hyprland-desktop** — picks the DE + DM: `desktopEnvironment.hyprland`, `displayManager.regreet`.
 
 `base` ← `server`:
