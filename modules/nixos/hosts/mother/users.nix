@@ -24,6 +24,7 @@ _:
           jellyfin = 6003;
           radarr = 6005;
           audiobookshelf = 6011;
+          shelfwright = 6012;
           komga = 6013;
         };
   };
