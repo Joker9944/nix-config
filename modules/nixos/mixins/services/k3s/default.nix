@@ -193,6 +193,7 @@ mkMixinModule "k3s" {
           (flake.lib.network.mkAllowFrom {
             sources = [ wg.hub.address ];
             tcp = [ wg.nodePort ]; # traefik websecure-proxied
+            udp = map (forward: forward.nodePort) wg.udpForwards;
           })
         ]
       );

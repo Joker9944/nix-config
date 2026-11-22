@@ -4,6 +4,7 @@ An index of bundle changes, not a narrative — one line per change, in the form
 
 ## 2026-11-22
 
+- wopr forwards UDP game ports (Valheim) to cluster NodePorts, geo-scoped, without failover — [hosts/wopr](/hosts/wopr.md)
 - Hyprland input is taken from upstream directly, not a tag — [architecture/hyprland-lua-config](/architecture/hyprland-lua-config.md)
 
 ## 2026-11-19

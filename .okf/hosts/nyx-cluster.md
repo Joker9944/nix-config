@@ -5,7 +5,7 @@ description: Four headless x86_64-linux machines running k3s — tars/case/kipp 
 tags: [host, server, k3s, zfs, longhorn]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-11-16T00:00:00Z
+  at: 2026-11-22T00:00:00Z
 sources:
   - id: longhorn-2166
     resource: https://github.com/longhorn/longhorn/issues/2166
@@ -88,8 +88,9 @@ Nothing the cluster needs goes in `allowedTCPPorts` — that opens a port to eve
 | tcp 6443, servers only | nodes + `100.64.0.0/10` |
 | tcp 2379 + 2380, servers only | nodes |
 | tcp 30443, servers only | the tunnel hub only — traefik `websecure-proxied` |
+| udp `wgEdge.udpForwards` NodePorts, servers only | the tunnel hub only — the edge's UDP forwards |
 
-The table governs the **LAN path only**. Nothing arriving on `tailscale0` is filtered by `networking.firewall` at all, so a wildcard-bound port answers any tailnet peer whatever the rules say — see [decisions/firewall-source-scoping](/decisions/firewall-source-scoping.md). `wg0` is **not** in `trustedInterfaces`, so host-bound ports *are* governed on the tunnel — that is what drops `6443`/`10250`/`9100` for the edge. The `30443` row is the exception and is belt-and-braces only: a DNATed NodePort traverses `FORWARD`, and `nixos-fw` is jumped from `INPUT` alone. Verified both ways — reaching a node's `30443` from another node's LAN address, which the rule does not admit, and the ruleset having no `FORWARD` jump to `nixos-fw`.
+The table governs the **LAN path only**. Nothing arriving on `tailscale0` is filtered by `networking.firewall` at all, so a wildcard-bound port answers any tailnet peer whatever the rules say — see [decisions/firewall-source-scoping](/decisions/firewall-source-scoping.md). `wg0` is **not** in `trustedInterfaces`, so host-bound ports *are* governed on the tunnel — that is what drops `6443`/`10250`/`9100` for the edge. The two hub rows are the exception and are belt-and-braces only: a DNATed NodePort traverses `FORWARD`, and `nixos-fw` is jumped from `INPUT` alone. Verified both ways — reaching a node's `30443` from another node's LAN address, which the rule does not admit, and the ruleset having no `FORWARD` jump to `nixos-fw`.
 
 The node addresses are `flake.lib.network.nyxNodes`, not a mixin option: every node needs the whole set rather than its own entry, and a host that enables the mixin without an entry there fails at eval. `mother` reads the same list for its NFS rule and export ACL. The `nfs` mixin itself opens nothing — who may reach 2049 is the same decision as who appears in the export ACL, and exports are a host delta.
 

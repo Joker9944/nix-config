@@ -26,14 +26,15 @@ in
     extraCommands = flake.lib.network.mkAllowFromSet {
       inherit sets;
       tcp = [ 443 ];
+      udp = map (forward: forward.listen) flake.lib.network.wgEdge.udpForwards;
     };
   };
 
   systemd = {
     services.update-geoblock = {
       description = "Populate the geoblock ipsets from db-ip";
-      # The firewall only guarantees the sets exist, possibly empty, so :443 is
-      # closed until this has run; being wanted by the firewall repopulates
+      # The firewall only guarantees the sets exist, possibly empty, so the public
+      # ports are closed until this has run; being wanted by the firewall repopulates
       # after every firewall start.
       wantedBy = [
         "multi-user.target"

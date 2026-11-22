@@ -5,7 +5,7 @@ description: A small VPS that restores public ingress after the cluster lost its
 tags: [host, server, edge, ingress, wireguard, tailscale, nginx]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-11-18T00:00:00Z
+  at: 2026-11-22T00:00:00Z
 ---
 
 # What it is
@@ -56,6 +56,14 @@ It **proxies rather than routes**, which is load-bearing twice over. Terminating
 means each side negotiates MSS against its own path, so the tunnel hop cannot blackhole large
 responses — a DNAT design would need MSS clamping in `FORWARD`. It also means the client address has
 to travel out of band, hence PROXY protocol.
+
+The **UDP forwards** (`wgEdge.udpForwards`, game ports whose NodePorts are `externalTrafficPolicy:
+Cluster`, so any spoke serves) get one round-robin upstream each, with no PROXY header and no
+failover. Without `proxy_responses` a UDP timeout never marks a peer failed, and `proxy_timeout` is
+re-armed by traffic in either direction, so a session to a dead spoke lives as long as the client
+keeps sending; a reconnect from a new source port is what moves it, which a `hash` upstream would
+defeat. `limit_conn` caps sessions per client address — the last point that address is known.
+Datagrams over the tunnel MTU fragment, since nothing negotiates around it.
 
 `:443` is the only public TCP port, and keeping it that way takes an override: the `openssh` mixin
 leaves `openFirewall` at its `true` default, which would publish 22 here, so this host sets it
@@ -113,7 +121,7 @@ is why `allowedUDPPorts` is used on this host and nowhere else — the exception
 of it. It cannot be scoped: the spokes dial from a CGNAT'd uplink with no stable source address. The
 exposure is small, since WireGuard answers an unauthenticated packet with silence.
 
-`:443` is public but scoped: `geoblock/` accepts it from the `geoblock4` / `geoblock6`
+`:443` and the UDP forwards are public but scoped: `geoblock/` accepts them from the `geoblock4` / `geoblock6`
 ipsets, which `update-geoblock.service` fills from db-ip's monthly release and caches under `/var/lib/geoblock`
 — so the port is shut between a cold boot with no cache and that unit's first success. Refused
 connections are not logged here, so the block is verified from outside: check-host.net's TCP check

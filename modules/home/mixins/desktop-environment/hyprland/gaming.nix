@@ -4,6 +4,7 @@ let
   regexes = [
     "steam_app_\\S+"
     "gamescope"
+    "valheim\\.x86_64"
   ];
 in
 mkHyprlandModule {

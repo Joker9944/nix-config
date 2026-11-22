@@ -5,12 +5,12 @@ description: Public ingress is geo-filtered on wopr by an iptables rule matching
 tags: [decision, networking, ingress, firewall, geoblocking]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-11-18T00:00:00Z
+  at: 2026-11-22T00:00:00Z
 ---
 
 # The rule
 
-[wopr](/hosts/wopr.md) accepts `:443` only from sources in the `geoblock4` / `geoblock6` ipsets.
+[wopr](/hosts/wopr.md) accepts `:443` and the UDP forwards (`wgEdge.udpForwards`) only from sources in the `geoblock4` / `geoblock6` ipsets.
 `modules/nixos/hosts/wopr/geoblock/` holds the country list, `flake.lib.network.mkAllowFromSet`
 renders the rules, and `update-geoblock.service` populates the sets from db-ip country-lite daily.
 It is the only source allowlisting in the ingress path; Traefik applies none.

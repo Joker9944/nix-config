@@ -5,9 +5,10 @@
   each spoke needs the hub, and the servers' firewall rule needs the hub address.
 
   Public keys are not secret and live here; private keys are per-host sops
-  secrets. `nodePort` is Traefik's `websecure-proxied` entrypoint, shared between
-  the edge's nginx upstream and the servers' firewall rule so the two cannot
-  drift.
+  secrets. `nodePort` (Traefik's `websecure-proxied` entrypoint) and
+  `udpForwards` (public UDP port to NodePort, mirrored by k8s-config's
+  `#EdgeUDPNodePorts`) are shared between the edge's nginx and firewall and the
+  servers' firewall rule so they cannot drift.
 */
 _: {
   # The cluster is CGNAT'd and cannot listen, so the spokes dial wopr and the
@@ -42,4 +43,17 @@ _: {
   };
 
   nodePort = 30443;
+
+  udpForwards = [
+    # valheim game
+    {
+      listen = 2456;
+      nodePort = 32456;
+    }
+    # valheim Steam query
+    {
+      listen = 2457;
+      nodePort = 32457;
+    }
+  ];
 }
