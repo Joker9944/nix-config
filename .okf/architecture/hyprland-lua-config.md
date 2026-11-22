@@ -4,8 +4,8 @@ title: Hyprland lua config surface
 description: The hyprland tree emits `hyprland.lua`, not `hyprland.conf`. Documents the `settings` shape and the fact that rule keys are validated at runtime, not build time — so `nix build` proves nothing about a rule's validity.
 tags: [architecture, hyprland, home-manager, convention]
 generated:
-  by: claude-code/claude-opus-5
-  at: 2026-11-11T00:00:00Z
+  by: claude-code/claude-opus-5-5
+  at: 2026-11-22T00:00:00Z
 verified:
   - by: claude-code/claude-opus-5
     at: 2026-08-16T00:00:00Z
@@ -116,7 +116,7 @@ the silent failure above.
 
 # Match keys live upstream, not here
 
-`flake.nix` pins `hyprland.url` to an upstream tag, bumped on its own schedule rather than
+`flake.nix` takes `hyprland.url` from upstream directly, bumped on its own schedule rather than
 the nixos release train (see [decisions/release-policy](/decisions/release-policy.md)). The
 lua vocabulary moves with those bumps, so any enumeration of match properties, effect names,
 or their value types would be stale one bump later and is deliberately **not** reproduced

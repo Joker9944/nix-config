@@ -2,6 +2,10 @@
 
 An index of bundle changes, not a narrative — one line per change, in the form `CLAUDE.md` rule 3 sets.
 
+## 2026-11-22
+
+- Hyprland input is taken from upstream directly, not a tag — [architecture/hyprland-lua-config](/architecture/hyprland-lua-config.md)
+
 ## 2026-11-19
 
 - Desktops run rootless Podman (`docker` alias, user socket as `DOCKER_HOST`) instead of Docker — [architecture/profiles](/architecture/profiles.md)

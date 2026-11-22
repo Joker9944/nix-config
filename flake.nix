@@ -5,7 +5,8 @@
     # nixpkgs
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-    hyprland.url = "github:hyprwm/Hyprland/main"; # cSpell:ignore hyprwm
+    # HACK pinned to the parent of 9927f2e, which stops exporting the session env under uwsm; revert to main once https://github.com/hyprwm/Hyprland/issues/17071 lands
+    hyprland.url = "github:hyprwm/Hyprland/489b111974fc1ecf7f4cd84e7d995ce84804e11e"; # cSpell:ignore hyprwm
 
     # home manager
     home-manager = {
