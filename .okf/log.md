@@ -2,6 +2,10 @@
 
 An index of bundle changes, not a narrative — one line per change, in the form `CLAUDE.md` rule 3 sets.
 
+## 2026-11-23
+
+- kube-apiserver trusts Kanidm OIDC (headlamp client) via structured authentication config — [hosts/nyx-cluster](/hosts/nyx-cluster.md)
+
 ## 2026-11-22
 
 - wopr forwards UDP game ports (Valheim) to cluster NodePorts, geo-scoped, without failover — [hosts/wopr](/hosts/wopr.md)

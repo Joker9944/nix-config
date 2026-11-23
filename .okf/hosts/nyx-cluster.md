@@ -5,7 +5,7 @@ description: Four headless x86_64-linux machines running k3s — tars/case/kipp 
 tags: [host, server, k3s, zfs, longhorn]
 generated:
   by: claude-code/claude-opus-5
-  at: 2026-11-22T00:00:00Z
+  at: 2026-11-23T00:00:00Z
 sources:
   - id: longhorn-2166
     resource: https://github.com/longhorn/longhorn/issues/2166
@@ -60,6 +60,10 @@ Each server is also a **spoke** of that tunnel. The `k3s` mixin gates it on `isS
 Each spoke also carries the node label `vonarx.online/ingress-spoke=true`, which is what the Traefik DaemonSet selects on: the edge's NodePort is `externalTrafficPolicy: Local`, so a node without a local Traefik pod cannot serve and the label has to track the tunnel exactly. It is gated on `isServer` because the mixin's `wgSpoke` assertion already makes server and spoke equivalent. Like every label here it applies at registration only — see [nyx-bootstrap](/workflows/nyx-bootstrap.md).
 
 The tailnet is also the *only* way in to `6443`: the firewall scopes the API server to the node addresses plus the tailnet CGNAT range, so `kubectl` from a desktop on the cluster LAN is refused. [HAL9000](HAL9000.md) is on a different subnet entirely and only ever reached the cluster this way.
+
+# API authentication
+
+kube-apiserver trusts Kanidm through a structured `AuthenticationConfiguration` that the `k3s` mixin writes to `/etc/rancher/k3s/authentication-config.yaml` on servers, with users and groups both carrying the `oidc:` prefix. Kanidm gives each OAuth2 client its own issuer URL, so every client that talks to the API server (currently `headlamp`) is its own `jwt` entry. That is why this uses the structured file rather than `--oidc-*` flags, which allow only one issuer and cannot be combined with the file.
 
 # Storage
 

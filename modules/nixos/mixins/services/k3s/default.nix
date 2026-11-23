@@ -37,6 +37,8 @@ let
     lib.throwIf (!lib.hasAttr hostName wg.spokes)
       "k3s mixin: ${hostName} is a server but has no entry in lib/network/wgEdge.nix; the ingress tunnel needs a transit address and public key per server"
       wg.spokes.${hostName};
+
+  authConfigPath = "rancher/k3s/authentication-config.yaml";
 in
 mkMixinModule "k3s" {
   imports = [ inputs.sops-nix.nixosModules.sops ];
@@ -67,7 +69,10 @@ mkMixinModule "k3s" {
       # off tailscale0 and every other interface. Ungated: kube-proxy runs on
       # every node and k3s tags --kube-proxy-arg (agent/flags), so servers
       # accept it too.
-      extraFlags = [ "--kube-proxy-arg=metrics-bind-address=${nodeAddress}" ];
+      extraFlags = [
+        "--kube-proxy-arg=metrics-bind-address=${nodeAddress}"
+      ]
+      ++ lib.optional isServer "--kube-apiserver-arg=authentication-config=/etc/${authConfigPath}";
 
       # The ingress-spoke label selects where Traefik must run: the edge's
       # NodePort is externalTrafficPolicy: Local, so a node without a local pod
@@ -77,6 +82,33 @@ mkMixinModule "k3s" {
         (lib.optional isNvidiaGpu "nvidia.com/gpu.present=true")
         ++ (lib.optional isNfs "vonarx.online/nfs-host=true")
         ++ (lib.optional isServer "vonarx.online/ingress-spoke=true");
+    };
+
+    # Kanidm issues one issuer per OAuth2 client, so each client is its own jwt
+    # entry.
+    environment.etc.${authConfigPath} = lib.mkIf isServer {
+      source = (pkgs.formats.yaml { }).generate "authentication-config.yaml" {
+        apiVersion = "apiserver.config.k8s.io/v1";
+        kind = "AuthenticationConfiguration";
+        jwt = [
+          {
+            issuer = {
+              url = "https://idm.vonarx.online/oauth2/openid/headlamp";
+              audiences = [ "headlamp" ];
+            };
+            claimMappings = {
+              username = {
+                claim = "preferred_username";
+                prefix = "oidc:";
+              };
+              groups = {
+                claim = "groups";
+                prefix = "oidc:";
+              };
+            };
+          }
+        ];
+      };
     };
 
     # Spoke of the public ingress tunnel. wopr holds the only public address, so
