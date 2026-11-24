@@ -1,8 +1,11 @@
 { mkMixinModule, ... }:
-{ config, ... }:
+{ config, pkgs-unstable, ... }:
 mkMixinModule "regreet" {
   programs.regreet = {
     enable = true;
+
+    # UPGRADE(26.11): drop; 0.5.0 stops showing the unstyled window before init (rharish101/ReGreet#168).
+    package = pkgs-unstable.regreet;
 
     font = config.custom.theme.fonts.interface;
 

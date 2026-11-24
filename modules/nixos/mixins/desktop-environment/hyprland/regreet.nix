@@ -68,6 +68,8 @@
                   kb_options = xkb.options;
                 };
 
+              animations.enabled = false;
+
               misc.disable_hyprland_logo = true;
             };
           };
