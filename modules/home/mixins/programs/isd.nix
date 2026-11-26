@@ -1,6 +1,6 @@
 { mkMixinModule, ... }:
 mkMixinModule "isd" {
-  home.shellAliases.sc = "isd";
+  home.shellAbbrs.sc = "isd";
 
   programs.isd.enable = true;
 }

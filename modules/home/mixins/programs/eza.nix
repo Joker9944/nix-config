@@ -5,6 +5,8 @@ mkMixinModule "eza" {
     enable = true;
     git = config.programs.git.enable;
     icons = "auto";
+    # upstream's mkDefault aliases become fish abbrs under preferAbbrs and shadow ours
+    enableFishIntegration = false;
   };
 
   home.shellAliases = {

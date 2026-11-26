@@ -8,12 +8,14 @@ _: {
       aerc.enable = true;
       anki.enable = true;
       atuin.enable = true;
-      bash.enable = true;
       claude-code.enable = true;
       direnv.enable = true;
       discord.enable = true;
+      dua.enable = true;
       eza.enable = true;
+      fd.enable = true;
       fish.enable = true;
+      fzf.enable = true;
       git.enable = true;
       gnome-text-editor.enable = true;
       jetbrains-idea.enable = true;
@@ -41,6 +43,7 @@ _: {
       xournalpp.enable = true;
       zap.enable = true;
       zoom.enable = true;
+      zoxide.enable = true;
     };
 
     pwas = {

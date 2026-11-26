@@ -6,7 +6,7 @@
   ...
 }:
 mkHyprlandModule {
-  home.shellAliases.screenshot = "grimblast";
+  home.shellAbbrs.screenshot = "grimblast";
 
   programs.grimblast = {
     enable = true;

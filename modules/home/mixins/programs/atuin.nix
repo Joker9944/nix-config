@@ -7,6 +7,7 @@ mkMixinModule "atuin" {
 
     settings = {
       filter_mode_shell_up_key_binding = "session";
+      ai.enabled = false;
     };
   };
 }
