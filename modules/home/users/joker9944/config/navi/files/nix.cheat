@@ -1,0 +1,28 @@
+% nix
+
+# Switch NixOS from flake
+sudo nixos-rebuild switch --flake <flake>
+
+# Switch home-manager from flake
+home-manager switch --flake <flake>
+
+# Show home-manager news
+home-manager news --flake <flake>
+
+# Show set option value from flake
+nixos-option --flake <flake> <option>
+
+# Start interactive nix repl
+nix repl <installable>
+
+# Search for a package
+nix search <installable> <regex>
+
+# Show build log of a derivation
+nix log <drv>
+
+# List attribute names of a flake output
+nix eval --raw <output> --apply 'x: builtins.concatStringsSep "\n" (builtins.attrNames x)'
+
+$ flake: echo -e "$HOME/Workspace/nix-config\ngithub:joker9944/nix-config"
+$ installable: echo -e "nixpkgs\ngithub:joker9944/nix-config"

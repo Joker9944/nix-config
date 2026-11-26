@@ -1,0 +1,13 @@
+% media
+
+# Resize image
+magick <in> -resize "<geometry>" <out>
+
+# Crop image to aspect ratio
+magick <in> -gravity <gravity> -crop "<ratio>" <out>
+
+# Extract images from PDF
+pdfimages -png -j <pdf> <prefix>
+
+$ gravity: echo -e "Center\nEast\nWest\nNorth\nSouth"
+$ pdf: find . -maxdepth 1 -name '*.pdf'

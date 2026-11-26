@@ -1,0 +1,20 @@
+% kanidm
+
+# Add members to group
+kanidm group add-members <group> <member>
+
+# Create credential reset token
+kanidm person credential create-reset-token <person>
+
+# Show OAuth2 client secret
+kanidm system oauth2 show-basic-secret <client>
+
+# Prefer short username for OAuth2 client
+kanidm system oauth2 prefer-short-username <client>
+
+# Disable legacy crypto for OAuth2 client
+kanidm system oauth2 disable-legacy-crypto <client>
+
+$ group: kanidm group list | awk '/^name:/ { print $2 }'
+$ person: kanidm person list | awk '/^name:/ { print $2 }'
+$ client: kanidm system oauth2 list | awk '/^name:/ { print $2 }'

@@ -1,0 +1,16 @@
+% files
+
+# Set group rw permissions recursively, x only on dirs
+chmod -R u=rwX,g=rwX,o= <path>
+
+# Set dir and file permissions separately
+find <path> \( -type d -exec chmod <dir_mode> {} + \) -o \( -type f -exec chmod <file_mode> {} + \)
+
+# Show hardlink count
+stat -c %h <path>
+
+# Sync dir to remote (dry run)
+rsync -avn --inplace <src>/ <dest>/
+
+# Sync dir to remote
+rsync -av --inplace --info=progress2 <src>/ <dest>/

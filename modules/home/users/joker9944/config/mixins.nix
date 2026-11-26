@@ -22,6 +22,7 @@ _: {
       librewolf.enable = true;
       loupe.enable = true;
       mpv.enable = true;
+      navi.enable = true;
       neovim.enable = false;
       nh.enable = true;
       opencloud-desktop.enable = true;

@@ -1,0 +1,21 @@
+% kubernetes
+
+# Open shell in pod
+kubectl exec --stdin --tty --namespace <ns> <pod> -- <shell>
+
+# Toggle CNPG cluster maintenance
+kubectl cnpg maintenance <action> --namespace <ns> <cluster>
+
+$ ns: kubectl get namespaces --no-headers --output custom-columns=:metadata.name
+$ pod: kubectl get pods --namespace $ns --no-headers --output custom-columns=:metadata.name
+$ cluster: kubectl get clusters.postgresql.cnpg.io --namespace $ns --no-headers --output custom-columns=:metadata.name
+$ action: echo -e "set\nunset"
+$ shell: echo -e "sh\nbash"
+
+% docker
+
+# Open shell in image, overriding entrypoint
+docker run --rm --interactive --tty --entrypoint <shell> <image>
+
+$ image: docker images --format '{{.Repository}}:{{.Tag}}'
+$ shell: echo -e "sh\nbash"
